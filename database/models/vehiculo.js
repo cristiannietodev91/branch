@@ -51,20 +51,21 @@ module.exports = (sequelize, DataTypes) => {
     Vehiculo.associate = function (models) {
         // associations can be defined here
         Vehiculo.belongsTo(models.Marca, {
-            foreignKey: 'fk_idmarca',
-            targetKey: 'IdMarca',
-            as: 'marca'
+            foreignKey: 'IdMarca',
+            target_id: 'IdMarca'
         });
+
         Vehiculo.belongsTo(models.Usuarios, {
-            foreignKey: 'fk_idusuario',
-            targetKey: 'IdUsuario',
-            as: 'usuario'
+            foreignKey: 'IdUsuario',
+            target_id: 'IdUsuario'
         });
+
         Vehiculo.belongsTo(models.Taller, {
-            foreignKey: 'fk_idtaller',
-            targetKey: 'IdTaller',
+            foreignKey: 'IdTaller',
+            target_id: 'IdTaller',
             as: 'taller'
         });
+
         Vehiculo.hasMany(models.Cita, {
             foreignKey: 'fk_idvehiculocita',
             as: 'citas',

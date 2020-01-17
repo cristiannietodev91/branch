@@ -58,7 +58,7 @@ module.exports = (sequelize, DataTypes) => {
     Taller.associate = function (models) {
         // associations can be defined here
         Taller.hasMany(models.Vehiculo, {
-            foreignKey: 'fk_idtaller',
+            foreignKey: 'IdTaller',
             as: 'vehiculos',
             onDelete: 'CASCADE',
         });
