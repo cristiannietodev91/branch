@@ -8,6 +8,8 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/usersRoute');
 var tallerRouter = require('./routes/tallerRoute');
 var vehiculoRouter = require('./routes/vehiculoRoute');
+var marcaRouter = require('./routes/marcaRoute');
+var citaRouter = require('./routes/citaRoute');
 
 var app = express();
 
@@ -21,6 +23,8 @@ app.use('/', indexRouter);
 app.use('/usuario', usersRouter);
 app.use('/taller', tallerRouter);
 app.use('/vehiculo', vehiculoRouter);
+app.use('/marca', marcaRouter);
+app.use('/cita', citaRouter);
 
 
 app.use(logErrors);

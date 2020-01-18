@@ -67,7 +67,7 @@ module.exports = (sequelize, DataTypes) => {
         });
 
         Vehiculo.hasMany(models.Cita, {
-            foreignKey: 'fk_idvehiculocita',
+            foreignKey: 'IdVehiculo',
             as: 'citas',
             onDelete: 'CASCADE',
         });

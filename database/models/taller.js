@@ -64,7 +64,7 @@ module.exports = (sequelize, DataTypes) => {
         });
 
         Taller.hasMany(models.Cita, {
-            foreignKey: 'fk_idtallercita',
+            foreignKey: 'IdCita',
             as: 'citas',
             onDelete: 'CASCADE',
         });
