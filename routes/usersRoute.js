@@ -9,6 +9,10 @@ router.get('/getById/:Id', userController.findUsuarioById);
 
 router.post('/create', userController.createUsuario);
 
+//router.get('/config', userController.helloWorld);
+
+router.post('/createFireBaseUser', userController.createFireBaseUsuario);
+
 router.put('/update/:Id', userController.updateUsuario);
 
 router.delete('/deleteById/:Id', userController.deleteUsuarioById);
