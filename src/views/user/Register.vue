@@ -1,32 +1,79 @@
 <template>
   <b-row class="h-100">
-    <b-colxx xxs="12" md=10  class="mx-auto my-auto">
+    <b-colxx xxs="12" md="10" class="mx-auto my-auto">
       <b-card class="auth-card" no-body>
-          <div class="position-relative image-side ">
-            <p class=" text-white h2">{{ $t('dashboards.magic-is-in-the-details') }}</p>
-              <p class="white mb-0">  Please use this form to register. <br />If you are a member, please
-                <router-link tag="a" to="/user/login" class="white">login</router-link>.
-              </p>
-          </div>
-          <div class="form-side">
-            <router-link tag="a" to="/"><span class="logo-single"/></router-link>
-            <h6 class="mb-4">{{ $t('user.register')}}</h6>
-            <b-form @submit.prevent="formSubmit">
-               <label class="form-group has-float-label mb-4">
-                <input type="text" class="form-control" v-model="fullname">
-                <span>{{ $t('user.fullname') }}</span>
-              </label>
-              <label class="form-group has-float-label mb-4">
-                <input type="email" class="form-control" v-model="email">
-                <span>{{ $t('user.email') }}</span>
-              </label>
-              <label class="form-group has-float-label mb-4">
-                <input type="password" class="form-control" v-model="password">
-                <span>{{ $t('user.password') }}</span>
-              </label>
-              <div class="d-flex justify-content-end align-items-center">
-                  <b-button type="submit" variant="primary" size="lg" class="btn-shadow">{{ $t('user.register-button')}}</b-button>
-              </div>
+        <div class="position-relative image-side">
+          <p class="text-white h2">{{ $t('branch.frase') }}</p>
+          <p class="white mb-0">
+            Please use this form to register.
+            <br />If you are a member, please
+            <router-link tag="a" to="/user/login" class="white">login</router-link>.
+          </p>
+        </div>
+        <div class="form-side">
+          <router-link tag="a" to="/">
+            <span class="logo-single" />
+          </router-link>
+          <h6 class="mb-4">{{ $t('user.register')}}</h6>
+          <b-form @submit.prevent="formSubmit" class="av-tooltip tooltip-label-bottom">
+            <b-form-group :label="$t('user.fullname')" class="has-float-label mb-4">
+              <b-form-input
+                type="text"
+                v-model="$v.form.fullname.$model"
+                :state="!$v.form.fullname.$error"
+              />
+              <b-form-invalid-feedback v-if="!$v.form.fullname.required">Please enter your name</b-form-invalid-feedback>
+              <b-form-invalid-feedback
+                v-else-if="!$v.form.fullname.minLength"
+              >Your name must be minimum 4 characters</b-form-invalid-feedback>
+            </b-form-group>
+            <b-form-group :label="$t('user.identificacion')" class="has-float-label mb-4">
+              <b-form-input
+                type="text"
+                v-model="$v.form.identificacion.$model"
+                :state="!$v.form.identificacion.$error"
+              />
+              <b-form-invalid-feedback v-if="!$v.form.identificacion.required">Please enter your ID</b-form-invalid-feedback>
+              <b-form-invalid-feedback
+                v-else-if="!$v.form.identificacion.minLength"
+              >Your ID must be minimum 4 characters</b-form-invalid-feedback>
+            </b-form-group>
+            <b-form-group :label="$t('user.email')" class="has-float-label mb-4">
+              <b-form-input
+                type="text"
+                v-model="$v.form.email.$model"
+                :state="!$v.form.email.$error"
+              />
+              <b-form-invalid-feedback
+                v-if="!$v.form.email.required"
+              >Please enter your email address</b-form-invalid-feedback>
+              <b-form-invalid-feedback
+                v-else-if="!$v.form.email.email"
+              >Please enter a valid email address</b-form-invalid-feedback>
+              <b-form-invalid-feedback
+                v-else-if="!$v.form.email.minLength"
+              >Your email must be minimum 4 characters</b-form-invalid-feedback>
+            </b-form-group>
+            <b-form-group :label="$t('user.password')" class="has-float-label mb-4">
+              <b-form-input
+                type="password"
+                v-model="$v.form.password.$model"
+                :state="!$v.form.password.$error"
+              />
+              <b-form-invalid-feedback v-if="!$v.form.password.required">Please enter your password</b-form-invalid-feedback>
+              <b-form-invalid-feedback
+                v-else-if="!$v.form.password.minLength"
+              >Your password must be minimum 4 characters</b-form-invalid-feedback>
+            </b-form-group>
+
+            <div class="d-flex justify-content-end align-items-center">
+              <b-button
+                type="submit"
+                variant="primary"
+                size="lg"
+                class="btn-shadow"
+              >{{ $t('user.register-button')}}</b-button>
+            </div>
           </b-form>
         </div>
       </b-card>
@@ -34,19 +81,86 @@
   </b-row>
 </template>
 <script>
+import { mapGetters, mapActions } from "vuex";
+import { validationMixin } from "vuelidate";
+const {
+  required,
+  maxLength,
+  minLength,
+  email
+} = require("vuelidate/lib/validators");
+
 export default {
-  data () {
+  data() {
     return {
-      fullname: '',
-      email: '',
-      password: ''
+      form: {
+        fullname: "",
+        email: "",
+        password: "",
+        identificacion: ""
+      }
+    };
+  },
+  mixins: [validationMixin],
+  validations: {
+    form: {
+      fullname: {
+        required,
+        maxLength: maxLength(40),
+        minLength: minLength(4)
+      },
+      password: {
+        required,
+        maxLength: maxLength(16),
+        minLength: minLength(4)
+      },
+      email: {
+        required,
+        email,
+        minLength: minLength(4)
+      },
+      identificacion: {
+        required,
+        maxLength: maxLength(40),
+        minLength: minLength(4)
+      }
     }
   },
+  computed: {
+    ...mapGetters(["currentUser", "processing", "loginError"])
+  },
   methods: {
-    formSubmit () {
-      console.log('register')
-      this.$router.push('/')
+    ...mapActions(["register"]),
+    formSubmit() {
+      console.log("register");
+      this.$v.$touch();
+      this.$v.form.$touch();
+      this.register({
+        fullname: this.form.fullname,
+        identificacion: this.form.identificacion,
+        email: this.form.email,
+        password: this.form.password
+      });
+      //this.$router.push('/')
+    }
+  },
+  watch: {
+    currentUser(val) {
+      console.log('Userr wtach ::::>',val)
+      if (val && val.uid && val.uid.length > 0) {
+        setTimeout(() => {
+          this.$router.push("/");
+        }, 200);
+      }
+    },
+    loginError(val) {
+      if (val != null) {
+        this.$notify("error", "Login Error", val, {
+          duration: 3000,
+          permanent: false
+        });
+      }
     }
   }
-}
+};
 </script>

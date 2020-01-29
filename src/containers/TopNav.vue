@@ -100,11 +100,13 @@
             </div>
         </div>
         <div class="user d-inline-block">
+            
             <b-dropdown class="dropdown-menu-right" right variant="empty" toggle-class="p-0" menu-class="mt-3" no-caret>
                 <template slot="button-content">
-                    <span class="name mr-1">{{currentUser.title}}</span>
+                    <span class="name mr-1">{{currentUser.displayName}}</span>
+                    <span class="name mr-1">{{currentUser.email}}</span>
                     <span>
-                        <img :alt="currentUser.title" :src="currentUser.img" />
+                        <img :alt="currentUser.email" :src="currentUser.photoUrl || '/assets/img/profile-pic-6.jpg' " />
                     </span>
                 </template>
                 <b-dropdown-item>Account</b-dropdown-item>

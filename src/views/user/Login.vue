@@ -75,8 +75,8 @@ export default {
     data() {
         return {
             form: {
-                email: "test@coloredstrategies.com",
-                password: "xxxxxx"
+                email: "",
+                password: ""
             },
         };
     },
@@ -102,8 +102,8 @@ export default {
         ...mapActions(["login"]),
         formSubmit() {
             this.$v.$touch();
-            this.form.email = "piaf-vue@coloredstrategies.com";
-            this.form.password = "piaf123";
+            //this.form.email = "piaf-vue@coloredstrategies.com";
+            //this.form.password = "piaf123";
             this.$v.form.$touch();
            // if (!this.$v.form.$anyError) {
                 this.login({
@@ -115,6 +115,7 @@ export default {
     },
     watch: {
         currentUser(val) {
+            console.log('Wtah usuario autenticado ::::>',val);
             if (val && val.uid && val.uid.length > 0) {
                 setTimeout(() => {
                     this.$router.push("/");

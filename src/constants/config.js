@@ -15,17 +15,19 @@ export const localeOptions = [
 ]
 
 export const firebaseConfig = {
-  apiKey: "AIzaSyDe94G7L-3soXVSpVbsYlB5DfYH2L91aTU",
-  authDomain: "piaf-vue-login.firebaseapp.com",
-  databaseURL: "https://piaf-vue-login.firebaseio.com",
-  projectId: "piaf-vue-login",
-  storageBucket: "piaf-vue-login.appspot.com",
-  messagingSenderId: "557576321564",
-  appId: "1:557576321564:web:bc2ce73477aff5c2197dd9"
+  apiKey: "AIzaSyBpPrdTl4df4E1eeGX9mcstM0MEWKjNM0o",
+  authDomain: "branch-263701.firebaseapp.com",
+  databaseURL: "https://branch-263701.firebaseio.com",
+  projectId: "branch-263701",
+  storageBucket: "branch-263701.appspot.com",
+  messagingSenderId: "74838816843",
+  appId: "1:74838816843:web:5ca46e82f1587bc252b5ce"
 };
 
 
 export const apiUrl = 'https://api.coloredstrategies.com'
+
+export const apiBranchUrl = 'http://localhost:3000'
 
 export const currentUser = {
   id: 1,

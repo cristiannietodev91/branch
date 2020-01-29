@@ -27,11 +27,13 @@ import VCalendar from 'v-calendar'
 import 'v-calendar/lib/v-calendar.min.css'
 import VueScrollTo from 'vue-scrollto'
 import firebase from 'firebase/app'
+//import * as admin from 'firebase-admin';
 import 'firebase/auth'
 
 // import Vuelidate from 'vuelidate'
 // Vue.use(Vuelidate);
 
+//console.log('Service account file :::::>',serviceAccount);
 
 Vue.use(BootstrapVue);
 Vue.use(VueI18n);
@@ -70,6 +72,10 @@ Vue.use(VCalendar, {
 Vue.use(VueScrollTo);
 
 firebase.initializeApp(firebaseConfig);
+
+firebase.auth().onAuthStateChanged(user => {
+  store.dispatch("fetchUser", user);
+});
 
 Vue.config.productionTip = false
 

@@ -1,21 +1,22 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
-import { currentUser } from '../../constants/config'
+import axios from 'axios'
+import { apiBranchUrl } from '../../constants/config'
 
 export default {
   state: {
     currentUser: localStorage.getItem('user') != null ? JSON.parse(localStorage.getItem('user')) : null,
     loginError: null,
     processing: false,
-    forgotMailSuccess:null,
-    resetPasswordSuccess:null
+    forgotMailSuccess: null,
+    resetPasswordSuccess: null
   },
   getters: {
     currentUser: state => state.currentUser,
     processing: state => state.processing,
     loginError: state => state.loginError,
     forgotMailSuccess: state => state.forgotMailSuccess,
-    resetPasswordSuccess:state => state.resetPasswordSuccess,
+    resetPasswordSuccess: state => state.resetPasswordSuccess,
   },
   mutations: {
     setUser(state, payload) {
@@ -41,13 +42,13 @@ export default {
       state.loginError = null
       state.currentUser = null
       state.processing = false
-      state.forgotMailSuccess=true
+      state.forgotMailSuccess = true
     },
     setResetPasswordSuccess(state) {
       state.loginError = null
       state.currentUser = null
       state.processing = false
-      state.resetPasswordSuccess=true
+      state.resetPasswordSuccess = true
     },
     clearError(state) {
       state.loginError = null
@@ -62,9 +63,18 @@ export default {
         .signInWithEmailAndPassword(payload.email, payload.password)
         .then(
           user => {
-            const item = { uid: user.user.uid, ...currentUser }
+            const newUser = {
+              uid: user.user.uid,
+              displayName: user.user.displayName,
+              email: user.user.email,
+              photoUrl: user.user.photoURL
+            }
+
+            console.log('Resultado usuario autenticado :::: > ', newUser);
+            const item = { uid: newUser.uid, ...newUser }
             localStorage.setItem('user', JSON.stringify(item))
-            commit('setUser', { uid: user.user.uid, ...currentUser })
+            commit('setUser', { uid: newUser.uid, ...newUser })
+
           },
           err => {
             localStorage.removeItem('user')
@@ -99,7 +109,7 @@ export default {
       commit('setProcessing', true)
       firebase
         .auth()
-        .confirmPasswordReset(payload.resetPasswordCode,payload.newPassword)
+        .confirmPasswordReset(payload.resetPasswordCode, payload.newPassword)
         .then(
           user => {
             commit('clearError')
@@ -113,14 +123,39 @@ export default {
           }
         )
     },
+    register({ commit }, payload) {
+      commit('clearError')
+      commit('setProcessing', true)
+      firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password).then((user) => {
+        user.user
+          .updateProfile({
+            displayName: payload.fullname
+          })
+          .then(() => { });
+        axios
+          .post(`${apiBranchUrl}/usuario/createFireBaseUser`, payload)
+          .then(user => {
+            console.debug('Resultado usuario firebase :::> ', user.data);
+            const item = { uid: user.uid, ...user.data }
+            //const item = { uid: user.user.uid, ...currentUser }
+            localStorage.setItem('user', JSON.stringify(item))
+            commit('setUser', { uid: user.uid, ...user.data })
+          },
+            err => {
+              console.error('Error firebase :::> ', err.message);
+              commit('setError', err.message)
+              setTimeout(() => {
+                commit('clearError')
+              }, 3000)
+            })
 
-
-
-    /*
-       return await auth.(resetPasswordCode, newPassword)
-        .then(user => user)
-        .catch(error => error);
-    */
+      }).catch(function (error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.error('Error login Firebase :::> ', errorMessage, ' Code :::>', errorCode);
+      });
+    },
     signOut({ commit }) {
       firebase
         .auth()
@@ -129,6 +164,17 @@ export default {
           localStorage.removeItem('user')
           commit('setLogout')
         }, _error => { })
+    },
+    fetchUser({ commit }, user) {
+      if (user) {
+        commit("SET_USER", {
+          fullname: user.fullname,
+          email: user.email
+        });
+      } else {
+        localStorage.removeItem('user')
+        commit('setLogout')
+      }
     }
   }
 }
