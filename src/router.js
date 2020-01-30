@@ -134,7 +134,7 @@ const routes = [
                 path: "search",
                 component: () =>
                   import(/* webpackChunkName: "miscellaneous" */ "./views/app/pages/miscellaneous/Search")
-              }, 
+              },
               {
                 path: "prices",
                 component: () =>
@@ -151,6 +151,25 @@ const routes = [
                   import(/* webpackChunkName: "miscellaneous" */ "./views/app/pages/miscellaneous/Invoice")
               }
             ]
+          }
+        ]
+      },
+      {
+        path: "app/taller",
+        component: () =>
+          import(/* webpackChunkName: "pages" */ "./views/app/taller"),
+        redirect: "/app/taller/listTalleres",
+        children: [
+          {
+            path: "listTalleres",
+            component: () =>
+              import(/* webpackChunkName: "product" */ "./views/app/taller/ListTalleres")
+          },
+          {
+            path: "detailTaller/:IdTaller",
+            component: () =>
+              import(/* webpackChunkName: "product" */ "./views/app/taller/DetailsTaller")
+
           }
         ]
       },
@@ -377,7 +396,7 @@ const routes = [
         path: "forgot-password",
         component: () =>
           import(/* webpackChunkName: "user" */ "./views/user/ForgotPassword")
-      },    
+      },
       {
         path: "reset-password",
         component: () =>

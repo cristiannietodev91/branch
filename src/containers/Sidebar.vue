@@ -3,7 +3,7 @@
     <div class="main-menu">
         <vue-perfect-scrollbar class="scroll" :settings="{ suppressScrollX: true, wheelPropagation: false }">
             <ul class="list-unstyled">
-                <li v-for="(item,index) in menuItems" :class="{ 'active' : (selectedParentMenu === item.id && viewingParentMenu === '') || viewingParentMenu === item.id }" :key="`parent_${item.id}`" :data-flag="item.id">
+                <li v-for="(item) in menuItems" :class="{ 'active' : (selectedParentMenu === item.id && viewingParentMenu === '') || viewingParentMenu === item.id }" :key="`parent_${item.id}`" :data-flag="item.id">
                     <a v-if="item.newWindow" :href="item.to" rel="noopener noreferrer" target="_blank">
                         <i :class="item.icon" />
                         {{ $t(item.label) }}

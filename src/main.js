@@ -30,8 +30,9 @@ import firebase from 'firebase/app'
 //import * as admin from 'firebase-admin';
 import 'firebase/auth'
 
-// import Vuelidate from 'vuelidate'
-// Vue.use(Vuelidate);
+import Vuelidate from 'vuelidate'
+
+Vue.use(Vuelidate);
 
 //console.log('Service account file :::::>',serviceAccount);
 

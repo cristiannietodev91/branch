@@ -3022,6 +3022,14 @@ main {
   border-top-right-radius: calc(0.15rem - 1px);
 }
 
+.card-img-top-2 {
+  border-radius: calc(0.25rem - 1px);
+  height: 100%;
+  object-fit: cover;
+  max-height: 200px;
+  width: 100%;
+}
+
 .card-img-left {
   width: 100%;
   border-top-left-radius: calc(0.15rem - 1px);

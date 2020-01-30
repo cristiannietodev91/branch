@@ -3,7 +3,24 @@
     "copyright": "Piaf Vue © Todos los derechos reservados."
   },
   "branch": {
-     "frase" : "Llegamos para revolucionar el servicio tecnico de motos en Colombia"
+     "frase" : "Llegamos para revolucionar el servicio tecnico de motos en Colombia",
+     "taller": {
+        "listaTalleres" : "Lista talleres",
+        "detalleTaller" : "Detalle taller",
+        "add-new-taller-title": "Agregar nuevo taller",
+        "nombreTaller" : "Nombre del taller",
+        "identificacion" : "NIT",
+        "direccion" : "Direccion",
+        "celular" : "Celular",
+        "email" : "E-mail"
+     },
+     "forms": {
+        "validations": {
+          "required": "Esta campo es requerido",
+          "longitud": "La longitud del campo es incorrecta",
+          "email" : "Debe ingresar un email valido"
+        }
+     }
   },
   "user": {
     "login-title": "Iniciar sesión",
@@ -110,7 +127,10 @@
     "wizard": "Mago",
     "form-layouts": "Diseños de Formulario",
     "form-validations": "Validaciones de Formulario",
-    "form-wizard": "Asistente de Formulario"
+    "form-wizard": "Asistente de Formulario",
+    "taller" : "Taller",
+    "listTalleres" : "Lista talleres",
+    "detailTaller" : "Ver mi taller"
   },
   "dashboards": {
     "pending-orders": "Pedidos Pendientes",

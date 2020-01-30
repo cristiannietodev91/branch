@@ -21,6 +21,7 @@ var color = defaultColor;
 if (localStorage.getItem("themeColor")) {
   color = localStorage.getItem("themeColor");
 }
+
 let render = () => {
   import("./assets/css/sass/themes/piaf." + color + ".scss").then(() =>
     require("./main")
