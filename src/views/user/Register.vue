@@ -4,8 +4,8 @@
       <b-card class="auth-card" no-body>
           <div class="position-relative image-side ">
             <p class=" text-white h2">{{ $t('dashboards.magic-is-in-the-details') }}</p>
-              <p class="white mb-0">  Please use this form to register. <br />If you are a member, please
-                <router-link tag="a" to="/user/login" class="white">login</router-link>.
+              <p class="white mb-0">  Por favor llene los datos para crear una cuenta <br />Si ya está registrado puede 
+                <router-link tag="a" to="/user/login" class="white">iniciar sesión</router-link>.
               </p>
           </div>
           <div class="form-side">

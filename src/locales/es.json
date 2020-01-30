@@ -1,9 +1,9 @@
 {
   "general": {
-    "copyright": "Piaf Vue © Todos los derechos reservados."
+    "copyright": "Branch © Todos los derechos reservados."
   },
   "branch": {
-     "frase" : "Llegamos para revolucionar el servicio tecnico de motos en Colombia"
+     "frase" : "Llegamos para revolucionar el servicio técnico de motos en Colombia"
   },
   "user": {
     "login-title": "Iniciar sesión",
@@ -16,10 +16,10 @@
     "fullname": "Nombre completo",
     "login-button": "INICIAR SESIÓN",
     "register-button": "REGISTRO",
-    "reset-password-button": "REINICIAR",
+    "reset-password-button": "RECUPERAR",
     "buy": "COMPRAR",
     "username": "Nombre de Usuario",
-    "text-credentials" : "Por favor use sus credenciales para autenticarse",
+    "text-credentials" : "Por favor use sus datos para ingresar",
     "text-nomember" : "Si no estas registrado"
   },
   "menu": {
@@ -155,7 +155,7 @@
     "pending-for-print": "Pendiente para imprimir",
     "logs": "Troncos",
     "gogo": "PIAF",
-    "magic-is-in-the-details": "LA MAGIA ESTA EN LOS DETALLES",
+    "magic-is-in-the-details": "LA MÁGIA ESTÁ EN LOS DETALLES",
     "yes-it-is-indeed": "¡Si es verdad!",
     "advanced-search": "Búsqueda Avanzada",
     "toppings": "Coberturas",

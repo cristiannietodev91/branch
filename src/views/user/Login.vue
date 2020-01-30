@@ -3,31 +3,34 @@
     <b-colxx xxs="12" md="10" class="mx-auto my-auto">
         <b-card class="auth-card" no-body>
             <div class="position-relative image-side">
-                <p class="text-white h2">{{ $t('branch.frase') }}</p>
+                <h1 class="login-brand">
+                    <router-link tag="a" to="/">
+                        <span class="logo-single" />
+                        <span class="brand-text">Branch - Todo en el mismo lugar</span>
+                    </router-link>
+                </h1>
+                <p class="text-white h5">{{ $t('branch.frase') }}</p>
                 <p class="white mb-0">
                     {{ $t('user.text-credentials')}}
-                    <br />{{$t('user.text-nomember')}}, please
-                    <router-link tag="a" to="/user/register" class="white">register</router-link>.
+                    <br />{{$t('user.text-nomember')}}, 
+                    <router-link tag="a" to="/user/register" class="white">crear mi cuenta</router-link>.
                 </p>
             </div>
             <div class="form-side">
-                <router-link tag="a" to="/">
-                    <span class="logo-single" />
-                </router-link>
                 <h6 class="mb-4">{{ $t('user.login-title')}}</h6>
 
                 <b-form @submit.prevent="formSubmit" class="av-tooltip tooltip-label-bottom">
                     <b-form-group :label="$t('user.email')" class="has-float-label mb-4">
                         <b-form-input type="text" v-model="$v.form.email.$model" :state="!$v.form.email.$error" />
-                        <b-form-invalid-feedback v-if="!$v.form.email.required">Please enter your email address</b-form-invalid-feedback>
-                        <b-form-invalid-feedback v-else-if="!$v.form.email.email">Please enter a valid email address</b-form-invalid-feedback>
-                        <b-form-invalid-feedback v-else-if="!$v.form.email.minLength">Your email must be minimum 4 characters</b-form-invalid-feedback>
+                        <b-form-invalid-feedback v-if="!$v.form.email.required">Ingrese su email</b-form-invalid-feedback>
+                        <b-form-invalid-feedback v-else-if="!$v.form.email.email">Ingrese un email válido</b-form-invalid-feedback>
+                        <b-form-invalid-feedback v-else-if="!$v.form.email.minLength">Su email debe tener al menos 4 caracteres</b-form-invalid-feedback>
                     </b-form-group>
 
                     <b-form-group :label="$t('user.password')" class="has-float-label mb-4">
                         <b-form-input type="password" v-model="$v.form.password.$model" :state="!$v.form.password.$error" />
-                        <b-form-invalid-feedback v-if="!$v.form.password.required">Please enter your password</b-form-invalid-feedback>
-                        <b-form-invalid-feedback v-else-if="!$v.form.password.minLength || !$v.form.password.maxLength">Your password must be between 4 and 16 characters</b-form-invalid-feedback>
+                        <b-form-invalid-feedback v-if="!$v.form.password.required">Ingrese su contraseña</b-form-invalid-feedback>
+                        <b-form-invalid-feedback v-else-if="!$v.form.password.minLength || !$v.form.password.maxLength">Su contraseña debe tener al menos 16 caracteres</b-form-invalid-feedback>
                     </b-form-group>
                     <div class="d-flex justify-content-between align-items-center">
                         <router-link tag="a" to="/user/forgot-password">{{ $t('user.forgot-password-question')}}</router-link>
