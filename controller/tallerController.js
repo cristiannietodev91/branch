@@ -22,6 +22,7 @@ const createTaller = (req, res, next) => {
     try {
         var taller = req.body;
         console.debug('Parametro de taller recibido :::::>', taller);
+        taller.estado = "registrado";
         tallerDAO.create(taller, function (error, taller) {
             if (error) {
                 console.error('Error al realizar la transaccion de crear taller:::>', 'error ::>', error);
