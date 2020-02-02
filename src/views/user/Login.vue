@@ -9,11 +9,11 @@
                         <span class="brand-text">Branch - Todo en el mismo lugar</span>
                     </router-link>
                 </h1>
-                <p class="text-white h5">{{ $t('branch.frase') }}</p>
-                <p class="white mb-0">
+                <p class="h5">{{ $t('branch.frase') }}</p>
+                <p class="mb-0">
                     {{ $t('user.text-credentials')}}
                     <br />{{$t('user.text-nomember')}}, 
-                    <router-link tag="a" to="/user/register" class="white">crear mi cuenta</router-link>.
+                    <router-link tag="a" to="/user/register" class="">crea una cuenta</router-link>.
                 </p>
             </div>
             <div class="form-side">

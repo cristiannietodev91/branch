@@ -151,7 +151,8 @@ body {
 }
 
 .fixed-background {
-  background: url("/assets/img/branch-banner-inicio.jpg") no-repeat center center fixed;
+  // background: url("/assets/img/branch-banner-inicio.jpg") no-repeat center center fixed;
+  background: url($bgPath) no-repeat center center fixed;
   background-size: cover;
   width: 100%;
   height: 100%;
@@ -773,7 +774,7 @@ button {
 }
 
 .btn-primary {
-  background-color: $theme-color-1;
+  background-color: $theme-color-4;
   border-color: $theme-color-1;
   color: $button-text-color;
 
@@ -2956,7 +2957,7 @@ main {
 /* 16.Cards*/
 .card {
   border: initial;
-  background: rgba($azul-4, .7);
+  background: rgba($background-color, .7);
 
   .card-header .card-icon {
     right: 5px;
@@ -6044,7 +6045,7 @@ input:-webkit-autofill {
     width: 40%;
     // background: url("/assets/img/login-balloon.jpg") no-repeat center top;
     // background-size: cover;
-    background: rgba($azul-4, .7);
+    background: rgba($input-background, .7);
     padding: 80px 40px;
 
     .h3 {
@@ -6325,14 +6326,14 @@ input:-webkit-autofill {
 }
 
 .theme-colors {
-  width: 280px;
+  width: 125px;
   position: fixed;
   z-index: 1030;
   top: 50%;
   right: 0;
-  background: $foreground-color;
+  background: $background-color;
   @include depth(1);
-  transform: translate(280px, -50%);
+  transform: translate(125px, -50%);
   transition: transform 0.4s ease-out;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -6340,7 +6341,7 @@ input:-webkit-autofill {
   .theme-button {
     position: absolute;
     left: -34px;
-    background: $foreground-color;
+    background: $background-color;
     padding: 13px 7px 13px 7px;
     border-radius: 0.2rem;
     color: $primary-color;
@@ -6403,7 +6404,7 @@ input:-webkit-autofill {
 .has-float-label label::after,
 .has-float-label legend::after,
 .has-float-label > span::after {
-  background: $foreground-color !important;
+  background: $background-color !important;
 }
 .has-float-label legend{
   width: auto;
@@ -7057,7 +7058,7 @@ input:-webkit-autofill {
 
 .video-js.side-bar-video {
   width: 100%;
-  height: 280px;
+  height: 125px;
   background-color: $background-color;
   overflow: hidden;
 
@@ -9266,7 +9267,7 @@ i.large-icon {
   }
 
   .theme-colors {
-    transform: translate(-280px, -50%);
+    transform: translate(-125px, -50%);
     left: 0;
     right: initial;
 
@@ -9281,7 +9282,7 @@ i.large-icon {
   }
 
   .theme-colors {
-    transform: translate(-280px, -50%);
+    transform: translate(-125px, -50%);
     left: 0;
     right: initial;
 
