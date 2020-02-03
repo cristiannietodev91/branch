@@ -170,6 +170,12 @@ const routes = [
             component: () =>
               import(/* webpackChunkName: "product" */ "./views/app/taller/DetailsTaller")
 
+          },
+          {
+            path: "listClients/:IdTaller",
+            component: () =>
+              import(/* webpackChunkName: "product" */ "./views/app/taller/ListClientes")
+
           }
         ]
       },

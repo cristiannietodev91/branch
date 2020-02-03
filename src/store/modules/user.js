@@ -126,35 +126,24 @@ export default {
     register({ commit }, payload) {
       commit('clearError')
       commit('setProcessing', true)
-      firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password).then((user) => {
-        user.user
-          .updateProfile({
-            displayName: payload.fullname
+    axios
+        .post(`${apiBranchUrl}/usuario/createFireBaseUser`, payload)
+        .then(user => {
+          console.debug('Resultado usuario firebase :::> ', user.data);
+          const item = { uid: user.uid, ...user.data }
+          //const item = { uid: user.user.uid, ...currentUser }
+          localStorage.setItem('user', JSON.stringify(item))
+          commit('setUser', { uid: user.uid, ...user.data })
+        },
+          err => {
+            console.error('Error firebase :::> ', err.message);
+            commit('setError', err.message)
+            setTimeout(() => {
+              commit('clearError')
+            }, 3000)
           })
-          .then(() => { });
-        axios
-          .post(`${apiBranchUrl}/usuario/createFireBaseUser`, payload)
-          .then(user => {
-            console.debug('Resultado usuario firebase :::> ', user.data);
-            const item = { uid: user.uid, ...user.data }
-            //const item = { uid: user.user.uid, ...currentUser }
-            localStorage.setItem('user', JSON.stringify(item))
-            commit('setUser', { uid: user.uid, ...user.data })
-          },
-            err => {
-              console.error('Error firebase :::> ', err.message);
-              commit('setError', err.message)
-              setTimeout(() => {
-                commit('clearError')
-              }, 3000)
-            })
 
-      }).catch(function (error) {
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        console.error('Error login Firebase :::> ', errorMessage, ' Code :::>', errorCode);
-      });
+
     },
     signOut({ commit }) {
       firebase

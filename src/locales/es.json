@@ -3,30 +3,38 @@
     "copyright": "Piaf Vue © Todos los derechos reservados."
   },
   "branch": {
-     "frase" : "Llegamos para revolucionar el servicio tecnico de motos en Colombia",
-     "taller": {
-        "listaTalleres" : "Lista talleres",
-        "detalleTaller" : "Detalle taller",
-        "add-new-taller-title": "Agregar nuevo taller",
-        "nombreTaller" : "Nombre del taller",
-        "identificacion" : "NIT",
-        "direccion" : "Direccion",
-        "celular" : "Celular",
-        "email" : "E-mail"
-     },
-     "mecanico": {
-      "identificacion" : "Identificacion",
-      "firstName" : "Nombre",
-      "lastName" : "Apellido",
-      "skills" : "Skills"
-     },
-     "forms": {
-        "validations": {
-          "required": "Esta campo es requerido",
-          "longitud": "La longitud del campo es incorrecta",
-          "email" : "Debe ingresar un email valido"
-        }
-     }
+    "frase": "Llegamos para revolucionar el servicio tecnico de motos en Colombia",
+    "taller": {
+      "listaTalleres": "Lista talleres",
+      "detalleTaller": "Detalle taller",
+      "add-new-taller-title": "Agregar nuevo taller",
+      "nombreTaller": "Nombre del taller",
+      "identificacion": "NIT",
+      "direccion": "Direccion",
+      "celular": "Celular",
+      "email": "E-mail"
+    },
+    "mecanico": {
+      "identificacion": "Identificacion",
+      "firstName": "Nombre",
+      "lastName": "Apellido",
+      "skills": "Skills"
+    },
+    "forms": {
+      "validations": {
+        "required": "Esta campo es requerido",
+        "longitud": "La longitud del campo es incorrecta",
+        "email": "Debe ingresar un email valido"
+      }
+    },
+    "clientes": {
+      "listaClientes": "Lista de clientes"
+    },
+    "vehiculo": {
+      "placa": "Placa",
+      "celular": "Celular",
+      "email": "E-mail"
+    }
   },
   "user": {
     "login-title": "Iniciar sesión",
@@ -43,8 +51,8 @@
     "reset-password-button": "REINICIAR",
     "buy": "COMPRAR",
     "username": "Nombre de Usuario",
-    "text-credentials" : "Por favor use sus credenciales para autenticarse",
-    "text-nomember" : "Si no estas registrado"
+    "text-credentials": "Por favor use sus credenciales para autenticarse",
+    "text-nomember": "Si no estas registrado"
   },
   "menu": {
     "app": "Inicio",
@@ -134,9 +142,12 @@
     "form-layouts": "Diseños de Formulario",
     "form-validations": "Validaciones de Formulario",
     "form-wizard": "Asistente de Formulario",
-    "taller" : "Taller",
-    "listTalleres" : "Lista talleres",
-    "detailTaller" : "Ver mi taller"
+    "branch": {
+      "taller": "Taller",
+      "listTalleres": "Lista talleres",
+      "detailTaller": "Ver mi taller",
+      "listClientes": "Mis clientes"
+    }
   },
   "dashboards": {
     "pending-orders": "Pedidos Pendientes",
@@ -255,8 +266,10 @@
       "featurecomparison": "Comparación de Características",
       "pricecomparison": "Comparación de Precios"
     },
-    "branch":{
-      "mecanicos" : "Mecanicos"
+    "branch": {
+      "mecanicos": "MECANICOS",
+      "add-new-mecanico": "Agregar nuevo mecanico",
+      "add-new-vehiculo": "Agregar nuevo vehiculo"
     }
   },
   "chat": {
@@ -494,7 +507,6 @@
     "validation-bootstrap": "Bootstrap Validation",
     "validation-vuelidate": "Vuelidate Validation",
     "name": "Name"
-
   },
   "form-components": {
     "custom-inputs": "Entrada Personalizada",

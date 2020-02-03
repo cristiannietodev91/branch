@@ -2,18 +2,23 @@ const data = [
   {
     id: "talleres",
     icon: "iconsminds-car",
-    label: "menu.taller",
+    label: "menu.branch.taller",
     to: "/app/taller",
     subs: [
       {
-        icon: "simple-icon-briefcase",
+        icon: "simple-icon-list",
         label: "branch.taller.listaTalleres",
         to: "/app/taller/listTalleres"
       },
       {
         icon: "simple-icon-briefcase",
-        label: "menu.detailTaller",
+        label: "menu.branch.detailTaller",
         to: "/app/taller/detailTaller/1"
+      },
+      {
+        icon: "simple-icon-people",
+        label: "menu.branch.listClientes",
+        to: "/app/taller/listClients/1"
       }
     ]
   },

@@ -18,6 +18,13 @@ class ServiceCrm {
     return http.post("/mecanico/create",mecanico);
   }
 
+  getVehiculosByIdTaller(IdTaller){
+    return http.get("/vehiculo/getByIdTaller/"+IdTaller);
+  }
+
+  createVehiculo(vehiculo) {
+    return http.post("/vehiculo/create",vehiculo);
+  }
 
 
   getAllTipificacionesTel() {

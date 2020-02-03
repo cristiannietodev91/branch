@@ -2,7 +2,7 @@
   <div>
     <b-row>
       <b-colxx xxs="12">
-        <h1>{{ $t('menu.taller') }} {{ $route.params.IdTaller}}</h1>
+        <h1>{{ $t('menu.branch.taller') }} {{ $route.params.IdTaller}}</h1>
         <div class="top-right-button-container">
           <b-button
             v-b-modal.modalAddMecanico
@@ -13,7 +13,7 @@
           <b-modal
             id="modalAddMecanico"
             ref="modalAddMecanico"
-            :title="$t('pages.add-new-modal-title')"
+            :title="$t('pages.branch.add-new-mecanico')"
             modal-class="modal-right"
             hide-footer
           >
