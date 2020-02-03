@@ -1,4 +1,6 @@
 var vehiculoDAO = require('../dao/vehiculoDAO');
+var userController = require('../controller/userController');
+var sms = require('../utils/sendSms')
 var HttpStatus = require('http-status-codes');
 
 const getAllVehiculos = (req, res, next) => {
@@ -22,32 +24,69 @@ const createVehiculo = (req, res, next) => {
     try {
         var vehiculo = req.body;
         console.debug('Parametro de vehiculo recibido :::::>', vehiculo);
-        vehiculoDAO.create(vehiculo, function (error, vehiculo) {
+        vehiculoDAO.findAllByFilter({ placa: vehiculo.placa }, function (error, vehiculos) {
             if (error) {
-                console.error('Error al realizar la transaccion de crear vehiculo:::>', 'error ::>', error);
-                if(error.errors){
+                console.error('Error al realizar la transaccion de crear vehiculo:::>', 'error ::>', error.message);
+                if (error.errors) {
                     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
-                }else{
+                } else {
                     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
-                }                
+                }
             } else {
-                if (vehiculo) {
-                    vehiculoDAO.getById(vehiculo.IdVehiculo, function (error, vehiculo) {
+                if (vehiculos.lenght > 1) {
+                    //TODO : Placa ya existe, si no tiene taller si coloca el ID de taller que esta registrando
+                } else {
+                    //Se crea un usuario en firebase 
+                    var usuario = {
+                        email: vehiculo.email,
+                        celular: '+57'+vehiculo.celular,
+                        password: '123456',
+                        fullname: 'Sin nombre'
+                    }
+                    userController.createUsuarioNew(usuario, function (error, userRecord) {
                         if (error) {
-                            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
-                        } else {
-                            if (vehiculo) {
-                                return res.status(HttpStatus.OK).json(vehiculo);
+                            console.error('Error al realizar la transaccion de crear vehiculo:::>', 'error ::>', error);
+                            if (error.errors) {
+                                return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
                             } else {
-                                return res.status(HttpStatus.OK).json({});
+                                return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+                            }
+                        } else {
+                            if (userRecord) {
+                                var vehiculoRegister = {
+                                    IdMarca: 1,
+                                    IdUsuario: userRecord.uid,
+                                    IdTaller: vehiculo.IdTaller,
+                                    tipoVehiculo: 'Moto',
+                                    placa: vehiculo.placa,
+                                    estado: 'Pendiente'
+                                }
+                                vehiculoDAO.create(vehiculoRegister, function (error, vehiculo) {
+                                    if (error) {
+                                        console.error('Error al realizar la transaccion de crear vehiculo:::>', 'error ::>', error);
+                                        if (error.errors) {
+                                            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
+                                        } else {
+                                            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+                                        }
+                                    } else {
+                                        if (vehiculo) {
+                                            //Send SMS al usuario al que pertenece el vehiculo para que ingrese a administrar el vehiculo
+                                            var textoSms = "Se ha registrado el vehiculo "+vehiculo.placa+" por el taller BRANCH lo invitamos a que se registre en el siguiente link para que disfrute los beneficios BRANCH http://localhost:8080";
+                                            sms.sendSMSTwilio(userRecord.phoneNumber,textoSms);
+                                            return res.status(HttpStatus.OK).json(vehiculo);                                            
+                                        } else {
+                                            return res.status(HttpStatus.OK).json({ error: "No se creo el vehiculo" });
+                                        }
+                                    }
+                                });
                             }
                         }
-                    });
-                } else {
-                    return res.status(HttpStatus.OK).json({ error: "No se creo el vehiculo" });
+
+                    })
                 }
             }
-        });
+        })
     } catch (error) {
         console.error('Error al crear vehiculo ', error);
         return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
@@ -65,7 +104,7 @@ const updateVehiculo = (req, res, next) => {
                     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
                 } else {
                     if (vehiculo) {
-                        return res.status(HttpStatus.ACCEPTED).json({ message: 'Se actualizo el Vehiculo ' + IdVehiculo + ' correctamente' });                        
+                        return res.status(HttpStatus.ACCEPTED).json({ message: 'Se actualizo el Vehiculo ' + IdVehiculo + ' correctamente' });
                     } else {
                         return res.status(HttpStatus.OK).json({ error: "No se actualizo el vehiculo" });
                     }
@@ -107,7 +146,11 @@ const findVehiculoById = (req, res, next) => {
         //console.debug('Parametro de Idusuario recibido :::::>', req.params);
         vehiculoDAO.getById(IdVehiculo, function (error, vehiculo) {
             if (error) {
-                return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
+                if (error.errors) {
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
+                } else {
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+                }
             } else {
                 if (vehiculo) {
                     return res.status(HttpStatus.OK).json(vehiculo);
@@ -122,6 +165,31 @@ const findVehiculoById = (req, res, next) => {
     }
 }
 
+const getAllVehiculosByIdTaller = (req, res, next) => {
+    try {
+        var IdTaller = req.params.Id;
+        console.debug('Parametro taller recibido :::::>', req.query);
+
+        vehiculoDAO.findAllByFilter({ IdTaller: IdTaller }, function (error, vehiculos) {
+            if (error) {
+                console.error('Error al realizar la transaccion de buscar vehiculos:::>', 'error ::>', error.message);
+                if (error.errors) {
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
+                } else {
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+                }
+            } else {
+                if (vehiculos) {
+                    res.status(HttpStatus.OK).json(vehiculos);
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error al listar vehiculos ', error);
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+    }
+}
+
 
 
 module.exports = {
@@ -129,5 +197,6 @@ module.exports = {
     createVehiculo,
     updateVehiculo,
     deleteVehiculoById,
-    findVehiculoById
+    findVehiculoById,
+    getAllVehiculosByIdTaller
 }

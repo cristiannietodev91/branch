@@ -11,16 +11,8 @@ module.exports = {
         // Find all users
         return models.sequelize.transaction((t1) => {
             return models.Mecanico.create(mecanico).then(async createdmecanico => {
-                //await models.Taller.addMecanico(createdmecanico);
                 await createdmecanico.addTallers([mecanico.taller.IdTaller]);
-                //console.log('Mecanico creado ::::>',createdmecanico);
-                /*models.Taller.findByPk(mecanico.taller.IdTaller).then(async taller=>{
-                    await taller.addMecanico(createdmecanico)
-                    
-                })*/
-                
-                 //mecanico.addTallers([mecanico.taller,mecanico.taller.IdTaller]);
-                 return createdmecanico;
+                return createdmecanico;
             });
         }).then(function (result) {
             if (result) {

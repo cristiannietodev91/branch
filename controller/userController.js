@@ -35,74 +35,30 @@ const createFireBaseUsuario = async (req, res, next) => {
     try {
         var usuario = req.body;
         console.debug('Parametro de usuario recibido :::::>', usuario);
-        admin.auth().getUserByEmail(usuario.email).then(function (userRecord) {
-            // See the UserRecord reference doc for the contents of userRecord.
-            console.log('Successfully fetched user data:', userRecord.toJSON());
-            admin.auth().setCustomUserClaims(userRecord.uid, {
-                fullname: usuario.fullname,
-                identificacion: usuario.identificacion
-            }).then(function () {
-                //userRecord.getIdToken(true);
-                // Tell client to refresh token on user.
-                // Lookup the user associated with the specified uid.
-                admin.auth().getUser(userRecord.uid).then((userAct) => {
-                    // The claims can be accessed on the user record.
-                    console.log('Resultado userClaim :::::>', userAct);
-                    res.status(HttpStatus.OK).json(userAct);
-                });
-                
-            });
-
-
-        })
-            .catch(function (error) {
-                console.log('Error fetching user data:', error);
-                next(error);
-            });
-
-
-
-    } catch (error) {
-        console.error('Error al crear usuario ', error);
-        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
-    }
-}
-
-const createUsuario = (req, res, next) => {
-    try {
-        var usuario = req.body;
-        console.debug('Parametro de usuario recibido :::::>', usuario);
-        usersDAO.create(usuario, function (error, usuario) {
-            if (error) {
-                console.error('Error al realizar la transaccion de crear usuario:::>', 'error ::>', error);
-                if (error.errors) {
-                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
-                } else {
-                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
-                }
-            } else {
-                if (usuario) {
-                    usersDAO.getById(usuario.IdUsuario, function (error, usuario) {
-                        if (error) {
-                            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
-                        } else {
-                            if (usuario) {
-                                return res.status(HttpStatus.OK).json(usuario);
-                            } else {
-                                return res.status(HttpStatus.OK).json({});
-                            }
-                        }
-                    });
-                } else {
-                    return res.status(HttpStatus.OK).json({ error: "No se creo el usuario" });
+        var usuario = {
+            email: usuario.email,
+            password: usuario.password,
+            fullname: usuario.fullname,
+            celular: usuario.celular,
+            identificacion: usuario.identificacion
+        }       
+        
+        createUsuarioNew(usuario, function (error, userRecord) {
+            if(error){
+                return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+            }else{
+                if (userRecord) {
+                    res.status(HttpStatus.OK).json(userRecord);
                 }
             }
-        });
+            
+        })
     } catch (error) {
         console.error('Error al crear usuario ', error);
         return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
     }
 }
+
 
 const updateUsuario = (req, res, next) => {
     try {
@@ -172,13 +128,59 @@ const findUsuarioById = (req, res, next) => {
     }
 }
 
+const createUsuarioNew = (usuario, cb) => {
+    admin.auth().createUser({
+        email: usuario.email,
+        emailVerified: false,
+        phoneNumber: usuario.celular,
+        password: usuario.password,
+        displayName: usuario.fullname,
+        disabled: false
+    }).then(function (userRecord) {
+        // See the UserRecord reference doc for the contents of userRecord.
+        admin.auth().setCustomUserClaims(userRecord.uid, {
+            fullname: usuario.fullname,
+            identificacion: usuario.identificacion
+        }).then(function () {
+            //userRecord.getIdToken(true);
+            // Tell client to refresh token on user.
+            // Lookup the user associated with the specified uid.
+            admin.auth().getUser(userRecord.uid).then((userAct) => {
+                // The claims can be accessed on the user record.
+                //console.debug('Resultado userClaim :::::>', userAct);
+                var usuarioDb = {
+                    firstName: userAct.displayName,
+                    email: userAct.email,
+                    uid: userAct.uid,
+                    celular: userAct.phoneNumber,
+                    tipoUsuario: 'Cliente',
+                    estado: 'Pendiente'
+                }
+                usersDAO.create(usuarioDb, function (error, usuario) {
+                    if (error) {
+                        cb(error,null);
+                    } else {
+                        if (usuario) {
+                            cb(null,userAct);
+                        } else {
+                            cb({ message: "No se creo el usuario"},null)                            
+                        }
+                    }
+                });
+                
+            });
+        });
+    }).catch(function (error) {
+        cb(error, null);
+    });
+}
 
 
 module.exports = {
     getAllUsuarios,
-    createUsuario,
     createFireBaseUsuario,
     updateUsuario,
     deleteUsuarioById,
-    findUsuarioById
+    findUsuarioById,
+    createUsuarioNew
 }

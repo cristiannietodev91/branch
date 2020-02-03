@@ -31,8 +31,8 @@ module.exports = (sequelize, DataTypes) => {
       // allowNull defaults to true
     }
   }, {});
-  Marca.associate = function (models) {
-    // associations can be defined here
+  Marca.associate = function (models) {    
+    
   };
   return Marca;
 };

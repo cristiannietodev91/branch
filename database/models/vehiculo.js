@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         IdUsuario: {
-            type: Sequelize.INTEGER,
+            type: Sequelize.STRING(50),
             allowNull: false
         },
         IdTaller: {
@@ -53,12 +53,7 @@ module.exports = (sequelize, DataTypes) => {
         Vehiculo.belongsTo(models.Marca, {
             foreignKey: 'IdMarca',
             target_id: 'IdMarca'
-        });
-
-        Vehiculo.belongsTo(models.Usuarios, {
-            foreignKey: 'IdUsuario',
-            target_id: 'IdUsuario'
-        });
+        });        
 
         Vehiculo.belongsTo(models.Taller, {
             foreignKey: 'IdTaller',
@@ -71,6 +66,12 @@ module.exports = (sequelize, DataTypes) => {
             as: 'citas',
             onDelete: 'CASCADE',
         });
+
+        Vehiculo.belongsTo(models.Usuarios, {
+            foreignKey: 'IdUsuario',
+            targetKey: 'uid',
+            target_id: 'uid'
+        });        
     };
     return Vehiculo;
 };

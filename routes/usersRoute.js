@@ -7,8 +7,6 @@ router.get('/getAll', userController.getAllUsuarios);
 
 router.get('/getById/:Id', userController.findUsuarioById);
 
-router.post('/create', userController.createUsuario);
-
 //router.get('/config', userController.helloWorld);
 
 router.post('/createFireBaseUser', userController.createFireBaseUsuario);

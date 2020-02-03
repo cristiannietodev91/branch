@@ -18,7 +18,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     identificacion: {
       type: Sequelize.STRING,
-      allowNull: false,
       unique: true
       // allowNull defaults to true
     },
@@ -29,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
         isEmail: true
       }
     },
-    password: {
+    uid: {
       type: Sequelize.STRING,
       allowNull: false
     },
@@ -48,11 +47,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   User.associate = function (models) {
     // associations can be defined here
-    User.hasMany(models.Vehiculo, {
-      foreignKey: 'IdUsuario',
-      as: 'vehiculos',
-      onDelete: 'CASCADE',
-    });
+    
   };
   return User;
 };

@@ -15,7 +15,7 @@ module.exports = {
             });
         }).then(function (result) {
             if (result) {
-                console.debug('Resultado despues usuario :::: >', result);
+                //console.debug('Resultado despues usuario :::: >', result);
                 var userCreated = result.dataValues;
                 cb(null, userCreated);
             } else {
