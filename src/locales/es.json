@@ -14,6 +14,12 @@
         "celular" : "Celular",
         "email" : "E-mail"
      },
+     "mecanico": {
+      "identificacion" : "Identificacion",
+      "firstName" : "Nombre",
+      "lastName" : "Apellido",
+      "skills" : "Skills"
+     },
      "forms": {
         "validations": {
           "required": "Esta campo es requerido",
@@ -248,6 +254,9 @@
       "useractionsauditlog": "Registro de acciones del usuario",
       "featurecomparison": "Comparación de Características",
       "pricecomparison": "Comparación de Precios"
+    },
+    "branch":{
+      "mecanicos" : "Mecanicos"
     }
   },
   "chat": {

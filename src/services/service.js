@@ -14,6 +14,12 @@ class ServiceCrm {
     return http.get("/taller/getById/"+IdTaller);
   }
 
+  createMecanico(mecanico) {
+    return http.post("/mecanico/create",mecanico);
+  }
+
+
+
   getAllTipificacionesTel() {
     return http.get(`/tipificacion/getAllTipificacionesTel`);
   }

@@ -4,17 +4,64 @@
       <b-colxx xxs="12">
         <h1>{{ $t('menu.taller') }} {{ $route.params.IdTaller}}</h1>
         <div class="top-right-button-container">
-          <b-dropdown
-            id="ddown5"
-            :text="$t('pages.actions')"
+          <b-button
+            v-b-modal.modalAddMecanico
+            variant="primary"
             size="lg"
-            variant="outline-primary"
-            class="top-right-button top-right-button-single"
-            no-fade="true"
+            class="top-right-button"
+          >{{ $t('pages.add-new') }}</b-button>
+          <b-modal
+            id="modalAddMecanico"
+            ref="modalAddMecanico"
+            :title="$t('pages.add-new-modal-title')"
+            modal-class="modal-right"
+            hide-footer
           >
-            <b-dropdown-item>{{ $t('dashboards.last-week') }}</b-dropdown-item>
-            <b-dropdown-item>{{ $t('dashboards.this-month') }}</b-dropdown-item>
-          </b-dropdown>
+            <b-form @submit.prevent="onValitadeFormSubmit">
+              <b-form-group :label="$t('branch.mecanico.identificacion')">
+                <b-form-input
+                  v-model="$v.newMecanico.identificacion.$model"
+                  :state="!$v.newMecanico.identificacion.$error"
+                />
+                <b-form-invalid-feedback
+                  v-if="!$v.newMecanico.identificacion.required"
+                >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
+                <b-form-invalid-feedback
+                  v-else-if="!$v.newMecanico.identificacion.minLength || !$v.newMecanico.identificacion.maxLength"
+                >{{$t('branch.forms.validations.longitud')}}</b-form-invalid-feedback>
+              </b-form-group>
+              <b-form-group :label="$t('branch.mecanico.firstName')">
+                <b-form-input
+                  v-model="$v.newMecanico.firstName.$model"
+                  :state="!$v.newMecanico.firstName.$error"
+                />
+                <b-form-invalid-feedback
+                  v-if="!$v.newMecanico.firstName.required"
+                >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
+              </b-form-group>
+              <b-form-group :label="$t('branch.mecanico.lastName')">
+                <b-form-input
+                  v-model="$v.newMecanico.lastName.$model"
+                  :state="!$v.newMecanico.lastName.$error"
+                />
+                <b-form-invalid-feedback
+                  v-if="!$v.newMecanico.lastName.required"
+                >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
+              </b-form-group>
+              <b-form-group :label="$t('branch.mecanico.skills')">
+                <input-tag
+                  v-model="newMecanico.skills"
+                  :placeholder="$t('form-components.tags')"
+                  :limit="4"
+                ></input-tag>
+              </b-form-group>
+              <b-button
+                variant="outline-secondary"
+                @click="hideModal('modalAddMecanico')"
+              >{{ $t('pages.cancel') }}</b-button>
+              <b-button type="submit" variant="primary">{{ $t('forms.submit') }}</b-button>
+            </b-form>
+          </b-modal>
         </div>
         <piaf-breadcrumb />
         <b-tabs nav-class="separator-tabs ml-0 mb-5" content-class="tab-content" :no-fade="true">
@@ -45,14 +92,13 @@
             </b-card>
           </b-tab>
 
-          <b-tab :title="$t('pages.orders')">
+          <b-tab :title="$t('pages.branch.mecanicos')">
             <b-row>
               <b-colxx>
-                <order-item
-                  v-for="(order,index) in orders"
+                <mecanicos-items
+                  v-for="(mecanico,index) in taller.Mecanicos"
                   :key="index"
-                  :data="order"
-                  detail-path="#"
+                  :data="mecanico"                  
                 />
               </b-colxx>
             </b-row>
@@ -64,55 +110,88 @@
 </template>
 
 <script>
-import Stars from "../../../components/Common/Stars";
-import RadialProgressCard from "../../../components/Cards/RadialProgressCard";
-import SmallLineChartCard from "../../../components/Cards/SmallLineChartCard";
-import AreaShadowChart from "../../../components/Charts/AreaShadow";
-import CommentItem from "../../../components/Listing/CommentItem";
-import OrderItem from "../../../components/Listing/OrderItem";
-
-import {
-  smallChartData1,
-  smallChartData2,
-  smallChartData3,
-  smallChartData4,
-  areaChartData
-} from "../../../data/charts";
-import { comments } from "../../../data/comments";
-import orders from "../../../data/orders";
+import { required, minLength, maxLength } from "vuelidate/lib/validators";
+import MecanicosItem from "../../../components/Listing/MecanicosListItem";
+import InputTag from "../../../components/Form/InputTag";
 
 import ServicesCore from "../../../services/service";
 
 export default {
   components: {
-    stars: Stars,
-    "radial-progress-card": RadialProgressCard,
-    "small-line-chart-card": SmallLineChartCard,
-    "area-shadow-chart": AreaShadowChart,
-    "comment-item": CommentItem,
-    "order-item": OrderItem
+    "input-tag": InputTag,
+    "mecanicos-items": MecanicosItem
   },
   data() {
     return {
       isLoad: false,
-      smallChartData1,
-      smallChartData2,
-      smallChartData3,
-      smallChartData4,
-      areaChartData,
-      comments: comments.slice(0, 5),
-      orders,
-      taller: {}
+      taller: {},
+      newMecanico: {
+        identificacion: "",
+        firstName: "",
+        lastName: "",
+        skills: []
+      }
     };
   },
-  methods: {},
+  validations: {
+    newMecanico: {
+      identificacion: {
+        required,
+        maxLength: maxLength(16),
+        minLength: minLength(2)
+      },
+      firstName: {
+        required
+      },
+      lastName: {
+        required
+      },
+      skills: {
+        required
+      }
+    }
+  },
+  methods: {
+    hideModal(refname) {
+      this.$refs[refname].hide();
+    },
+    onValitadeFormSubmit() {
+      this.$v.$touch();
+      var myJsonString = JSON.stringify(this.newMecanico.skills);
+      var mecanico = {
+        identificacion: this.newMecanico.identificacion,
+        firstName: this.newMecanico.firstName,
+        lastName: this.newMecanico.lastName,
+        skills: myJsonString,
+        taller: this.taller
+      };
+      // if its still pending or an error is returned do not submit
+      if (this.$v.newMecanico.$pending || this.$v.newMecanico.$error) return;
+
+      console.log(JSON.stringify(mecanico));
+      ServicesCore.createMecanico(mecanico).then(response => {
+        if (response.status == 200) {
+          //this.loadItems();
+          this.hideModal("modalAddMecanico");
+          this.newMecanico = {
+            identificacion: "",
+            firstName: "",
+            lastName: "",
+            skills: []
+          };
+        } else {
+        }
+      });
+    }
+  },
   mounted() {
     setTimeout(() => {
       this.isLoad = true;
     }, 50);
     ServicesCore.getTallerById(this.$route.params.IdTaller).then(response => {
-      if (response.status == 200) {
+      if (response.status == 200 || response.status == 304) {
         this.taller = response.data;
+        console.log('Taller :::>',this.taller);
       }
     });
   }

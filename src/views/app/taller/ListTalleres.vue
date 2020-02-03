@@ -6,7 +6,7 @@
           <h1>{{ $t('branch.taller.listaTalleres') }}</h1>
           <div class="top-right-button-container">
             <b-button
-              v-b-modal.modalbasic
+              v-b-modal.modalright
               variant="primary"
               size="lg"
               class="top-right-button"
@@ -290,7 +290,6 @@
 
 <script>
 import { required, minLength, maxLength,email } from 'vuelidate/lib/validators'
-import { validationMixin } from "vuelidate";
 
 import {
   DataListIcon,
@@ -380,7 +379,6 @@ export default {
       }
     };
   },
-  mixins: [validationMixin],
   validations: {
     newItem: {
       nombre: {
