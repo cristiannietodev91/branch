@@ -29,11 +29,7 @@ module.exports = (sequelize, DataTypes) => {
     }, {});
     Mecanico.associate = function (models) {
         // associations can be defined here
-        Mecanico.belongsToMany(models.Taller, {
-            through: 'MecanicoTaller',
-            as: 'Talleres',
-            foreignKey: 'IdMecanico'
-        });
+        
     };
     return Mecanico;
 };

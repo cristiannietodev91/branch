@@ -30,7 +30,7 @@ const createTaller = (req, res, next) => {
                     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
                 }else{
                     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
-                }                
+                }         
             } else {
                 if (taller) {
                     tallerDAO.getById(taller.IdTaller, function (error, taller) {
@@ -103,14 +103,20 @@ const deleteTallerById = (req, res, next) => {
 }
 
 const findTallerById = (req, res, next) => {
-    try {
+    try {       
         var IdTaller = req.params.Id;
-        //console.debug('Parametro de Idusuario recibido :::::>', req.params);
+        console.debug('Parametro de IdTaller recibido :::::>',req.params);
         tallerDAO.getById(IdTaller, function (error, taller) {
             if (error) {
-                return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
+                console.error('Error al realizar la transaccion de get taller:::>', 'error ::>', error);
+                if(error.errors){
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
+                }else{
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+                }                
             } else {
                 if (taller) {
+                    console.debug('Resultado de buscar taller por ID ::::>',IdTaller)
                     return res.status(HttpStatus.OK).json(taller);
                 } else {
                     return res.status(HttpStatus.OK).json({});

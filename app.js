@@ -11,6 +11,7 @@ var tallerRouter = require('./routes/tallerRoute');
 var vehiculoRouter = require('./routes/vehiculoRoute');
 var marcaRouter = require('./routes/marcaRoute');
 var citaRouter = require('./routes/citaRoute');
+var mecanicoRouter = require('./routes/mecanicoRoute');
 
 var app = express();
 
@@ -27,6 +28,7 @@ app.use('/taller', tallerRouter);
 app.use('/vehiculo', vehiculoRouter);
 app.use('/marca', marcaRouter);
 app.use('/cita', citaRouter);
+app.use('/mecanico', mecanicoRouter);
 
 
 app.use(logErrors);

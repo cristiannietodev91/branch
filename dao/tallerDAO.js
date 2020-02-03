@@ -46,14 +46,18 @@ module.exports = {
         });
     },
     getById: function (IdTaller, cb) {
-        // Find all users
         return models.sequelize.transaction((t1) => {
-            return models.Taller.findByPk(IdTaller).then(taller => {
+            return models.Taller.findByPk(IdTaller, {
+                include:
+                {
+                    model: models.Mecanico
+                }
+            }).then(taller => {
                 return taller;
             });
         }).then(function (result) {
             if (result) {
-                console.debug('Resultado despues getTaller By Id :::: >', result);
+                //console.debug('Resultado despues getTaller By Id :::: >', result);
                 var tallerCreated = result.dataValues;
                 cb(null, tallerCreated);
             } else {

@@ -69,11 +69,7 @@ module.exports = (sequelize, DataTypes) => {
             onDelete: 'CASCADE',
         });
 
-        Taller.belongsToMany(models.Mecanico, { 
-            through: 'MecanicoTaller', 
-            as: 'Mecanicos', 
-            foreignKey: 'IdTaller' 
-        });
+       
     };
     return Taller;
 };
