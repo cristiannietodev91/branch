@@ -34,6 +34,11 @@
       "placa": "Placa",
       "celular": "Celular",
       "email": "E-mail"
+    },
+    "cita": {
+      "mecanico": "Mecanico",
+      "fechaCita" : "Fecha",
+      "placa": "Placa"
     }
   },
   "user": {
@@ -269,7 +274,8 @@
     "branch": {
       "mecanicos": "MECANICOS",
       "add-new-mecanico": "Agregar nuevo mecanico",
-      "add-new-vehiculo": "Agregar nuevo vehiculo"
+      "add-new-vehiculo": "Agregar nuevo vehiculo",
+      "add-new-cita": "Agregar nueva cita"
     }
   },
   "chat": {

@@ -26,6 +26,14 @@ class ServiceCrm {
     return http.post("/vehiculo/create",vehiculo);
   }
 
+  createCita(cita) {
+    return http.post("/cita/create",cita);
+  }
+  
+  getCitasByIdTaller(IdTaller){
+    return http.get("/cita/getByIdTaller/"+IdTaller);
+  }
+
 
   getAllTipificacionesTel() {
     return http.get(`/tipificacion/getAllTipificacionesTel`);
