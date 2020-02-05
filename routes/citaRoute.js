@@ -7,6 +7,8 @@ router.get('/getAll', citaController.getAllCitas);
 
 router.get('/getById/:Id', citaController.findCitaById);
 
+router.get('/getByIdTaller/:Id', citaController.getAllCitasByIdTaller);
+
 router.post('/create', citaController.createCita);
 
 router.put('/update/:Id', citaController.updateCita);

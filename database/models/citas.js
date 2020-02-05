@@ -12,6 +12,9 @@ module.exports = (sequelize, DataTypes) => {
             type: Sequelize.INTEGER,
             allowNull: false
         },
+        IdMecanico: {
+            type: Sequelize.INTEGER
+        },
         IdVehiculo: {
             type: Sequelize.INTEGER,
             allowNull: false

@@ -77,5 +77,29 @@ module.exports = {
         }).catch(function (err) {
             cb(err, null);
         });
+    },
+    findAllByFilter: function (filter, cb) {
+        // Find all users
+        return models.sequelize.transaction((t1) => {
+            return models.Cita.findAll({
+                include: [
+                    {
+                        model: models.Vehiculo
+                    }
+                ],
+                where: filter
+            }).then(citas => {
+                return citas;
+            });
+        }).then(function (result) {
+            if (result) {
+                //console.debug('Resultado despues listar vehiculos By Filter :::: >',filter,' Result ::::> ', result);                
+                cb(null, result);
+            } else {
+                cb(null, null);
+            }
+        }).catch(function (err) {
+            cb(err, null);
+        });
     }
 }

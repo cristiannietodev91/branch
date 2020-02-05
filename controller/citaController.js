@@ -1,4 +1,5 @@
 var citaDAO = require('../dao/citaDAO');
+var vehiculoDAO = require('../dao/vehiculoDAO');
 var HttpStatus = require('http-status-codes');
 
 const getAllCitas = (req, res, next) => {
@@ -22,32 +23,57 @@ const createCita = (req, res, next) => {
     try {
         var cita = req.body;
         console.debug('Parametro de cita recibido :::::>', cita);
-        citaDAO.create(cita, function (error, cita) {
+
+        vehiculoDAO.findAllByFilter({ placa: cita.placa, IdTaller: cita.taller }, function (error, vehiculo) {
             if (error) {
-                console.error('Error al realizar la transaccion de crear cita:::>', 'error ::>', error);
-                if(error.errors){
+                console.error('Error al realizar la transaccion de buscar vehiculo por placa:::>', 'error ::>', error);
+                if (error.errors) {
                     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
-                }else{
+                } else {
                     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
-                }                
+                }
             } else {
-                if (cita) {
-                    citaDAO.getById(cita.IdCita, function (error, cita) {
+                if (vehiculo.length > 0) {
+                    var citaDb = {
+                        IdVehiculo : vehiculo[0].IdVehiculo,
+                        IdTaller : cita.taller,
+                        IdMecanico : cita.mecanico,
+                        fechaCita : cita.fechaCita
+                    }
+                    console.log('Cita a persistir en la BD',citaDb);
+                    citaDAO.create(citaDb, function (error, cita) {
                         if (error) {
-                            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
+                            console.error('Error al realizar la transaccion de crear cita:::>', 'error ::>', error);
+                            if (error.errors) {
+                                return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
+                            } else {
+                                return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+                            }
                         } else {
                             if (cita) {
                                 return res.status(HttpStatus.OK).json(cita);
+                                /*citaDAO.getById(cita.IdCita, function (error, cita) {
+                                    if (error) {
+                                        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
+                                    } else {
+                                        if (cita) {
+                                            
+                                        } else {
+                                            return res.status(HttpStatus.OK).json({});
+                                        }
+                                    }
+                                });*/
                             } else {
-                                return res.status(HttpStatus.OK).json({});
+                                return res.status(HttpStatus.OK).json({ error: "No se creo la cita" });
                             }
                         }
                     });
+
                 } else {
-                    return res.status(HttpStatus.OK).json({ error: "No se creo la cita" });
+                    return res.status(HttpStatus.PRECONDITION_REQUIRED).json({ error: 'No se encontro un vehiculo con la placa ' + cita.placa });
                 }
             }
-        });
+        })
     } catch (error) {
         console.error('Error al crear cita ', error);
         return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
@@ -65,7 +91,7 @@ const updateCita = (req, res, next) => {
                     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
                 } else {
                     if (cita) {
-                        return res.status(HttpStatus.ACCEPTED).json({ message: 'Se actualizo la cita ' + IdCita + ' correctamente' });                        
+                        return res.status(HttpStatus.ACCEPTED).json({ message: 'Se actualizo la cita ' + IdCita + ' correctamente' });
                     } else {
                         return res.status(HttpStatus.OK).json({ error: "No se actualizo la cita" });
                     }
@@ -122,6 +148,46 @@ const findCitaById = (req, res, next) => {
     }
 }
 
+const getAllCitasByIdTaller = (req, res, next) => {
+    try {
+        var IdTaller = req.params.Id;
+        console.debug('Parametro taller recibido :::::>', req.query);
+
+        citaDAO.findAllByFilter({ IdTaller: IdTaller }, function (error, citas) {
+            if (error) {
+                console.error('Error al realizar la transaccion de buscar citas:::>', 'error ::>', error.message);
+                if (error.errors) {
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
+                } else {
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+                }
+            } else {
+                if (citas) {
+                    var events = castCitasToEvents(citas);
+                    res.status(HttpStatus.OK).json(events);
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error al listar citas ::::> ', error);
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+    }
+}
+
+const castCitasToEvents = (citas) => {
+    var events = [];
+    citas.forEach(cita => {
+        var dataCita = cita.dataValues;
+        var event = {
+            id: dataCita.IdCita,
+            startDate: dataCita.fechaCita,
+            title: 'Cita vehiculo =>'+dataCita.Vehiculo.placa 
+        }
+        events.push(event);
+    });
+    return events
+}
+
 
 
 module.exports = {
@@ -129,5 +195,6 @@ module.exports = {
     createCita,
     updateCita,
     deleteCitaById,
-    findCitaById
+    findCitaById,
+    getAllCitasByIdTaller
 }
