@@ -2,14 +2,14 @@
   <div>
     <b-row>
       <b-colxx xxs="12">
-        <h1>{{ $t('menu.branch.taller') }} {{ $route.params.IdTaller}}</h1>
+        <h1>{{ $t('menu.taller') }} {{ $route.params.IdTaller}}</h1>
         <div class="top-right-button-container">
           <b-button
             v-b-modal.modalAddMecanico
             variant="primary"
             size="lg"
             class="top-right-button"
-          >{{ $t('pages.add-new') }}</b-button>
+          >{{ $t('pages.branch.add-new-mecanico') }}</b-button>
           <b-modal
             id="modalAddMecanico"
             ref="modalAddMecanico"
@@ -189,7 +189,7 @@ import {
   CalendarMathMixin
 } from "vue-simple-calendar";
 import vSelect from "vue-select";
-
+import "vue-select/dist/vue-select.css";
 import MecanicosItem from "../../../components/Listing/MecanicosListItem";
 import InputTag from "../../../components/Form/InputTag";
 
@@ -358,7 +358,6 @@ export default {
       .then(response => {
         if (response.status == 200) {
           this.calendar.events = response.data;
-          console.log("Events :::>", this.events);
         }
       })
       .catch(error => {        

@@ -1,9 +1,9 @@
 {
   "general": {
-    "copyright": "Piaf Vue © Todos los derechos reservados."
+    "copyright": "Branch © Todos los derechos reservados."
   },
   "branch": {
-    "frase": "Llegamos para revolucionar el servicio tecnico de motos en Colombia",
+    "frase": "Llegamos para revolucionar el servicio técnico de motos en Colombia",
     "taller": {
       "listaTalleres": "Lista talleres",
       "detalleTaller": "Detalle taller",
@@ -12,7 +12,8 @@
       "identificacion": "NIT",
       "direccion": "Direccion",
       "celular": "Celular",
-      "email": "E-mail"
+      "email": "E-mail",
+      "logo": "URL Logo"
     },
     "mecanico": {
       "identificacion": "Identificacion",
@@ -24,7 +25,9 @@
       "validations": {
         "required": "Esta campo es requerido",
         "longitud": "La longitud del campo es incorrecta",
-        "email": "Debe ingresar un email valido"
+        "email": "Debe ingresar un email valido",
+        "nit" : "El formato del NIT no es valido (XXXXX-X)",
+        "url" : "El campo debe ser una URL"
       }
     },
     "clientes": {
@@ -37,7 +40,7 @@
     },
     "cita": {
       "mecanico": "Mecanico",
-      "fechaCita" : "Fecha",
+      "fechaCita": "Fecha",
       "placa": "Placa"
     }
   },
@@ -53,10 +56,10 @@
     "fullname": "Nombre completo",
     "login-button": "INICIAR SESIÓN",
     "register-button": "REGISTRO",
-    "reset-password-button": "REINICIAR",
+    "reset-password-button": "RECUPERAR",
     "buy": "COMPRAR",
     "username": "Nombre de Usuario",
-    "text-credentials": "Por favor use sus credenciales para autenticarse",
+    "text-credentials": "Por favor use sus datos para ingresar",
     "text-nomember": "Si no estas registrado"
   },
   "menu": {
@@ -147,12 +150,10 @@
     "form-layouts": "Diseños de Formulario",
     "form-validations": "Validaciones de Formulario",
     "form-wizard": "Asistente de Formulario",
-    "branch": {
-      "taller": "Taller",
-      "listTalleres": "Lista talleres",
-      "detailTaller": "Ver mi taller",
-      "listClientes": "Mis clientes"
-    }
+    "taller": "Taller",
+    "listTalleres": "Lista talleres",
+    "detailTaller": "Ver mi taller",
+    "listClients": "Mis clientes"
   },
   "dashboards": {
     "pending-orders": "Pedidos Pendientes",
@@ -198,7 +199,7 @@
     "pending-for-print": "Pendiente para imprimir",
     "logs": "Troncos",
     "gogo": "PIAF",
-    "magic-is-in-the-details": "LA MAGIA ESTA EN LOS DETALLES",
+    "magic-is-in-the-details": "LA MÁGIA ESTÁ EN LOS DETALLES",
     "yes-it-is-indeed": "¡Si es verdad!",
     "advanced-search": "Búsqueda Avanzada",
     "toppings": "Coberturas",

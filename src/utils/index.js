@@ -111,7 +111,7 @@ export const centerTextPlugin = {
         : activePercentage
     }
 
-    ctx.font = '36px Nunito, sans-serif'
+    ctx.font = '36px IBM Plex Sans, sans-serif'
     ctx.fillStyle = ThemeColors().primaryColor
     ctx.textBaseline = 'middle'
 
@@ -120,7 +120,7 @@ export const centerTextPlugin = {
     var textY = height / 2
     ctx.fillText(text, textX, textY)
 
-    ctx.font = '14px Nunito, sans-serif'
+    ctx.font = '14px IBM Plex Sans, sans-serif'
     ctx.textBaseline = 'middle'
 
     var text2 = activeLabel

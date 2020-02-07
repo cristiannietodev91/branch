@@ -20,11 +20,12 @@ const getters = {
 const mutations = {
   changeSideMenuStatus(state, payload) {
     let { classNames, step: clickIndex, selectedMenuHasSubItems } = payload;
+    //console.log('Click Indexxxx 11111:::>',clickIndex,' Modulo :::> ',(clickIndex % 4))
     const currentClasses = classNames ? classNames.split(' ').filter(x => x !== '') : '';
     let nextClasses = '';
     if (!selectedMenuHasSubItems) {
       if (currentClasses.includes("menu-default") && (clickIndex % 4 === 0 || clickIndex % 4 === 3))
-        clickIndex = 1;
+        clickIndex = 0;
 
       if (currentClasses.includes("menu-sub-hidden") && (clickIndex % 4 === 2))
         clickIndex = 0;
@@ -32,7 +33,7 @@ const mutations = {
       if (currentClasses.includes("menu-hidden") && (clickIndex % 4 === 2 || clickIndex % 4 === 3))
         clickIndex = 0;
     }
-
+    //console.log('Click Indexxxx:::>',clickIndex,' Modulo :::> ',(clickIndex % 4))
     if (clickIndex % 4 === 0) {
       if (currentClasses.includes('menu-default') && currentClasses.includes('menu-sub-hidden')) {
         nextClasses = 'menu-default menu-sub-hidden';

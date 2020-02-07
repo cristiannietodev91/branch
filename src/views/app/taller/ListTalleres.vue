@@ -6,7 +6,7 @@
           <h1>{{ $t('branch.taller.listaTalleres') }}</h1>
           <div class="top-right-button-container">
             <b-button
-              v-b-modal.modalright
+              v-b-modal.modalAddTaller
               variant="primary"
               size="lg"
               class="top-right-button"
@@ -42,13 +42,13 @@
               </b-dropdown>
             </b-button-group>
             <b-modal
-              id="modalbasic"
-              ref="modalbasic"
+              id="modalAddTaller"
+              ref="modalAddTaller"
               :title="$t('branch.taller.add-new-taller-title')"
               hide-footer
             >
               <b-form @submit.prevent="onValitadeFormSubmit" class="av-tooltip tooltip-label-right">
-                <b-form-group :label="$t('branch.taller.nombreTaller')">
+                <b-form-group label-cols="2" horizontal :label="$t('branch.taller.nombreTaller')">
                   <b-form-input
                     type="text"
                     v-model="$v.newItem.nombre.$model"
@@ -61,7 +61,7 @@
                     v-else-if="!$v.newItem.nombre.minLength || !$v.newItem.nombre.maxLength"
                   >{{$t('branch.forms.validations.longitud')}}</b-form-invalid-feedback>
                 </b-form-group>
-                <b-form-group :label="$t('branch.taller.identificacion')">
+                <b-form-group label-cols="2" horizontal :label="$t('branch.taller.identificacion')">
                   <b-form-input
                     type="text"
                     v-model="$v.newItem.identificacion.$model"
@@ -71,11 +71,14 @@
                     v-if="!$v.newItem.identificacion.required"
                   >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
                   <b-form-invalid-feedback
+                    v-if="!$v.newItem.identificacion.alpha"
+                  >{{$t('branch.forms.validations.nit')}}</b-form-invalid-feedback>
+                  <b-form-invalid-feedback
                     v-else-if="!$v.newItem.nombre.minLength || !$v.newItem.nombre.maxLength"
                   >{{$t('branch.forms.validations.longitud')}}</b-form-invalid-feedback>
                 </b-form-group>
 
-                <b-form-group :label="$t('branch.taller.direccion')">
+                <b-form-group label-cols="2" horizontal :label="$t('branch.taller.direccion')">
                   <b-form-input
                     type="text"
                     v-model="$v.newItem.direccion.$model"
@@ -89,7 +92,7 @@
                   >{{$t('branch.forms.validations.longitud')}}</b-form-invalid-feedback>
                 </b-form-group>
 
-                <b-form-group :label="$t('branch.taller.celular')">
+                <b-form-group label-cols="2" horizontal :label="$t('branch.taller.celular')">
                   <b-form-input
                     type="text"
                     v-model="$v.newItem.celular.$model"
@@ -103,7 +106,7 @@
                   >{{$t('branch.forms.validations.longitud')}}</b-form-invalid-feedback>
                 </b-form-group>
 
-                <b-form-group :label="$t('branch.taller.email')">
+                <b-form-group label-cols="2" horizontal :label="$t('branch.taller.email')">
                   <b-form-input
                     type="text"
                     v-model="$v.newItem.email.$model"
@@ -119,12 +122,24 @@
                     v-else-if="!$v.newItem.email.minLength || !$v.newItem.email.maxLength"
                   >{{$t('branch.forms.validations.longitud')}}</b-form-invalid-feedback>
                 </b-form-group>
+                <b-form-group label-cols="2" horizontal :label="$t('branch.taller.logo')">
+                  <b-form-input
+                    type="text"
+                    v-model="$v.newItem.urlLogo.$model"
+                    :state="!$v.newItem.urlLogo.$error"
+                  />
+                  <b-form-invalid-feedback
+                    v-if="!$v.newItem.urlLogo.required"
+                  >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
+                  <b-form-invalid-feedback
+                    v-else-if="!$v.newItem.urlLogo.url"
+                  >{{$t('branch.forms.validations.url')}}</b-form-invalid-feedback>
+                </b-form-group>
                 <b-button
-                    variant="outline-secondary"
-                    @click="hideModal('modalbasic')"
-                  >{{ $t('pages.cancel') }}</b-button>
-                <b-button type="submit" variant="primary"  >{{ $t('forms.submit') }}</b-button>
-                
+                  variant="outline-secondary"
+                  @click="hideModal('modalAddTaller')"
+                >{{ $t('pages.cancel') }}</b-button>
+                <b-button type="submit" variant="primary">{{ $t('forms.submit') }}</b-button>
               </b-form>
             </b-modal>
           </div>
@@ -139,26 +154,6 @@
               <i class="simple-icon-arrow-down align-middle" />
             </b-button>
             <b-collapse id="displayOptions" class="d-md-block">
-              <span class="mr-3 d-inline-block float-md-left">
-                <a
-                  :class="{'mr-2 view-icon':true,'active': displayMode==='list'}"
-                  @click="changeDisplayMode('list')"
-                >
-                  <data-list-icon />
-                </a>
-                <a
-                  :class="{'mr-2 view-icon':true,'active': displayMode==='thumb'}"
-                  @click="changeDisplayMode('thumb')"
-                >
-                  <thumb-list-icon />
-                </a>
-                <a
-                  :class="{'mr-2 view-icon':true,'active': displayMode==='image'}"
-                  @click="changeDisplayMode('image')"
-                >
-                  <image-list-icon />
-                </a>
-              </span>
               <div class="d-block d-md-inline-block pt-1">
                 <b-dropdown
                   id="ddown1"
@@ -201,37 +196,8 @@
         </b-colxx>
       </b-row>
       <template v-if="isLoad">
-        <b-row v-if="displayMode==='image'" key="image">
-          <b-colxx
-            sm="6"
-            lg="4"
-            xl="3"
-            class="mb-3"
-            v-for="(item,index) in items"
-            :key="index"
-            :id="item.id"
-          >
-            <image-list-item
-              :key="item.id"
-              :data="item"
-              :selected-items="selectedItems"
-              @toggle-item="toggleItem"
-              v-contextmenu:contextmenu
-            />
-          </b-colxx>
-        </b-row>
-        <b-row v-else-if="displayMode==='thumb'" key="thumb">
-          <b-colxx xxs="12" class="mb-3" v-for="(item,index) in items" :key="index" :id="item.id">
-            <thumb-list-item
-              :key="item.id"
-              :data="item"
-              :selected-items="selectedItems"
-              @toggle-item="toggleItem"
-              v-contextmenu:contextmenu
-            />
-          </b-colxx>
-        </b-row>
-        <b-row v-else-if="displayMode==='list'" key="list">
+        
+        <b-row >
           <b-colxx xxs="12" class="mb-3" v-for="(item,index) in items" :key="index" :id="item.id">
             <taller-list-item
               :key="item.id"
@@ -289,7 +255,14 @@
 </template>
 
 <script>
-import { required, minLength, maxLength,email } from 'vuelidate/lib/validators'
+import {
+  required,
+  minLength,
+  maxLength,
+  email,
+  helpers,
+  url
+} from "vuelidate/lib/validators";
 
 import {
   DataListIcon,
@@ -304,6 +277,8 @@ import ImageListItem from "../../../components/Listing/ImageListItem";
 import ThumbListItem from "../../../components/Listing/ThumbListItem";
 import TallerListItem from "../../../components/Listing/TallerListItem";
 
+const alpha = helpers.regex('alpha', /(^[0-9]+-{1}[0-9]{1})/)
+
 export default {
   components: {
     "data-list-icon": DataListIcon,
@@ -317,23 +292,14 @@ export default {
   data() {
     return {
       isLoad: false,
-      displayMode: "list",
       sort: {
-        column: "title",
-        label: "Product Name"
+        column: "nombre",
+        label: "Nombre taller"
       },
       sortOptions: [
         {
-          column: "title",
-          label: "Product Name"
-        },
-        {
-          column: "category",
-          label: "Category"
-        },
-        {
-          column: "status",
-          label: "Status"
+          column: "nombre",
+          label: "Nombre taller"
         }
       ],
       page: 1,
@@ -375,7 +341,8 @@ export default {
         identificacion: "",
         direccion: "",
         celular: "",
-        email: ""
+        email: "",
+        urlLogo: ""
       }
     };
   },
@@ -388,6 +355,7 @@ export default {
       },
       identificacion: {
         required,
+        alpha,
         maxLength: maxLength(16),
         minLength: minLength(8)
       },
@@ -404,6 +372,10 @@ export default {
       email: {
         required,
         email
+      },
+      urlLogo:{
+        required,
+        url
       }
     }
   },
@@ -438,9 +410,6 @@ export default {
     },
     hideModal(refname) {
       this.$refs[refname].hide();
-    },
-    changeDisplayMode(displayType) {
-      this.displayMode = displayType;
     },
     changePageSize(perPage) {
       this.perPage = perPage;
@@ -530,21 +499,20 @@ export default {
         identificacion: this.newItem.identificacion,
         direccion: this.newItem.direccion,
         celular: this.newItem.celular,
-        email: this.newItem.email
+        email: this.newItem.email,
+        logo: this.newItem.urlLogo
       };
       // if its still pending or an error is returned do not submit
       if (this.$v.newItem.$pending || this.$v.newItem.$error) return;
 
       console.log(JSON.stringify(taller));
       ServicesCore.createTaller(taller).then(response => {
-        if(response.status == 200){
+        if (response.status == 200) {
           this.loadItems();
-          this.hideModal('modalbasic');
-        }else{
-
+          this.hideModal("modalbasic");
+        } else {
         }
-        
-      })
+      });
     }
   },
   computed: {

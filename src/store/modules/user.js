@@ -1,7 +1,6 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
-import axios from 'axios'
-import { apiBranchUrl } from '../../constants/config'
+import ServicesCore from "../../services/service";
 
 export default {
   state: {
@@ -70,13 +69,14 @@ export default {
               photoUrl: user.user.photoURL
             }
 
-            console.log('Resultado usuario autenticado :::: > ', newUser);
+            //console.log('Resultado usuario autenticado :::: > ', newUser);
             const item = { uid: newUser.uid, ...newUser }
             localStorage.setItem('user', JSON.stringify(item))
             commit('setUser', { uid: newUser.uid, ...newUser })
 
           },
           err => {
+            console.debug('Error register ::::>',err);
             localStorage.removeItem('user')
             commit('setError', err.message)
             setTimeout(() => {
@@ -126,17 +126,17 @@ export default {
     register({ commit }, payload) {
       commit('clearError')
       commit('setProcessing', true)
-    axios
-        .post(`${apiBranchUrl}/usuario/createFireBaseUser`, payload)
-        .then(user => {
+      payload.tipoUsuario = "AdminTaller";
+      //TODO: RollbackUSer firebase en caso de error
+      ServicesCore.registrarUsuario(payload).then(user => {
           console.debug('Resultado usuario firebase :::> ', user.data);
-          const item = { uid: user.uid, ...user.data }
+          const item = { uid: user.data.uid, ...user.data }
           //const item = { uid: user.user.uid, ...currentUser }
           localStorage.setItem('user', JSON.stringify(item))
           commit('setUser', { uid: user.uid, ...user.data })
         },
           err => {
-            console.error('Error firebase :::> ', err.message);
+            console.error('Error firebase :::> ', err);
             commit('setError', err.message)
             setTimeout(() => {
               commit('clearError')
@@ -156,10 +156,7 @@ export default {
     },
     fetchUser({ commit }, user) {
       if (user) {
-        commit("SET_USER", {
-          fullname: user.fullname,
-          email: user.email
-        });
+        commit('setUser', { uid: user.uid, ...user.data })
       } else {
         localStorage.removeItem('user')
         commit('setLogout')

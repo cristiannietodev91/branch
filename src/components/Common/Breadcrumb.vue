@@ -33,7 +33,7 @@ export default {
         rawPaths = rawPaths.filter(x => x !== this.$route.params[pName])
       }
     }
-    rawPaths.map((sub, index) => {
+    rawPaths.map((sub, index) => {      
       this.items.push({
         text: this.$t('menu.' + sub),
         to: this.getUrl(path, sub, index)

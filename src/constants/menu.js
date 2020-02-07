@@ -1,28 +1,5 @@
 const data = [
   {
-    id: "talleres",
-    icon: "iconsminds-car",
-    label: "menu.branch.taller",
-    to: "/app/taller",
-    subs: [
-      {
-        icon: "simple-icon-list",
-        label: "branch.taller.listaTalleres",
-        to: "/app/taller/listTalleres"
-      },
-      {
-        icon: "simple-icon-briefcase",
-        label: "menu.branch.detailTaller",
-        to: "/app/taller/detailTaller/1"
-      },
-      {
-        icon: "simple-icon-people",
-        label: "menu.branch.listClientes",
-        to: "/app/taller/listClients/1"
-      }
-    ]
-  },
-  {
     id: "dashboards",
     icon: "iconsminds-shop-4",
     label: "menu.dashboards",
@@ -47,6 +24,29 @@ const data = [
       label: "menu.content",
       to: "/app/dashboards/content"
     }
+    ]
+  }, 
+  {
+    id: "talleres",
+    icon: "iconsminds-car",
+    label: "menu.taller",
+    to: "/app/taller",
+    subs: [
+      {
+        icon: "simple-icon-list",
+        label: "branch.taller.listaTalleres",
+        to: "/app/taller/listTalleres"
+      },
+      {
+        icon: "simple-icon-briefcase",
+        label: "menu.detailTaller",
+        to: "/app/taller/detailTaller/1"
+      },
+      {
+        icon: "simple-icon-people",
+        label: "menu.listClients",
+        to: "/app/taller/listClients/1"
+      }
     ]
   },
   {

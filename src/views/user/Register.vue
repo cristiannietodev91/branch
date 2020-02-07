@@ -4,10 +4,10 @@
       <b-card class="auth-card" no-body>
         <div class="position-relative image-side">
           <p class="text-white h2">{{ $t('branch.frase') }}</p>
-          <p class="white mb-0">
-            Please use this form to register.
-            <br />If you are a member, please
-            <router-link tag="a" to="/user/login" class="white">login</router-link>.
+          <p class="mb-0">
+            Por favor llene los datos para crear una cuenta
+            <br />Si ya está registrado puede
+            <router-link tag="a" to="/user/login" class>iniciar sesión</router-link>.
           </p>
         </div>
         <div class="form-side">
@@ -22,10 +22,12 @@
                 v-model="$v.form.fullname.$model"
                 :state="!$v.form.fullname.$error"
               />
-              <b-form-invalid-feedback v-if="!$v.form.fullname.required">Please enter your name</b-form-invalid-feedback>
+              <b-form-invalid-feedback
+                v-if="!$v.form.fullname.required"
+              >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
               <b-form-invalid-feedback
                 v-else-if="!$v.form.fullname.minLength"
-              >Your name must be minimum 4 characters</b-form-invalid-feedback>
+              >{{$t('branch.forms.validations.longitud')}}</b-form-invalid-feedback>
             </b-form-group>
             <b-form-group :label="$t('user.identificacion')" class="has-float-label mb-4">
               <b-form-input
@@ -33,10 +35,12 @@
                 v-model="$v.form.identificacion.$model"
                 :state="!$v.form.identificacion.$error"
               />
-              <b-form-invalid-feedback v-if="!$v.form.identificacion.required">Please enter your ID</b-form-invalid-feedback>
+              <b-form-invalid-feedback
+                v-if="!$v.form.identificacion.required"
+              >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
               <b-form-invalid-feedback
                 v-else-if="!$v.form.identificacion.minLength"
-              >Your ID must be minimum 4 characters</b-form-invalid-feedback>
+              >{{$t('branch.forms.validations.longitud')}}</b-form-invalid-feedback>
             </b-form-group>
             <b-form-group :label="$t('user.email')" class="has-float-label mb-4">
               <b-form-input
@@ -46,13 +50,13 @@
               />
               <b-form-invalid-feedback
                 v-if="!$v.form.email.required"
-              >Please enter your email address</b-form-invalid-feedback>
+              >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
               <b-form-invalid-feedback
                 v-else-if="!$v.form.email.email"
-              >Please enter a valid email address</b-form-invalid-feedback>
+              >{{$t('branch.forms.validations.email')}}</b-form-invalid-feedback>
               <b-form-invalid-feedback
                 v-else-if="!$v.form.email.minLength"
-              >Your email must be minimum 4 characters</b-form-invalid-feedback>
+              >{{$t('branch.forms.validations.longitug')}}</b-form-invalid-feedback>
             </b-form-group>
             <b-form-group :label="$t('user.password')" class="has-float-label mb-4">
               <b-form-input
@@ -60,10 +64,12 @@
                 v-model="$v.form.password.$model"
                 :state="!$v.form.password.$error"
               />
-              <b-form-invalid-feedback v-if="!$v.form.password.required">Please enter your password</b-form-invalid-feedback>
+              <b-form-invalid-feedback
+                v-if="!$v.form.password.required"
+              >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
               <b-form-invalid-feedback
                 v-else-if="!$v.form.password.minLength"
-              >Your password must be minimum 4 characters</b-form-invalid-feedback>
+              >{{$t('branch.forms.validations.longitud')}}</b-form-invalid-feedback>
             </b-form-group>
 
             <div class="d-flex justify-content-end align-items-center">
@@ -135,18 +141,20 @@ export default {
       console.log("register");
       this.$v.$touch();
       this.$v.form.$touch();
-      this.register({
-        fullname: this.form.fullname,
-        identificacion: this.form.identificacion,
-        email: this.form.email,
-        password: this.form.password
-      });
+      if (!this.$v.form.$anyError) {
+        this.register({
+          fullname: this.form.fullname,
+          identificacion: this.form.identificacion,
+          email: this.form.email,
+          password: this.form.password
+        });
+      }
       //this.$router.push('/')
     }
   },
   watch: {
     currentUser(val) {
-      console.log('Userr wtach ::::>',val)
+      console.log("Userr wtach ::::>", val);
       if (val && val.uid && val.uid.length > 0) {
         setTimeout(() => {
           this.$router.push("/");

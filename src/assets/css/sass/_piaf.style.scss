@@ -46,7 +46,7 @@ Table of Contents
 */
 
 /* 00.Variables and Imports */
-@import url("https://fonts.googleapis.com/css?family=Nunito:300,400,400i,600,700");
+@import url("https://fonts.googleapis.com/css?family=IBM+Plex+Sans:300,400,400i,600,700&display=swap");
 
 $main-menu-item-height: 110px;
 $main-menu-width: 120px;
@@ -126,7 +126,7 @@ html {
 }
 
 body {
-  font-family: "Nunito", sans-serif;
+  font-family: "IBM Plex Sans", sans-serif;
   font-size: 0.8rem;
   font-weight: 400;
   color: $primary-color;
@@ -151,7 +151,8 @@ body {
 }
 
 .fixed-background {
-  background: url("/assets/img/balloon.png") no-repeat center center fixed;
+  // background: url("/assets/img/branch-banner-inicio.jpg") no-repeat center center fixed;
+  background: url($bgPath) no-repeat center center fixed;
   background-size: cover;
   width: 100%;
   height: 100%;
@@ -360,12 +361,11 @@ hr {
 }
 
 .logo-single {
-  width: 110px;
-  height: 35px;
-  background: url($logoPath) no-repeat;
-  background-position: center center;
+  width: 220px;
+  height: 58px;
+  background: url($logoPath) no-repeat center center;
   display: inline-block;
-  margin-bottom: 60px;
+  margin-bottom: 10px;
 }
 
 .list-item-heading {
@@ -434,7 +434,7 @@ a {
 p {
   font-size: 0.85rem;
   line-height: 1.3rem;
-  font-family: "Nunito", sans-serif;
+  font-family: "IBM Plex Sans", sans-serif;
 }
 
 .text-large {
@@ -689,6 +689,9 @@ p {
 
 .white {
   color: $button-text-color !important;
+  a{
+    color: $theme-color-1 !important;
+  }
 }
 
 .opacity-25 {
@@ -771,7 +774,7 @@ button {
 }
 
 .btn-primary {
-  background-color: $theme-color-1;
+  background-color: $theme-color-4;
   border-color: $theme-color-1;
   color: $button-text-color;
 
@@ -1924,6 +1927,7 @@ button {
     background: $background-color;
 
     input {
+      border-radius: 50px;
       border: initial;
       background: transparent;
       outline: initial !important;
@@ -2953,7 +2957,7 @@ main {
 /* 16.Cards*/
 .card {
   border: initial;
-  background: $foreground-color;
+  background: rgba($background-color, .7);
 
   .card-header .card-icon {
     right: 5px;
@@ -4134,7 +4138,7 @@ div[data-notify="container"] {
 }
 
 .form-control:focus {
-  background: $input-background !important;
+  background: rgba($input-background, .2) !important;
   color: $primary-color !important;
 }
 
@@ -4545,7 +4549,7 @@ select.form-control:not([size]):not([multiple]) {
   font-size: 0.8rem;
   width: 100% !important;
   outline: initial;
-  font-family: "Nunito", sans-serif !important;
+  font-family: "IBM Plex Sans", sans-serif !important;
   box-shadow: initial !important;
   border-width: 0 0 0 0 !important;
   border-color: $separator-color !important;
@@ -4556,7 +4560,7 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .c-pane-container {
-  font-family: "Nunito", sans-serif !important;
+  font-family: "IBM Plex Sans", sans-serif !important;
   font-weight: 400 !important;
   background-color: $input-background !important;
   font-size: 0.8rem !important;
@@ -5011,14 +5015,15 @@ select.form-control:not([size]):not([multiple]) {
 .form-control,
 .form-control.is-valid  {
   height: initial;
-  border-radius: $border-radius;
+  // border-radius: $border-radius-rounded;
+  border-radius: 50px;
   outline: initial !important;
   box-shadow: initial !important;
   font-size: 0.8rem;
   padding: 0.7rem 0.75rem 0.65rem 0.75rem;
   line-height: 1.5;
   border: 1px solid $separator-color;
-  background: $input-background;
+  background: rgba($input-background, .4);
   color: $primary-color;
 }
 
@@ -6046,8 +6051,9 @@ input:-webkit-autofill {
 
   .image-side {
     width: 40%;
-    background: url("/assets/img/login-balloon.jpg") no-repeat center top;
-    background-size: cover;
+    // background: url("/assets/img/login-balloon.jpg") no-repeat center top;
+    // background-size: cover;
+    background: rgba($input-background, .7);
     padding: 80px 40px;
 
     .h3 {
@@ -6211,7 +6217,7 @@ input:-webkit-autofill {
 .RichEditor-root {
   background: $foreground-color;
   border: 1px solid $separator-color;
-  font-family: "Nunito", sans-serif;
+  font-family: "IBM Plex Sans", sans-serif;
   font-size: 14px;
   padding: 15px;
 }
@@ -6254,7 +6260,7 @@ input:-webkit-autofill {
 }
 
 .RichEditor-controls {
-  font-family: "Nunito", sans-serif;
+  font-family: "IBM Plex Sans", sans-serif;
   font-size: 12px;
   margin-bottom: 5px;
   user-select: none;
@@ -6328,14 +6334,14 @@ input:-webkit-autofill {
 }
 
 .theme-colors {
-  width: 280px;
+  width: 125px;
   position: fixed;
   z-index: 1030;
   top: 50%;
   right: 0;
-  background: $foreground-color;
+  background: $background-color;
   @include depth(1);
-  transform: translate(280px, -50%);
+  transform: translate(125px, -50%);
   transition: transform 0.4s ease-out;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -6343,7 +6349,7 @@ input:-webkit-autofill {
   .theme-button {
     position: absolute;
     left: -34px;
-    background: $foreground-color;
+    background: $background-color;
     padding: 13px 7px 13px 7px;
     border-radius: 0.2rem;
     color: $primary-color;
@@ -6406,7 +6412,7 @@ input:-webkit-autofill {
 .has-float-label label::after,
 .has-float-label legend::after,
 .has-float-label > span::after {
-  background: $foreground-color !important;
+  background: $background-color !important;
 }
 .has-float-label legend{
   width: auto;
@@ -6741,7 +6747,7 @@ input:-webkit-autofill {
     }
 
     span {
-      font-family: "Nunito", sans-serif;
+      font-family: "IBM Plex Sans", sans-serif;
       font-size: 0.8rem;
       font-weight: 400;
       margin-left: 0.5rem;
@@ -6885,7 +6891,7 @@ input:-webkit-autofill {
   cursor: pointer;
 
   span {
-    font-family: "Nunito", sans-serif;
+    font-family: "IBM Plex Sans", sans-serif;
     font-size: 0.8rem;
     font-weight: 400;
     margin-left: 0.5rem;
@@ -7060,7 +7066,7 @@ input:-webkit-autofill {
 
 .video-js.side-bar-video {
   width: 100%;
-  height: 280px;
+  height: 125px;
   background-color: $background-color;
   overflow: hidden;
 
@@ -9269,7 +9275,7 @@ i.large-icon {
   }
 
   .theme-colors {
-    transform: translate(-280px, -50%);
+    transform: translate(-125px, -50%);
     left: 0;
     right: initial;
 
@@ -9284,7 +9290,7 @@ i.large-icon {
   }
 
   .theme-colors {
-    transform: translate(-280px, -50%);
+    transform: translate(-125px, -50%);
     left: 0;
     right: initial;
 
@@ -9536,3 +9542,17 @@ footer.page-footer {
     }
   }
 }
+ // ================== MUNE'S STYLES ==================
+
+ .login-brand{
+    margin: 0;
+    padding: 0;
+    a{
+      display: block;
+      .brand-text{
+        text-indent: -9999px;
+        display: block;
+        height: 0;
+      }
+    }
+ }

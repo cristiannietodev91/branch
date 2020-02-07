@@ -224,6 +224,7 @@
 <script>
 import {
   required,
+  requiredIf,
   minLength,
   maxLength,
   email
@@ -317,11 +318,16 @@ export default {
         required
       },
       celular: {
-        required,
+        required: requiredIf(function (celular) {
+          return !this.newItem.email
+        }),
         maxLength: maxLength(10),
         minLength: minLength(10)
       },
       email: {
+        required: requiredIf(function (email) {
+          return !this.newItem.celular
+        }),
         email
       }
     }
