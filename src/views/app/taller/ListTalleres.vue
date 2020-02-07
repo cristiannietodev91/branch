@@ -393,20 +393,7 @@ export default {
         this.lastPage = response.last_page;
         this.isLoad = true;
         return response.data;
-      });
-      /*.then(res => {
-          console.debug("Resultado lista de talleres 2::::>", res.data);
-          if (res) {
-            this.total = res.total;
-            this.from = res.from;
-            this.to = res.to;
-            this.items = res.data;
-            this.perPage = res.per_page;
-            this.selectedItems = [];
-            this.lastPage = res.last_page;
-            this.isLoad = true;
-          }
-        });*/
+      });      
     },
     hideModal(refname) {
       this.$refs[refname].hide();
@@ -509,7 +496,7 @@ export default {
       ServicesCore.createTaller(taller).then(response => {
         if (response.status == 200) {
           this.loadItems();
-          this.hideModal("modalbasic");
+          this.hideModal("modalAddTaller");
         } else {
         }
       });
