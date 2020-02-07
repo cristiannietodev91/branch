@@ -1,5 +1,6 @@
 var citaDAO = require('../dao/citaDAO');
 var vehiculoDAO = require('../dao/vehiculoDAO');
+var sms = require('../utils/sendSms')
 var HttpStatus = require('http-status-codes');
 
 const getAllCitas = (req, res, next) => {
@@ -51,6 +52,12 @@ const createCita = (req, res, next) => {
                             }
                         } else {
                             if (cita) {
+                                console.log('Usuario asociado a vehiculo',vehiculo[0]);
+                                if(vehiculo[0].Usuario.celular){
+                                    var textoSms = "Se ha agendado una cita para el vehiculo "+vehiculo[0].placa+" el dia " +cita.fechaCita +" en el taller BRANCH";
+                                    sms.sendSMSTwilio(vehiculo[0].Usuario.celular,textoSms);
+                                }
+                                
                                 return res.status(HttpStatus.OK).json(cita);
                                 /*citaDAO.getById(cita.IdCita, function (error, cita) {
                                     if (error) {

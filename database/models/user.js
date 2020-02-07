@@ -33,8 +33,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     celular: {
-      type: Sequelize.STRING,
-      allowNull: false
+      type: Sequelize.STRING
     },
     tipoUsuario: {
       type: Sequelize.ENUM('Cliente', 'AdminTaller'),

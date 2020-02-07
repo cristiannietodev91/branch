@@ -72,8 +72,10 @@ const createVehiculo = (req, res, next) => {
                                     } else {
                                         if (vehiculo) {
                                             //Send SMS al usuario al que pertenece el vehiculo para que ingrese a administrar el vehiculo
-                                            var textoSms = "Se ha registrado el vehiculo "+vehiculo.placa+" por el taller BRANCH lo invitamos a que se registre en el siguiente link para que disfrute los beneficios BRANCH http://localhost:8080";
-                                            sms.sendSMSTwilio(userRecord.phoneNumber,textoSms);
+                                            if(userRecord.celular){
+                                                var textoSms = "Se ha registrado el vehiculo "+vehiculo.placa+" por el taller BRANCH lo invitamos a que se registre en el siguiente link para que disfrute los beneficios BRANCH http://localhost:8080";
+                                                sms.sendSMSTwilio(userRecord.celular,textoSms);
+                                            }
                                             return res.status(HttpStatus.OK).json(vehiculo);                                            
                                         } else {
                                             return res.status(HttpStatus.OK).json({ error: "No se creo el vehiculo" });

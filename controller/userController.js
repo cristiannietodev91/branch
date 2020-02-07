@@ -40,18 +40,19 @@ const createFireBaseUsuario = async (req, res, next) => {
             password: usuario.password,
             fullname: usuario.fullname,
             celular: usuario.celular,
-            identificacion: usuario.identificacion
-        }       
-        
-        createUsuarioNew(usuario, function (error, userRecord) {
-            if(error){
-                return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
-            }else{
-                if (userRecord) {
-                    res.status(HttpStatus.OK).json(userRecord);
+            identificacion: usuario.identificacion,
+            tipoUsuario: usuario.tipoUsuario
+        }
+
+        createUsuarioNew(usuario, function (error, usuarioResult) {
+            if (error) {
+                return res.status(HttpStatus.METHOD_FAILURE).send({ message: error.message });
+            } else {
+                if (usuarioResult) {
+                    res.status(HttpStatus.OK).json(usuarioResult);
                 }
             }
-            
+
         })
     } catch (error) {
         console.error('Error al crear usuario ', error);
@@ -137,38 +138,26 @@ const createUsuarioNew = (usuario, cb) => {
         displayName: usuario.fullname,
         disabled: false
     }).then(function (userRecord) {
-        // See the UserRecord reference doc for the contents of userRecord.
-        admin.auth().setCustomUserClaims(userRecord.uid, {
-            fullname: usuario.fullname,
-            identificacion: usuario.identificacion
-        }).then(function () {
-            //userRecord.getIdToken(true);
-            // Tell client to refresh token on user.
-            // Lookup the user associated with the specified uid.
-            admin.auth().getUser(userRecord.uid).then((userAct) => {
-                // The claims can be accessed on the user record.
-                //console.debug('Resultado userClaim :::::>', userAct);
-                var usuarioDb = {
-                    firstName: userAct.displayName,
-                    email: userAct.email,
-                    uid: userAct.uid,
-                    celular: userAct.phoneNumber,
-                    tipoUsuario: 'Cliente',
-                    estado: 'Pendiente'
+
+        var usuarioDb = {
+            firstName: userRecord.displayName,
+            email: userRecord.email,
+            uid: userRecord.uid,
+            celular: userRecord.phoneNumber,
+            identificacion: usuario.identificacion,
+            tipoUsuario: usuario.tipoUsuario,
+            estado: 'Pendiente'
+        }
+        usersDAO.create(usuarioDb, function (error, usuario) {
+            if (error) {
+                cb(error, null);
+            } else {
+                if (usuario) {
+                    cb(null, usuario);
+                } else {
+                    cb({ message: "No se creo el usuario" }, null)
                 }
-                usersDAO.create(usuarioDb, function (error, usuario) {
-                    if (error) {
-                        cb(error,null);
-                    } else {
-                        if (usuario) {
-                            cb(null,userAct);
-                        } else {
-                            cb({ message: "No se creo el usuario"},null)                            
-                        }
-                    }
-                });
-                
-            });
+            }
         });
     }).catch(function (error) {
         cb(error, null);

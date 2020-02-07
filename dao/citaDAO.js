@@ -15,7 +15,7 @@ module.exports = {
             });
         }).then(function (result) {
             if (result) {
-                console.debug('Resultado transaccion crear cita :::: >', result);
+                //console.debug('Resultado transaccion crear cita :::: >', result);
                 var citaCreated = result.dataValues;
                 cb(null, citaCreated);
             } else {
