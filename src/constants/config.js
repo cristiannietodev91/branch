@@ -27,7 +27,7 @@ export const firebaseConfig = {
 
 export const apiUrl = 'https://api.coloredstrategies.com'
 
-export const apiBranchUrl = 'http://localhost:3000'
+export const apiBranchUrl = process.env.VUE_APP_URLBACKSERVICES
 
 export const currentUser = {
   id: 1,

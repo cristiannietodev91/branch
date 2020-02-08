@@ -1,12 +1,13 @@
 {
-  "name": "piaf-vue",
-  "version": "4.0.2",
-  "description": "Piaf - Vue 2 Bootstrap 4 Admin Dashboard Template",
-  "author": "Colored Strategies <support@coloredstrategies.com>",
+  "name": "branch",
+  "version": "0.0.4",
+  "description": "Administrador de Tallers Branch",
+  "author": "Cristian Nieto (cristianandresnieto@gmail.com)",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "start": "node server.js"
   },
   "dependencies": {
     "@glidejs/glide": "^3.4.1",
