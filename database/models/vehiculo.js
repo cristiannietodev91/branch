@@ -67,7 +67,7 @@ module.exports = (sequelize, DataTypes) => {
             onDelete: 'CASCADE',
         });
 
-        Vehiculo.belongsTo(models.Usuarios, {
+        Vehiculo.belongsTo(models.usuarios, {
             foreignKey: 'IdUsuario',
             targetKey: 'uid',
             target_id: 'uid'
