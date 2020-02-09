@@ -84,10 +84,10 @@ module.exports = {
             return models.vehiculo.findAll({
                 include:[
                     {
-                        model: models.Marca
+                        model: models.marca
                     },
                     {
-                        model: models.Usuarios
+                        model: models.usuarios
                     }
                 ],
                 

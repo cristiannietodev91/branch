@@ -50,7 +50,7 @@ module.exports = {
             return models.taller.findByPk(IdTaller, {
                 include:
                 {
-                    model: models.Mecanico
+                    model: models.mecanico
                 }
             }).then(taller => {
                 return taller;

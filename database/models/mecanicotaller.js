@@ -6,13 +6,13 @@ module.exports = (sequelize, DataTypes) => {
     IdTaller: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'Taller'
+        model: 'taller'
       }
     },
     IdMecanico: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'Mecanico'
+        model: 'mecanico'
       }
     }
     

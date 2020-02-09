@@ -84,7 +84,7 @@ module.exports = {
             return models.cita.findAll({
                 include: [
                     {
-                        model: models.Vehiculo
+                        model: models.vehiculo
                     }
                 ],
                 where: filter
