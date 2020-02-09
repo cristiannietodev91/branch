@@ -2,7 +2,7 @@
 const Sequelize = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-    const Taller = sequelize.define('Taller', {
+    const Taller = sequelize.define('taller', {
         IdTaller: {
             type: Sequelize.INTEGER,
             primaryKey: true,
@@ -57,7 +57,7 @@ module.exports = (sequelize, DataTypes) => {
     }, {});
     Taller.associate = function (models) {
         // associations can be defined here
-        Taller.hasMany(models.Vehiculo, {
+        Taller.hasMany(models.vehiculo, {
             foreignKey: 'IdTaller',
             as: 'vehiculos',
             onDelete: 'CASCADE',

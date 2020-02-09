@@ -28,12 +28,12 @@ module.exports = (sequelize, DataTypes) => {
     }, {});
     Cita.associate = function (models) {
         // associations can be defined here
-        Cita.belongsTo(models.Taller, {
+        Cita.belongsTo(models.taller, {
             foreignKey: 'IdTaller',
             target_id: 'IdTaller'
         });
 
-        Cita.belongsTo(models.Vehiculo, {
+        Cita.belongsTo(models.vehiculo, {
             foreignKey: 'IdVehiculo',
             target_id: 'IdVehiculo'
         });

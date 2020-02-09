@@ -3,14 +3,14 @@ const models = require("../database/models");
 module.exports = {
     findAll: function (cb) {
         // Find all users
-        models.Marca.findAll().then(marcas => {
+        models.marca.findAll().then(marcas => {
             cb(null, marcas);
         });
     },
     create: function (marca, cb) {
         // Find all users
         return models.sequelize.transaction((t1) => {
-            return models.Marca.create(marca).then(marca => {
+            return models.marca.create(marca).then(marca => {
                 return marca;
             });
         }).then(function (result) {
@@ -29,7 +29,7 @@ module.exports = {
     update: function (IdMarca, marca, cb) {
         // Find all users
         return models.sequelize.transaction((t1) => {
-            return models.Marca.update(marca, {
+            return models.marca.update(marca, {
                 where: { IdMarca: IdMarca }
             }).then(marca => {
                 return marca;
@@ -48,7 +48,7 @@ module.exports = {
     getById: function (IdMarca, cb) {
         // Find all users
         return models.sequelize.transaction((t1) => {
-            return models.Marca.findByPk(IdMarca).then(marca => {
+            return models.marca.findByPk(IdMarca).then(marca => {
                 return marca;
             });
         }).then(function (result) {
@@ -66,7 +66,7 @@ module.exports = {
     deleteById: function (IdMarca, cb) {
         // Find all users
         return models.sequelize.transaction((t1) => {
-            return models.Marca.destroy({
+            return models.marca.destroy({
                 where: { IdMarca: IdMarca }
             }).then(deleted => {
                 return deleted;

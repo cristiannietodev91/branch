@@ -3,14 +3,14 @@ const models = require("../database/models");
 module.exports = {
     findAll: function (cb) {
         // Find all users
-        models.Mecanico.findAll().then(mecanicos => {
+        models.mecanico.findAll().then(mecanicos => {
             cb(null, mecanicos);
         });
     },
     create: function (mecanico, cb) {
         // Find all users
         return models.sequelize.transaction((t1) => {
-            return models.Mecanico.create(mecanico).then(async createdmecanico => {
+            return models.mecanico.create(mecanico).then(async createdmecanico => {
                 await createdmecanico.addTallers([mecanico.taller.IdTaller]);
                 return createdmecanico;
             });
@@ -30,7 +30,7 @@ module.exports = {
     update: function (IdMecanico, mecanico, cb) {
         // Find all users
         return models.sequelize.transaction((t1) => {
-            return models.Mecanico.update(mecanico, {
+            return models.mecanico.update(mecanico, {
                 where: { IdMecanico: IdMecanico }
             }).then(mecanico => {
                 return mecanico;
@@ -49,7 +49,7 @@ module.exports = {
     getById: function (IdMecanico, cb) {
         // Find all users
         return models.sequelize.transaction((t1) => {
-            return models.Mecanico.findByPk(IdMecanico).then(mecanico => {
+            return models.mecanico.findByPk(IdMecanico).then(mecanico => {
                 return mecanico;
             });
         }).then(function (result) {
@@ -67,7 +67,7 @@ module.exports = {
     deleteById: function (IdMecanico, cb) {
         // Find all users
         return models.sequelize.transaction((t1) => {
-            return models.Mecanico.destroy({
+            return models.mecanico.destroy({
                 where: { IdMecanico: IdMecanico }
             }).then(deleted => {
                 return deleted;

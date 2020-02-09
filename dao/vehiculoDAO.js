@@ -3,14 +3,14 @@ const models = require("../database/models");
 module.exports = {
     findAll: function (cb) {
         // Find all users
-        models.Vehiculo.findAll().then(vehiculos => {
+        models.vehiculo.findAll().then(vehiculos => {
             cb(null, vehiculos);
         });
     },
     create: function (vehiculo, cb) {
         // Find all users
         return models.sequelize.transaction((t1) => {
-            return models.Vehiculo.create(vehiculo).then(vehiculo => {
+            return models.vehiculo.create(vehiculo).then(vehiculo => {
                 return vehiculo;
             });
         }).then(function (result) {
@@ -29,7 +29,7 @@ module.exports = {
     update: function (IdVehiculo, vehiculo, cb) {
         // Find all users
         return models.sequelize.transaction((t1) => {
-            return models.Vehiculo.update(vehiculo, {
+            return models.vehiculo.update(vehiculo, {
                 where: { IdVehiculo: IdVehiculo }
             }).then(vehiculo => {
                 return vehiculo;
@@ -48,7 +48,7 @@ module.exports = {
     getById: function (IdVehiculo, cb) {
         // Find all users
         return models.sequelize.transaction((t1) => {
-            return models.Vehiculo.findByPk(IdVehiculo).then(vehiculo => {
+            return models.vehiculo.findByPk(IdVehiculo).then(vehiculo => {
                 return vehiculo;
             });
         }).then(function (result) {
@@ -66,7 +66,7 @@ module.exports = {
     deleteById: function (IdVehiculo, cb) {
         // Find all users
         return models.sequelize.transaction((t1) => {
-            return models.Vehiculo.destroy({
+            return models.vehiculo.destroy({
                 where: { IdVehiculo: IdVehiculo }
             }).then(deleted => {
                 return deleted;
@@ -81,7 +81,7 @@ module.exports = {
     findAllByFilter: function (filter,cb) {
         // Find all users
         return models.sequelize.transaction((t1) => {
-            return models.Vehiculo.findAll({
+            return models.vehiculo.findAll({
                 include:[
                     {
                         model: models.Marca

@@ -2,7 +2,7 @@
 const Sequelize = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  const Marca = sequelize.define('Marca', {
+  const Marca = sequelize.define('marca', {
     IdMarca: {
       type: Sequelize.INTEGER,
       primaryKey: true,

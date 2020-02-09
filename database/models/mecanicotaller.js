@@ -2,7 +2,7 @@
 const Sequelize = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  const MecanicoTaller = sequelize.define('MecanicoTaller', {
+  const MecanicoTaller = sequelize.define('mecanicotaller', {
     IdTaller: {
       type: DataTypes.INTEGER,
       references: {
@@ -19,12 +19,12 @@ module.exports = (sequelize, DataTypes) => {
 
   }, {});
   MecanicoTaller.associate = function (models) {
-    models.Taller.belongsToMany(models.Mecanico, {
+    models.taller.belongsToMany(models.mecanico, {
       through: MecanicoTaller,
       foreignKey: 'IdTaller'
     });
     // associations can be defined here
-    models.Mecanico.belongsToMany(models.Taller, {
+    models.mecanico.belongsToMany(models.taller, {
       through: MecanicoTaller,
       foreignKey: 'IdMecanico'
     });

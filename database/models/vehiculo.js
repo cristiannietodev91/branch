@@ -2,7 +2,7 @@
 const Sequelize = require('sequelize');
 //TODO: Pendiente foreing key tabla vehiculo columna IdMarca
 module.exports = (sequelize, DataTypes) => {
-    const Vehiculo = sequelize.define('Vehiculo', {
+    const Vehiculo = sequelize.define('vehiculo', {
         IdVehiculo: {
             type: Sequelize.INTEGER,
             primaryKey: true,
@@ -50,12 +50,12 @@ module.exports = (sequelize, DataTypes) => {
     }, {});
     Vehiculo.associate = function (models) {
         // associations can be defined here
-        Vehiculo.belongsTo(models.Marca, {
+        Vehiculo.belongsTo(models.marca, {
             foreignKey: 'IdMarca',
             target_id: 'IdMarca'
         });        
 
-        Vehiculo.belongsTo(models.Taller, {
+        Vehiculo.belongsTo(models.taller, {
             foreignKey: 'IdTaller',
             target_id: 'IdTaller',
             as: 'taller'
