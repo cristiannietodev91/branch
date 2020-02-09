@@ -63,7 +63,7 @@ module.exports = (sequelize, DataTypes) => {
             onDelete: 'CASCADE',
         });
 
-        Taller.hasMany(models.Cita, {
+        Taller.hasMany(models.cita, {
             foreignKey: 'IdCita',
             as: 'citas',
             onDelete: 'CASCADE',

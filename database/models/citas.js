@@ -2,7 +2,7 @@
 const Sequelize = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-    const Cita = sequelize.define('Cita', {
+    const Cita = sequelize.define('cita', {
         IdCita: {
             type: Sequelize.INTEGER,
             primaryKey: true,

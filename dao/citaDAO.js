@@ -3,14 +3,14 @@ const models = require("../database/models");
 module.exports = {
     findAll: function (cb) {
         // Find all users
-        models.Cita.findAll().then(citas => {
+        models.cita.findAll().then(citas => {
             cb(null, citas);
         });
     },
     create: function (cita, cb) {
         // Find all users
         return models.sequelize.transaction((t1) => {
-            return models.Cita.create(cita).then(cita => {
+            return models.cita.create(cita).then(cita => {
                 return cita;
             });
         }).then(function (result) {
@@ -29,7 +29,7 @@ module.exports = {
     update: function (IdCita, cita, cb) {
         // Find all users
         return models.sequelize.transaction((t1) => {
-            return models.Cita.update(cita, {
+            return models.cita.update(cita, {
                 where: { IdCita: IdCita }
             }).then(cita => {
                 return cita;
@@ -48,7 +48,7 @@ module.exports = {
     getById: function (IdCita, cb) {
         // Find all users
         return models.sequelize.transaction((t1) => {
-            return models.Cita.findByPk(IdCita).then(cita => {
+            return models.cita.findByPk(IdCita).then(cita => {
                 return cita;
             });
         }).then(function (result) {
@@ -66,7 +66,7 @@ module.exports = {
     deleteById: function (IdCita, cb) {
         // Find all users
         return models.sequelize.transaction((t1) => {
-            return models.Cita.destroy({
+            return models.cita.destroy({
                 where: { IdCita: IdCita }
             }).then(deleted => {
                 return deleted;
@@ -81,7 +81,7 @@ module.exports = {
     findAllByFilter: function (filter, cb) {
         // Find all users
         return models.sequelize.transaction((t1) => {
-            return models.Cita.findAll({
+            return models.cita.findAll({
                 include: [
                     {
                         model: models.Vehiculo
