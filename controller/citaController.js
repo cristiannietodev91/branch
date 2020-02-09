@@ -188,7 +188,7 @@ const castCitasToEvents = (citas) => {
         var event = {
             id: dataCita.IdCita,
             startDate: dataCita.fechaCita,
-            title: 'Cita vehiculo =>'+dataCita.Vehiculo.placa 
+            title: 'Cita vehiculo =>'+dataCita.vehiculo.placa 
         }
         events.push(event);
     });
