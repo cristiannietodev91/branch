@@ -53,9 +53,9 @@ const createCita = (req, res, next) => {
                         } else {
                             if (cita) {
                                 console.log('Usuario asociado a vehiculo',vehiculo[0]);
-                                if(vehiculo[0].Usuario.celular){
+                                if(vehiculo[0].usuario.celular){
                                     var textoSms = "Se ha agendado una cita para el vehiculo "+vehiculo[0].placa+" el dia " +cita.fechaCita +" en el taller BRANCH";
-                                    sms.sendSMSTwilio(vehiculo[0].Usuario.celular,textoSms);
+                                    sms.sendSMSTwilio(vehiculo[0].usuario.celular,textoSms);
                                 }
                                 
                                 return res.status(HttpStatus.OK).json(cita);
