@@ -168,7 +168,7 @@
             <b-row>
               <b-colxx>
                 <mecanicos-items
-                  v-for="(mecanico,index) in taller.Mecanicos"
+                  v-for="(mecanico,index) in taller.mecanicos"
                   :key="index"
                   :data="mecanico"
                 />

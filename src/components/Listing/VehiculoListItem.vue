@@ -5,8 +5,8 @@
             <router-link :to="`?p=${data.IdVehiculo}`" class="w-40 w-sm-100">
                 <p class="list-item-heading mb-0 truncate">{{data.placa}}</p>
             </router-link>
-            <p class="mb-0 text-muted text-small w-15 w-sm-100">{{data.Usuario.email}}</p>
-            <p class="mb-0 text-muted text-small w-15 w-sm-100">{{data.Usuario.celular}}</p>
+            <p class="mb-0 text-muted text-small w-15 w-sm-100">{{data.usuario.email}}</p>
+            <p class="mb-0 text-muted text-small w-15 w-sm-100">{{data.usuario.celular}}</p>
             <div class="w-15 w-sm-100">
                 <b-badge pill variant="primary">{{ data.estado }}</b-badge>
             </div>
