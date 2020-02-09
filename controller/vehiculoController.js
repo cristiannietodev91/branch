@@ -41,7 +41,8 @@ const createVehiculo = (req, res, next) => {
                         email: vehiculo.email,
                         celular: '+57'+vehiculo.celular,
                         password: '123456',
-                        fullname: 'Sin nombre'
+                        fullname: 'Sin nombre',
+                        tipoUsuario: 'Cliente'
                     }
                     userController.createUsuarioNew(usuario, function (error, userRecord) {
                         if (error) {
