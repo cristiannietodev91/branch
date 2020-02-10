@@ -193,7 +193,30 @@ const getAllVehiculosByIdTaller = (req, res, next) => {
     }
 }
 
+const getAllVehiculosByIdUsuario = (req, res, next) => {
+    try {
+        var IdUsuario = req.params.Id;
+        console.debug('Parametro usuario recibido :::::>', IdUsuario);
 
+        vehiculoDAO.findAllByFilter({ IdUsuario: IdUsuario }, function (error, vehiculos) {
+            if (error) {
+                console.error('Error al realizar la transaccion de buscar vehiculos:::>', 'error ::>', error.message);
+                if (error.errors) {
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
+                } else {
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+                }
+            } else {
+                if (vehiculos) {
+                    res.status(HttpStatus.OK).json(vehiculos);
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error al listar vehiculos ', error);
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+    }
+}
 
 module.exports = {
     getAllVehiculos,
@@ -201,5 +224,6 @@ module.exports = {
     updateVehiculo,
     deleteVehiculoById,
     findVehiculoById,
-    getAllVehiculosByIdTaller
+    getAllVehiculosByIdTaller,
+    getAllVehiculosByIdUsuario
 }

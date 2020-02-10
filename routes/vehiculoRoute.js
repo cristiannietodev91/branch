@@ -9,6 +9,8 @@ router.get('/getById/:Id', vehiculoController.findVehiculoById);
 
 router.get('/getByIdTaller/:Id', vehiculoController.getAllVehiculosByIdTaller);
 
+router.get('/getByIdUsuario/:Id', vehiculoController.getAllVehiculosByIdUsuario);
+
 router.post('/create', vehiculoController.createVehiculo);
 
 router.put('/update/:Id', vehiculoController.updateVehiculo);
