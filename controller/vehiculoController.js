@@ -230,7 +230,12 @@ function crearVehiculoDB(userRecord, vehiculo, cb) {
         IdTaller: vehiculo.IdTaller,
         tipoVehiculo: 'Moto',
         placa: vehiculo.placa,
-        estado: 'Pendiente'
+        estado: 'Pendiente',
+        alias: vehiculo.alias,
+        color: vehiculo.color,
+        fechaCompra: vehiculo.fechaCompra,
+        kilometraje: vehiculo.kilometraje,
+        modelo: vehiculo.modelo
     };
     vehiculoDAO.create(vehiculoRegister, function (error, vehiculo) {
         if (error) {
