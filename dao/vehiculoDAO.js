@@ -88,6 +88,9 @@ module.exports = {
                     },
                     {
                         model: models.usuarios
+                    },
+                    {
+                        model: models.taller
                     }
                 ],
                 
