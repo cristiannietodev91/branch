@@ -57,8 +57,7 @@ module.exports = (sequelize, DataTypes) => {
 
         Vehiculo.belongsTo(models.taller, {
             foreignKey: 'IdTaller',
-            target_id: 'IdTaller',
-            as: 'taller'
+            target_id: 'IdTaller'
         });
 
         Vehiculo.hasMany(models.cita, {
