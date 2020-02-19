@@ -86,6 +86,9 @@ module.exports = {
                     {
                         model: models.vehiculo,
                         where: filterVehiculo
+                    },
+                    {
+                        model: models.taller
                     }
                 ],
                 where: filterCita
