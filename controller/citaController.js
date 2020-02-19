@@ -157,10 +157,9 @@ const findCitaById = (req, res, next) => {
 
 const getAllCitasByIdTaller = (req, res, next) => {
     try {
-        var IdTaller = req.params.Id;
-        console.debug('Parametro taller recibido :::::>', req.query);
+        var IdTaller = req.params.Id;        
 
-        citaDAO.findAllByFilter({ IdTaller: IdTaller }, function (error, citas) {
+        citaDAO.findAllByFilter({ IdTaller: IdTaller }, {}, function (error, citas) {
             if (error) {
                 console.error('Error al realizar la transaccion de buscar citas:::>', 'error ::>', error.message);
                 if (error.errors) {
@@ -172,6 +171,30 @@ const getAllCitasByIdTaller = (req, res, next) => {
                 if (citas) {
                     var events = castCitasToEvents(citas);
                     res.status(HttpStatus.OK).json(events);
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error al listar citas ::::> ', error);
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+    }
+}
+
+const getAllCitasByIdUsuario = (req, res, next) => {
+    try {
+        var IdUsuario = req.params.Id;        
+        
+        citaDAO.findAllByFilter({  },{ IdUsuario :IdUsuario}, function (error, citas) {
+            if (error) {
+                console.error('Error al realizar la transaccion de buscar citas:::>', 'error ::>', error.message);
+                if (error.errors) {
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
+                } else {
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+                }
+            } else {
+                if (citas) {                    
+                    res.status(HttpStatus.OK).json(citas);
                 }
             }
         });
@@ -203,5 +226,6 @@ module.exports = {
     updateCita,
     deleteCitaById,
     findCitaById,
-    getAllCitasByIdTaller
+    getAllCitasByIdTaller,
+    getAllCitasByIdUsuario
 }

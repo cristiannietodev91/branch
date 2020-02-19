@@ -78,16 +78,17 @@ module.exports = {
             cb(err, null);
         });
     },
-    findAllByFilter: function (filter, cb) {
+    findAllByFilter: function (filterCita,filterVehiculo, cb) {
         // Find all users
         return models.sequelize.transaction((t1) => {
             return models.cita.findAll({
                 include: [
                     {
-                        model: models.vehiculo
+                        model: models.vehiculo,
+                        where: filterVehiculo
                     }
                 ],
-                where: filter
+                where: filterCita
             }).then(citas => {
                 return citas;
             });
