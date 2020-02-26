@@ -108,5 +108,35 @@ module.exports = {
         }).catch(function (err) {
             cb(err, null);
         });        
+    },
+    findOneByFilter: function (filter,cb) {
+        // Find all users
+        return models.sequelize.transaction((t1) => {
+            return models.vehiculo.findOne({
+                include:[
+                    {
+                        model: models.marca
+                    },
+                    {
+                        model: models.usuarios
+                    },
+                    {
+                        model: models.taller
+                    }
+                ],                
+                where: filter
+            }).then(vehiculo => {
+                return vehiculo;
+            });
+        }).then(function (result) {
+            if (result) {
+                cb(null, result);
+            } else {
+                cb(null, null);
+            }
+        }).catch(function (err) {
+            cb(err, null);
+        });        
     }
+
 }
