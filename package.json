@@ -4,6 +4,9 @@
   "description": "Administrador de Tallers Branch",
   "author": "Cristian Nieto (cristianandresnieto@gmail.com)",
   "private": true,
+  "engines": {
+    "node": "10.16.0"
+  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
