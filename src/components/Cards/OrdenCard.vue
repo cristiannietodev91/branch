@@ -1,0 +1,169 @@
+<template>
+  <b-card :class="{'d-flex flex-row':true}">
+    <b-row>
+      <b-colxx xxs="3">
+        <p class="text-muted text-small mb-2">{{$t('branch.orden.codigoOrden')}}</p>
+        <p class="mb-3 text-primary font-weight-bold">{{data.CodigoOrden}}</p>
+      </b-colxx>
+      <b-colxx xxs="3">
+        <p class="text-muted text-small mb-2">{{$t('branch.orden.codigoOrden')}}</p>
+        <p class="mb-3">{{data.vehiculo.placa}}</p>
+      </b-colxx>
+      <b-colxx xxs="3">
+        <p class="text-muted text-small mb-2">{{$t('branch.orden.marca')}}</p>
+        <p class="mb-3">{{data.vehiculo.marca.marca}}</p>
+      </b-colxx>
+    </b-row>
+    <horizontal-stepper
+      locale="es"
+      :keep-alive="false"
+      :steps="demoSteps"
+      @completed-step="completeStep"
+      @active-step="isStepActive"
+      @stepper-finished="alert"
+    ></horizontal-stepper>
+    <!--
+        <div class="min-width-zero">
+          <router-link :to="link || '#'">
+            <b-card-sub-title class="truncate mb-1">{{data.CodigoOrden}}</b-card-sub-title>
+          </router-link>
+          <b-card-text class="text-muted text-small mb-2">{{data.kilometraje}}</b-card-text>
+          <b-card-text class="text-muted text-small mb-2">{{data.vehiculo.tipoVehiculo}}</b-card-text>
+          <b-card-text class="text-muted text-small mb-2">{{data.vehiculo.marca.marca}}</b-card-text>
+          <b-card-text class="text-muted text-small mb-2">{{data.vehiculo.color}}</b-card-text>
+          <b-card-text class="text-muted text-small mb-2">{{data.vehiculo.placa}}</b-card-text>
+          <b-card-text class="text-muted text-small mb-2">{{data.vehiculo.modelo}}</b-card-text>
+          <b-card-text class="text-muted text-small mb-2">{{data.etapa.NombreEtapa}}</b-card-text>
+          <b-card-text class="text-muted text-small mb-2">{{data.createdAt}}</b-card-text>
+        </div>
+    -->
+  </b-card>
+</template>
+<script>
+import HorizontalStepper from "./../Steps/Steeper";
+import ThumbnailImage from "./ThumbnailImage";
+import Ingreso from "./../Steps/Ingreso";
+import Diagnostico from "./../Steps/Diagnostico";
+import Cotizacion from "./../Steps/Cotizacion";
+
+export default {
+  props: ["link", "data", "mecanicos"],
+  components: {
+    ThumbnailImage,
+    HorizontalStepper
+  },
+  data() {
+    return {
+      demoSteps: []
+    };
+  },
+  methods: {
+    // Executed when @completed-step event is triggered
+    completeStep(payload) {
+      if (payload.index) {
+        //console.debug("Valid complete step :::>", payload);
+        this.demoSteps.forEach(step => {
+          //console.debug("Valid steps :::>", step);
+          if (step.name === payload.name) {
+            step.completed = true;
+          }
+        });
+      }
+    },
+    // Executed when @active-step event is triggered
+    isStepActive(payload) {
+      //console.debug('Valid if step is active :::>',payload);
+      this.demoSteps.forEach(step => {
+        //console.debug('Valid steps :::>',step);
+        if (step.name === payload.name) {
+          if (step.completed === true) {
+            step.completed = true;
+          }
+        }
+      });
+    },
+    // Executed when @stepper-finished event is triggered
+    alert(payload) {
+      alert("end");
+    }
+  },
+  created() {
+    var idxIngreso = this.data.etapas.findIndex(element => {
+      if (element.IdEtapa == 2) {
+        return true;
+      }
+    });    
+
+    this.demoSteps.push({
+      icon: "mail",
+      name: "ingreso",
+      title: "Ingreso",
+      component: Ingreso,
+      data: this.data.etapas[idxIngreso],
+      completed: idxIngreso > -1
+    });
+
+    let idxDiagnostico = this.data.etapas.findIndex(element => {
+      if (element.IdEtapa == 3) {
+        return true;
+      }
+    });
+
+    console.log('Indice Diagnostico :::>',idxDiagnostico);    
+
+    let etapa =
+      idxDiagnostico > -1 ? this.data.etapas[idxDiagnostico]  : null;
+
+    let dataDiagnostico = {
+      IdCita: this.data.IdCita,
+      IdTaller: this.data.IdTaller,
+      CodigoOrden: this.data.CodigoOrden,
+      IdVehiculo: this.data.IdVehiculo,
+      kilometraje: this.data.kilometraje,
+      etapa: etapa,
+      mecanicos: this.mecanicos
+    };
+
+    this.demoSteps.push({
+      icon: "report_problem",
+      name: "diagnostico",
+      title: "Diagnostico",
+      component: Diagnostico,
+      data: dataDiagnostico,
+      completed: idxDiagnostico > -1
+    });
+
+    let idxCotizacion = this.data.etapas.findIndex(element => {
+      if (element.IdEtapa == 4) {
+        return true;
+      }
+    });
+
+    console.log('Indice Cotizacion :::>',idxCotizacion);    
+
+    let etapaCotizacion =
+      idxDiagnostico > -1 ? this.data.etapas[idxCotizacion]  : null;
+
+    let dataCotizacion = {
+      IdCita: this.data.IdCita,
+      IdTaller: this.data.IdTaller,
+      CodigoOrden: this.data.CodigoOrden,
+      IdVehiculo: this.data.IdVehiculo,
+      kilometraje: this.data.kilometraje,
+      etapa: etapaCotizacion,
+      mecanicos: this.mecanicos
+    };  
+
+    this.demoSteps.push({
+      icon: "report_problem",
+      name: "cotizacion",
+      title: "Cotizacion",
+      component: Cotizacion,
+      data: dataCotizacion,
+      completed: false
+    });
+
+
+  }
+};
+</script>

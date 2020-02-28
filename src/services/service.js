@@ -34,42 +34,18 @@ class ServiceCrm {
     return http.post("/cita/create", cita);
   }
 
+  createOrden(orden) {
+    return http.post("/orden/create", orden);
+  }
+
   getCitasByIdTaller(IdTaller) {
     return http.get("/cita/getByIdTaller/" + IdTaller);
   }
-
-
-  getAllTipificacionesTel() {
-    return http.get(`/tipificacion/getAllTipificacionesTel`);
+  
+  getOrdenesByIdTaller(IdTaller) {
+    return http.get("/orden/getByIdTaller/" + IdTaller);
   }
 
-  getAllTipificacionesContacto() {
-    return http.get(`/tipificacion/getAllTipificacionesContacto`);
-  }
-
-  tipificarTelefono(telefonoGestion) {
-    return http.post("/gestionTelefono/createGestion", telefonoGestion);
-  }
-
-  tipificarContacto(telefonoContacto) {
-    return http.post("/gestionContacto/createGestion", telefonoContacto);
-  }
-
-  update(id, data) {
-    return http.put(`/tutorials/${id}`, data);
-  }
-
-  delete(id) {
-    return http.delete(`/tutorials/${id}`);
-  }
-
-  deleteAll() {
-    return http.delete(`/tutorials`);
-  }
-
-  findByTitle(title) {
-    return http.get(`/tutorials?title=${title}`);
-  }
 }
 
 export default new ServiceCrm();

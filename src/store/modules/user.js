@@ -127,7 +127,7 @@ export default {
       commit('clearError')
       commit('setProcessing', true)
       payload.tipoUsuario = "AdminTaller";
-      //TODO: RollbackUSer firebase en caso de error
+      
       ServicesCore.registrarUsuario(payload).then(user => {
           console.debug('Resultado usuario firebase :::> ', user.data);
           const item = { uid: user.data.uid, ...user.data }

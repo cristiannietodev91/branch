@@ -102,26 +102,6 @@
               <i class="simple-icon-arrow-down align-middle" />
             </b-button>
             <b-collapse id="displayOptions" class="d-md-block">
-              <span class="mr-3 d-inline-block float-md-left">
-                <a
-                  :class="{'mr-2 view-icon':true,'active': displayMode==='list'}"
-                  @click="changeDisplayMode('list')"
-                >
-                  <data-list-icon />
-                </a>
-                <a
-                  :class="{'mr-2 view-icon':true,'active': displayMode==='thumb'}"
-                  @click="changeDisplayMode('thumb')"
-                >
-                  <thumb-list-icon />
-                </a>
-                <a
-                  :class="{'mr-2 view-icon':true,'active': displayMode==='image'}"
-                  @click="changeDisplayMode('image')"
-                >
-                  <image-list-icon />
-                </a>
-              </span>
               <div class="d-block d-md-inline-block pt-1">
                 <b-dropdown
                   id="ddown1"
@@ -164,17 +144,15 @@
         </b-colxx>
       </b-row>
       <template v-if="isLoad">
-        <b-row v-if="displayMode==='list'" key="list">
-          <b-colxx xxs="12" class="mb-3" v-for="(item,index) in items" :key="index" :id="item.id">
-            <vehiculo-list-item
-              :key="item.id"
-              :data="item"
-              :selected-items="selectedItems"
-              @toggle-item="toggleItem"
-              v-contextmenu:contextmenu
-            />
-          </b-colxx>
-        </b-row>
+        <b-colxx xxs="12" class="mb-3" v-for="(item,index) in items" :key="index" :id="item.id">
+          <vehiculo-list-item
+            :key="item.id"
+            :data="item"
+            :selected-items="selectedItems"
+            @toggle-item="toggleItem"
+            v-contextmenu:contextmenu
+          />
+        </b-colxx>
         <b-row v-if="lastPage>1">
           <b-colxx xxs="12">
             <b-pagination-nav
@@ -252,23 +230,18 @@ export default {
   data() {
     return {
       isLoad: false,
-      displayMode: "list",
       sort: {
-        column: "title",
-        label: "Product Name"
+        column: "placa",
+        label: "Placa"
       },
       sortOptions: [
         {
-          column: "title",
-          label: "Product Name"
+          column: "placa",
+          label: "Placa"
         },
         {
-          column: "category",
-          label: "Category"
-        },
-        {
-          column: "status",
-          label: "Status"
+          column: "usuario.firstname",
+          label: "Nombre cliente"
         }
       ],
       page: 1,
@@ -281,30 +254,6 @@ export default {
       items: [],
       pageSizes: [4, 8, 12],
       selectedItems: [],
-      categories: [
-        {
-          label: "Cakes",
-          value: "Cakes"
-        },
-        {
-          label: "Cupcakes",
-          value: "Cupcakes"
-        },
-        {
-          label: "Desserts",
-          value: "Desserts"
-        }
-      ],
-      statuses: [
-        {
-          text: "ON HOLD",
-          value: "ON HOLD"
-        },
-        {
-          text: "PROCESSED",
-          value: "PROCESSED"
-        }
-      ],
       newItem: {
         placa: "",
         celular: "",
@@ -318,15 +267,15 @@ export default {
         required
       },
       celular: {
-        required: requiredIf(function (celular) {
-          return !this.newItem.email
+        required: requiredIf(function(celular) {
+          return !this.newItem.email;
         }),
         maxLength: maxLength(10),
         minLength: minLength(10)
       },
       email: {
-        required: requiredIf(function (email) {
-          return !this.newItem.celular
+        required: requiredIf(function(email) {
+          return !this.newItem.celular;
         }),
         email
       }
@@ -339,24 +288,15 @@ export default {
         response => {
           if (response.status == 200) {
             console.debug("Resultado lista de talleres ::::>", response.data);
-            this.total = response.total;
-            this.from = response.from;
-            this.to = response.to;
             this.items = response.data;
-            this.perPage = response.per_page;
             this.selectedItems = [];
-            this.lastPage = response.last_page;
             this.isLoad = true;
-            return response.data;
           }
         }
       );
     },
     hideModal(refname) {
       this.$refs[refname].hide();
-    },
-    changeDisplayMode(displayType) {
-      this.displayMode = displayType;
     },
     changePageSize(perPage) {
       this.perPage = perPage;
@@ -368,7 +308,7 @@ export default {
       if (this.selectedItems.length >= this.items.length) {
         if (isToggle) this.selectedItems = [];
       } else {
-        this.selectedItems = this.items.map(x => x.id);
+        this.selectedItems = this.items.map(x => x.IdVehiculo);
       }
     },
     keymap(event) {
@@ -392,11 +332,11 @@ export default {
     toggleItem(event, itemId) {
       if (event.shiftKey && this.selectedItems.length > 0) {
         let itemsForToggle = this.items;
-        var start = this.getIndex(itemId, itemsForToggle, "id");
+        var start = this.getIndex(itemId, itemsForToggle, "IdVehiculo");
         var end = this.getIndex(
           this.selectedItems[this.selectedItems.length - 1],
           itemsForToggle,
-          "id"
+          "IdVehiculo"
         );
         itemsForToggle = itemsForToggle.slice(
           Math.min(start, end),
@@ -450,18 +390,33 @@ export default {
       // if its still pending or an error is returned do not submit
       if (this.$v.newItem.$pending || this.$v.newItem.$error) return;
 
-      ServicesCore.createVehiculo(vehiculo).then(response => {
-        if (response.status == 200) {
-          this.newItem = {
-            placa: "",
-            celular: "",
-            email: ""
-          };
-          this.hideModal("modaladdvehiculo");
-          this.loadItems();
-        } else {
-        }
-      });
+      ServicesCore.createVehiculo(vehiculo)
+        .then(response => {
+          if (response.status == 200) {
+            this.newItem = {
+              placa: "",
+              celular: "",
+              email: ""
+            };
+            this.$notify(
+              "success",
+              "Resultado",
+              "Se creo el vehiculo correctamente",
+              {
+                duration: 3000,
+                permanent: false
+              }
+            );
+            this.hideModal("modaladdvehiculo");
+            this.loadItems();
+          }
+        })
+        .catch(error => {
+          this.$notify("error filled", "ERROR", error.response.data.error, {
+            duration: 3000,
+            permanent: false
+          });
+        });
     }
   },
   computed: {

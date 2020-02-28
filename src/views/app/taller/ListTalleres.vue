@@ -45,8 +45,7 @@
               id="modalAddTaller"
               ref="modalAddTaller"
               :title="$t('branch.taller.add-new-taller-title')"
-              hide-footer
-            >
+              hide-footer>
               <b-form @submit.prevent="onValitadeFormSubmit" class="av-tooltip tooltip-label-right">
                 <b-form-group label-cols="2" horizontal :label="$t('branch.taller.nombreTaller')">
                   <b-form-input
@@ -148,8 +147,7 @@
             <b-button
               variant="empty"
               class="pt-0 pl-0 d-inline-block d-md-none"
-              v-b-toggle.displayOptions
-            >
+              v-b-toggle.displayOptions>
               {{ $t('pages.display-options') }}
               <i class="simple-icon-arrow-down align-middle" />
             </b-button>

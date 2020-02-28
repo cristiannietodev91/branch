@@ -41,7 +41,18 @@
     "cita": {
       "mecanico": "Mecanico",
       "fechaCita": "Fecha",
-      "placa": "Placa"
+      "placa": "Placa",
+      "horacita": "Hora"
+    },
+    "orden": {
+      "codigoOrden": "# Orden",
+      "fechaIngreso": "Fecha Ingreso",
+      "mecanico": "Mecanico",
+      "kilometraje": "Kilometraje Ingreso",
+      "documentos": "Documentos Deja",
+      "observaciones": "Observaciones",
+      "placa": "Placa",
+      "marca": "Marca"
     }
   },
   "user": {
@@ -274,9 +285,11 @@
     },
     "branch": {
       "mecanicos": "MECANICOS",
+      "ordentrabajo" : "ORDENES DE TRABAJO",
       "add-new-mecanico": "Agregar nuevo mecanico",
       "add-new-vehiculo": "Agregar nuevo vehiculo",
-      "add-new-cita": "Agregar nueva cita"
+      "add-new-cita": "Agregar nueva cita",
+      "add-orden-vehicle": "Ingresar orden de trabajo"
     }
   },
   "chat": {
