@@ -56,10 +56,10 @@ const createCita = (req, res, next) => {
                         } else {
                             if (cita) {
 
-                                /*if(vehiculo.usuario.celular){
-                                    var textoSms = "Se ha agendado una cita para el vehiculo "+vehiculo.placa+" el dia " +cita.fechaCita +" en el taller BRANCH";
+                                if(vehiculo.usuario.celular){
+                                    var textoSms = "Se ha agendado una cita para el vehiculo "+vehiculo.placa+" el dia " +cita.fechaCita +" a las"+ cita.horaCita + " en el taller BRANCH";
                                     sms.sendSMSTwilio(vehiculo.usuario.celular,textoSms);
-                                }*/
+                                }
 
                                 return res.status(HttpStatus.OK).json(cita);
                                 /*citaDAO.getById(cita.IdCita, function (error, cita) {

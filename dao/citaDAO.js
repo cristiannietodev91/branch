@@ -51,7 +51,12 @@ module.exports = {
             return models.cita.findByPk(IdCita,{
                 include: [
                     {
-                        model: models.vehiculo                        
+                        model: models.vehiculo,
+                        include: [
+                            {
+                                model: models.usuarios
+                            }
+                        ]                       
                     }
                 ]
             }).then(cita => {

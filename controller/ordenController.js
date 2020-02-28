@@ -1,5 +1,6 @@
 var ordenDAO = require('../dao/OrdenDAO');
 var citaDAO = require('../dao/citaDAO');
+var sms = require('../utils/sendSms')
 var HttpStatus = require('http-status-codes');
 var moment = require('moment');
 
@@ -31,6 +32,16 @@ const createOrden = (req, res, next) => {
                             DocumentosDeja: orden.documentos,
                             CodigoOrden: CodigoOrden,
                             Observaciones: orden.Observaciones
+                        }
+
+                        if(cita.vehiculo.usuario.celular & orden.IdEtapa == 2){
+                            var textoSms = "Su vehiculo "+cita.vehiculo.placa+" ha sido INGRESADO  en el taller BRANCH";
+                            sms.sendSMSTwilio(cita.vehiculo.usuario.celular,textoSms);
+                        }
+
+                        if(cita.vehiculo.usuario.celular & orden.IdEtapa == 3){
+                            var textoSms = "Su vehiculo "+cita.vehiculo.placa+" ha sido DIAGNOSTICADO  en el taller BRANCH";
+                            sms.sendSMSTwilio(cita.vehiculo.usuario.celular,textoSms);
                         }
     
                         ordenDAO.create(ordenDB, (error, orden) => {
