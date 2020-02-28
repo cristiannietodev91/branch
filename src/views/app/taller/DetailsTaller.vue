@@ -502,6 +502,7 @@ export default {
               observacion: null
             };
             this.loadCitasTaller();
+            this.loadOrdenesTaller();
             this.$notify(
               "success",
               "Resultado",
