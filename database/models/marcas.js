@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     categoria: {
-      type: Sequelize.STRING(1)
+      type: Sequelize.STRING(5)
     },
     tipo: {
       type: Sequelize.STRING
@@ -27,6 +27,10 @@ module.exports = (sequelize, DataTypes) => {
       // allowNull defaults to true
     },
     tipoVehiculo: {
+      type: Sequelize.ENUM('Moto', 'Carro')
+      // allowNull defaults to true
+    },
+    urllogo: {
       type: Sequelize.ENUM('Moto', 'Carro')
       // allowNull defaults to true
     }

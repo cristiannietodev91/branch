@@ -41,7 +41,8 @@ const createCita = (req, res, next) => {
                         IdTaller: cita.taller,
                         IdMecanico: cita.mecanico,
                         fechaCita: cita.fechaCita,
-                        horaCita: cita.horaCita
+                        horaCita: cita.horaCita,
+                        estado: 'Confirmada'
                     }
                     console.log('Cita a persistir en la BD', citaDb);
                     citaDAO.create(citaDb, function (error, cita) {
@@ -209,10 +210,7 @@ const getAllCitasByIdUsuario = (req, res, next) => {
 const castCitasToEvents = (citas) => {
     let events = [];
     citas.forEach(cita => {
-        var dataCita = cita.dataValues;
-        console.log('Fecha evento ::>', cita.dataValues.fechaCita)
-        console.log('Hora evento ::>', cita.dataValues.horaCita)
-        // let myDate = new Date(Date.UTC(dataCita.fechaCita.ge))
+        var dataCita = cita.dataValues;        
         let hour = 0;
         if (cita.dataValues.horaCita) {
             hour = moment(cita.dataValues.horaCita, 'HH:mm:ss');             
@@ -223,19 +221,13 @@ const castCitasToEvents = (citas) => {
         console.log('Hora format :::>',hour);
 
         let myDate = new Date(Date.UTC(dataCita.fechaCita.getFullYear(), dataCita.fechaCita.getMonth(), dataCita.fechaCita.getDate(), hour.hour(), hour.minute(), 0));
-        /*if(cita.dataValues.horaCita){
-            myDate.setHours(cita.dataValues.horaCita)
-        }else{
-            myDate.setHours(0);
-            myDate.setMinutes(0);
-        }*/
-
-        //myDate.setHours(dataCita.horaCita.get)
+        
 
         let event = {
             id: dataCita.IdCita,
             startDate: myDate,
-            title: 'Cita vehiculo =>' + dataCita.vehiculo.placa
+            title: 'Cita vehiculo =>' + dataCita.vehiculo.placa,
+            classes: dataCita.estado == 'Con orden'? 'event-orden' : 'event-default'
         }
         events.push(event);
     });

@@ -24,6 +24,9 @@ module.exports = (sequelize, DataTypes) => {
         },
         horaCita: {
             type: Sequelize.TIME
+        },
+        estado: {
+            type: Sequelize.ENUM('Solicitada','Confirmada','Con orden','Cancelada')
         }
     }, {});
     Cita.associate = function (models) {

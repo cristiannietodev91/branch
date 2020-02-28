@@ -74,7 +74,23 @@ const createVehiculo = (req, res, next) => {
                                 }
                             } else {
                                 if (userRecord) {
-                                    crearVehiculoDB(userRecord, vehiculo, res);
+                                    crearVehiculoDB(userRecord, vehiculo, function (error, vehiculo) {
+                                        if (error) {
+                                            console.error('Error al realizar la transaccion de crear vehiculo con usuario existente:::>', 'error ::>', error);
+                                            if (error.errors) {
+                                                return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
+                                            }
+                                            else {
+                                                return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+                                            }
+                                        }else{
+                                            if(vehiculo){
+                                                return res.status(HttpStatus.OK).json(vehiculo);
+                                            }else{
+                                                return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'Error indefinido al crear vehiculo' });
+                                            }
+                                        }
+                                    });
                                 }
                             }
 

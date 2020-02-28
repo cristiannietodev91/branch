@@ -3,21 +3,26 @@ const models = require("../database/models");
 module.exports = {
     findAll: function (cb) {
         // Find all users
-        models.cita.findAll().then(citas => {
-            cb(null, citas);
+        models.ordentrabajo.findAll().then(ordenes => {
+            cb(null, ordenes);
         });
     },
-    create: function (cita, cb) {
+    findAllEtapas: function (cb) {
+        // Find all users
+        models.etapa.findAll().then(etapas => {
+            cb(null, etapas);
+        });
+    },
+    create: function (orden, cb) {
         // Find all users
         return models.sequelize.transaction((t1) => {
-            return models.cita.create(cita).then(cita => {
-                return cita;
+            return models.ordentrabajo.create(orden).then(orden => {
+                return orden;
             });
         }).then(function (result) {
             if (result) {
                 //console.debug('Resultado transaccion crear cita :::: >', result);
-                var citaCreated = result.dataValues;
-                cb(null, citaCreated);
+                cb(null, result.dataValues);
             } else {
                 cb(null, null);
             }
@@ -26,17 +31,16 @@ module.exports = {
             cb(err, null);
         });
     },
-    update: function (IdCita, cita, cb) {
+    update: function (IdOrdenTrabajo, orden, cb) {
         // Find all users
         return models.sequelize.transaction((t1) => {
-            return models.cita.update(cita, {
-                where: { IdCita: IdCita }
-            }).then(cita => {
-                return cita;
+            return models.ordentrabajo.update(orden, {
+                where: { IdOrdenTrabajo: IdOrdenTrabajo }
+            }).then(orden => {
+                return orden;
             });
         }).then(function (result) {
             if (result) {
-                console.debug('Resultado despues de actualizar cita :::: >', result);
                 cb(null, result);
             } else {
                 cb(null, null);
@@ -45,22 +49,15 @@ module.exports = {
             cb(err, null);
         });
     },
-    getById: function (IdCita, cb) {
+    getById: function (IdOrdenTrabajo, cb) {
         // Find all users
         return models.sequelize.transaction((t1) => {
-            return models.cita.findByPk(IdCita,{
-                include: [
-                    {
-                        model: models.vehiculo                        
-                    }
-                ]
-            }).then(cita => {
-                return cita;
+            return models.ordentrabajo.findByPk(IdOrdenTrabajo).then(orden => {
+                return orden;
             });
         }).then(function (result) {
             if (result) {
-                var citaCreated = result.dataValues;
-                cb(null, citaCreated);
+                cb(null, result.dataValues);
             } else {
                 cb(null, null);
             }
@@ -68,41 +65,50 @@ module.exports = {
             cb(err, null);
         });
     },
-    deleteById: function (IdCita, cb) {
+    deleteById: function (IdOrdenTrabajo, cb) {
         // Find all users
         return models.sequelize.transaction((t1) => {
-            return models.cita.destroy({
-                where: { IdCita: IdCita }
+            return models.ordentrabajo.destroy({
+                where: { IdOrdenTrabajo: IdOrdenTrabajo }
             }).then(deleted => {
                 return deleted;
             });
         }).then(function (result) {
-            console.log('Resultado despues Eliminar cita :::: >', result);
             cb(null, result);
         }).catch(function (err) {
             cb(err, null);
         });
     },
-    findAllByFilter: function (filterCita,filterVehiculo, cb) {
+    findAllByFilter: function (filterOrden,filterVehiculo, cb) {
         // Find all users
         return models.sequelize.transaction((t1) => {
-            return models.cita.findAll({
+            return models.ordentrabajo.findAll({
                 include: [
                     {
                         model: models.vehiculo,
-                        where: filterVehiculo
+                        where: filterVehiculo,
+                        include: [
+                            {
+                                model: models.marca
+                            }
+                        ]                        
                     },
                     {
                         model: models.taller
+                    },
+                    {
+                        model: models.mecanico
+                    },
+                    {
+                        model: models.etapa
                     }
                 ],
-                where: filterCita
-            }).then(citas => {
-                return citas;
+                where: filterOrden
+            }).then(ordenes => {
+                return ordenes;
             });
         }).then(function (result) {
             if (result) {
-                //console.debug('Resultado despues listar vehiculos By Filter :::: >',filter,' Result ::::> ', result);                
                 cb(null, result);
             } else {
                 cb(null, null);
