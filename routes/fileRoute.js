@@ -4,6 +4,6 @@ var router = express.Router();
 
 router.post('/send', fileController.fileUpload);
 
-router.post('/new', fileController.fileUpload);
+router.put('/send', fileController.fileUpload);
 
 module.exports = router;
