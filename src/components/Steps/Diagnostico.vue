@@ -110,6 +110,7 @@ export default {
       filesEtapa: [],
       dropzoneOptions: {
         url: process.env.VUE_APP_URLBACKSERVICES+"file/send",
+        method: 'put',
         thumbnailWidth: 150,
         autoProcessQueue: true,
         acceptedFiles: "image/*"
