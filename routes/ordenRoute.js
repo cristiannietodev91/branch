@@ -3,6 +3,8 @@ var ordenController = require('../controller/ordenController')
 var router = express.Router();
 
 /* GET users listing. */
+router.get('/getById/:Id', ordenController.getOrdenById);
+
 router.get('/getAllEtapas', ordenController.getAllEtapas);
 
 router.post('/create', ordenController.createOrden);

@@ -95,10 +95,21 @@ module.exports = {
                 include: [
                     {
                         model: models.vehiculo,
-                        where: filterVehiculo
+                        where: filterVehiculo,
+                        include: [
+                            {
+                                model: models.marca
+                            },
+                            {
+                                model: models.usuarios
+                            }
+                        ]
                     },
                     {
                         model: models.taller
+                    },
+                    {
+                        model: models.mecanico
                     }
                 ],
                 where: filterCita

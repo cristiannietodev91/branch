@@ -25,7 +25,16 @@ module.exports = (sequelize, DataTypes) => {
         },
         costos: {
             type: Sequelize.JSON
-        }
+        },
+        fullName: {
+            type: DataTypes.VIRTUAL,
+            get() {
+              return `${this.firstName} ${this.lastName}`;
+            },
+            set(value) {
+              throw new Error('Do not try to set the `fullName` value!');
+            }
+          }
     }, {});
     Mecanico.associate = function (models) {
         // associations can be defined here

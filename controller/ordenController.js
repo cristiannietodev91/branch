@@ -29,9 +29,10 @@ const createOrden = (req, res, next) => {
                             IdMecanico: orden.mecanico,
                             IdVehiculo: cita.IdVehiculo,
                             kilometraje: orden.kilometraje,
-                            DocumentosDeja: orden.documentos,
+                            DocumentosDeja: orden.documentosDeja,
                             CodigoOrden: CodigoOrden,
-                            Observaciones: orden.Observaciones
+                            Observaciones: orden.Observaciones,
+                            documentos: orden.documentos
                         }
 
                         if(cita.vehiculo.usuario.celular & orden.IdEtapa == 2){
@@ -55,7 +56,7 @@ const createOrden = (req, res, next) => {
                             } else {
                                 if (orden) {
                                     if(orden.IdEtapa){
-                                        cita.estado = 'Con orden'
+                                        cita.estado = 'Cumplida'
                                         citaDAO.update(cita.IdCita,cita,(error,cita)=>{
                                             if (error) {
                                                 console.error('Error al realizar la transaccion de crear actualizar cita:::>', 'error ::>', error);
@@ -66,12 +67,12 @@ const createOrden = (req, res, next) => {
                                                 }
                                             } else {
                                                 if (cita) {
-                                                    return res.status(HttpStatus.OK).json({ message: "Se creo la orden de trabajo"});                                
+                                                    return res.status(HttpStatus.OK).json({ orden});                                
                                                 }
                                             }
                                         })
                                     }else{
-                                        return res.status(HttpStatus.OK).json({ message: "Se creo la orden de trabajo"});                                
+                                        return res.status(HttpStatus.OK).json({ orden});                                
                                     }
                                     
                                     
@@ -117,7 +118,7 @@ const getAllOrdenesByIdTaller = (req, res, next) =>{
 
         ordenDAO.findAllByFilter({ IdTaller: IdTaller }, {}, function (error, ordenes) {
             if (error) {
-                console.error('Error al realizar la transaccion de buscar citas:::>', 'error ::>', error.message);
+                console.error('Error al realizar la transaccion de buscar ordenes By Taller:::>', 'error ::>', error.message);
                 if (error.errors) {
                     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
                 } else {
@@ -135,9 +136,35 @@ const getAllOrdenesByIdTaller = (req, res, next) =>{
     }
 }
 
+const getOrdenById = (req, res, next) => {
+    try {       
+        var IdOrden = req.params.Id;
+        console.debug('Parametro de IdTaller recibido :::::>',req.params);
+        ordenDAO.getById(IdOrden, function (error, orden) {
+            if (error) {
+                if(error.errors){
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
+                }else{
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+                }                
+            } else {
+                if (orden) {
+                    return res.status(HttpStatus.OK).json(orden);
+                } else {
+                    return res.status(HttpStatus.OK).json({});
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error al buscar Taller By Id ', error);
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+    }
+}
+
 
 module.exports = {
     createOrden,
     getAllEtapas,
-    getAllOrdenesByIdTaller
+    getAllOrdenesByIdTaller,
+    getOrdenById
 }

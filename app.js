@@ -13,6 +13,7 @@ var marcaRouter = require('./routes/marcaRoute');
 var citaRouter = require('./routes/citaRoute');
 var mecanicoRouter = require('./routes/mecanicoRoute');
 var ordenRouter = require('./routes/ordenRoute');
+var fileRouter = require('./routes/fileRoute');
 
 var app = express();
 
@@ -31,6 +32,7 @@ app.use('/marca', marcaRouter);
 app.use('/cita', citaRouter);
 app.use('/mecanico', mecanicoRouter);
 app.use('/orden', ordenRouter);
+app.use('/file', fileRouter);
 
 
 app.use(logErrors);

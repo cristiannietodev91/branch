@@ -52,7 +52,13 @@ module.exports = {
     getById: function (IdOrdenTrabajo, cb) {
         // Find all users
         return models.sequelize.transaction((t1) => {
-            return models.ordentrabajo.findByPk(IdOrdenTrabajo).then(orden => {
+            return models.ordentrabajo.findByPk(IdOrdenTrabajo,{
+                include: [
+                    {
+                        model: models.mecanico
+                    }
+                ]
+            }).then(orden => {
                 return orden;
             });
         }).then(function (result) {
@@ -103,7 +109,11 @@ module.exports = {
                         model: models.etapa
                     }
                 ],
-                where: filterOrden
+                where: filterOrden,
+                order: [
+                    ['CodigoOrden'],
+                    ['createdAt','DESC'],
+                ]
             }).then(ordenes => {
                 return ordenes;
             });

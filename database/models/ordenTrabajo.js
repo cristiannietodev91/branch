@@ -39,6 +39,9 @@ module.exports = (sequelize, DataTypes) => {
         },
         Observaciones:{
             type: Sequelize.STRING,
+        },
+        documentos: {
+            type: Sequelize.JSON
         }
     }, {});
     Orden.associate = function (models) {

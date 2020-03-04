@@ -25,8 +25,11 @@ module.exports = (sequelize, DataTypes) => {
         horaCita: {
             type: Sequelize.TIME
         },
+        servicio: {
+            type: Sequelize.STRING
+        },
         estado: {
-            type: Sequelize.ENUM('Solicitada','Confirmada','Con orden','Cancelada')
+            type: Sequelize.ENUM('Solicitada','Confirmada','Cancelada','Incumplida','Cumplida')
         }
     }, {});
     Cita.associate = function (models) {
@@ -39,6 +42,11 @@ module.exports = (sequelize, DataTypes) => {
         Cita.belongsTo(models.vehiculo, {
             foreignKey: 'IdVehiculo',
             target_id: 'IdVehiculo'
+        });
+
+        Cita.belongsTo(models.mecanico, {
+            foreignKey: 'IdMecanico',
+            target_id: 'IdMecanico'
         });
     };
     return Cita;

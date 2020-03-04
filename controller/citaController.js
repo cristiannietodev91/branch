@@ -1,5 +1,6 @@
 var citaDAO = require('../dao/citaDAO');
 var vehiculoDAO = require('../dao/vehiculoDAO');
+let mecanicoDAO = require('../dao/mecanicoDAO');
 var sms = require('../utils/sendSms')
 var HttpStatus = require('http-status-codes');
 var moment = require('moment');
@@ -42,7 +43,8 @@ const createCita = (req, res, next) => {
                         IdMecanico: cita.mecanico,
                         fechaCita: cita.fechaCita,
                         horaCita: cita.horaCita,
-                        estado: 'Confirmada'
+                        servicio: cita.servicio,
+                        estado: cita.estado
                     }
                     console.log('Cita a persistir en la BD', citaDb);
                     citaDAO.create(citaDb, function (error, cita) {
@@ -55,24 +57,25 @@ const createCita = (req, res, next) => {
                             }
                         } else {
                             if (cita) {
-
-                                if(vehiculo.usuario.celular){
-                                    var textoSms = "Se ha agendado una cita para el vehiculo "+vehiculo.placa+" el dia " +cita.fechaCita +" a las"+ cita.horaCita + " en el taller BRANCH";
-                                    sms.sendSMSTwilio(vehiculo.usuario.celular,textoSms);
-                                }
-
-                                return res.status(HttpStatus.OK).json(cita);
-                                /*citaDAO.getById(cita.IdCita, function (error, cita) {
-                                    if (error) {
-                                        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
-                                    } else {
-                                        if (cita) {
-                                            
+                                if (vehiculo.usuario.celular) {
+                                    let textoSms = ""
+                                    mecanicoDAO.getById(cita.mecanico, (error, mecanico) => {
+                                        if (error) {
+                                            console.error('Error al buscar mecanico para SMS de la cita, error ::>', error);
                                         } else {
-                                            return res.status(HttpStatus.OK).json({});
+                                            if (mecanico) {
+                                                //Texto de cita con mecanico
+                                                textoSms = "Hola " + vehiculo.usuario.firstName + "! Te esperamos el " + cita.fechaCita + " a las " + cita.horaCita + " con tu " + vehiculo.tipoVehiculo + "  " + vehiculo.placa + ", " + mecanico.firstName + " de BRANCH tendra el gusto de recibirte. Tu experiencia nuestro motor! BRANCH"
+                                                sms.sendSMSTwilio(vehiculo.usuario.celular, textoSms);
+                                            } else {
+                                                //Texto de cita sin mecanico
+                                                textoSms = "Hola " + vehiculo.usuario.firstName + "! Te esperamos el " + cita.fechaCita + " a las " + cita.horaCita + " con tu " + vehiculo.tipoVehiculo + "  " + vehiculo.placa + ", BRANCH tendra el gusto de recibirte. Tu experiencia nuestro motor! BRANCH"
+                                                sms.sendSMSTwilio(vehiculo.usuario.celular, textoSms);
+                                            }
                                         }
-                                    }
-                                });*/
+                                    })
+                                }
+                                return res.status(HttpStatus.OK).json(cita);
                             } else {
                                 return res.status(HttpStatus.OK).json({ error: "No se creo la cita" });
                             }
@@ -98,7 +101,11 @@ const updateCita = (req, res, next) => {
             citaDAO.update(IdCita, cita, function (error, cita) {
                 if (error) {
                     console.error('Error al realizar la transaccion de actualizar cita:::>', 'error ::>', error.message);
-                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
+                    if (error.errors) {
+                        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
+                    } else {
+                        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+                    }
                 } else {
                     if (cita) {
                         return res.status(HttpStatus.ACCEPTED).json({ message: 'Se actualizo la cita ' + IdCita + ' correctamente' });
@@ -164,7 +171,7 @@ const getAllCitasByIdTaller = (req, res, next) => {
 
         citaDAO.findAllByFilter({ IdTaller: IdTaller }, {}, function (error, citas) {
             if (error) {
-                console.error('Error al realizar la transaccion de buscar citas:::>', 'error ::>', error.message);
+                console.error('Error al realizar la transaccion de buscar citas por Taller error ::>', error.message);
                 if (error.errors) {
                     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
                 } else {
@@ -189,7 +196,7 @@ const getAllCitasByIdUsuario = (req, res, next) => {
 
         citaDAO.findAllByFilter({}, { IdUsuario: IdUsuario }, function (error, citas) {
             if (error) {
-                console.error('Error al realizar la transaccion de buscar citas:::>', 'error ::>', error.message);
+                console.error('Error al realizar la transaccion de buscar citas By Usuario error ::>', error.message);
                 if (error.errors) {
                     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
                 } else {
@@ -210,24 +217,36 @@ const getAllCitasByIdUsuario = (req, res, next) => {
 const castCitasToEvents = (citas) => {
     let events = [];
     citas.forEach(cita => {
-        var dataCita = cita.dataValues;        
+        var dataCita = cita.dataValues;
         let hour = 0;
         if (cita.dataValues.horaCita) {
-            hour = moment(cita.dataValues.horaCita, 'HH:mm:ss');             
+            hour = moment(cita.dataValues.horaCita, 'HH:mm:ss');
         } else {
-            hour = moment('00:00:00', 'HH:mm:ss');;           
+            hour = moment('00:00:00', 'HH:mm:ss');;
         }
 
-        console.log('Hora format :::>',hour);
+        console.log('Hora format :::>', hour);
 
         let myDate = new Date(Date.UTC(dataCita.fechaCita.getFullYear(), dataCita.fechaCita.getMonth(), dataCita.fechaCita.getDate(), hour.hour(), hour.minute(), 0));
-        
+
+        let classEstado = (estado)=>{
+            switch(estado){
+                case  'Solicitada' : return 'event-solicitado'
+                case  'Confirmada' : return 'event-confirmada'
+                case  'Cumplida' : return 'event-cumplida'                
+                case  'Cancelada' : return 'event-cancelada'
+                case  'Incumplida' : return 'event-incumplida'
+                default: 'event-default'
+            }
+        }
 
         let event = {
             id: dataCita.IdCita,
             startDate: myDate,
             title: 'Cita vehiculo =>' + dataCita.vehiculo.placa,
-            classes: dataCita.estado == 'Con orden'? 'event-orden' : 'event-default'
+            classes: classEstado(dataCita.estado),
+            citaObject: dataCita,
+            estado: dataCita.estado
         }
         events.push(event);
     });

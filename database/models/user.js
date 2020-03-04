@@ -42,6 +42,9 @@ module.exports = (sequelize, DataTypes) => {
     estado: {
       type: Sequelize.ENUM('Registrado', 'Pendiente'),
       allowNull: false
+    },
+    IdTaller: {
+      type: Sequelize.INTEGER
     }
   }, {});
   User.associate = function (models) {

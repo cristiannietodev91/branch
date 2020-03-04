@@ -77,5 +77,23 @@ module.exports = {
         }).catch(function (err) {
             cb(err, null);
         });
+    },
+    findOneByFilter: function (filter,cb) {
+        // Find all users
+        return models.sequelize.transaction((t1) => {
+            return models.usuarios.findOne({
+                where: filter
+            }).then(usuario => {
+                return usuario;
+            });
+        }).then(function (result) {
+            if (result) {
+                cb(null, result);
+            } else {
+                cb(null, null);
+            }
+        }).catch(function (err) {
+            cb(err, null);
+        });        
     }
 }

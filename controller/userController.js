@@ -129,6 +129,31 @@ const findUsuarioById = (req, res, next) => {
     }
 }
 
+const getUsuarioByUID = (req, res, next) => {
+    try {
+        var uid = req.params.uid;
+        console.debug('Parametro taller recibido :::::>', req.query);
+
+        usersDAO.findOneByFilter({ uid: uid }, function (error, usuario) {
+            if (error) {
+                console.error('Error al realizar la transaccion de buscar usuario por UID error ::>', error.message);
+                if (error.errors) {
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
+                } else {
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+                }
+            } else {
+                if (usuario) {
+                    res.status(HttpStatus.OK).json(usuario);
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error al buscar usuario By UID ', error);
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+    }
+}
+
 const createUsuarioNew = (usuario, cb) => {
     admin.auth().createUser({
         email: usuario.email,
@@ -171,5 +196,6 @@ module.exports = {
     updateUsuario,
     deleteUsuarioById,
     findUsuarioById,
-    createUsuarioNew
+    createUsuarioNew,
+    getUsuarioByUID
 }
