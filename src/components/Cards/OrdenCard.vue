@@ -1,5 +1,5 @@
 <template>
-  <b-card :class="{'d-flex flex-row':true}">
+  <b-card >
     <b-row>
       <b-colxx xxs="3">
         <p class="text-muted text-small mb-2">{{$t('branch.orden.codigoOrden')}}</p>
@@ -50,11 +50,11 @@ export default {
   props: ["link", "data", "mecanicos"],
   components: {
     ThumbnailImage,
-    HorizontalStepper
+    HorizontalStepper    
   },
   data() {
     return {
-      demoSteps: []
+      demoSteps: []      
     };
   },
   methods: {
@@ -92,7 +92,7 @@ export default {
       if (element.IdEtapa == 2) {
         return true;
       }
-    });    
+    });
 
     this.demoSteps.push({
       icon: "mail",
@@ -109,10 +109,9 @@ export default {
       }
     });
 
-    console.log('Indice Diagnostico :::>',idxDiagnostico);    
+    console.log("Indice Diagnostico :::>", idxDiagnostico);
 
-    let etapa =
-      idxDiagnostico > -1 ? this.data.etapas[idxDiagnostico]  : null;
+    let etapa = idxDiagnostico > -1 ? this.data.etapas[idxDiagnostico] : null;
 
     let dataDiagnostico = {
       IdCita: this.data.IdCita,
@@ -139,10 +138,10 @@ export default {
       }
     });
 
-    console.log('Indice Cotizacion :::>',idxCotizacion);    
+    console.log("Indice Cotizacion :::>", idxCotizacion);
 
     let etapaCotizacion =
-      idxDiagnostico > -1 ? this.data.etapas[idxCotizacion]  : null;
+      idxDiagnostico > -1 ? this.data.etapas[idxCotizacion] : null;
 
     let dataCotizacion = {
       IdCita: this.data.IdCita,
@@ -152,7 +151,7 @@ export default {
       kilometraje: this.data.kilometraje,
       etapa: etapaCotizacion,
       mecanicos: this.mecanicos
-    };  
+    };
 
     this.demoSteps.push({
       icon: "report_problem",
@@ -160,10 +159,8 @@ export default {
       title: "Cotizacion",
       component: Cotizacion,
       data: dataCotizacion,
-      completed: false
+      completed: idxCotizacion > -1
     });
-
-
   }
 };
 </script>

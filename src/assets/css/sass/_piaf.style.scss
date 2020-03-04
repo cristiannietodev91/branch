@@ -3476,8 +3476,24 @@ main {
         padding: 10px;
       }
 
-      .event-orden{
-        background: #34eb49 !important;
+      .event-solicitado{
+        background: #0eb0e2 !important;
+      }
+
+      .event-confirmada{
+        background: $theme-color-1 !important;
+      }
+
+      .event-cumplida{
+        background: #14d82b !important;
+      }
+
+      .event-cancelada{
+        background: #e27d09 !important;
+      }
+      
+      .event-incumplida{
+        background: #e42a09 !important;
       }
 
       .event-default{

@@ -6,6 +6,10 @@ class ServiceCrm {
     return http.post("/usuario/createFireBaseUser",usuario);
   }
 
+  getUsuarioByUid(uid) {
+    return http.get("/usuario/getByUID/"+uid);
+  }
+
   getAllTalleres() {
     return http.get("/taller/getAll");
   }
@@ -16,6 +20,10 @@ class ServiceCrm {
 
   getTallerById(IdTaller) {
     return http.get("/taller/getById/" + IdTaller);
+  }
+
+  getOrdenById(IdOrden){
+    return http.get("/orden/getById/"+IdOrden)
   }
 
   createMecanico(mecanico) {
@@ -34,11 +42,16 @@ class ServiceCrm {
     return http.post("/cita/create", cita);
   }
 
+  updateCita(cita) {
+    return http.put("/cita/update/"+cita.IdCita, cita);
+  }
+
   createOrden(orden) {
     return http.post("/orden/create", orden);
   }
 
   getCitasByIdTaller(IdTaller) {
+    console.log(`Buscar citas IdTaller :::> ${IdTaller}`)
     return http.get("/cita/getByIdTaller/" + IdTaller);
   }
   

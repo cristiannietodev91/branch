@@ -166,13 +166,13 @@ const routes = [
               import(/* webpackChunkName: "product" */ "./views/app/taller/ListTalleres")
           },
           {
-            path: "detailTaller/:IdTaller",
+            path: "detailTaller",
             component: () =>
               import(/* webpackChunkName: "product" */ "./views/app/taller/DetailsTaller")
 
           },
           {
-            path: "listClients/:IdTaller",
+            path: "listClients",
             component: () =>
               import(/* webpackChunkName: "product" */ "./views/app/taller/ListClientes")
 

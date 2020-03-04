@@ -284,7 +284,7 @@ export default {
   methods: {
     loadItems() {
       this.isLoad = false;
-      ServicesCore.getVehiculosByIdTaller(this.$route.params.IdTaller).then(
+      ServicesCore.getVehiculosByIdTaller(this.currentUser.IdTaller).then(
         response => {
           if (response.status == 200) {
             console.debug("Resultado lista de talleres ::::>", response.data);
@@ -385,7 +385,7 @@ export default {
         placa: this.newItem.placa,
         celular: this.newItem.celular,
         email: this.newItem.email,
-        IdTaller: this.$route.params.IdTaller
+        IdTaller: this.currentUser.IdTaller
       };
       // if its still pending or an error is returned do not submit
       if (this.$v.newItem.$pending || this.$v.newItem.$error) return;

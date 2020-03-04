@@ -26,6 +26,7 @@ import VueLineClamp from 'vue-line-clamp'
 import VCalendar from 'v-calendar'
 import 'v-calendar/lib/v-calendar.min.css'
 import VueScrollTo from 'vue-scrollto'
+import VueMoment from 'vue-moment'
 import firebase from 'firebase/app'
 //import * as admin from 'firebase-admin';
 import 'firebase/auth'
@@ -38,7 +39,7 @@ Vue.use(Vuelidate);
 
 Vue.use(BootstrapVue);
 Vue.use(VueI18n);
-
+Vue.use(VueMoment);
 const messages = { en: en, es: es };
 const locale = (localStorage.getItem('currentLanguage') && localeOptions.filter(x => x.id === localStorage.getItem('currentLanguage')).length > 0) ? localStorage.getItem('currentLanguage') : defaultLocale;
 const i18n = new VueI18n({
@@ -60,7 +61,7 @@ Vue.use(VueLineClamp, {
 Vue.use(VCalendar, {
   firstDayOfWeek: 2, // ...other defaults,
   formats: {
-    title: 'MMM YY',
+    title: 'MMM YYYY',
     weekdays: 'WW',
     navMonths: 'MMMM',
     input: ['L', 'YYYY-MM-DD', 'YYYY/MM/DD'],
@@ -74,11 +75,12 @@ Vue.use(VueScrollTo);
 
 firebase.initializeApp(firebaseConfig);
 
-firebase.auth().onAuthStateChanged(user => {
+
+/*firebase.auth().onAuthStateChanged(user => {
   if(user){
     store.dispatch("fetchUser", user);
   }  
-});
+});*/
 
 Vue.config.productionTip = false
 

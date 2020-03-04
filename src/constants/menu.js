@@ -40,12 +40,12 @@ const data = [
       {
         icon: "simple-icon-briefcase",
         label: "menu.detailTaller",
-        to: "/app/taller/detailTaller/1"
+        to: "/app/taller/detailTaller"
       },
       {
         icon: "simple-icon-people",
         label: "menu.listClients",
-        to: "/app/taller/listClients/1"
+        to: "/app/taller/listClients"
       }
     ]
   },
