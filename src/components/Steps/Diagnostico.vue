@@ -109,7 +109,7 @@ export default {
       },
       filesEtapa: [],
       dropzoneOptions: {
-        url: null,
+        url: process.env.VUE_APP_URLBACKSERVICES+`file/sendFile`,
         method: 'post',
         autoProcessQueue: true,
         acceptedFiles: "image/*"
@@ -117,7 +117,7 @@ export default {
       awss3: {
         signingURL: f => {
           // The server REST endpoint we setup earlier
-          const key = process.env.VUE_APP_URLBACKSERVICES+`file/send?filename=${f.name}`;
+          const key = process.env.VUE_APP_URLBACKSERVICES+`file/signed?filename=${f.name}`;
           // Save this for later use
           return key;
         },
