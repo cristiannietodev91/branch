@@ -54,9 +54,18 @@ module.exports = {
                         model: models.vehiculo,
                         include: [
                             {
+                                model: models.marca
+                            },
+                            {
                                 model: models.usuarios
                             }
                         ]                       
+                    },
+                    {
+                        model: models.taller
+                    },
+                    {
+                        model: models.mecanico
                     }
                 ]
             }).then(cita => {

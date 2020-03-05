@@ -4,6 +4,10 @@ let mecanicoDAO = require('../dao/mecanicoDAO');
 var sms = require('../utils/sendSms')
 var HttpStatus = require('http-status-codes');
 var moment = require('moment');
+var debug = require('debug')('branch:server');
+const { Op } = require("sequelize");
+
+moment.locale('es')
 
 const getAllCitas = (req, res, next) => {
     try {
@@ -59,19 +63,20 @@ const createCita = (req, res, next) => {
                             if (cita) {
                                 if (vehiculo.usuario.celular) {
                                     let textoSms = ""
-                                    mecanicoDAO.getById(cita.mecanico, (error, mecanico) => {
+                                    debug(' Mecanico a buscar para envio de SMS con Mecancio ::>', cita.IdMecanico)
+                                    mecanicoDAO.getById(cita.IdMecanico, (error, mecanico) => {
                                         if (error) {
                                             console.error('Error al buscar mecanico para SMS de la cita, error ::>', error);
                                         } else {
-                                            if (mecanico) {
+                                            /*if (mecanico) {
                                                 //Texto de cita con mecanico
-                                                textoSms = "Hola " + vehiculo.usuario.firstName + "! Te esperamos el " + cita.fechaCita + " a las " + cita.horaCita + " con tu " + vehiculo.tipoVehiculo + "  " + vehiculo.placa + ", " + mecanico.firstName + " de BRANCH tendra el gusto de recibirte. Tu experiencia nuestro motor! BRANCH"
+                                                textoSms = "Hola " + vehiculo.usuario.firstName + "! Te esperamos el " + moment(cita.fechaCita).format('D [de] MMMM YYYY') + " a las " + cita.horaCita + " con tu " + vehiculo.tipoVehiculo + "  " + vehiculo.placa + ", " + mecanico.firstName + " de BRANCH tendra el gusto de recibirte. Tu experiencia nuestro motor! BRANCH"
                                                 sms.sendSMSTwilio(vehiculo.usuario.celular, textoSms);
                                             } else {
                                                 //Texto de cita sin mecanico
-                                                textoSms = "Hola " + vehiculo.usuario.firstName + "! Te esperamos el " + cita.fechaCita + " a las " + cita.horaCita + " con tu " + vehiculo.tipoVehiculo + "  " + vehiculo.placa + ", BRANCH tendra el gusto de recibirte. Tu experiencia nuestro motor! BRANCH"
+                                                textoSms = "Hola " + vehiculo.usuario.firstName + "! Te esperamos el " + moment(cita.fechaCita).format('D [de] MMMM YYYY') + " a las " + cita.horaCita + " con tu " + vehiculo.tipoVehiculo + "  " + vehiculo.placa + ", BRANCH tendra el gusto de recibirte. Tu experiencia nuestro motor! BRANCH"
                                                 sms.sendSMSTwilio(vehiculo.usuario.celular, textoSms);
-                                            }
+                                            }*/
                                         }
                                     })
                                 }
@@ -98,22 +103,69 @@ const updateCita = (req, res, next) => {
         var IdCita = req.params.Id;
         var cita = req.body;
         if (IdCita) {
-            citaDAO.update(IdCita, cita, function (error, cita) {
-                if (error) {
-                    console.error('Error al realizar la transaccion de actualizar cita:::>', 'error ::>', error.message);
-                    if (error.errors) {
-                        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
+            
+            debug('Hora actual cita ::>',moment(cita.horaCita,'hh:mm:ss'))
+            debug('Fecha Today -1 ::>',moment().add(1, 'day') )
+            
+
+            let momentHour = moment(cita.horaCita,'hh:mm:ss')
+            let fechaCita = moment(cita.fechaCita).hour(momentHour.hour()).minute(momentHour.minute())
+
+            debug('Fecha actual cita :::>',fechaCita)
+            debug('Comparacion de cita ::>',fechaCita >= moment().subtract(1, 'day'))
+
+            if (cita.estado != 'Cancelada' || (cita.estado == 'Cancelada' && fechaCita >= moment().add(1, 'day'))){
+                citaDAO.update(IdCita, cita, function (error, cita) {
+                    if (error) {
+                        console.error('Error al realizar la transaccion de actualizar cita:::>', 'error ::>', error.message);
+                        if (error.errors) {
+                            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
+                        } else {
+                            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+                        }
                     } else {
-                        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+                        if (cita) {
+                            citaDAO.getById(IdCita, (error, cita) => {
+                                if (error) {
+                                    console.error('Error al realizar la transaccion de actualizar cita:::>', 'error ::>', error.message);
+                                    if (error.errors) {
+                                        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
+                                    } else {
+                                        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+                                    }
+                                } else {
+                                    if (cita) {
+                                        debug('Datos para envio de SMS ::>', cita.vehiculo.usuario.celular);
+                                        if (cita.vehiculo.usuario.celular) {
+                                            let textoSms = ""
+                                            //Texto de cita con mecanico
+                                            debug('Estado de la cita ::>', cita.estado);
+                                            /*if (cita.estado == 'Cancelada') {
+                                                textoSms = "Hola " + cita.vehiculo.usuario.firstName + "! Se cancelo la cita que tenias el " + moment(cita.fechaCita).format('D [de] MMMM YYYY') + " a las " + cita.horaCita + " con tu " + cita.vehiculo.tipoVehiculo + "  " + cita.vehiculo.placa + ", BRANCH tendra el gusto de recibirte en una proxima oportunidad. Tu experiencia nuestro motor! BRANCH"
+                                                sms.sendSMSTwilio(cita.vehiculo.usuario.celular, textoSms);
+                                            } else {
+                                                if (cita.estado == 'Incumplida') {
+                                                    textoSms = "Hola " + cita.vehiculo.usuario.firstName + "! Incumpliste la cita que tenias el " + moment(cita.fechaCita).format('D [de] MMMM YYYY') + " a las " + cita.horaCita + " con tu " + cita.vehiculo.tipoVehiculo + "  " + cita.vehiculo.placa + ", esto afectara tu puntuacion en nuestra plataforma. BRANCH tendra el gusto de recibirte en una proxima oportunidad. Tu experiencia nuestro motor! BRANCH"
+                                                    sms.sendSMSTwilio(cita.vehiculo.usuario.celular, textoSms);
+                                                } else {
+                                                    textoSms = "Hola " + cita.vehiculo.usuario.firstName + "! Su cita quedo asignada el " + moment(cita.fechaCita).format('D [de] MMMM YYYY') + " a las " + cita.horaCita + " con tu " + cita.vehiculo.tipoVehiculo + "  " + cita.vehiculo.placa + ", " + cita.mecanico.firstName + " de BRANCH tendra el gusto de recibirte. Tu experiencia nuestro motor! BRANCH"
+                                                    sms.sendSMSTwilio(cita.vehiculo.usuario.celular, textoSms);
+                                                }
+                                            }*/
+
+                                        }
+                                    }
+                                }
+                            })
+                            return res.status(HttpStatus.ACCEPTED).json({ message: 'Se actualizo la cita ' + IdCita + ' correctamente' });
+                        } else {
+                            return res.status(HttpStatus.OK).json({ error: "No se actualizo la cita" });
+                        }
                     }
-                } else {
-                    if (cita) {
-                        return res.status(HttpStatus.ACCEPTED).json({ message: 'Se actualizo la cita ' + IdCita + ' correctamente' });
-                    } else {
-                        return res.status(HttpStatus.OK).json({ error: "No se actualizo la cita" });
-                    }
-                }
-            });
+                });
+            }else{
+                return res.status(HttpStatus.EXPECTATION_FAILED).json({ error: "Solo se puede cancelar una cita hasta 24 horas antes." });
+            }
         } else {
             return res.status(HttpStatus.BAD_REQUEST).json({ message: "El parametro IdCita es requerido" });
         }
@@ -169,7 +221,7 @@ const getAllCitasByIdTaller = (req, res, next) => {
     try {
         var IdTaller = req.params.Id;
 
-        citaDAO.findAllByFilter({ IdTaller: IdTaller }, {}, function (error, citas) {
+        citaDAO.findAllByFilter({ IdTaller: IdTaller, estado: { [Op.ne]: 'Cancelada' } }, {}, function (error, citas) {
             if (error) {
                 console.error('Error al realizar la transaccion de buscar citas por Taller error ::>', error.message);
                 if (error.errors) {
@@ -225,17 +277,15 @@ const castCitasToEvents = (citas) => {
             hour = moment('00:00:00', 'HH:mm:ss');;
         }
 
-        console.log('Hora format :::>', hour);
-
         let myDate = new Date(Date.UTC(dataCita.fechaCita.getFullYear(), dataCita.fechaCita.getMonth(), dataCita.fechaCita.getDate(), hour.hour(), hour.minute(), 0));
 
-        let classEstado = (estado)=>{
-            switch(estado){
-                case  'Solicitada' : return 'event-solicitado'
-                case  'Confirmada' : return 'event-confirmada'
-                case  'Cumplida' : return 'event-cumplida'                
-                case  'Cancelada' : return 'event-cancelada'
-                case  'Incumplida' : return 'event-incumplida'
+        let classEstado = (estado) => {
+            switch (estado) {
+                case 'Solicitada': return 'event-solicitado'
+                case 'Confirmada': return 'event-confirmada'
+                case 'Cumplida': return 'event-cumplida'
+                case 'Cancelada': return 'event-cancelada'
+                case 'Incumplida': return 'event-incumplida'
                 default: 'event-default'
             }
         }

@@ -2,6 +2,7 @@ var vehiculoDAO = require('../dao/vehiculoDAO');
 var userController = require('../controller/userController');
 var sms = require('../utils/sendSms')
 var HttpStatus = require('http-status-codes');
+const { Op } = require("sequelize");
 
 const getAllVehiculos = (req, res, next) => {
     try {
@@ -203,6 +204,72 @@ const getAllVehiculosByIdTaller = (req, res, next) => {
     }
 }
 
+const getAllPaginateFilterVehiculosByIdTaller = (req, res, next) => {
+    try {
+        let page = req.query.page;
+        let perpage =  parseInt(req.query.perPage);
+        let columnFilter = req.query.columnFilter
+        let valueSearch = req.query.filter
+        let IdTaller = req.params.Id;
+
+        let filterVehiculo = {}
+        let filterUsuario = {}
+
+        if(columnFilter == 'placa'){
+            if(valueSearch){
+                filterVehiculo = {
+                    IdTaller : IdTaller,
+                    placa : {
+                        [Op.substring] : valueSearch
+                    }
+                }
+            }else{
+                filterVehiculo = {
+                    IdTaller : IdTaller                
+                }
+            }
+        }else{
+            filterVehiculo = {
+                IdTaller : IdTaller                
+            }
+            if(columnFilter == 'firstName' || columnFilter == 'identificacion'){
+                if(valueSearch){
+                    filterUsuario = {
+                        IdTaller : IdTaller,
+                        [columnFilter] : {
+                            [Op.substring] : valueSearch
+                        }
+                    }
+                }else{
+                    filterUsuario = {}
+                }   
+            }
+        }
+
+        
+
+        console.debug('Parametro taller recibido :::::>', req.query);
+
+        vehiculoDAO.findPaginateByFilter(page,perpage,filterVehiculo,filterUsuario, function (error, vehiculos) {
+            if (error) {
+                console.error('Error al realizar la transaccion de buscar vehiculos:::>', 'error ::>', error.message);
+                if (error.errors) {
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
+                } else {
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+                }
+            } else {
+                if (vehiculos) {
+                    res.status(HttpStatus.OK).json(vehiculos);
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error al listar vehiculos ', error);
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+    }
+}
+
 const getAllVehiculosByIdUsuario = (req, res, next) => {
     try {
         var IdUsuario = req.params.Id;
@@ -235,7 +302,8 @@ module.exports = {
     deleteVehiculoById,
     findVehiculoById,
     getAllVehiculosByIdTaller,
-    getAllVehiculosByIdUsuario
+    getAllVehiculosByIdUsuario,
+    getAllPaginateFilterVehiculosByIdTaller
 }
 
 
