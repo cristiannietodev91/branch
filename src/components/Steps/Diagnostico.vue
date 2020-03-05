@@ -155,7 +155,7 @@ export default {
 
       let documento = {
         nombrearchivo: response.name,
-        url: response.s3ObjectLocation,
+        url: response.s3Url+'/'+response.s3Signature.key,
         type: response.type,
         date: dateCreated,
         size: response.size
