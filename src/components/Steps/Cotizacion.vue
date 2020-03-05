@@ -82,22 +82,21 @@ export default {
       },
       filesEtapa: [],
       dropzoneOptions: {
-        url: process.env.VUE_APP_URLBACKSERVICES+"file/send",
-        method: 'put',
-        thumbnailWidth: 150,
+        url: process.env.VUE_APP_URLBACKSERVICES+`file/sendFile`,
+        method: 'post',
         autoProcessQueue: true,
         acceptedFiles: "image/*"
       },
       awss3: {
         signingURL: f => {
           // The server REST endpoint we setup earlier
-          const key = process.env.VUE_APP_URLBACKSERVICES+`file/send?filename=${f.name}`;
+          const key = process.env.VUE_APP_URLBACKSERVICES+`file/signed?filename=${f.name}`;
           // Save this for later use
           return key;
         },
         headers: {},
         params: {},
-        sendFileToServer: true
+        sendFileToServer: false
       },
       glideBasicOption: {
         gap: 5,

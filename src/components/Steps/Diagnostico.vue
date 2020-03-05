@@ -109,9 +109,8 @@ export default {
       },
       filesEtapa: [],
       dropzoneOptions: {
-        url: process.env.VUE_APP_URLBACKSERVICES+"file/send",
-        method: 'put',
-        thumbnailWidth: 150,
+        url: null,
+        method: 'post',
         autoProcessQueue: true,
         acceptedFiles: "image/*"
       },
@@ -124,7 +123,7 @@ export default {
         },
         headers: {},
         params: {},
-        sendFileToServer: true
+        sendFileToServer: false
       },
       glideBasicOption: {
         gap: 5,
