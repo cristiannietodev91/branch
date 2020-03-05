@@ -3,8 +3,8 @@ var fileController = require('../controller/fileController')
 var router = express.Router();
 var cors = require('cors')
 
-router.post('/send',cors(), fileController.fileUpload);
+router.post('/signed', cors(), fileController.signedS3);
 
-router.put('/send',cors(), fileController.sendFile);
+router.post('/sendFile',cors(), fileController.sendFile);
 
 module.exports = router;

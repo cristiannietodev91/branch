@@ -34,7 +34,7 @@ AWS.config.getCredentials(function (err) {
 });
 */
 
-const fileUpload = (req, res, next) => {
+const signedS3 = (req, res, next) => {
     //let file = req.body;
     //let paramsss = req.params;
     console.log('Peticion recibida ::::>', req.query);
@@ -73,11 +73,11 @@ const fileUpload = (req, res, next) => {
 
 
 const sendFile = (req, res, next) => {
-    let file = req.body;
-    console.log('Peticion recibida send file::::>', file);
+    //let file = req.body;
+    //console.log('Peticion recibida send file::::>', file);
 
 
-    res.status(HttpStatus.OK).json(file);
+    res.status(HttpStatus.OK).json({message: 'File uploaded'});
 }
 
 
@@ -85,6 +85,6 @@ const sendFile = (req, res, next) => {
 
 
 module.exports = {
-    fileUpload,
+    signedS3,
     sendFile
 }
