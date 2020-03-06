@@ -314,7 +314,7 @@ function crearVehiculoDB(userRecord, vehiculo, cb) {
             } else {
                 if (marca) {
                     var vehiculoRegister = {
-                        IdMarca: 1,
+                        IdMarca: marca.IdMarca,
                         IdUsuario: userRecord.uid,
                         IdTaller: vehiculo.IdTaller,
                         tipoVehiculo: 'Moto',

@@ -46,7 +46,7 @@ module.exports = {
         });
     },
     getById: function (IdVehiculo, cb) {
-        // Find all users
+        // Find all vehiculos
         return models.sequelize.transaction((t1) => {
             return models.vehiculo.findByPk(IdVehiculo).then(vehiculo => {
                 return vehiculo;
