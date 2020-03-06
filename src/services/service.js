@@ -34,6 +34,17 @@ class ServiceCrm {
     return http.get("/vehiculo/getByIdTaller/" + IdTaller);
   }
 
+  getPaginateVehiculosByIdTaller(IdTaller,page,perPage,columnFilter,filter) {
+    return http.get("/vehiculo/getPaginateByIdTaller/" + IdTaller,{
+      params: {
+        page: page,
+        perPage: perPage,
+        columnFilter: columnFilter,
+        filter: filter
+      }
+    });
+  }
+
   createVehiculo(vehiculo) {
     return http.post("/vehiculo/create", vehiculo);
   }

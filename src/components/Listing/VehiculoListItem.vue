@@ -10,17 +10,37 @@
     ></div>
 
     <div class="pl-2 d-flex flex-grow-1 min-width-zero">
-      <div class="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
-        <p class="list-item-heading mb-0 truncate w-15 w-sm-100">{{data.placa}}</p>
-        <div class="mb-0 text-muted text-small w-10 w-sm-100">
-            <p class="mb-0 text-muted text-small">{{data.kilometraje}} KM</p>
-            <p class="mb-0 text-muted text-small">Año {{data.modelo}}</p>
-            <p class="mb-0 text-muted text-small">{{data.marca.marca}}</p>
-        </div>        
-        <p class="mb-0 text-muted text-small w-10 w-sm-100">{{data.color}}</p>
-        <p class="mb-0 text-muted text-small w-10 w-sm-100">{{data.tipoVehiculo}}</p>
-        <p class="mb-0 text-muted text-small w-30 w-sm-100">{{data.usuario.email}}</p>
-        <p class="mb-0 text-muted text-small w-15 w-sm-100">{{data.usuario.celular}}</p>
+      <div class="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center p-3">
+        <div class="mb-0 w-30 w-sm-100">
+          <p class="text-muted text-small mb-1">{{ $t('branch.orden.marca') }}</p>
+          <p class="mb-1 text-small mb-3">{{data.marca.marca}}</p>
+          <p class="text-muted text-small mb-1">{{ $t('branch.vehiculo.dueno') }}</p>
+          <p class="mb-1 text-small">{{data.usuario.firstName}}</p>
+        </div>
+        <div class="mb-0 w-30 w-sm-100">
+          <p class="text-muted text-small mb-1">{{ $t('branch.marca.referencia') }}</p>
+          <p class="mb-1 text-small mb-3">{{data.marca.referencia}}</p>
+          <p class="text-muted text-small mb-1">{{ $t('branch.usuario.identificacion') }}</p>
+          <p class="mb-1 text-small">{{data.usuario.identificacion ? data.usuario.identificacion : '1234' }}</p>
+        </div>
+        <div class="mb-0 w-30 w-sm-100">
+          <p class="text-muted text-small mb-1">{{ $t('branch.vehiculo.modelo') }}</p>
+          <p class="mb-1 text-small mb-3">{{data.modelo ? data.modelo : 'Sin modelo'}}</p>
+          <p class="text-muted text-small mb-1">{{ $t('branch.usuario.telefono') }}</p>
+          <p class="mb-1 text-small">{{data.usuario.celular}}</p>
+        </div>
+        <div class="mb-0 w-30 w-sm-100 mr-2">
+          <p class="text-muted text-small mb-1">{{ $t('branch.vehiculo.placa') }}</p>
+          <p class="mb-1 text-small mb-3">{{data.placa}}</p>
+          <p class="text-muted text-small mb-1">{{ $t('branch.usuario.email') }}</p>
+          <p class="mb-1 text-small">{{data.usuario.email}}</p>
+        </div>
+        <div class="mb-0 w-30 w-sm-100">
+          <p class="text-muted text-small mb-1">{{ $t('branch.vehiculo.kilometraje') }}</p>
+          <p class="mb-1 text-small mb-3">{{data.kilometraje}} KM</p>
+          <p class="text-muted text-small mb-1">{{ $t('branch.vehiculo.tipo') }}</p>
+          <p class="mb-1 text-small">{{data.tipoVehiculo}}</p>
+        </div>
         <div class="w-15 w-sm-100">
           <b-badge pill variant="primary">{{ data.estado }}</b-badge>
         </div>

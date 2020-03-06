@@ -241,7 +241,7 @@ export default {
           })
           .catch(error => {
             //this.hideModal("modalAddCita");
-            //console.error("Error al crear cita :::>",error);
+            console.error("Error al crear cita :::>",error);
             if (error.response) {
               this.$notify("error filled", "ERROR", error.response.data.error, {
                 duration: 3000,

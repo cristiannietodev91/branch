@@ -105,16 +105,16 @@
               <div class="d-block d-md-inline-block pt-1">
                 <b-dropdown
                   id="ddown1"
-                  :text="`${$t('pages.orderby')} ${sort.label}`"
+                  :text="`${$t('pages.filterby')} ${filter.label}`"
                   variant="outline-dark"
                   class="mr-1 float-md-left btn-group"
                   size="xs"
                 >
                   <b-dropdown-item
-                    v-for="(order,index) in sortOptions"
+                    v-for="(filter,index) in filterOptions"
                     :key="index"
-                    @click="changeOrderBy(order)"
-                  >{{ order.label }}</b-dropdown-item>
+                    @click="changeFilterBy(filter)"
+                  >{{ filter.label }}</b-dropdown-item>
                 </b-dropdown>
 
                 <div class="search-sm d-inline-block float-md-left mr-1 align-top">
@@ -200,6 +200,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import {
   required,
   requiredIf,
@@ -230,18 +231,22 @@ export default {
   data() {
     return {
       isLoad: false,
-      sort: {
+      filter: {
         column: "placa",
         label: "Placa"
       },
-      sortOptions: [
+      filterOptions: [
         {
           column: "placa",
           label: "Placa"
         },
         {
-          column: "usuario.firstname",
+          column: "firstName",
           label: "Nombre cliente"
+        },
+        {
+          column: "identificacion",
+          label: "Identificacion"
         }
       ],
       page: 1,
@@ -282,13 +287,21 @@ export default {
     }
   },
   methods: {
-    loadItems() {
+    loadItems(page,perPage,columnFilter,filter) {
       this.isLoad = false;
-      ServicesCore.getVehiculosByIdTaller(this.currentUser.IdTaller).then(
+      console.log("Carga lista de clientes ::::>", this.currentUser);
+      ServicesCore.getPaginateVehiculosByIdTaller(this.currentUser.IdTaller,page,perPage,columnFilter,filter).then(
         response => {
           if (response.status == 200) {
             console.debug("Resultado lista de talleres ::::>", response.data);
-            this.items = response.data;
+            this.items = response.data.docs;
+            this.total = response.data.total;
+            this.lastPage = response.data.pages;
+            this.to = page*perPage;
+            if(this.to > this.total){
+              this.to = this.total
+            }
+            this.from = this.to - (this.items.length-1);                        
             this.selectedItems = [];
             this.isLoad = true;
           }
@@ -301,8 +314,8 @@ export default {
     changePageSize(perPage) {
       this.perPage = perPage;
     },
-    changeOrderBy(sort) {
-      this.sort = sort;
+    changeFilterBy(filter) {
+      this.filter = filter;
     },
     selectAll(isToggle) {
       if (this.selectedItems.length >= this.items.length) {
@@ -377,6 +390,7 @@ export default {
       );
     },
     linkGen(pageNum) {
+      //console.log('PageNum ::>',pageNum);
       return "#page-" + pageNum;
     },
     onValitadeFormSubmit() {
@@ -420,6 +434,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(["currentUser"]),
     isSelectedAll() {
       return this.selectedItems.length >= this.items.length;
     },
@@ -432,11 +447,17 @@ export default {
   },
   watch: {
     search() {
+      console.log('Value to search ::> ',this.search);
       this.page = 1;
+      this.loadItems(this.page,this.perPage,this.filter.column,this.search);
+    },
+    page(){
+      console.log('New Page ::>',this.page);
+      this.loadItems(this.page,this.perPage,this.filter.column,this.search);
     }
   },
   mounted() {
-    this.loadItems();
+    this.loadItems(this.page,this.perPage,this.filter.column,this.search);
   }
 };
 </script>
