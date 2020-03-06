@@ -7,6 +7,15 @@ module.exports = {
             cb(null, marcas);
         });
     },
+    findAllUnique: function (cb) {
+        // Find all users
+        models.marca.findAll({
+            attributes: ['marca'],
+            group: ['marca']
+        }).then(marcas => {
+            cb(null, marcas);
+        });
+    },
     create: function (marca, cb) {
         // Find all users
         return models.sequelize.transaction((t1) => {

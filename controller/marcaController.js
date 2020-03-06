@@ -18,6 +18,24 @@ const getAllMarcas = (req, res, next) => {
     }
 }
 
+
+const getListUniqueMarcas = (req, res, next) => {
+    try {
+        marcaDAO.findAllUnique(function (error, marcas) {
+            if (error) {
+                res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({ error: error.errors[0] });
+            } else {
+                if (marcas) {
+                    res.status(HttpStatus.OK).json(marcas);
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error al listar marcas ::::::>', error);
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+    }
+}
+
 const createMarca = (req, res, next) => {
     try {
         var marca = req.body;
@@ -126,6 +144,7 @@ const findMarcaById = (req, res, next) => {
 
 module.exports = {
     getAllMarcas,
+    getListUniqueMarcas,
     createMarca,
     updateMarca,
     deleteMarcaById,

@@ -5,6 +5,8 @@ var router = express.Router();
 /* GET users listing. */
 router.get('/getAll', marcaController.getAllMarcas);
 
+router.get('/getAllUnique', marcaController.getListUniqueMarcas);
+
 router.get('/getById/:Id', marcaController.findMarcaById);
 
 router.post('/create', marcaController.createMarca);
