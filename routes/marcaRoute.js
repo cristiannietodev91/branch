@@ -7,6 +7,8 @@ router.get('/getAll', marcaController.getAllMarcas);
 
 router.get('/getAllUnique', marcaController.getListUniqueMarcas);
 
+router.get('/getAllByMarca/:marca', marcaController.getAllMarcaByMarca);
+
 router.get('/getById/:Id', marcaController.findMarcaById);
 
 router.post('/create', marcaController.createMarca);
