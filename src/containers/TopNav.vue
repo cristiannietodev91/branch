@@ -13,7 +13,7 @@
                 <i class="simple-icon-magnifier"></i>
             </span>
         </div>
-        <div class="d-inline-block">
+        <!-- <div class="d-inline-block">
             <b-dropdown id="langddm" class="ml-2" variant="light" size="sm" toggle-class="language-button">
                 <template slot="button-content">
                     <span class="name">{{$i18n.locale.toUpperCase()}}</span>
@@ -23,7 +23,7 @@
         </div>
         <div class="position-relative d-none d-none d-lg-inline-block">
             <a class="btn btn-outline-primary btn-sm ml-2" target="_top" :href="buyUrl">{{$t('user.buy')}}</a>
-        </div>
+        </div> -->
     </div>
     <router-link class="navbar-logo" tag="a" to="/app">
         <span class="logo d-none d-xs-block"></span>
