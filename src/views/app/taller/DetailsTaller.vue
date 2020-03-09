@@ -17,19 +17,24 @@
           <b-tab :title="$t('pages.details')">
             <b-row>
               <b-colxx xl="12" lg="12" class="mb-4">
-                <b-card class="mb-4">
+                <b-card class="mb-4 detalle-taller">
                   <div class="position-absolute card-top-buttons">
                     <b-button variant="outline-white" class="icon-button">
                       <i class="simple-icon-pencil" />
                     </b-button>
                   </div>
                   <b-row>
-                    <b-colxx>
+                    <b-colxx class="logo-taller">
                       <img
                         :alt="taller.email"
-                        :src="taller.logo || '/assets/img/detail.jpg' "
+                        :src="taller.logo || '/assets/img/preload.gif' "
                         class="card-img-top-2"
                       />
+                      <!-- <img
+                        :alt="taller.email"
+                        :src="taller.logo"
+                        class="card-img-top-2"
+                      /> -->
                     </b-colxx>
                     <b-colxx>
                       <p
@@ -98,20 +103,26 @@
                         :id="`event-${eventProps.event.originalEvent.citaObject.IdCita}`"
                         :title="eventProps.event.title"
                         :class="`cv-event ${eventProps.event.classes[0]} ${eventProps.event.classes[1]} ${eventProps.event.classes[2]}`"
-                        :style="`top: calc(1.4em + ${eventProps.event.eventRow}*4.5em + ${eventProps.event.eventRow}*2px);`"
+                        :style="`top: calc(1.4em + ${eventProps.event.eventRow}*7em + ${eventProps.event.eventRow}*2px);`"
                         @click.ctrl="eventProps.event.originalEvent.estado == 'Solicitada' || eventProps.event.originalEvent.estado == 'Confirmada' ? onCtrlClickEvent(eventProps.event.originalEvent.citaObject) : ''"
                         @click.exact="eventProps.event.originalEvent.estado == 'Confirmada' ? onClickEvent(eventProps.event) : ''"
                       >
-                        <span
-                          class="startTime"
-                        >{{new Date(eventProps.event.originalEvent.startDate).toLocaleString("en-US", {timeZone: "UTC"}) | moment("hh:mm A")}}</span>
-                        <br />
-                        <span>{{eventProps.event.originalEvent.citaObject.servicio}}</span>
-                        <br />
-                        {{eventProps.event.originalEvent.citaObject.vehiculo.marca.marca}} {{eventProps.event.originalEvent.citaObject.vehiculo.marca.referencia}}
+                        <h4 class="startTime">
+                          {{new Date(eventProps.event.originalEvent.startDate).toLocaleString("en-US", {timeZone: "UTC"}) | moment("hh:mm A")}}
+                        </h4>
+                        <!-- <p>
+                          {{eventProps.event.originalEvent.citaObject.servicio}}
+                        </p>
+                        <p>
+                          {{eventProps.event.originalEvent.citaObject.vehiculo.marca.marca}}
+                        </p>
+                        <p>
+                          {{eventProps.event.originalEvent.citaObject.vehiculo.marca.referencia}}
+                        </p> -->
                         <b-popover
                           :target="`event-${eventProps.event.originalEvent.citaObject.IdCita}`"
-                          triggers="hover">
+                          triggers="hover"
+                          id="calendar-tooltip">
                           <template v-slot:title>{{eventProps.event.originalEvent.citaObject.vehiculo.marca.marca}} {{eventProps.event.originalEvent.citaObject.vehiculo.marca.referencia}}</template>
                           {{eventProps.event.originalEvent.citaObject.horaCita}} <br />
                           {{eventProps.event.originalEvent.citaObject.vehiculo.usuario.firstName}}
@@ -120,11 +131,11 @@
                           Recibe: {{eventProps.event.originalEvent.citaObject.mecanico.fullName}}
 
                         </b-popover>
-                        <!--
-                        <p>
+                        
+                        <!-- <p>
                         {{eventProps.event}}
-                        </p>
-                        -->
+                        </p> -->
+                        
                       </div>
                     </template>
                   </calendar-view>

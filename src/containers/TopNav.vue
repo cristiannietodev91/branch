@@ -36,7 +36,7 @@
             <b-tooltip target="tool-mode-switch" placement="left" title="Dark Mode"></b-tooltip>
         </div>
         <div class="header-icons d-inline-block align-middle">
-            <div class="position-relative d-none d-sm-inline-block">
+            <!-- <div class="position-relative d-none d-sm-inline-block">
                 <b-dropdown variant="empty" size="sm" right toggle-class="header-icon" menu-class="position-absolute mt-3 iconMenuDropdown" no-caret>
                     <template slot="button-content">
                         <i class="simple-icon-grid" />
@@ -68,7 +68,7 @@
                         </router-link>
                     </div>
                 </b-dropdown>
-            </div>
+            </div> -->
 
             <div class="position-relative d-inline-block">
                 <b-dropdown variant="empty" size="sm" right toggle-class="header-icon notificationButton" menu-class="position-absolute mt-3 notificationDropdown" no-caret>
@@ -98,24 +98,23 @@
                     </b-button>
                 </div>
             </div>
-        </div>
-        <div class="user d-inline-block">
-            
-            <b-dropdown class="dropdown-menu-right" right variant="empty" toggle-class="p-0" menu-class="mt-3" no-caret>
-                <template slot="button-content">
-                    <span class="name mr-1">{{currentUser.displayName}}</span>
-                    <span class="name mr-1">{{currentUser.email}}</span>
-                    <span>
-                        <img :alt="currentUser.email" :src="currentUser.photoUrl || '/assets/img/profile-pic-6.jpg' " />
-                    </span>
-                </template>
-                <b-dropdown-item>Account</b-dropdown-item>
-                <b-dropdown-item>Features</b-dropdown-item>
-                <b-dropdown-item>History</b-dropdown-item>
-                <b-dropdown-item>Support</b-dropdown-item>
-                <b-dropdown-divider />
-                <b-dropdown-item @click="logout">Sign out</b-dropdown-item>
-            </b-dropdown>
+            <div class="user d-inline-block">
+                <b-dropdown class="dropdown-menu-right" right variant="empty" toggle-class="p-0" menu-class="mt-3" no-caret>
+                    <template slot="button-content">
+                        <span>
+                            <img :alt="currentUser.email" :src="currentUser.photoUrl || '/assets/img/profile-pic-6.jpg' " />
+                        </span>
+                        <span class="name mr-1">{{currentUser.displayName}}</span>
+                        <!-- <span class="name mr-1">{{currentUser.email}}</span> -->
+                    </template>
+                    <b-dropdown-item>Account</b-dropdown-item>
+                    <b-dropdown-item>Features</b-dropdown-item>
+                    <b-dropdown-item>History</b-dropdown-item>
+                    <b-dropdown-item>Support</b-dropdown-item>
+                    <b-dropdown-divider />
+                    <b-dropdown-item @click="logout">Sign out</b-dropdown-item>
+                </b-dropdown>
+            </div>
         </div>
     </div>
 </nav>
