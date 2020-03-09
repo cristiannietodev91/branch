@@ -11,6 +11,10 @@ router.get('/getByIdTaller/:Id', citaController.getAllCitasByIdTaller);
 
 router.get('/getByIdUsuario/:Id', citaController.getAllCitasByIdUsuario);
 
+router.get('/getPasadasByIdUsuario/:Id', citaController.getAllCitasPasadasByIdUsuario);
+
+router.get('/getActivasByIdUsuario/:Id', citaController.getAllCitasPasadasByIdUsuario);
+
 router.post('/create', citaController.createCita);
 
 router.put('/update/:Id', citaController.updateCita);

@@ -17,7 +17,11 @@ var fileRouter = require('./routes/fileRoute');
 
 var app = express();
 
-app.use(cors())
+app.use(cors({
+    origin: '*' , //servidor que deseas que consuma o (*) en caso que sea acceso libre
+    credentials: true
+}))
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

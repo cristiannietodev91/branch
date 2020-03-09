@@ -221,7 +221,7 @@ const getAllCitasByIdTaller = (req, res, next) => {
     try {
         var IdTaller = req.params.Id;
 
-        citaDAO.findAllByFilter({ IdTaller: IdTaller, estado: { [Op.ne]: 'Cancelada' } }, {}, function (error, citas) {
+        citaDAO.findAllByFilter({ IdTaller: IdTaller, estado: { [Op.ne]: 'Cancelada' } }, {}, {},function (error, citas) {
             if (error) {
                 console.error('Error al realizar la transaccion de buscar citas por Taller error ::>', error.message);
                 if (error.errors) {
@@ -246,7 +246,57 @@ const getAllCitasByIdUsuario = (req, res, next) => {
     try {
         var IdUsuario = req.params.Id;
 
-        citaDAO.findAllByFilter({}, { IdUsuario: IdUsuario }, function (error, citas) {
+        citaDAO.findAllByFilter({}, { IdUsuario: IdUsuario },{},function (error, citas) {
+            if (error) {
+                console.error('Error al realizar la transaccion de buscar citas By Usuario error ::>', error.message);
+                if (error.errors) {
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
+                } else {
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+                }
+            } else {
+                if (citas) {
+                    res.status(HttpStatus.OK).json(citas);
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error al listar citas ::::> ', error);
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+    }
+}
+
+const getAllCitasPasadasByIdUsuario = (req, res, next) => {
+    try {
+        var IdUsuario = req.params.Id;
+
+        citaDAO.findAllByFilter({ [Op.or]: [{ estado: 'Cancelada'}, { estado: 'Incumplida'} ] }
+           , { IdUsuario: IdUsuario }, {IdEtapa: 2}, function (error, citas) {
+            if (error) {
+                console.error('Error al realizar la transaccion de buscar citas By Usuario error ::>', error.message);
+                if (error.errors) {
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
+                } else {
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+                }
+            } else {
+                if (citas) {
+                    res.status(HttpStatus.OK).json(citas);
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error al listar citas ::::> ', error);
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+    }
+}
+
+const getAllCitasActivasByIdUsuario = (req, res, next) => {
+    try {
+        var IdUsuario = req.params.Id;
+
+        citaDAO.findAllByFilter({ estado: 'Cumplida' }
+           , { IdUsuario: IdUsuario }, {IdEtapa: 2}, function (error, citas) {
             if (error) {
                 console.error('Error al realizar la transaccion de buscar citas By Usuario error ::>', error.message);
                 if (error.errors) {
@@ -312,5 +362,7 @@ module.exports = {
     deleteCitaById,
     findCitaById,
     getAllCitasByIdTaller,
-    getAllCitasByIdUsuario
+    getAllCitasByIdUsuario,
+    getAllCitasPasadasByIdUsuario,
+    getAllCitasActivasByIdUsuario
 }

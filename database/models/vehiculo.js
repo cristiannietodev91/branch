@@ -44,6 +44,9 @@ module.exports = (sequelize, DataTypes) => {
         alias: {
             type: Sequelize.STRING
         },
+        fotos: {
+            type: Sequelize.JSON
+        },
         estado: {
             type: Sequelize.ENUM('Registrado', 'Pendiente'),
             allowNull: false

@@ -97,7 +97,7 @@ module.exports = {
             cb(err, null);
         });
     },
-    findAllByFilter: function (filterCita,filterVehiculo, cb) {
+    findAllByFilter: function (filterCita,filterVehiculo, filterOrden, cb) {
         // Find all users
         return models.sequelize.transaction((t1) => {
             return models.cita.findAll({
@@ -119,6 +119,11 @@ module.exports = {
                     },
                     {
                         model: models.mecanico
+                    },
+                    {
+                        model: models.ordentrabajo,
+                        where: filterOrden,
+                        required:false
                     }
                 ],
                 where: filterCita

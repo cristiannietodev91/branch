@@ -26,7 +26,7 @@ const createVehiculo = (req, res, next) => {
     try {
         var vehiculo = req.body;
         console.debug('Parametro de vehiculo recibido :::::>', vehiculo);
-        vehiculoDAO.findOneByFilter({ placa: vehiculo.placa }, function (error, vehiculo) {
+        vehiculoDAO.findOneByFilter({ placa: vehiculo.placa }, function (error, vehiculoResult) {
             if (error) {
                 console.error('Error al buscar vehiculo por placa:::>', 'error ::>', error.message);
                 if (error.errors) {
@@ -35,7 +35,8 @@ const createVehiculo = (req, res, next) => {
                     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
                 }
             } else {
-                if (vehiculo) {
+                console.debug('Vehiculo resultado consulta BD ::::> ',vehiculoResult);
+                if (vehiculoResult) {
                     //TODO : Placa ya existe, si no tiene taller si coloca el ID de taller que esta registrando
                 } else {
                     if (vehiculo.usuario) {
@@ -111,16 +112,40 @@ const updateVehiculo = (req, res, next) => {
     try {
         var IdVehiculo = req.params.Id;
         var vehiculo = req.body;
+        console.debug('Parametro de vehiculo recibido para actualizar :::::>', vehiculo);
         if (IdVehiculo) {
-            vehiculoDAO.update(IdVehiculo, vehiculo, function (error, vehiculo) {
+            marcaDAO.findOneByFilter({ marca: vehiculo.marca.marca, referencia: vehiculo.marca.referencia }, (error, marca) => {
                 if (error) {
-                    console.error('Error al realizar la transaccion de actualizar vehiculo:::>', 'error ::>', error.message);
-                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
+                    cb(error, null);
                 } else {
-                    if (vehiculo) {
-                        return res.status(HttpStatus.ACCEPTED).json({ message: 'Se actualizo el Vehiculo ' + IdVehiculo + ' correctamente' });
-                    } else {
-                        return res.status(HttpStatus.OK).json({ error: "No se actualizo el vehiculo" });
+                    if (marca) {                        
+                        var vehiculoUpdate = {
+                            IdMarca: marca.IdMarca,
+                            IdUsuario: vehiculo.usuario.uid,
+                            IdTaller: vehiculo.IdTaller,
+                            tipoVehiculo: 'Moto',
+                            placa: vehiculo.placa,
+                            estado: 'Pendiente',
+                            alias: vehiculo.alias,
+                            color: vehiculo.color,
+                            fechaCompra: vehiculo.fechaCompra,
+                            kilometraje: vehiculo.kilometraje,
+                            modelo: vehiculo.modelo,
+                            fotos: vehiculo.fotos
+                        };
+
+                        vehiculoDAO.update(IdVehiculo, vehiculoUpdate, function (error, vehiculo) {
+                            if (error) {
+                                console.error('Error al realizar la transaccion de actualizar vehiculo:::>', 'error ::>', error.message);
+                                return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
+                            } else {
+                                if (vehiculo) {
+                                    return res.status(HttpStatus.ACCEPTED).json({ message: 'Se actualizo el Vehiculo ' + IdVehiculo + ' correctamente' });
+                                } else {
+                                    return res.status(HttpStatus.OK).json({ error: "No se actualizo el vehiculo" });
+                                }
+                            }
+                        });
                     }
                 }
             });

@@ -48,6 +48,9 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: 'IdMecanico',
             target_id: 'IdMecanico'
         });
+
+        Cita.hasOne(models.ordentrabajo,{foreignKey: 'IdCita'});
+
     };
     return Cita;
 };
