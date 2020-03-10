@@ -13,7 +13,7 @@ router.get('/getByIdUsuario/:Id', citaController.getAllCitasByIdUsuario);
 
 router.get('/getPasadasByIdUsuario/:Id', citaController.getAllCitasPasadasByIdUsuario);
 
-router.get('/getActivasByIdUsuario/:Id', citaController.getAllCitasPasadasByIdUsuario);
+router.get('/getActivasByIdUsuario/:Id', citaController.getAllCitasActivasByIdUsuario);
 
 router.post('/create', citaController.createCita);
 

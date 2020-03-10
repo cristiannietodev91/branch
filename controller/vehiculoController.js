@@ -211,7 +211,7 @@ const getAllVehiculosByIdTaller = (req, res, next) => {
 
         vehiculoDAO.findAllByFilter({ IdTaller: IdTaller }, function (error, vehiculos) {
             if (error) {
-                console.error('Error al realizar la transaccion de buscar vehiculos:::>', 'error ::>', error.message);
+                console.error('Error al realizar la transaccion de buscar vehiculos por taller:::>', 'error ::>', error.message);
                 if (error.errors) {
                     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
                 } else {
@@ -276,7 +276,7 @@ const getAllPaginateFilterVehiculosByIdTaller = (req, res, next) => {
 
         vehiculoDAO.findPaginateByFilter(page, perpage, filterVehiculo, filterUsuario, function (error, vehiculos) {
             if (error) {
-                console.error('Error al realizar la transaccion de buscar vehiculos:::>', 'error ::>', error.message);
+                console.error('Error al realizar la transaccion de buscar vehiculos paginados:::>', 'error ::>', error.message);
                 if (error.errors) {
                     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
                 } else {
@@ -300,7 +300,7 @@ const getAllVehiculosByIdUsuario = (req, res, next) => {
         console.debug('Parametro usuario recibido :::::>', IdUsuario);
         vehiculoDAO.findAllByFilter({ IdUsuario: IdUsuario }, function (error, vehiculos) {
             if (error) {
-                console.error('Error al realizar la transaccion de buscar vehiculos:::>', 'error ::>', error.message);
+                console.error('Error al realizar la transaccion de buscar vehiculos por usuario:::>', 'error ::>', error.message);
                 if (error.errors) {
                     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
                 } else {

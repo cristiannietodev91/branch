@@ -49,7 +49,7 @@ module.exports = (sequelize, DataTypes) => {
             target_id: 'IdMecanico'
         });
 
-        Cita.hasOne(models.ordentrabajo,{foreignKey: 'IdCita'});
+        Cita.hasMany(models.ordentrabajo,{foreignKey: 'IdCita'});
 
     };
     return Cita;

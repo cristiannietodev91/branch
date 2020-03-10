@@ -129,7 +129,8 @@ const findUsuarioById = (req, res, next) => {
     }
 }
 
-const getUsuarioByUID = (req, res, next) => {
+
+const loginUserTallerByUID = (req, res, next) => {
     try {
         var uid = req.params.uid;
         console.debug('Parametro taller recibido :::::>', req.query);
@@ -144,7 +145,13 @@ const getUsuarioByUID = (req, res, next) => {
                 }
             } else {
                 if (usuario) {
-                    res.status(HttpStatus.OK).json(usuario);
+
+                    if(usuario.IdTaller){
+                        res.status(HttpStatus.OK).json(usuario);
+                    }else{
+                        res.status(HttpStatus.PRECONDITION_FAILED).json({error: 'Usuario no tiene acceso a ningun taller'});
+                    }
+                    
                 }
             }
         });
@@ -197,5 +204,5 @@ module.exports = {
     deleteUsuarioById,
     findUsuarioById,
     createUsuarioNew,
-    getUsuarioByUID
+    loginUserTallerByUID
 }

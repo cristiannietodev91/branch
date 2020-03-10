@@ -68,7 +68,7 @@ const createCita = (req, res, next) => {
                                         if (error) {
                                             console.error('Error al buscar mecanico para SMS de la cita, error ::>', error);
                                         } else {
-                                            /*if (mecanico) {
+                                            if (mecanico) {
                                                 //Texto de cita con mecanico
                                                 textoSms = "Hola " + vehiculo.usuario.firstName + "! Te esperamos el " + moment(cita.fechaCita).format('D [de] MMMM YYYY') + " a las " + cita.horaCita + " con tu " + vehiculo.tipoVehiculo + "  " + vehiculo.placa + ", " + mecanico.firstName + " de BRANCH tendra el gusto de recibirte. Tu experiencia nuestro motor! BRANCH"
                                                 sms.sendSMSTwilio(vehiculo.usuario.celular, textoSms);
@@ -76,7 +76,7 @@ const createCita = (req, res, next) => {
                                                 //Texto de cita sin mecanico
                                                 textoSms = "Hola " + vehiculo.usuario.firstName + "! Te esperamos el " + moment(cita.fechaCita).format('D [de] MMMM YYYY') + " a las " + cita.horaCita + " con tu " + vehiculo.tipoVehiculo + "  " + vehiculo.placa + ", BRANCH tendra el gusto de recibirte. Tu experiencia nuestro motor! BRANCH"
                                                 sms.sendSMSTwilio(vehiculo.usuario.celular, textoSms);
-                                            }*/
+                                            }
                                         }
                                     })
                                 }
@@ -140,7 +140,7 @@ const updateCita = (req, res, next) => {
                                             let textoSms = ""
                                             //Texto de cita con mecanico
                                             debug('Estado de la cita ::>', cita.estado);
-                                            /*if (cita.estado == 'Cancelada') {
+                                            if (cita.estado == 'Cancelada') {
                                                 textoSms = "Hola " + cita.vehiculo.usuario.firstName + "! Se cancelo la cita que tenias el " + moment(cita.fechaCita).format('D [de] MMMM YYYY') + " a las " + cita.horaCita + " con tu " + cita.vehiculo.tipoVehiculo + "  " + cita.vehiculo.placa + ", BRANCH tendra el gusto de recibirte en una proxima oportunidad. Tu experiencia nuestro motor! BRANCH"
                                                 sms.sendSMSTwilio(cita.vehiculo.usuario.celular, textoSms);
                                             } else {
@@ -151,7 +151,7 @@ const updateCita = (req, res, next) => {
                                                     textoSms = "Hola " + cita.vehiculo.usuario.firstName + "! Su cita quedo asignada el " + moment(cita.fechaCita).format('D [de] MMMM YYYY') + " a las " + cita.horaCita + " con tu " + cita.vehiculo.tipoVehiculo + "  " + cita.vehiculo.placa + ", " + cita.mecanico.firstName + " de BRANCH tendra el gusto de recibirte. Tu experiencia nuestro motor! BRANCH"
                                                     sms.sendSMSTwilio(cita.vehiculo.usuario.celular, textoSms);
                                                 }
-                                            }*/
+                                            }
 
                                         }
                                     }
@@ -296,7 +296,7 @@ const getAllCitasActivasByIdUsuario = (req, res, next) => {
         var IdUsuario = req.params.Id;
 
         citaDAO.findAllByFilter({ estado: 'Cumplida' }
-           , { IdUsuario: IdUsuario }, {IdEtapa: 2}, function (error, citas) {
+           , { IdUsuario: IdUsuario }, {}, function (error, citas) {
             if (error) {
                 console.error('Error al realizar la transaccion de buscar citas By Usuario error ::>', error.message);
                 if (error.errors) {

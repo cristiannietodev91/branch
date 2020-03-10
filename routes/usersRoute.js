@@ -7,7 +7,7 @@ router.get('/getAll', userController.getAllUsuarios);
 
 router.get('/getById/:Id', userController.findUsuarioById);
 
-router.get('/getByUID/:uid', userController.getUsuarioByUID);
+router.get('/loginUsuario/:uid', userController.loginUserTallerByUID);
 
 //router.get('/config', userController.helloWorld);
 
