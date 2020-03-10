@@ -14,6 +14,14 @@
           label="firstName"
           :reduce="mecanico => mecanico.IdMecanico"
         >
+          <template #search="{attributes, events}">
+            <input
+              class="vs__search"
+              :required="!newOrden.mecanico"
+              v-bind="attributes"
+              v-on="events"
+            />
+          </template>
           <template
             v-slot:option="option"
           >{{ option.firstName }} {{ option.lastName }} - {{option.identificacion}}</template>
@@ -29,11 +37,16 @@
         >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
       </b-form-group>
       <b-form-group :label="$t('branch.orden.documentos')">
-        <input-tag
+        <b-form-checkbox-group
+          id="checkbox-documentos"
           v-model="newOrden.documentos"
-          :placeholder="$t('form-components.tags')"
-          :limit="4"
-        ></input-tag>
+          :state="state"
+          name="docuementos"
+        >
+          <b-form-checkbox value="soat">SOAT</b-form-checkbox>
+          <b-form-checkbox value="tecnomecanica">Tecnico Mecanica</b-form-checkbox>
+        </b-form-checkbox-group>
+        <b-form-invalid-feedback :state="state">{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
       </b-form-group>
       <b-form-group :label="$t('branch.orden.observaciones')">
         <b-textarea v-model.trim="newOrden.observacion"></b-textarea>
@@ -139,6 +152,11 @@ export default {
             }
           });
       }
+    }
+  },
+  computed: {
+    state() {
+      return this.newOrden.documentos.length >= 1;
     }
   },
   mounted() {
