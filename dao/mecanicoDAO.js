@@ -54,7 +54,6 @@ module.exports = {
             });
         }).then(function (result) {
             if (result) {
-                console.debug('Resultado despues get By Id :::: >', result);
                 var mecanicoCreated = result.dataValues;
                 cb(null, mecanicoCreated);
             } else {

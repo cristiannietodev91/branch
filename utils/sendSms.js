@@ -37,7 +37,10 @@ const sendSMSTwilio = (to, text) => {
         .then(message => {
             console.log("Message sent successfully a ", to, 'Result ::::>', message.sid);
         })
+        .catch(e => { console.error('Error al enviar SMS a twilio:', e.code, e.message); })
         .done();
+        
+
 }
 
 module.exports = {
