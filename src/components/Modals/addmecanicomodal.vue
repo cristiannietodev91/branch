@@ -90,6 +90,15 @@ export default {
     }
   },
   methods: {
+    hideModal(refname) {
+      this.$refs[refname].hide();
+      this.newMecanico = {
+        identificacion: "",
+        firstName: "",
+        lastName: "",
+        skills: []
+      };
+    },
     onValitadeFormSubmit() {
       this.$v.$touch();
 
@@ -110,6 +119,8 @@ export default {
           if (response.status == 200) {
             //this.loadItems();
             this.hideModal("modalAddMecanico");
+            
+            this.$emit("loadcitastalleres");
             this.newMecanico = {
               identificacion: "",
               firstName: "",

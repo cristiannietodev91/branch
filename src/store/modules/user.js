@@ -63,7 +63,7 @@ export default {
         .signInWithEmailAndPassword(payload.email, payload.password)
         .then(
           user => {
-            ServicesCore.getUsuarioByUid(user.user.uid).then(response => {
+            ServicesCore.loginUserTaller(user.user.uid).then(response => {
               if (response.status == 200) {
                 let usuario = response.data;
 
@@ -80,9 +80,9 @@ export default {
                 const item = { uid: newUser.uid, ...newUser }
                 localStorage.setItem('user', JSON.stringify(item))
                 commit('setUser', { uid: newUser.uid, ...newUser })
+
               }
-            })
-              .catch(error => {
+            }).catch(error => {
                 localStorage.removeItem('user')
                 commit('setError', err.message)
                 setTimeout(() => {

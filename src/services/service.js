@@ -6,8 +6,8 @@ class ServiceCrm {
     return http.post("/usuario/createFireBaseUser",usuario);
   }
 
-  getUsuarioByUid(uid) {
-    return http.get("/usuario/getByUID/"+uid);
+  loginUserTaller(uid) {
+    return http.get("/usuario/loginUsuario/"+uid);
   }
 
   getAllTalleres() {

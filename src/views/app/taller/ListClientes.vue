@@ -422,7 +422,7 @@ export default {
               }
             );
             this.hideModal("modaladdvehiculo");
-            this.loadItems();
+            this.loadItems(this.page,this.perPage,this.filter.column,this.search);
           }
         })
         .catch(error => {
