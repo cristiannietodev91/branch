@@ -1925,7 +1925,7 @@ button {
     width: $sub-menu-width;
     border-radius: 20px;
     background: $background-color;
-
+    border: 1px solid $light-btn-background;
     input {
       border-radius: 50px;
       border: initial;
@@ -3475,39 +3475,23 @@ main {
       .cv-day-number {
         padding: 10px;
       }
-
-      .event-solicitado{
-        background: #0eb0e2 !important;
-      }
-
-      .event-confirmada{
-        background: $theme-color-1 !important;
-      }
-
-      .event-cumplida{
-        background: #14d82b !important;
-      }
-
-      .event-cancelada{
-        background: #e27d09 !important;
-      }
-      
-      .event-incumplida{
-        background: #e42a09 !important;
-      }
-
-      .event-default{
-        background: $theme-color-1 !important;
-      }
-
       .cv-event {
-        font-size: 0.85em !important;
-        border-radius: 25px !important;
-        text-align: center !important;
-        padding: 0px 5px !important;
-        font-family: inherit !important;
-        color: $foreground-color !important;
-        margin-top: 17px;
+        font-size: 0.5em !important;
+        // border-radius: 25px !important;
+        // text-align: center !important;
+        // padding: 0px 5px !important;
+        // font-family: inherit !important;
+        // color: $foreground-color !important;
+        // margin-top: 17px;
+        width: 140px;
+        background: $background-color !important;
+        margin: 4em 0 0 .2em;
+        padding: .6em;
+        border: 2px solid;
+        p{
+          white-space: normal;
+          margin: 0;
+        }
 
         &.toBeContinued {
           border-right-style: none !important;
@@ -3552,6 +3536,40 @@ main {
 
         &.danger {
           background-color: $error-color !important;
+        }
+        &.event-solicitado{
+          background: #0eb0e2 !important;
+        }
+
+        &.event-confirmada{
+          border-color: $separator-color !important;
+          h4{
+            color: $separator-color !important;
+          }
+        }
+        &.event-cumplida{
+          border-color: #F9CB7A !important;
+          h4{
+            color: #F9CB7A !important;
+          }
+        }
+        &.event-cancelada{
+          border-color: #e27d09 !important;
+          h4{
+            color: #e27d09 !important;
+          }
+        }
+        &.event-incumplida{
+          border-color: #E56A79 !important;
+          h4{
+            color: #E56A79 !important;
+          }
+        }
+        &.event-default{
+          border-color: $theme-color-1 !important;
+          h4{
+            color: $theme-color-1 !important;
+          }
         }
       }
     }
@@ -9591,4 +9609,39 @@ footer.page-footer {
 
 .step-title h4{
   font-size: 10px !important;
+}
+.user{
+  div{
+    button{
+      // text-align: right;
+      span{
+        color: $separator-color;
+        display: block;
+        img{
+          margin: 0;
+        }
+      }
+    } 
+  }
+  .vue-switcher{
+    label{
+
+    }
+    input{
+      left: 0;
+    }
+  }
+}
+.detalle-taller{
+  .logo-taller{
+    // background: url("/assets/img/preload.gif") no-repeat center center;
+    text-align: center;
+    .card-img-top-2{
+      width: auto;
+      height: auto;
+    }
+  }
+}
+#calendar-tooltip{
+  top: -11em !important;
 }
