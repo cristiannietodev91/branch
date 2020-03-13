@@ -3485,7 +3485,7 @@ main {
         // margin-top: 17px;
         width: 140px;
         background: $background-color !important;
-        margin: 4em 0 0 .2em;
+        margin: 4em 0 0 .4em;
         padding: .6em;
         border: 2px solid;
         p{
@@ -9644,4 +9644,29 @@ footer.page-footer {
 }
 #calendar-tooltip{
   top: -11em !important;
+}
+.switch_branch{
+  input[type="checkbox"]{
+    left: 0 !important;
+  }
+}
+.mecanicos-branch{
+  display: flex;
+  .card{
+    padding: 1em 1em 1em 0;
+  }
+}
+.detalle-taller{
+  .card-top-buttons{
+    z-index: 1;
+  }
+}
+.ordenes-branch{
+  .card.mb-4{
+    padding: 0 1em;
+    box-shadow: none;
+    h5{
+      padding-bottom: 1.5em;
+    }
+  }
 }
