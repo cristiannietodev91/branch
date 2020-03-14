@@ -84,6 +84,7 @@ import "vue-select/dist/vue-select.css";
 import { required } from "vuelidate/lib/validators";
 import ServicesCore from "../../services/service";
 
+
 export default {
   props: ["taller", "cita"],
   components: {
@@ -152,13 +153,14 @@ export default {
       // if its still pending or an error is returned do not submit
       if (this.$v.newCita.$pending || this.$v.newCita.$error) return;
 
-      console.log(JSON.stringify(this.newCita));
+      //console.log(JSON.stringify(this.newCita));
+      
 
       var citaCreate = {
         IdCita: this.newCita.IdCita,
         placa: this.newCita.placa,
         mecanico: this.newCita.mecanico,
-        fechaCita: this.newCita.fechaCita,
+        fechaCita: this.$moment(this.newCita.fechaCita).format("DD/MM/YYYY"),
         taller: this.taller.IdTaller,
         horaCita: this.newCita.horaCita,
         servicio: this.newCita.servicio.label,
