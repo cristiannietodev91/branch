@@ -8,11 +8,11 @@ export const menuHiddenBreakpoint = 768
 
 export const defaultLocale = 'es'
 export const defaultDirection = 'ltr'
-export const localeOptions = [
-  { id: 'en', name: 'English LTR', direction: 'ltr' },
-  { id: 'es', name: 'Español', direction: 'ltr' },
-  { id: 'enrtl', name: 'English RTL', direction: 'rtl' }
-]
+// export const localeOptions = [
+//   { id: 'en', name: 'English LTR', direction: 'ltr' },
+//   { id: 'es', name: 'Español', direction: 'ltr' },
+//   { id: 'enrtl', name: 'English RTL', direction: 'rtl' }
+// ]
 
 export const firebaseConfig = {
   apiKey: "AIzaSyBpPrdTl4df4E1eeGX9mcstM0MEWKjNM0o",

@@ -14,49 +14,8 @@
         </div>
         <piaf-breadcrumb />
         <b-tabs nav-class="separator-tabs ml-0 mb-5" content-class="tab-content" :no-fade="true">
-          <b-tab :title="$t('pages.details')">
-            <b-row>
-              <b-colxx xl="12" lg="12" class="mb-4">
-                <b-card class="mb-4">
-                  <div class="position-absolute card-top-buttons">
-                    <b-button variant="outline-white" class="icon-button">
-                      <i class="simple-icon-pencil" />
-                    </b-button>
-                  </div>
-                  <b-row>
-                    <b-colxx>
-                      <img
-                        :alt="taller.email"
-                        :src="taller.logo || '/assets/img/detail.jpg' "
-                        class="card-img-top-2"
-                      />
-                    </b-colxx>
-                    <b-colxx>
-                      <p
-                        class="text-muted font-weight-medium mb-2"
-                      >{{ $t('branch.taller.nombreTaller') }}</p>
-                      <p class="mb-3">{{taller.nombre}}</p>
-                      <p
-                        class="text-muted font-weight-medium mb-2"
-                      >{{ $t('branch.taller.identificacion') }}</p>
-                      <div class="mb-3">{{taller.identificacion}}</div>
-                      <p
-                        class="text-muted font-weight-medium mb-2"
-                      >{{ $t('branch.taller.celular') }}</p>
-                      <p class="mb-3">{{taller.celular}}</p>
-                    </b-colxx>
-                    <b-colxx>
-                      <p class="text-muted font-weight-medium mb-2">{{ $t('branch.taller.email') }}</p>
-                      <div class="mb-3">{{taller.email}}</div>
-                      <p
-                        class="text-muted font-weight-medium mb-2"
-                      >{{ $t('branch.taller.direccion') }}</p>
-                      <div class="mb-3">{{taller.direccion}}</div>
-                    </b-colxx>
-                  </b-row>
-                </b-card>
-              </b-colxx>
-            </b-row>
+
+          <b-tab :title="$t('CITAS')"> <!-- Ayuda para cambiar este título, LO HICE A LAS PATADAS -->
             <b-row>
               <b-colxx xl="12" lg="12" class="mb-4">
                 <b-card :title="$t('dashboards.calendar')">
@@ -98,20 +57,27 @@
                         :id="`event-${eventProps.event.originalEvent.citaObject.IdCita}`"
                         :title="eventProps.event.title"
                         :class="`cv-event ${eventProps.event.classes[0]} ${eventProps.event.classes[1]} ${eventProps.event.classes[2]}`"
-                        :style="`top: calc(1.4em + ${eventProps.event.eventRow}*4.5em + ${eventProps.event.eventRow}*2px);`"
+                        :style="`top: calc(1.4em + ${eventProps.event.eventRow}*10em + ${eventProps.event.eventRow}*2px);`"
                         @click.ctrl="eventProps.event.originalEvent.estado == 'Solicitada' || eventProps.event.originalEvent.estado == 'Confirmada' ? onCtrlClickEvent(eventProps.event.originalEvent.citaObject) : ''"
                         @click.exact="eventProps.event.originalEvent.estado == 'Confirmada' ? onClickEvent(eventProps.event) : ''"
                       >
-                        <span
-                          class="startTime"
-                        >{{new Date(eventProps.event.originalEvent.startDate).toLocaleString("en-US", {timeZone: "UTC"}) | moment("hh:mm A")}}</span>
-                        <br />
-                        <span>{{eventProps.event.originalEvent.citaObject.servicio}}</span>
-                        <br />
-                        {{eventProps.event.originalEvent.citaObject.vehiculo.marca.marca}} {{eventProps.event.originalEvent.citaObject.vehiculo.marca.referencia}}
+                        <h4 class="startTime">
+                          {{new Date(eventProps.event.originalEvent.startDate).toLocaleString("en-US", {timeZone: "UTC"}) | moment("hh:mm A")}}
+                        </h4>
+                        <p>{{eventProps.event.originalEvent.estado}}</p>
+                        <!-- <p>
+                          {{eventProps.event.originalEvent.citaObject.servicio}}
+                        </p>
+                        <p>
+                          {{eventProps.event.originalEvent.citaObject.vehiculo.marca.marca}}
+                        </p>
+                        <p>
+                          {{eventProps.event.originalEvent.citaObject.vehiculo.marca.referencia}}
+                        </p> -->
                         <b-popover
                           :target="`event-${eventProps.event.originalEvent.citaObject.IdCita}`"
-                          triggers="hover">
+                          triggers="hover"
+                          id="calendar-tooltip">
                           <template v-slot:title>{{eventProps.event.originalEvent.citaObject.vehiculo.marca.marca}} {{eventProps.event.originalEvent.citaObject.vehiculo.marca.referencia}}</template>
                           {{eventProps.event.originalEvent.citaObject.horaCita}} <br />
                           {{eventProps.event.originalEvent.citaObject.vehiculo.usuario.firstName}}
@@ -120,11 +86,11 @@
                           Recibe: {{eventProps.event.originalEvent.citaObject.mecanico  ? eventProps.event.originalEvent.citaObject.mecanico.fullName : 'Sin mecanico asignado'}}
 
                         </b-popover>
-                        <!--
-                        <p>
+                        
+                        <!-- <p>
                         {{eventProps.event}}
-                        </p>
-                        -->
+                        </p> -->
+                        
                       </div>
                     </template>
                   </calendar-view>
@@ -135,7 +101,7 @@
 
           <b-tab :title="$t('pages.branch.mecanicos')">
             <b-row>
-              <b-colxx>
+              <b-colxx class="mecanicos-branch">
                 <mecanicos-items
                   v-for="(mecanico,index) in taller.mecanicos"
                   :key="index"
@@ -144,11 +110,12 @@
               </b-colxx>
             </b-row>
           </b-tab>
+
           <b-tab :title="$t('pages.branch.ordentrabajo')">
             <b-row>
               <b-colxx
                 xxs="12"
-                class="mb-3"
+                class="ordenes-branch"
                 v-for="(orden,ordenIndex) in ordenes"
                 :key="`orden_${ordenIndex}`"
               >
@@ -156,6 +123,46 @@
               </b-colxx>
             </b-row>
           </b-tab>
+
+
+          <b-tab :title="$t('pages.details')">
+            <b-row>
+              <b-colxx xl="12" lg="12" class="mb-4">
+                <b-card class="mb-4 detalle-taller">
+                  <div class="position-absolute card-top-buttons">
+                    <b-button class="icon-button">
+                      <i class="simple-icon-pencil" />
+                    </b-button>
+                  </div>
+                  <b-row>
+                    <b-colxx class="logo-taller">
+                      <img :alt="taller.email" :src="taller.logo || '/assets/img/preload.gif'" class="card-img-top-2"/>
+                      <!-- <img
+                        :alt="taller.email"
+                        :src="taller.logo"
+                        class="card-img-top-2"
+                      /> -->
+                    </b-colxx>
+                    <b-colxx>
+                      <h5 class="mb-1 card-subtitle truncate">{{taller.nombre}}</h5>
+                      <p class="text-muted text-small mb-2">{{ $t('branch.taller.nombreTaller') }}</p>
+                      <h5 class="mb-1 card-subtitle truncate">{{taller.identificacion}}</h5>
+                      <p class="text-muted text-small mb-2">{{ $t('branch.taller.identificacion') }}</p>
+                      <h5 class="mb-1 card-subtitle truncate">{{taller.celular}}</h5>
+                      <p class="text-muted text-small mb-2">{{ $t('branch.taller.celular') }}</p>
+                    </b-colxx>
+                    <b-colxx>
+                      <h5 class="mb-1 card-subtitle truncate">{{taller.email}}</h5>
+                      <p class="text-muted text-small mb-2">{{ $t('branch.taller.email') }}</p>
+                      <h5 class="mb-1 card-subtitle truncate">{{taller.direccion}}</h5>
+                      <p class="text-muted text-small mb-2">{{ $t('branch.taller.direccion') }}</p>
+                    </b-colxx>
+                  </b-row>
+                </b-card>
+              </b-colxx>
+            </b-row>
+          </b-tab>
+
         </b-tabs>
       </b-colxx>
     </b-row>

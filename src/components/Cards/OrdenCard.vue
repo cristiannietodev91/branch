@@ -1,17 +1,17 @@
 <template>
   <b-card >
     <b-row>
-      <b-colxx xxs="3">
+      <b-colxx md="6" sm="6" lg="4" xxs="12">
+        <h5 class="mb-1 card-subtitle truncate">{{data.CodigoOrden}}</h5>
         <p class="text-muted text-small mb-2">{{$t('branch.orden.codigoOrden')}}</p>
-        <p class="mb-3 text-primary font-weight-bold">{{data.CodigoOrden}}</p>
       </b-colxx>
-      <b-colxx xxs="3">
-        <p class="text-muted text-small mb-2">{{$t('branch.orden.codigoOrden')}}</p>
-        <p class="mb-3">{{data.vehiculo.placa}}</p>
+      <b-colxx xxs="4">
+        <h5 class="mb-1 card-subtitle truncate">{{data.vehiculo.placa}}</h5>
+        <p class="text-muted text-small mb-2">{{$t('branch.orden.placa')}}</p>
       </b-colxx>
-      <b-colxx xxs="3">
+      <b-colxx xxs="4">
+        <h5 class="mb-1 card-subtitle truncate">{{data.vehiculo.marca.marca}}</h5>
         <p class="text-muted text-small mb-2">{{$t('branch.orden.marca')}}</p>
-        <p class="mb-3">{{data.vehiculo.marca.marca}}</p>
       </b-colxx>
     </b-row>
     <horizontal-stepper

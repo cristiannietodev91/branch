@@ -13,7 +13,7 @@
                 <i class="simple-icon-magnifier"></i>
             </span>
         </div>
-        <div class="d-inline-block">
+        <!-- <div class="d-inline-block">
             <b-dropdown id="langddm" class="ml-2" variant="light" size="sm" toggle-class="language-button">
                 <template slot="button-content">
                     <span class="name">{{$i18n.locale.toUpperCase()}}</span>
@@ -23,7 +23,7 @@
         </div>
         <div class="position-relative d-none d-none d-lg-inline-block">
             <a class="btn btn-outline-primary btn-sm ml-2" target="_top" :href="buyUrl">{{$t('user.buy')}}</a>
-        </div>
+        </div> -->
     </div>
     <router-link class="navbar-logo" tag="a" to="/app">
         <span class="logo d-none d-xs-block"></span>
@@ -32,11 +32,11 @@
 
     <div class="navbar-right">
         <div class="d-none d-md-inline-block align-middle mr-3">
-            <switches id="tool-mode-switch" v-model="isDarkActive" theme="custom" class="vue-switcher-small" color="primary" />
-            <b-tooltip target="tool-mode-switch" placement="left" title="Dark Mode"></b-tooltip>
+            <switches id="tool-mode-switch" v-model="isDarkActive" theme="custom" class="vue-switcher-small switch_branch" color="primary" />
+            <b-tooltip target="tool-mode-switch" placement="top-left" title="Modo oscuro"></b-tooltip>
         </div>
         <div class="header-icons d-inline-block align-middle">
-            <div class="position-relative d-none d-sm-inline-block">
+            <!-- <div class="position-relative d-none d-sm-inline-block">
                 <b-dropdown variant="empty" size="sm" right toggle-class="header-icon" menu-class="position-absolute mt-3 iconMenuDropdown" no-caret>
                     <template slot="button-content">
                         <i class="simple-icon-grid" />
@@ -68,7 +68,7 @@
                         </router-link>
                     </div>
                 </b-dropdown>
-            </div>
+            </div> -->
 
             <div class="position-relative d-inline-block">
                 <b-dropdown variant="empty" size="sm" right toggle-class="header-icon notificationButton" menu-class="position-absolute mt-3 notificationDropdown" no-caret>
@@ -98,24 +98,23 @@
                     </b-button>
                 </div>
             </div>
-        </div>
-        <div class="user d-inline-block">
-            
-            <b-dropdown class="dropdown-menu-right" right variant="empty" toggle-class="p-0" menu-class="mt-3" no-caret>
-                <template slot="button-content">
-                    <span class="name mr-1">{{currentUser.displayName}}</span>
-                    <span class="name mr-1">{{currentUser.email}}</span>
-                    <span>
-                        <img :alt="currentUser.email" :src="currentUser.photoUrl || '/assets/img/profile-pic-6.jpg' " />
-                    </span>
-                </template>
-                <b-dropdown-item>Account</b-dropdown-item>
-                <b-dropdown-item>Features</b-dropdown-item>
-                <b-dropdown-item>History</b-dropdown-item>
-                <b-dropdown-item>Support</b-dropdown-item>
-                <b-dropdown-divider />
-                <b-dropdown-item @click="logout">Sign out</b-dropdown-item>
-            </b-dropdown>
+            <div class="user d-inline-block">
+                <b-dropdown class="dropdown-menu-right" right variant="empty" toggle-class="p-0" menu-class="mt-3" no-caret>
+                    <template slot="button-content">
+                        <span>
+                            <img :alt="currentUser.email" :src="currentUser.photoUrl || '/assets/img/profile-pic-6.jpg' " />
+                        </span>
+                        <span class="name mr-1">{{currentUser.displayName}}</span>
+                        <!-- <span class="name mr-1">{{currentUser.email}}</span> -->
+                    </template>
+                    <b-dropdown-item>Account</b-dropdown-item>
+                    <b-dropdown-item>Features</b-dropdown-item>
+                    <b-dropdown-item>History</b-dropdown-item>
+                    <b-dropdown-item>Support</b-dropdown-item>
+                    <b-dropdown-divider />
+                    <b-dropdown-item @click="logout">Sign out</b-dropdown-item>
+                </b-dropdown>
+            </div>
         </div>
     </div>
 </nav>
