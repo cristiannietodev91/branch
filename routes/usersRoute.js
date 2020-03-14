@@ -13,7 +13,7 @@ router.get('/loginUsuario/:uid', userController.loginUserTallerByUID);
 
 router.post('/createFireBaseUser', userController.createFireBaseUsuario);
 
-router.put('/update/:Id', userController.updateUsuario);
+router.put('/update/:uid', userController.updateUsuarioByUid);
 
 router.delete('/deleteById/:Id', userController.deleteUsuarioById);
 

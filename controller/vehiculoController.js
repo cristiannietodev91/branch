@@ -35,9 +35,8 @@ const createVehiculo = (req, res, next) => {
                     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
                 }
             } else {
-                console.debug('Vehiculo resultado consulta BD ::::> ',vehiculoResult);
                 if (vehiculoResult) {
-                    //TODO : Placa ya existe, si no tiene taller si coloca el ID de taller que esta registrando
+                    //TODO : Placa ya existe, si no tiene taller si coloca el ID de taller que esta registrando                    
                 } else {
                     if (vehiculo.usuario) {
                         crearVehiculoDB(vehiculo.usuario, vehiculo, function (error, vehiculo) {
@@ -206,7 +205,7 @@ const findVehiculoById = (req, res, next) => {
 
 const getAllVehiculosByIdTaller = (req, res, next) => {
     try {
-        var IdTaller = req.params.Id;
+        let IdTaller = req.params.Id;
         console.debug('Parametro taller recibido :::::>', req.query);
 
         vehiculoDAO.findAllByFilter({ IdTaller: IdTaller }, function (error, vehiculos) {
@@ -224,6 +223,28 @@ const getAllVehiculosByIdTaller = (req, res, next) => {
             }
         });
     } catch (error) {
+        console.error('Error al listar vehiculos ', error);
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+    }
+}
+
+const getVehiculoByPlaca = (req, res, next) => {
+    try {
+        let placa = req.params.placa;
+        console.debug('Parametro de palca recibido :::::>', placa);
+        vehiculoDAO.findOneByFilter({ placa: placa }, function (error, vehiculoResult) {
+            if (error) {
+                console.error('Error al buscar vehiculo por placa:::>', 'error ::>', error.message);
+                if (error.errors) {
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
+                } else {
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+                }
+            } else {
+                res.status(HttpStatus.OK).json(vehiculoResult);
+            }
+        });
+    }catch (error) {
         console.error('Error al listar vehiculos ', error);
         return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
     }
@@ -297,7 +318,6 @@ const getAllPaginateFilterVehiculosByIdTaller = (req, res, next) => {
 const getAllVehiculosByIdUsuario = (req, res, next) => {
     try {
         var IdUsuario = req.params.Id;
-        console.debug('Parametro usuario recibido :::::>', IdUsuario);
         vehiculoDAO.findAllByFilter({ IdUsuario: IdUsuario }, function (error, vehiculos) {
             if (error) {
                 console.error('Error al realizar la transaccion de buscar vehiculos por usuario:::>', 'error ::>', error.message);
@@ -326,7 +346,8 @@ module.exports = {
     findVehiculoById,
     getAllVehiculosByIdTaller,
     getAllVehiculosByIdUsuario,
-    getAllPaginateFilterVehiculosByIdTaller
+    getAllPaginateFilterVehiculosByIdTaller,
+    getVehiculoByPlaca
 }
 
 

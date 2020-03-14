@@ -45,6 +45,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     IdTaller: {
       type: Sequelize.INTEGER
+    },
+    tokenCM: {
+      type: Sequelize.STRING
     }
   }, {});
   User.associate = function (models) {

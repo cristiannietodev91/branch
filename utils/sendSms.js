@@ -1,4 +1,15 @@
 const Nexmo = require('nexmo')
+var admin = require('firebase-admin');
+
+
+var serviceAccount = require("../serviceAccountKey.json");
+
+/*
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: 'https://branch-263701.firebaseio.com'
+});
+*/
 
 const accountSid = 'AC1099fb5ef48363809ae9de3ae535cbec';
 const authToken = 'bd7e992979a930c85f612822f4ee4b44';
@@ -43,7 +54,32 @@ const sendSMSTwilio = (to, text) => {
 
 }
 
+
+const sendNotificacionToUser = (token,messageText) => {
+    let message = {
+        data: {
+            message: messageText            
+        },
+        token: token
+    };
+
+    // Send a message to the device corresponding to the provided
+    // registration token.
+    admin.messaging().send(message)
+        .then((response) => {
+            // Response is a message ID string.
+            console.log('Successfully sent message:', response);
+            
+        })
+        .catch((error) => {
+            console.log('Error sending message:', error);
+            
+        });
+
+}
+
 module.exports = {
     sendSMSNexmo,
-    sendSMSTwilio
+    sendSMSTwilio,
+    sendNotificacionToUser
 }

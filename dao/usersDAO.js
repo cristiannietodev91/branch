@@ -26,17 +26,16 @@ module.exports = {
             cb(err, null);
         });
     },
-    update: function (Idusuario, usuario, cb) {
+    update: function (filter, usuario, cb) {
         // Find all users
         return models.sequelize.transaction((t1) => {
             return models.usuarios.update(usuario, {
-                where: { IdUsuario: Idusuario }
+                where: filter
             }).then(user => {
                 return user;
             });
         }).then(function (result) {
             if (result) {
-                console.debug('Resultado despues de actualizar usuario :::: >', result);
                 cb(null, result);
             } else {
                 cb(null, null);

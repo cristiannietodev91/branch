@@ -38,11 +38,13 @@ const createOrden = (req, res, next) => {
                         if(cita.vehiculo.usuario.celular & orden.IdEtapa == 2){
                             var textoSms = "Su vehiculo "+cita.vehiculo.placa+" ha sido INGRESADO  en el taller BRANCH";
                             sms.sendSMSTwilio(cita.vehiculo.usuario.celular,textoSms);
+                            sms.sendNotificacionToUser(cita.vehiculo.usuario.tokenCM,textoSms);
                         }
 
                         if(cita.vehiculo.usuario.celular & orden.IdEtapa == 3){
                             var textoSms = "Su vehiculo "+cita.vehiculo.placa+" ha sido DIAGNOSTICADO  en el taller BRANCH";
                             sms.sendSMSTwilio(cita.vehiculo.usuario.celular,textoSms);
+                            sms.sendNotificacionToUser(cita.vehiculo.usuario.tokenCM,textoSms);
                         }
     
                         ordenDAO.create(ordenDB, (error, orden) => {

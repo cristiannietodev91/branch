@@ -13,6 +13,8 @@ router.get('/getPaginateByIdTaller/:Id', vehiculoController.getAllPaginateFilter
 
 router.get('/getByIdUsuario/:Id', vehiculoController.getAllVehiculosByIdUsuario);
 
+router.get('/getByPlaca/:placa', vehiculoController.getVehiculoByPlaca);
+
 router.post('/create', vehiculoController.createVehiculo);
 
 router.put('/update/:Id', vehiculoController.updateVehiculo);

@@ -15,6 +15,8 @@ router.get('/getPasadasByIdUsuario/:Id', citaController.getAllCitasPasadasByIdUs
 
 router.get('/getActivasByIdUsuario/:Id', citaController.getAllCitasActivasByIdUsuario);
 
+router.get('/getFuturasByIdUsuario/:Id', citaController.getAllCitasFuturasByIdUsuario);
+
 router.post('/create', citaController.createCita);
 
 router.put('/update/:Id', citaController.updateCita);

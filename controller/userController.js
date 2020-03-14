@@ -61,18 +61,23 @@ const createFireBaseUsuario = async (req, res, next) => {
 }
 
 
-const updateUsuario = (req, res, next) => {
+const updateUsuarioByUid = (req, res, next) => {
     try {
-        var Idusuario = req.params.Id;
+        var uid = req.params.uid;
         var usuario = req.body;
-        if (Idusuario) {
-            usersDAO.update(Idusuario, usuario, function (error, usuario) {
+        console.debug(' Usuario recibido para actualizar :::>', usuario);
+        if (uid) {
+            usersDAO.update({ uid: uid }, usuario, function (error, usuario) {
                 if (error) {
-                    console.error('Error al realizar la transaccion de actualizar usuario:::>', 'error ::>', error.message);
-                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
+                    console.error('Error al realizar la transaccion de buscar usuario por UID error ::>', error.message);
+                    if (error.errors) {
+                        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
+                    } else {
+                        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+                    }
                 } else {
                     if (usuario) {
-                        return res.status(HttpStatus.ACCEPTED).json({ message: 'Se actualizo el IdUsuario ' + Idusuario + ' correctamente' });
+                        return res.status(HttpStatus.ACCEPTED).json({ message: 'Se actualizo el IdUsuario ' + uid + ' correctamente' });
                     } else {
                         return res.status(HttpStatus.OK).json({ error: "No se actualizo el usuario" });
                     }
@@ -146,12 +151,12 @@ const loginUserTallerByUID = (req, res, next) => {
             } else {
                 if (usuario) {
 
-                    if(usuario.IdTaller){
+                    if (usuario.IdTaller) {
                         res.status(HttpStatus.OK).json(usuario);
-                    }else{
-                        res.status(HttpStatus.PRECONDITION_FAILED).json({error: 'Usuario no tiene acceso a ningun taller'});
+                    } else {
+                        res.status(HttpStatus.PRECONDITION_FAILED).json({ error: 'Usuario no tiene acceso a ningun taller' });
                     }
-                    
+
                 }
             }
         });
@@ -160,6 +165,7 @@ const loginUserTallerByUID = (req, res, next) => {
         return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
     }
 }
+
 
 const createUsuarioNew = (usuario, cb) => {
     admin.auth().createUser({
@@ -200,7 +206,7 @@ const createUsuarioNew = (usuario, cb) => {
 module.exports = {
     getAllUsuarios,
     createFireBaseUsuario,
-    updateUsuario,
+    updateUsuarioByUid,
     deleteUsuarioById,
     findUsuarioById,
     createUsuarioNew,

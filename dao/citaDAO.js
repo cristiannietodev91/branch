@@ -126,7 +126,11 @@ module.exports = {
                         required:false
                     }
                 ],
-                where: filterCita
+                where: filterCita,
+                order: [
+                    ['fechaCita'],
+                    ['horaCita'],
+                ]
             }).then(citas => {
                 return citas;
             });
