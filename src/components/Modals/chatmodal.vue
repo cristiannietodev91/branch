@@ -6,118 +6,136 @@
     modal-class="modal-basic"
     hide-footer
   >
-  <div>
-    
-    
-    <div class="d-flex flex-row chat-heading">
-      <div class="d-flex">
-        <img
-          :alt="data.vehiculo.usuario.email"
-          :src="data.vehiculo.marca.urllogo"
-          class="img-thumbnail border-0 rounded-circle ml-0 mr-4 list-thumbnail align-self-center small"
-        />
-      </div>
-      <div class="d-flex min-width-zero">
-        <div
-          class="card-body pl-0 align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero"
-        >
-          <div class="min-width-zero">
+    <div>
+        <b-row class="app-row">
+            <b-colxx xxs="12" class="chat-app">
+                <conversation-detail v-if="isLoadContacts && isLoadConversations && otherUser!=null" key="conversation" :current-user="currentUser" :other-user="otherUser" :messages="conversationMessages" />
+                <div v-else class="loading" key="conversationLoading"></div>
+            </b-colxx>
+        </b-row>
+        <div class="chat-input-container d-flex justify-content-between align-items-center">
+            <b-input class="flex-grow-1" type="text" :placeholder="$t('chat.saysomething')" v-model="message" @keyup.native.enter="sendMessage" />
             <div>
-              <p class="list-item-heading mb-1 truncate">
-                {{ data.vehiculo.usuario.email}}
-              </p>
+                <b-button variant="outline-primary" class="icon-button large ml-1">
+                    <i class="simple-icon-paper-clip" />
+                </b-button>
+                <b-button variant="primary" class="icon-button large ml-1" @click="sendMessage">
+                    <i class="simple-icon-arrow-right" />
+                </b-button>
             </div>
-            <p class="mb-0 text-muted text-small"></p>
-          </div>
         </div>
-      </div>
+                    <!-- <div class="pt-4 spaced-content pb-0 mt-2"></div>
+                    <conversation-list v-if="isLoadContacts && isLoadConversations" key="conversationList" :current-user="currentUser" :conversations="conversations" :contacts="contacts" @select-conversation="selectConversation" />
+                    <div v-else class="loading" key="conversationListLoading"></div> -->
+        <application-menu>
+            <b-tabs no-fade class="pl-0 pr-0 h-100" content-class="chat-app-tab-content" nav-class="card-header-tabs ml-0 mr-0" v-model="tabIndex">
+                <b-tab :title="$t('chat.messages')" active title-item-class="w-50 text-center" no-body class="chat-app-tab-pane">
+                    <div class="pt-4 spaced-content pb-0 mt-2">
+
+                    </div>
+                    <conversation-list v-if="isLoadContacts && isLoadConversations" key="conversationList" :current-user="currentUser" :conversations="conversations" :contacts="contacts" @select-conversation="selectConversation" />
+                    <div v-else class="loading" key="conversationListLoading"></div>
+                </b-tab>
+                <b-tab :title="$t('chat.contacts')" title-item-class="w-50 text-center" no-body class="chat-app-tab-pane">
+                    <div class="pt-4 spaced-content pb-0 mt-2">
+                        <div class="form-group">
+                            <b-input type="text" class="rounded" :placeholder="$t('menu.search')" v-model="searchKey" />
+                        </div>
+                    </div>
+                    <contact-list v-if="isLoadContacts" key="contactList" :data="contactsSearchResult" @select-contact="selectContact" />
+                    <div v-else class="loading" key="contactListLoading"></div>
+                </b-tab>
+            </b-tabs>
+        </application-menu>
     </div>
-    <div class="separator mb-5" />
-    <vue-perfect-scrollbar
-      class="scroll"
-      :settings="{ suppressScrollX: true, wheelPropagation: false }"
-      ref="chatArea">
-      <div v-for="(message, index) in messages" :key="`message${index}`">
-        <b-card
-          no-body
-          :class="{
-            'd-inline-block mb-3': true,
-            'float-left': message.sender === data.vehiculo.usuario.IdUsuario,
-            'float-right': message.sender === currentUser.id
-          }"
-        >
-          <div class="position-absolute pt-1 pr-2 r-0">
-            <span class="text-extra-small text-muted">{{ message.time }}</span>
-          </div>
-          <b-card-body>
-            <div
-              class="d-flex flex-row pb-1"
-              v-if="message.sender === currentUser.id"
-            >
-              <img
-                :alt="currentUser.title"
-                :src="currentUser.img"
-                class="img-thumbnail border-0 rounded-circle mr-3 list-thumbnail align-self-center xsmall"
-              />
-              <div class="d-flex flex-grow-1 min-width-zero">
-                <div
-                  class="m-2 pl-0 align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero"
-                >
-                  <div class="min-width-zero">
-                    <p class="mb-0 truncate list-item-heading">
-                      {{ currentUser.title }}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="d-flex flex-row pb-1" v-else>
-              <img
-                :alt="data.vehiculo.usuario.email"
-                :src="data.vehiculo.marca.urllogo"
-                class="img-thumbnail border-0 rounded-circle mr-3 list-thumbnail align-self-center xsmall"
-              />
-              <div class="d-flex flex-grow-1 min-width-zero">
-                <div
-                  class="m-2 pl-0 align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero"
-                >
-                  <div class="min-width-zero">
-                    <p class="mb-0 truncate list-item-heading">
-                      {{ data.vehiculo.usuario.email }}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="chat-text-left">
-              <p class="mb-0 text-semi-muted">{{ message.text }}</p>
-            </div>
-          </b-card-body>
-        </b-card>
-        <div class="clearfix" />
-      </div>
-    </vue-perfect-scrollbar>
-    
-  </div>
   </b-modal>
 </template>
 
 <script>
+import {
+    mapGetters,
+    mapActions
+} from 'vuex'
+// import ApplicationMenu from '../Common/ApplicationMenu'
+// import ContactList from '../ChatApp/ContactList'
+import ConversationList from '../ChatApp/ConversationList'
+import ConversationDetail from '../ChatApp/ConversationDetail'
+
 export default {
-  props: ["data", "currentUser"],
-  methods: {
-    scrollToEnd() {
-      setTimeout(() => {
-        const container = this.$refs.chatArea.$el;
-        container.scrollTop = container.scrollHeight;
-      }, 0);
+    components: {
+        // 'application-menu': ApplicationMenu,
+        // 'contact-list': ContactList,
+        'conversation-list': ConversationList,
+        'conversation-detail': ConversationDetail
+    },
+    data() {
+        return {
+            tabIndex: 0,
+            message: '',
+            searchKey: '',
+            isLoadCurrentConversation: false,
+            otherUser: null,
+            conversationMessages: null
+        }
+    },
+    computed: {
+        ...mapGetters(['currentUser', 'isLoadContacts', 'isLoadConversations', 'error', 'contacts', 'contactsSearchResult', 'conversations'])
+    },
+    methods: {
+        ...mapActions(['getContacts', 'searchContacts', 'getConversations']),
+        selectConversation(otherUser, messages) {
+            this.otherUser = otherUser
+            this.conversationMessages = messages
+        },
+        selectContact(userId) {
+            this.otherUser = this.contacts.find(x => x.id === userId)
+            const conversation = this.conversations.find(x => x.users.includes(userId) && x.users.includes(this.currentUser.id))
+            if (conversation) {
+                console.log('change selected conversation')
+                this.conversationMessages = conversation.messages
+            } else {
+                console.log('create new conversation')
+                const date = new Date()
+                this.conversations.splice(0, 0, {
+                    users: [userId, this.currentUser.id],
+                    messages: [],
+                    lastMessageTime: date.getHours() + ':' + date.getMinutes()
+                })
+                this.conversationMessages = []
+            }
+            this.tabIndex = 0
+            this.message = ''
+            this.searchKey = ''
+        },
+        sendMessage() {
+            console.log('add message to conversation')
+            const date = new Date()
+            this.conversationMessages.push({
+                sender: this.currentUser.id,
+                text: this.message,
+                time: date.getHours() + ':' + date.getMinutes()
+            })
+            this.message = ''
+        }
+    },
+    mounted() {
+        this.getContacts({
+            userId: this.currentUser.id,
+            searchKey: ''
+        })
+        this.getConversations(this.currentUser.id)
+        document.body.classList.add("no-footer");
+    },
+    beforeDestroy() {
+        document.body.classList.remove("no-footer");
+    },
+    watch: {
+        searchKey(val, oldVal) {
+            this.searchContacts({
+                userId: this.currentUser.id,
+                searchKey: val
+            })
+        }
     }
-  },
-  mounted() {
-    this.scrollToEnd();
-  },
-  updated() {
-    this.scrollToEnd();
-  }
-};
+}
 </script>
