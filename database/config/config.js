@@ -8,6 +8,7 @@ module.exports =
     "database": process.env.DBNAME,
     "host": process.env.DBHOST,
     "dialect": "mysql",
+    "port": process.env.DBPORT,
     define: {
       underscored: false,
       freezeTableName: true
@@ -27,7 +28,8 @@ module.exports =
     "password": null,
     "database": "database_test",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "port": process.env.DBPORT
   },
   "production": {
     "username": process.env.DBUSER,
@@ -35,6 +37,7 @@ module.exports =
     "database": process.env.DBNAME,
     "host": process.env.DBHOST,
     "dialect": "mysql",
+    "port": process.env.DBPORT,
     define: {
       underscored: false,
       freezeTableName: true

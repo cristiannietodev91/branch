@@ -96,6 +96,9 @@ module.exports = {
                         include: [
                             {
                                 model: models.marca
+                            },
+                            {
+                                model: models.usuarios
                             }
                         ]                        
                     },
