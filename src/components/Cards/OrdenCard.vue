@@ -5,13 +5,22 @@
         <h5 class="mb-1 card-subtitle truncate">{{data.CodigoOrden}}</h5>
         <p class="text-muted text-small mb-2">{{$t('branch.orden.codigoOrden')}}</p>
       </b-colxx>
-      <b-colxx xxs="4">
+      <b-colxx md="6" sm="6" lg="2" xxs="4">
         <h5 class="mb-1 card-subtitle truncate">{{data.vehiculo.placa}}</h5>
         <p class="text-muted text-small mb-2">{{$t('branch.orden.placa')}}</p>
       </b-colxx>
-      <b-colxx xxs="4">
+      <b-colxx md="6" sm="6" lg="2" xxs="4">
         <h5 class="mb-1 card-subtitle truncate">{{data.vehiculo.marca.marca}}</h5>
         <p class="text-muted text-small mb-2">{{$t('branch.orden.marca')}}</p>
+      </b-colxx>
+      <b-colxx md="6" sm="6" lg="4" xxs="4">
+        <b-button
+            v-b-modal.modalChat
+            variant="primary"
+            size="lg"
+            class="top-right-button"
+          >{{ $t('Enviar mensaje') }}</b-button>
+          <modal-add-chat :taller="taller"></modal-add-chat>
       </b-colxx>
     </b-row>
     <horizontal-stepper
