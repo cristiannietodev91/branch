@@ -2,16 +2,18 @@
   <b-modal
     id="modalChat"
     ref="modalChat"
-    :title="newChat.IdChat ? $t('pages.branch.title-edit-cita') : $t('pages.branch.add-new-cita')"
+    :title="$t('pages.branch.add-new-cita')"
     modal-class="modal-basic"
     hide-footer
   >
   <div>
+    
+    
     <div class="d-flex flex-row chat-heading">
       <div class="d-flex">
         <img
-          :alt="otherUser.title"
-          :src="otherUser.img"
+          :alt="data.vehiculo.usuario.email"
+          :src="data.vehiculo.marca.urllogo"
           class="img-thumbnail border-0 rounded-circle ml-0 mr-4 list-thumbnail align-self-center small"
         />
       </div>
@@ -22,10 +24,10 @@
           <div class="min-width-zero">
             <div>
               <p class="list-item-heading mb-1 truncate">
-                {{ otherUser.title }}
+                {{ data.vehiculo.usuario.email}}
               </p>
             </div>
-            <p class="mb-0 text-muted text-small">{{ otherUser.date }}</p>
+            <p class="mb-0 text-muted text-small"></p>
           </div>
         </div>
       </div>
@@ -34,14 +36,13 @@
     <vue-perfect-scrollbar
       class="scroll"
       :settings="{ suppressScrollX: true, wheelPropagation: false }"
-      ref="chatArea"
-    >
+      ref="chatArea">
       <div v-for="(message, index) in messages" :key="`message${index}`">
         <b-card
           no-body
           :class="{
             'd-inline-block mb-3': true,
-            'float-left': message.sender === otherUser.id,
+            'float-left': message.sender === data.vehiculo.usuario.IdUsuario,
             'float-right': message.sender === currentUser.id
           }"
         >
@@ -72,8 +73,8 @@
             </div>
             <div class="d-flex flex-row pb-1" v-else>
               <img
-                :alt="otherUser.title"
-                :src="otherUser.img"
+                :alt="data.vehiculo.usuario.email"
+                :src="data.vehiculo.marca.urllogo"
                 class="img-thumbnail border-0 rounded-circle mr-3 list-thumbnail align-self-center xsmall"
               />
               <div class="d-flex flex-grow-1 min-width-zero">
@@ -82,7 +83,7 @@
                 >
                   <div class="min-width-zero">
                     <p class="mb-0 truncate list-item-heading">
-                      {{ otherUser.title }}
+                      {{ data.vehiculo.usuario.email }}
                     </p>
                   </div>
                 </div>
@@ -96,13 +97,14 @@
         <div class="clearfix" />
       </div>
     </vue-perfect-scrollbar>
+    
   </div>
   </b-modal>
 </template>
 
 <script>
 export default {
-  props: ["currentUser", "otherUser", "messages"],
+  props: ["data", "currentUser"],
   methods: {
     scrollToEnd() {
       setTimeout(() => {

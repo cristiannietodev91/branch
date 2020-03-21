@@ -20,7 +20,7 @@
             size="lg"
             class="top-right-button"
           >{{ $t('Enviar mensaje') }}</b-button>
-          <modal-add-chat :taller="taller"></modal-add-chat>
+          <modal-add-chat :data="data" :currentUser="currentUser"></modal-add-chat>
       </b-colxx>
     </b-row>
     <horizontal-stepper
@@ -49,22 +49,30 @@
   </b-card>
 </template>
 <script>
+import { mapGetters } from "vuex";
 import HorizontalStepper from "./../Steps/Steeper";
 import ThumbnailImage from "./ThumbnailImage";
 import Ingreso from "./../Steps/Ingreso";
 import Diagnostico from "./../Steps/Diagnostico";
 import Cotizacion from "./../Steps/Cotizacion";
+import ModalChat from "../../components/Modals/chatmodal"
 
 export default {
   props: ["link", "data", "mecanicos"],
   components: {
     ThumbnailImage,
-    HorizontalStepper    
+    HorizontalStepper,
+    "modal-add-chat" : ModalChat  
   },
   data() {
     return {
       demoSteps: []      
     };
+  },
+  computed: {
+    ...mapGetters({
+      currentUser: "currentUser"
+    })
   },
   methods: {
     // Executed when @completed-step event is triggered
