@@ -9603,8 +9603,11 @@ footer.page-footer {
   font-size: 12px !important;
 }
 
-.stepper-box .top .steps-wrapper .step .circle i{
-  padding: 0.4rem !important;
+.stepper-box {
+  margin-top: 1em;
+  .top .steps-wrapper .step .circle i{
+    padding: 0.4rem !important;
+  }
 }
 
 .step-title h4{
