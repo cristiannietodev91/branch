@@ -84,7 +84,7 @@ export default {
         url: process.env.VUE_APP_URLBACKSERVICES+`file/sendFile`,
         method: 'post',
         autoProcessQueue: true,
-        acceptedFiles: "image/*",
+        acceptedFiles: "application/pdf",
         thumbnailHeight: 160,
         maxFilesize: 2,
         previewTemplate: this.dropzoneTemplate()
