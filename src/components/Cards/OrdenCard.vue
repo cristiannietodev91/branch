@@ -15,7 +15,7 @@
       </b-colxx>
       <b-colxx md="6" sm="6" lg="4" xxs="4">
         <b-button
-            v-b-modal.modalChat
+            @click="openModal"
             variant="primary"
             size="lg"
             class="top-right-button"
@@ -75,6 +75,9 @@ export default {
     })
   },
   methods: {
+    openModal(){
+      this.$bvModal.show("modalChat_"+data.codigoOrden);
+    },
     // Executed when @completed-step event is triggered
     completeStep(payload) {
       if (payload.index) {

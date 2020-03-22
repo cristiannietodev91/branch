@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    id="modalChat"
+    :id="`modalChat_${data.codigoOrden}`"
     ref="modalChat"
     :title="$t('pages.branch.add-new-cita')"
     modal-class="modal-basic"
