@@ -9,10 +9,10 @@
                         <p class="text-muted text-small mb-2">Identificación</p>
                         <h6>{{data.identificacion}}</h6>
                         <p class="text-muted text-small mb-2">Fecha de creación</p>
-                        <h6>{{data.createdAt}}</h6>
+                        <h6>{{data.createdAt | moment("D MMMM YYYY hh mm A")}}</h6>
                         <p class="text-muted text-small mb-2">Habilidades</p>
                         <p>
-                            <b-badge pill variant="primary">{{data.skills}}</b-badge>
+                            <b-badge pill variant="primary" v-for="(skill) in  JSON.parse(data.skills)" :key="`${skill}`">{{skill}}</b-badge>
                         </p>
                         <p class="text-muted text-small mb-2">
                             <b-button size="xs" variant="outline-primary">Editar</b-button>

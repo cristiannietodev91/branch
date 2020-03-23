@@ -43,6 +43,7 @@
       "kilometraje" : "Kilometraje"
     },
     "cita": {
+      "cita": "CITA",
       "mecanico": "Mecanico",
       "fechaCita": "Fecha",
       "placa": "Placa",
@@ -58,7 +59,9 @@
       "documentos": "Documentos Deja",
       "observaciones": "Observaciones",
       "placa": "Placa",
-      "marca": "Marca"
+      "marca": "Marca",
+      "fechaAprobacion": "Fecha aprobación",
+      "sinetapa": "El cliente aún no ha aprobado la cotización"
     },
     "marca" : {
       "marca" : "Marca",

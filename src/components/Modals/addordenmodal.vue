@@ -11,7 +11,7 @@
         <v-select
           :options="taller.mecanicos"
           v-model="newOrden.mecanico"
-          label="firstName"
+          label="fullName"
           :reduce="mecanico => mecanico.IdMecanico"
         >
           <template #search="{attributes, events}">
@@ -24,7 +24,7 @@
           </template>
           <template
             v-slot:option="option"
-          >{{ option.firstName }} {{ option.lastName }} - {{option.identificacion}}</template>
+          >{{ option.fullName }}  - {{option.identificacion}}</template>
         </v-select>
       </b-form-group>
       <b-form-group :label="$t('branch.orden.kilometraje')">
@@ -105,11 +105,12 @@ export default {
         let orden = {
           IdCita: this.cita.id,
           kilometraje: this.newOrden.kilometraje,
-          mecanico: this.newOrden.mecanico,
+          IdMecanico: this.newOrden.mecanico,
           documentosDeja: myJsonDocumentos,
           IdTaller: this.taller.IdTaller,
           IdEtapa: 2,
-          Observaciones: this.newOrden.observacion
+          Observaciones: this.newOrden.observacion,
+          estado: 'Aceptado'
         };
 
         ServicesCore.createOrden(orden)

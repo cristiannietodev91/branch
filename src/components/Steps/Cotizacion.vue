@@ -27,10 +27,25 @@
         :awss3="awss3"
         :options="dropzoneOptions"
         v-on:vdropzone-complete="complete"
+        v-on:vdropzone-removed-file="removeFile"
       ></vue-dropzone>
       <b-button type="submit" variant="primary" class="mt-4" size="lg">{{ $t('forms.submit') }}</b-button>
     </b-form>
     <div v-else>
+      <b-row>
+        <b-colxx xxs="3">
+          <p class="text-muted text-small mb-2">{{$t('branch.orden.fechaIngreso')}}</p>
+          <p class="mb-3">{{ data.etapa.createdAt | moment("D MMMM YYYY hh:mm A") }}</p>
+        </b-colxx>
+        <b-colxx xxs="3" v-if="data.etapa.mecanico">
+          <p class="text-muted text-small mb-2">{{$t('branch.orden.mecanico')}}</p>
+          <p class="mb-3">{{data.etapa.mecanico.identificacion}} {{data.etapa.mecanico.fullName}}</p>
+        </b-colxx>
+        <b-colxx>
+          <p class="text-muted text-small mb-2">{{$t('branch.orden.observaciones')}}</p>
+          <p class="mb-3">{{data.etapa.Observaciones}}</p>
+        </b-colxx>
+      </b-row>
       <div class="icon-cards-row">
         <glide-component :settings="glideBasicOption">
           <div
@@ -38,15 +53,18 @@
             v-for="(documento,index) in data.etapa.documentos"
             :key="`contact${index}`"
           >
-            <b-card class="flex-row" no-body>
-              <img alt="Thumbnail" :src="documento.url" class="list-thumbnail responsive border-0" />
-              <div class="pl-2 d-flex flex-grow-1 min-width-zero">
-                <b-card-body
-                  class="align-self-center d-flex min-width-zero">
-                  <p class="list-item-heading mb-1 truncated">{{documento.nombrearchivo}}</p>
-                  <p class="text-muted text-small mb-0 font-weight-light">{{ documento.date | moment("D MMMM YYYY hh mm A") }}</p>
-                </b-card-body>
-              </div>
+            <b-card class="flex-row" no-body>              
+              <b-link :href="documento.url" target="_blank"> 
+                <img alt="Thumbnail" src="/assets/img/pdflogo.jpg" class="list-thumbnail responsive border-0" />
+              
+                <div class="pl-2 d-flex flex-grow-1 min-width-zero">
+                  <b-card-body
+                    class="align-self-center d-flex min-width-zero">
+                    <p class="list-item-heading mb-1 truncated">{{documento.nombrearchivo}}</p>
+                    <p class="text-muted text-small mb-0 font-weight-light">{{ documento.date | moment("D MMMM YYYY hh:mm A") }}</p>
+                  </b-card-body>
+                </div>
+              </b-link>
             </b-card>
           </div>
         </glide-component>
@@ -58,6 +76,7 @@
 import GlideComponent from "../Carousel/GlideComponent";
 import IconCard from "../Cards/IconCard";
 import vSelect from "vue-select";
+import moment from 'moment-timezone';
 import "vue-select/dist/vue-select.css";
 import vue2Dropzone from "vue2-dropzone";
 import { validationMixin } from "vuelidate";
@@ -86,7 +105,8 @@ export default {
         autoProcessQueue: true,
         acceptedFiles: "application/pdf",
         thumbnailHeight: 160,
-        maxFilesize: 2,
+        maxFilesize: 4,
+        maxFiles: 1,
         previewTemplate: this.dropzoneTemplate()
       },
       awss3: {
@@ -125,17 +145,26 @@ export default {
   },
   methods: {
     complete(response) {
-      console.log("Se completo la subida de archivos :::>", response);
-      let dateCreated = new Date()
-      
-      let documento = {
-        nombrearchivo: response.name,
-        url: response.s3Url+'/'+response.s3Signature.key,
-        type: response.type,
-        date: dateCreated,
-        size: response.size
-      };
-      this.filesEtapa.push(documento);
+      if(response.status == 'success'){
+        console.log("Se completo la subida de archivos :::>", response);
+        let dateCreated = moment().tz('UTC').format();
+        
+        let documento = {
+          nombrearchivo: response.name,
+          url: response.s3Url+'/'+response.s3Signature.key,
+          type: response.type,
+          date: dateCreated,
+          size: response.size,
+          key: response.s3Signature.key
+        };
+        this.filesEtapa.push(documento);
+      }
+    },
+    removeFile(file, error, xhr){
+      this.filesEtapa = this.filesEtapa.filter((value)=> {
+        value.key != file.s3Signature.key
+      });
+      console.log('Se removio el file ::::>',this.filesEtapa);
     },
     uploadFiles() {
       if (this.filesEtapa.length > 0) {
@@ -143,11 +172,12 @@ export default {
           CodigoOrden: this.data.CodigoOrden,
           IdCita: this.data.IdCita,
           kilometraje: this.data.kilometraje,
-          mecanico: this.newOrden.mecanico,
+          IdMecanico: this.newOrden.mecanico,
           IdTaller: this.data.IdTaller,
           IdEtapa: 4,
           Observaciones: this.newOrden.observacion,
-          documentos: this.filesEtapa
+          documentos: this.filesEtapa,
+          estado: 'Pendiente'
         };
         console.log("Se va a agregar la siguiente orden ::>", orden);
 

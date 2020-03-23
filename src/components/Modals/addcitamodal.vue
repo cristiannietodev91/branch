@@ -41,12 +41,12 @@
         <v-select
           :options="taller.mecanicos"
           v-model="newCita.mecanico"
-          label="firstName"
+          label="fullName"
           :reduce="mecanico => mecanico.IdMecanico"
         >
           <template
             v-slot:option="option"
-          >{{ option.firstName }} {{ option.lastName }} - {{option.identificacion}}</template>
+          >{{ option.fullName }} - {{option.identificacion}}</template>
         </v-select>
       </b-form-group>
       <b-form-group :label="$t('branch.cita.servicio')" class="has-float-label">

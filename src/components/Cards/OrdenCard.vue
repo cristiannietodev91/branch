@@ -13,6 +13,7 @@
         <h5 class="mb-1 card-subtitle truncate">{{data.vehiculo.marca.marca}}</h5>
         <p class="text-muted text-small mb-2">{{$t('branch.orden.marca')}}</p>
       </b-colxx>
+      <!--
       <b-colxx md="6" sm="6" lg="4" xxs="4">
         <b-button
             @click="openModal"
@@ -22,6 +23,7 @@
           >{{ $t('Enviar mensaje') }}</b-button>
           <modal-add-chat :data="data" :currentUser="currentUser"></modal-add-chat>
       </b-colxx>
+      -->
     </b-row>
     <horizontal-stepper
       locale="es"
@@ -55,14 +57,14 @@ import ThumbnailImage from "./ThumbnailImage";
 import Ingreso from "./../Steps/Ingreso";
 import Diagnostico from "./../Steps/Diagnostico";
 import Cotizacion from "./../Steps/Cotizacion";
-import ModalChat from "../../components/Modals/chatmodal"
+import Aprobacion from "./../Steps/Aprobacion";
+
 
 export default {
   props: ["link", "data", "mecanicos"],
   components: {
     ThumbnailImage,
-    HorizontalStepper,
-    "modal-add-chat" : ModalChat  
+    HorizontalStepper
   },
   data() {
     return {
@@ -108,11 +110,16 @@ export default {
     }
   },
   created() {
+
     var idxIngreso = this.data.etapas.findIndex(element => {
       if (element.IdEtapa == 2) {
         return true;
       }
     });
+
+    console.log("Indice Ingreso :::>", idxIngreso);
+
+    let etapaIngreso = idxIngreso > -1 ? this.data.etapas[idxIngreso] : null;
 
     this.demoSteps.push({
       icon: "mail",
@@ -131,7 +138,7 @@ export default {
 
     console.log("Indice Diagnostico :::>", idxDiagnostico);
 
-    let etapa = idxDiagnostico > -1 ? this.data.etapas[idxDiagnostico] : null;
+    let etapaDiagnostico = idxDiagnostico > -1 ? this.data.etapas[idxDiagnostico] : null;
 
     let dataDiagnostico = {
       IdCita: this.data.IdCita,
@@ -139,7 +146,7 @@ export default {
       CodigoOrden: this.data.CodigoOrden,
       IdVehiculo: this.data.IdVehiculo,
       kilometraje: this.data.kilometraje,
-      etapa: etapa,
+      etapa: etapaDiagnostico,
       mecanicos: this.mecanicos
     };
 
@@ -181,6 +188,40 @@ export default {
       data: dataCotizacion,
       completed: idxCotizacion > -1
     });
+
+    let idxAprobacion = this.data.etapas.findIndex(element => {
+      if (element.IdEtapa == 5) {
+        return true;
+      }
+    });
+
+    console.log("Indice AProbacion :::>", idxAprobacion);
+
+    let etapaAprobacion =
+      idxAprobacion > -1 ? this.data.etapas[idxAprobacion] : null;
+
+    let dataAprobacion = {
+      IdCita: this.data.IdCita,
+      IdTaller: this.data.IdTaller,
+      CodigoOrden: this.data.CodigoOrden,
+      IdVehiculo: this.data.IdVehiculo,
+      kilometraje: this.data.kilometraje,
+      etapa: etapaAprobacion,
+      mecanicos: this.mecanicos
+    };
+
+    this.demoSteps.push({
+      icon: "report_problem",
+      name: "aprobacion",
+      title: "Aprobación",
+      component: Aprobacion,
+      data: dataAprobacion,
+      completed: idxAprobacion > -1
+    });
+
+
+
+
   }
 };
 </script>

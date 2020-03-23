@@ -15,7 +15,7 @@
         <piaf-breadcrumb />
         <b-tabs nav-class="separator-tabs ml-0 mb-5" content-class="tab-content" :no-fade="true">
 
-          <b-tab :title="$t('CITAS')"> <!-- Ayuda para cambiar este título, LO HICE A LAS PATADAS -->
+          <b-tab :title="$t('branch.cita.cita')"> 
             <b-row>
               <b-colxx xl="12" lg="12" class="mb-4">
                 <b-card :title="$t('dashboards.calendar')">
@@ -62,7 +62,7 @@
                         @click.exact="eventProps.event.originalEvent.estado == 'Confirmada' ? onClickEvent(eventProps.event) : ''"
                       >
                         <h4 class="startTime">
-                          {{new Date(eventProps.event.originalEvent.startDate).toLocaleString("en-US", {timeZone: "UTC"}) | moment("hh:mm A")}}
+                          {{new Date(eventProps.event.originalEvent.startDate) | moment("hh:mm A")}}
                         </h4>
                         <p>{{eventProps.event.originalEvent.estado}}</p>
                         <!-- <p>
@@ -213,7 +213,6 @@ export default {
   },
   methods: {
     loadCitasTaller() {
-      console.log("Carga lista de citas ::::>", this.currentUser);
       ServicesCore.getCitasByIdTaller(this.currentUser.IdTaller)
         .then(response => {
           if (response.status == 200) {

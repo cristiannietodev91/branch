@@ -136,7 +136,6 @@ import {
 import {
     searchPath,
     menuHiddenBreakpoint,
-    localeOptions,
     buyUrl,
     defaultColor
 } from '../constants/config'
@@ -159,7 +158,6 @@ export default {
             fullScreen: false,
             menuHiddenBreakpoint,
             searchPath,
-            localeOptions,
             buyUrl,
             notifications,
             isDarkActive: false

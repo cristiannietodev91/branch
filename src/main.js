@@ -10,7 +10,7 @@ import store from './store'
 import en from './locales/en.json'
 import es from './locales/es.json'
 import VueI18n from 'vue-i18n'
-import { defaultLocale, localeOptions, firebaseConfig } from './constants/config'
+import { defaultLocale, firebaseConfig } from './constants/config'
 // Notification Component Add
 import Notifications from './components/Common/Notification'
 // Breadcrumb Component Add
@@ -26,6 +26,11 @@ import VueLineClamp from 'vue-line-clamp'
 import VCalendar from 'v-calendar'
 import 'v-calendar/lib/v-calendar.min.css'
 import VueScrollTo from 'vue-scrollto'
+const moment = require('moment-timezone');
+require('moment/locale/es')
+
+moment.tz.setDefault("UTC");
+
 import VueMoment from 'vue-moment'
 import firebase from 'firebase/app'
 //import * as admin from 'firebase-admin';
@@ -39,9 +44,9 @@ Vue.use(Vuelidate);
 
 Vue.use(BootstrapVue);
 Vue.use(VueI18n);
-Vue.use(VueMoment);
+Vue.use(VueMoment, { moment });
 const messages = { en: en, es: es };
-const locale = (localStorage.getItem('currentLanguage') && localeOptions.filter(x => x.id === localStorage.getItem('currentLanguage')).length > 0) ? localStorage.getItem('currentLanguage') : defaultLocale;
+const locale = defaultLocale;
 const i18n = new VueI18n({
   locale: locale,
   fallbackLocale: 'es',
