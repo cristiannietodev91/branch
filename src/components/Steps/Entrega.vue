@@ -38,27 +38,21 @@
         v-on:vdropzone-complete="complete"
         v-on:vdropzone-removed-file="removeFile"
       ></vue-dropzone>
-      <div class="btn-icon">
-        <b-button type="submit" variant="primary" class="mt-4" size="lg">
-          <i class="iconsminds-upload-1"></i>
-          Cargar Diagnóstico
-          <!-- {{ $t('forms.submit') }} -->
-        </b-button>
-      </div>
+      <b-button type="submit" variant="primary" class="mt-4" size="lg">{{ $t('forms.submit') }}</b-button>
     </b-form>
     <div v-else>
       <b-row>
         <b-colxx xxs="3">
           <p class="text-muted text-small mb-2">{{$t('branch.orden.fechaIngreso')}}</p>
-          <h5 class="mb-1 card-subtitle truncate">{{data.etapa.createdAt | moment("D MMMM YYYY hh:mm A")}}</h5>
+          <p class="mb-3">{{ data.etapa.createdAt | moment("D MMMM YYYY hh:mm A") }}</p>
         </b-colxx>
         <b-colxx xxs="3" v-if="data.etapa.mecanico">
           <p class="text-muted text-small mb-2">{{$t('branch.orden.mecanico')}}</p>
-          <h5 class="mb-1 card-subtitle truncate">{{data.etapa.mecanico.identificacion}} {{data.etapa.mecanico.firstName}}</h5>
+          <p class="mb-3">{{data.etapa.mecanico.identificacion}} {{data.etapa.mecanico.fullName}}</p>
         </b-colxx>
         <b-colxx>
           <p class="text-muted text-small mb-2">{{$t('branch.orden.observaciones')}}</p>
-          <h5 class="mb-1 card-subtitle truncate">{{data.etapa.Observaciones}}</h5>
+          <p class="mb-3">{{data.etapa.Observaciones}}</p>
         </b-colxx>
       </b-row>
       <div class="icon-cards-row">
@@ -70,7 +64,7 @@
           >
             <b-card class="flex-row" no-body>
               <b-link :href="documento.url" target="_blank"> 
-                <img alt="Thumbnail" :src="documento.url.replace('branchmedia','branchmedia-resized')" class="list-thumbnail responsive border-0" />
+                <img alt="Thumbnail" :src="documento.url" class="list-thumbnail responsive border-0" />
                 <div class="pl-2 d-flex flex-grow-1 min-width-zero">
                   <b-card-body class="align-self-center d-flex min-width-zero">
                     <p class="list-item-heading mb-1 truncated">{{documento.nombrearchivo}}</p>
@@ -93,7 +87,6 @@
   </b-card>
 </template>
 <script>
-import SingleLightbox from "../Pages/SingleLightbox";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 import vue2Dropzone from "vue2-dropzone";
@@ -200,7 +193,7 @@ export default {
           kilometraje: this.data.kilometraje,
           IdMecanico: this.newOrden.mecanico,
           IdTaller: this.data.IdTaller,
-          IdEtapa: 3,
+          IdEtapa: 7,
           Observaciones: this.newOrden.observacion,
           documentos: this.filesEtapa,
           estado: 'Aceptado'

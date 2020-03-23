@@ -193,7 +193,7 @@ export default {
           kilometraje: this.data.kilometraje,
           IdMecanico: this.newOrden.mecanico,
           IdTaller: this.data.IdTaller,
-          IdEtapa: 3,
+          IdEtapa: 6,
           Observaciones: this.newOrden.observacion,
           documentos: this.filesEtapa,
           estado: 'Aceptado'

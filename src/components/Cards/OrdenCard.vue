@@ -61,6 +61,8 @@ import Ingreso from "./../Steps/Ingreso";
 import Diagnostico from "./../Steps/Diagnostico";
 import Cotizacion from "./../Steps/Cotizacion";
 import Aprobacion from "./../Steps/Aprobacion";
+import Reparacion from "./../Steps/Reparacion";
+import Entrega from "./../Steps/Entrega";
 
 
 export default {
@@ -198,7 +200,7 @@ export default {
       }
     });
 
-    console.log("Indice AProbacion :::>", idxAprobacion);
+    console.log("Indice Aprobacion :::>", idxAprobacion);
 
     let etapaAprobacion =
       idxAprobacion > -1 ? this.data.etapas[idxAprobacion] : null;
@@ -222,7 +224,65 @@ export default {
       completed: idxAprobacion > -1
     });
 
+    let idxReparacion = this.data.etapas.findIndex(element => {
+      if (element.IdEtapa == 6) {
+        return true;
+      }
+    });
 
+    console.log("Indice Reparacion :::>", idxReparacion);
+
+    let etapaReparacion =
+      idxReparacion > -1 ? this.data.etapas[idxReparacion] : null;
+
+    let dataReparacion = {
+      IdCita: this.data.IdCita,
+      IdTaller: this.data.IdTaller,
+      CodigoOrden: this.data.CodigoOrden,
+      IdVehiculo: this.data.IdVehiculo,
+      kilometraje: this.data.kilometraje,
+      etapa: etapaReparacion,
+      mecanicos: this.mecanicos
+    };
+
+    this.demoSteps.push({
+      icon: "report_problem",
+      name: "reparacion",
+      title: "Reparacion",
+      component: Reparacion,
+      data: dataReparacion,
+      completed: idxReparacion > -1
+    });
+
+    let idxEntrega = this.data.etapas.findIndex(element => {
+      if (element.IdEtapa == 7) {
+        return true;
+      }
+    });
+
+    console.log("Indice Entrega :::>", idxEntrega);
+
+    let etapaEntrega =
+      idxEntrega > -1 ? this.data.etapas[idxEntrega] : null;
+
+    let dataEntrega = {
+      IdCita: this.data.IdCita,
+      IdTaller: this.data.IdTaller,
+      CodigoOrden: this.data.CodigoOrden,
+      IdVehiculo: this.data.IdVehiculo,
+      kilometraje: this.data.kilometraje,
+      etapa: etapaEntrega,
+      mecanicos: this.mecanicos
+    };
+
+    this.demoSteps.push({
+      icon: "report_problem",
+      name: "entrega",
+      title: "Entrega",
+      component: Entrega,
+      data: dataEntrega,
+      completed: idxEntrega > -1
+    });
 
 
   }
