@@ -774,7 +774,7 @@ button {
 }
 
 .btn-primary {
-  background-color: $theme-color-4;
+  background-color: $theme-color-1;
   border-color: $theme-color-1;
   color: $button-text-color;
 
@@ -5057,7 +5057,7 @@ select.form-control:not([size]):not([multiple]) {
 .form-control.is-valid  {
   height: initial;
   // border-radius: $border-radius-rounded;
-  border-radius: 50px;
+  // border-radius: 50px;
   outline: initial !important;
   box-shadow: initial !important;
   font-size: 0.8rem;
@@ -9599,20 +9599,20 @@ footer.page-footer {
  }
 
 /* 40. Steps*/
-.material-icons{
-  font-size: 12px !important;
-}
+// .material-icons{
+//   font-size: 12px !important;
+// }
 
-.stepper-box {
-  margin-top: 1em;
-  .top .steps-wrapper .step .circle i{
-    padding: 0.4rem !important;
-  }
-}
+// .stepper-box {
+//   margin-top: 1em;
+//   .top .steps-wrapper .step .circle i{
+//     padding: 0.4rem !important;
+//   }
+// }
 
-.step-title h4{
-  font-size: 10px !important;
-}
+// .step-title h4{
+//   font-size: 10px !important;
+// }
 .user{
   div{
     button{
@@ -9665,11 +9665,269 @@ footer.page-footer {
   }
 }
 .ordenes-branch{
+  margin-bottom: 2em;
   .card.mb-4{
     padding: 0 1em;
     box-shadow: none;
     h5{
       padding-bottom: 1.5em;
+    }
+  }
+  .btn-icon{
+    text-align: right;
+    button{
+      padding: 0 1em;
+      i{
+        font-size: 2em;
+        vertical-align: middle;
+      }
+    }
+  }
+}
+
+// STEPPER STYLES
+
+@mixin shadow($level: 1) {
+  @if $level==1 {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  }
+  @else if $level==2 {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  }
+  @else if $level==3 {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  }
+  @else if $level==4 {
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  }
+  @else if $level==5 {
+    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.30), 0 15px 12px rgba(0, 0, 0, 0.22);
+  }
+}
+
+@mixin breakpoint($class) {
+  @if $class==xs {
+    @media (max-width: 767px) {
+      @content;
+    }
+  }
+  @else if $class==sm {
+    @media (min-width: 768px) {
+      @content;
+    }
+  }
+  @else if $class==md {
+    @media (min-width: 992px) {
+      @content;
+    }
+  }
+  @else if $class==lg {
+    @media (min-width: 1200px) {
+      @content;
+    }
+  }
+  @else {
+    @warn "Breakpoint mixin supports: xs, sm, md, lg";
+  }
+}
+
+.stepper-box {
+  background-color: $background-color !important;
+  @include shadow(0 !important);
+  min-height: 200px;
+  .top {
+    // .stepper-button-top {
+    //   z-index: 20;
+    //   padding: .4rem;
+    //   border-radius: 100rem;
+    //   cursor: pointer;
+    //   position: absolute;
+    //   display: flex;
+    //   align-items: center;
+    //   justify-content: space-between;
+    //   &.next {
+    //     border: 2px solid #3383c8;
+    //     color: #3383c8;
+    //     right: 1%;
+    //     &.deactivated {
+    //       border: 2px solid #cccccc !important;
+    //       color: #cccccc;
+    //       cursor: not-allowed !important;
+    //     }
+    //   }
+    //   &.previous {
+    //     color: #333333;
+    //     left: 1%;
+    //   }
+    // }
+    display: flex;
+    align-items: center;
+    position: relative;
+    justify-content: center;
+    // .divider-line {
+    //   border-bottom: 1px solid #cccccc;
+    //   height: 2px;
+    //   position: absolute;
+    //   @include breakpoint(xs) {
+    //     width: 90%;
+    //   }
+    // }
+    .steps-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      width: 95%;
+      left: 0;
+      padding: 2% 4%;
+      @include breakpoint(xs) {
+        width: 90%;
+        justify-content: center;
+      }
+      .step {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center; 
+        
+        margin-left: 0;
+        // color: $button-text-color;
+        color: $foreground-color;
+        background: rgba($theme-color-2, 1);
+        padding: $padding 0 0;
+        cursor: pointer;
+        &:before, &:after{
+            position: absolute;
+            top: 50%;
+            content: " ";
+            height: 0;
+            width: 0;
+            pointer-events: none;
+            border: solid transparent;
+        }
+        &:before {
+            left: 100%;
+            border-left-color: $background-color;
+            z-index: 1;
+            border-width: $arrow_size_prev;
+            margin-top: -$arrow_size_prev;
+        }
+        &:after {
+            left: 100%;
+            border-left-color: rgba($theme-color-2, 1);
+            z-index: 2;
+            border-width: $arrow_size_next;
+            margin-top: -$arrow_size_next;
+        }
+
+        i {
+          // color: $theme-color-1;
+          font-weight: 700 !important;
+          vertical-align: bottom;
+          // background-color: $theme-color-1;
+          // border-radius: 100rem;
+          // padding: $padding/10;
+        }
+        h4{
+          font-weight: 700 !important;
+          display: inline-block;
+        }
+        &:last-child{
+          &:after{
+            display: none;
+          }
+        }
+
+        @include breakpoint(xs) {
+          width: 100% !important;
+        }
+        &.deactivated {
+          background:  rgba($theme-color-2, .3);
+          color: $theme-color-1;
+          font-weight: 300 !important;
+          &:after{
+            border-left-color:  rgba($theme-color-2, .3);
+          }
+          h4{
+            font-weight: 300 !important;
+          }
+          i{
+            font-weight: 300 !important;
+          }
+          @include breakpoint(xs) {
+            display: none;
+          }
+          // .step-title {
+          //   opacity: .35;
+          // }
+          // &.help{
+          //   background: $separator-color;
+          //   &:after{
+          //     border-left-color: $separator-color;
+          //   }
+          // }
+        }
+        // .circle {
+        //   margin-bottom: 1rem;
+        //   padding: 0 1rem;
+        //   background-color: white;
+        
+        // }
+        // .step-title {
+        //   position: absolute;
+        //   top: 90%;
+        //   width: 100%;
+        //   h1,
+        //   h2,
+        //   h3,
+        //   h4,
+        //   h5 {
+        //     margin: 0 0 .2rem 0;
+        //     color: #333333;
+        //     font-weight: bold;
+        //   }
+        //   .step-subtitle {
+        //     font-weight: lighter;
+        //     margin: 0;
+        //     color: #555555;
+        //   }
+        // }
+      }
+    }
+  }
+  .content {
+    overflow: hidden;
+    margin: 1.5rem 0;
+  }
+  .bottom {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem;
+    border-top: 1px solid #cccccc;
+    &.only-next {
+      justify-content: flex-end;
+    }
+    .stepper-button {
+      padding: .5rem 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      &.next {
+        background-color: #3383c8;
+        color: white;
+        @include shadow(1);
+        &.deactivated {
+          background-color: #cccccc !important;
+          cursor: not-allowed !important;
+        }
+      }
+      &.previous {
+        color: #333333;
+      }
     }
   }
 }

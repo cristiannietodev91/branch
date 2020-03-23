@@ -127,3 +127,10 @@ $branch-blue-7: #27515E;
 $branch-blue-8: #041C24;
 
 $ruta: "/assets/img/";
+
+// stepper mune
+$line_height: 20px;
+$padding: 9px;
+$arrow_size_next: ($line_height + 2 * $padding)/2;
+$arrow_size_prev: ($line_height + 1 * $padding)/1;
+$max_li: 10;

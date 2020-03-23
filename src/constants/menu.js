@@ -132,23 +132,23 @@ const data = [
 
   //     ]
   //   },
-  //   {
-  //     id: "pages-blog",
-  //     label: "menu.blog",
-  //     to: "/app/pages/blog",
-  //     subs: [{
-  //       icon: "simple-icon-share",
-  //       label: "menu.blog-list",
-  //       to: "/app/pages/blog/blog-list"
-  //     },
-  //     {
-  //       icon: "simple-icon-link",
-  //       label: "menu.blog-detail",
-  //       to: "/app/pages/blog/blog-detail"
-  //     },
+    {
+      id: "pages-blog",
+      label: "menu.blog",
+      to: "/app/pages/blog",
+      subs: [{
+        icon: "simple-icon-share",
+        label: "menu.blog-list",
+        to: "/app/pages/blog/blog-list"
+      },
+      {
+        icon: "simple-icon-link",
+        label: "menu.blog-detail",
+        to: "/app/pages/blog/blog-detail"
+      },
 
-  //     ]
-  //   },
+      ]
+    },
   //   {
   //     id: "pages-miscellaneous",
   //     label: "menu.miscellaneous",

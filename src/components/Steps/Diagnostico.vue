@@ -38,21 +38,27 @@
         v-on:vdropzone-complete="complete"
         v-on:vdropzone-removed-file="removeFile"
       ></vue-dropzone>
-      <b-button type="submit" variant="primary" class="mt-4" size="lg">{{ $t('forms.submit') }}</b-button>
+      <div class="btn-icon">
+        <b-button type="submit" variant="primary" class="mt-4" size="lg">
+          <i class="iconsminds-upload-1"></i>
+          Cargar Diagnóstico
+          <!-- {{ $t('forms.submit') }} -->
+        </b-button>
+      </div>
     </b-form>
     <div v-else>
       <b-row>
         <b-colxx xxs="3">
           <p class="text-muted text-small mb-2">{{$t('branch.orden.fechaIngreso')}}</p>
-          <p class="mb-3">{{ data.etapa.createdAt | moment("D MMMM YYYY hh:mm A") }}</p>
+          <h5 class="mb-1 card-subtitle truncate">{{data.etapa.createdAt | moment("D MMMM YYYY hh:mm A")}}</h5>
         </b-colxx>
         <b-colxx xxs="3" v-if="data.etapa.mecanico">
           <p class="text-muted text-small mb-2">{{$t('branch.orden.mecanico')}}</p>
-          <p class="mb-3">{{data.etapa.mecanico.identificacion}} {{data.etapa.mecanico.fullName}}</p>
+          <h5 class="mb-1 card-subtitle truncate">{{data.etapa.mecanico.identificacion}} {{data.etapa.mecanico.firstName}}</h5>
         </b-colxx>
         <b-colxx>
           <p class="text-muted text-small mb-2">{{$t('branch.orden.observaciones')}}</p>
-          <p class="mb-3">{{data.etapa.Observaciones}}</p>
+          <h5 class="mb-1 card-subtitle truncate">{{data.etapa.Observaciones}}</h5>
         </b-colxx>
       </b-row>
       <div class="icon-cards-row">
@@ -87,6 +93,7 @@
   </b-card>
 </template>
 <script>
+import SingleLightbox from "../Pages/SingleLightbox";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 import vue2Dropzone from "vue2-dropzone";
