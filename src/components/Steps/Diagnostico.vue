@@ -37,21 +37,27 @@
         :options="dropzoneOptions"
         v-on:vdropzone-complete="complete"
       ></vue-dropzone>
-      <b-button type="submit" variant="primary" class="mt-4" size="lg">{{ $t('forms.submit') }}</b-button>
+      <div class="btn-icon">
+        <b-button type="submit" variant="primary" class="mt-4" size="lg">
+          <i class="iconsminds-upload-1"></i>
+          Cargar Diagnóstico
+          <!-- {{ $t('forms.submit') }} -->
+        </b-button>
+      </div>
     </b-form>
     <div v-else>
       <b-row>
         <b-colxx xxs="3">
           <p class="text-muted text-small mb-2">{{$t('branch.orden.fechaIngreso')}}</p>
-          <p class="mb-3">{{data.etapa.createdAt}}</p>
+          <h5 class="mb-1 card-subtitle truncate">{{data.etapa.createdAt}}</h5>
         </b-colxx>
         <b-colxx xxs="3" v-if="data.etapa.mecanico">
           <p class="text-muted text-small mb-2">{{$t('branch.orden.mecanico')}}</p>
-          <p class="mb-3">{{data.etapa.mecanico.identificacion}} {{data.etapa.mecanico.firstName}}</p>
+          <h5 class="mb-1 card-subtitle truncate">{{data.etapa.mecanico.identificacion}} {{data.etapa.mecanico.firstName}}</h5>
         </b-colxx>
         <b-colxx>
           <p class="text-muted text-small mb-2">{{$t('branch.orden.observaciones')}}</p>
-          <p class="mb-3">{{data.etapa.Observaciones}}</p>
+          <h5 class="mb-1 card-subtitle truncate">{{data.etapa.Observaciones}}</h5>
         </b-colxx>
       </b-row>
       <div class="icon-cards-row">
@@ -61,7 +67,7 @@
             v-for="(documento,index) in data.etapa.documentos"
             :key="`contact${index}`"
           >
-            <b-card class="flex-row" no-body>
+            <!-- <b-card class="flex-row" no-body>
               <img alt="Thumbnail" :src="documento.url" class="list-thumbnail responsive border-0" />
               <div class="pl-2 d-flex flex-grow-1 min-width-zero">
                 <b-card-body class="align-self-center d-flex min-width-zero">
@@ -71,7 +77,29 @@
                   >{{ documento.date | moment("D MMMM YYYY hh mm A") }}</p>
                 </b-card-body>
               </div>
-            </b-card>
+            </b-card> -->
+            <b-colxx xxs="12" xs="6" lg="4">
+                <b-card class="mb-4" no-body>
+                    <div class="position-relative">
+                      <img alt="Thumbnail" :src="documento.url" class="list-thumbnail responsive border-0" />
+                      <single-lightbox thumb="/assets/img/detail-5.jpg" large="/assets/img/detail-5.jpg" class-name="responsive border-0 card-img-top mb-3" />
+
+                      
+                      <!-- EN ESTO QUEDÉ, INTENTANDO AGREGAR LA FOTO CON UN MODAL QUE LA MUESTRE MAS GRANDE -->
+                      
+
+                      <!-- <img src="/assets/img/card-thumb-1.jpg" class="card-img-top" /> -->
+                      <!-- <b-badge variant="primary" pill class="position-absolute badge-top-left">NEW</b-badge>
+                      <b-badge variant="secondary" pill class="position-absolute badge-top-left-2">TRENDING</b-badge> -->
+                    </div>
+                    <b-card-body>
+                      <h6 class="mb-4 card-subtitle">{{documento.nombrearchivo}}</h6>
+                      <p class="card-text text-muted text-small mb-0 font-weight-light">{{ documento.date | moment("D MMMM YYYY hh mm A") }}</p>
+                    </b-card-body>
+                </b-card>
+            </b-colxx>
+
+
           </div>
         </glide-component>
         <div class="pl-2 d-flex flex-grow-1 min-width-zero" v-else>
@@ -84,6 +112,7 @@
   </b-card>
 </template>
 <script>
+import SingleLightbox from "../Pages/SingleLightbox";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 import vue2Dropzone from "vue2-dropzone";

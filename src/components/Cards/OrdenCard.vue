@@ -13,13 +13,16 @@
         <h5 class="mb-1 card-subtitle truncate">{{data.vehiculo.marca.marca}}</h5>
         <p class="text-muted text-small mb-2">{{$t('branch.orden.marca')}}</p>
       </b-colxx>
-      <b-colxx md="6" sm="6" lg="4" xxs="4">
+      <b-colxx md="6" sm="6" lg="4" xxs="4" class="btn-icon">
         <b-button
             @click="openModal"
             variant="primary"
             size="lg"
             class="top-right-button"
-          >{{ $t('Enviar mensaje') }}</b-button>
+          >
+          <i class="iconsminds-speach-bubble-8"></i>
+          {{ $t('Enviar mensaje') }}
+        </b-button>
           <modal-add-chat :data="data" :currentUser="currentUser"></modal-add-chat>
       </b-colxx>
     </b-row>
@@ -62,7 +65,7 @@ export default {
   components: {
     ThumbnailImage,
     HorizontalStepper,
-    "modal-add-chat" : ModalChat  
+    "modal-add-chat" : ModalChat
   },
   data() {
     return {
@@ -76,7 +79,7 @@ export default {
   },
   methods: {
     openModal(){
-      this.$bvModal.show("modalChat_"+data.codigoOrden);
+      this.$bvModal.show("ModalChat"+data.codigoOrden);
     },
     // Executed when @completed-step event is triggered
     completeStep(payload) {
@@ -115,7 +118,7 @@ export default {
     });
 
     this.demoSteps.push({
-      icon: "mail",
+      icon: "info",
       name: "ingreso",
       title: "Ingreso",
       component: Ingreso,
@@ -144,7 +147,7 @@ export default {
     };
 
     this.demoSteps.push({
-      icon: "report_problem",
+      icon: "help",
       name: "diagnostico",
       title: "Diagnostico",
       component: Diagnostico,
@@ -174,9 +177,9 @@ export default {
     };
 
     this.demoSteps.push({
-      icon: "report_problem",
+      icon: "help",
       name: "cotizacion",
-      title: "Cotizacion",
+      title: "Cotización",
       component: Cotizacion,
       data: dataCotizacion,
       completed: idxCotizacion > -1

@@ -1,24 +1,26 @@
 <template>
     <div class="stepper-box">
         <div class="top">
-            <div class="divider-line" :style="{width: `${(100/(steps.length) * (steps.length - 1)) - 10}%`}"></div>
+            <!-- <div class="divider-line" :style="{width: `${(100/(steps.length) * (steps.length - 1)) - 10}%`}"></div> -->
             <div class="steps-wrapper">
-                <template v-if="topButtons">
+                <!-- <template v-if="topButtons">
                     <div v-if="currentStep.index > 0" class="stepper-button-top previous" @click="backStep()">
                         <i class="material-icons">keyboard_arrow_left</i>
                     </div>
-                </template>
+                </template> -->
                 <template v-for="(step, index) in steps">
-                    <div :class="['step', isStepActive(index, step)]" :key="index" :style="{width: `${100 / steps.length}%`}">
-                        <div class="circle">
-                            <i class="material-icons md-18">
-                                {{ (step.completed) ? 'done' : step.icon }}
-                            </i>
-                        </div>
-                        <div class="step-title">
-                            <h4>{{step.title}}</h4>
-                            <h5 class="step-subtitle">{{step.subtitle}}</h5>
-                        </div>
+                    <div :class="['step', isStepActive(index, step)]" :key="index" :style="{width: `${100 / steps.length}%`}"  @click="activateStep(index, step)">
+                        <!-- <div class="circle"> -->
+                        <!-- </div> -->
+                        <!-- <div class="step-title"> -->
+                            <h4>
+                              <i class="material-icons md-18">
+                                  {{ (step.completed) ? 'done' : step.icon }}
+                              </i>
+                              {{step.title}}
+                            </h4>
+                            <!-- <h5 class="step-subtitle">{{step.subtitle}}</h5> -->
+                        <!-- </div> -->
                     </div>
                 </template>
                 <div v-if="topButtons" :class="['stepper-button-top next', !canContinue ? 'deactivated' : '']" @click="nextStep()">
@@ -36,16 +38,16 @@
                 <component v-else :is="steps[currentStep.index].component" :data="steps[currentStep.index].data" :clickedNext="nextButton[currentStep.name]" @can-continue="proceed" @change-next="changeNextBtnValue" :current-step="currentStep"></component>
             </transition>
         </div>
-        <div :class="['bottom', (currentStep.index > 0) ? '' : 'only-next']">
-            <div v-if="currentStep.index > 0" class="stepper-button previous" @click="backStep()">
+        <!-- <div :class="['bottom', (currentStep.index > 0) ? '' : 'only-next']">
+            <div v-if="currentStep.index > 0" class="btn top-right-button btn-primary btn-lg" @click="backStep()">
                 <i class="material-icons">keyboard_arrow_left</i>
                 <span>{{ 'back' | translate(locale) }}</span>
             </div>
-            <div :class="['stepper-button next', !canContinue ? 'deactivated' : '']" @click="nextStep()">
+            <div :class="['btn top-right-button btn-primary btn-lg', !canContinue ? 'deactivated' : '']" @click="nextStep()">
                 <span>{{ (finalStep) ? 'finish' : 'next' | translate(locale) }}</span>
                 <i class="material-icons">keyboard_arrow_right</i>
             </div>
-        </div>
+        </div> -->
     </div>
 </template>
 

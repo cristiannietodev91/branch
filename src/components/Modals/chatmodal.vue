@@ -6,7 +6,8 @@
     modal-class="modal-basic"
     hide-footer
   >
-    <div>
+  <p>este es el modal</p>
+    <!-- <div>
         <b-row class="app-row">
             <b-colxx xxs="12" class="chat-app">
                 <conversation-detail v-if="isLoadContacts && isLoadConversations && otherUser!=null" key="conversation" :current-user="currentUser" :other-user="otherUser" :messages="conversationMessages" />
@@ -23,11 +24,11 @@
                     <i class="simple-icon-arrow-right" />
                 </b-button>
             </div>
-        </div>
+        </div> -->
                     <!-- <div class="pt-4 spaced-content pb-0 mt-2"></div>
                     <conversation-list v-if="isLoadContacts && isLoadConversations" key="conversationList" :current-user="currentUser" :conversations="conversations" :contacts="contacts" @select-conversation="selectConversation" />
                     <div v-else class="loading" key="conversationListLoading"></div> -->
-        <application-menu>
+        <!-- <application-menu>
             <b-tabs no-fade class="pl-0 pr-0 h-100" content-class="chat-app-tab-content" nav-class="card-header-tabs ml-0 mr-0" v-model="tabIndex">
                 <b-tab :title="$t('chat.messages')" active title-item-class="w-50 text-center" no-body class="chat-app-tab-pane">
                     <div class="pt-4 spaced-content pb-0 mt-2">
@@ -47,7 +48,7 @@
                 </b-tab>
             </b-tabs>
         </application-menu>
-    </div>
+    </div> -->
   </b-modal>
 </template>
 
@@ -62,6 +63,7 @@ import ConversationList from '../ChatApp/ConversationList'
 import ConversationDetail from '../ChatApp/ConversationDetail'
 
 export default {
+    props: ["data"],
     components: {
         // 'application-menu': ApplicationMenu,
         // 'contact-list': ContactList,
@@ -75,18 +77,19 @@ export default {
             searchKey: '',
             isLoadCurrentConversation: false,
             otherUser: null,
-            conversationMessages: null
+            conversationMessages: null,
+            codigoOrden:[]
         }
     },
     computed: {
-        ...mapGetters(['currentUser', 'isLoadContacts', 'isLoadConversations', 'error', 'contacts', 'contactsSearchResult', 'conversations'])
+        //...mapGetters(['currentUser', 'isLoadContacts', 'isLoadConversations', 'error', 'contacts', 'contactsSearchResult', 'conversations'])
     },
     methods: {
-        ...mapActions(['getContacts', 'searchContacts', 'getConversations']),
-        selectConversation(otherUser, messages) {
-            this.otherUser = otherUser
-            this.conversationMessages = messages
-        },
+        // ...mapActions(['getContacts', 'searchContacts', 'getConversations']),
+        // selectConversation(otherUser, messages) {
+        //     this.otherUser = otherUser
+        //     this.conversationMessages = messages
+        // },
         selectContact(userId) {
             this.otherUser = this.contacts.find(x => x.id === userId)
             const conversation = this.conversations.find(x => x.users.includes(userId) && x.users.includes(this.currentUser.id))
@@ -118,24 +121,24 @@ export default {
             this.message = ''
         }
     },
-    mounted() {
-        this.getContacts({
-            userId: this.currentUser.id,
-            searchKey: ''
-        })
-        this.getConversations(this.currentUser.id)
-        document.body.classList.add("no-footer");
-    },
-    beforeDestroy() {
-        document.body.classList.remove("no-footer");
-    },
-    watch: {
-        searchKey(val, oldVal) {
-            this.searchContacts({
-                userId: this.currentUser.id,
-                searchKey: val
-            })
-        }
-    }
+    // mounted() {
+    //     this.getContacts({
+    //         userId: this.currentUser.id,
+    //         searchKey: ''
+    //     })
+    //     this.getConversations(this.currentUser.id)
+    //     document.body.classList.add("no-footer");
+    // },
+    // beforeDestroy() {
+    //     document.body.classList.remove("no-footer");
+    // },
+    // watch: {
+    //     searchKey(val, oldVal) {
+    //         this.searchContacts({
+    //             userId: this.currentUser.id,
+    //             searchKey: val
+    //         })
+    //     }
+    // }
 }
 </script>

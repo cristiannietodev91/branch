@@ -28,7 +28,13 @@
         :options="dropzoneOptions"
         v-on:vdropzone-complete="complete"
       ></vue-dropzone>
-      <b-button type="submit" variant="primary" class="mt-4" size="lg">{{ $t('forms.submit') }}</b-button>
+      <div class="btn-icon">
+        <b-button type="submit" variant="primary" class="mt-4" size="lg">
+          <i class="iconsminds-upload-1"></i>
+          Cargar Cotización
+          <!-- {{ $t('forms.submit') }} -->
+        </b-button>
+      </div>
     </b-form>
     <div v-else>
       <div class="icon-cards-row">
