@@ -11,4 +11,6 @@ router.post('/create', ordenController.createOrden);
 
 router.get('/getByIdTaller/:Id', ordenController.getAllOrdenesByIdTaller);
 
+router.put('/update/:Id', ordenController.updateOrden);
+
 module.exports = router;

@@ -42,6 +42,10 @@ module.exports = (sequelize, DataTypes) => {
         },
         documentos: {
             type: Sequelize.JSON
+        },
+        estado: {
+            type: Sequelize.ENUM('Aceptado', 'Pendiente', 'Rechazado', 'Inactivo'),
+            allowNull: false
         }
     }, {});
     Orden.associate = function (models) {

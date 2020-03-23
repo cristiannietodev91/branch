@@ -309,7 +309,7 @@ const getAllCitasActivasByIdUsuario = (req, res, next) => {
         var IdUsuario = req.params.Id;
 
         citaDAO.findAllByFilter({ estado: 'Cumplida' }
-           , { IdUsuario: IdUsuario }, {}, function (error, citas) {
+           , { IdUsuario: IdUsuario }, { [Op.or]: [{ estado: 'Aceptado'}, { estado: 'Pendiente'} ] }, function (error, citas) {
             if (error) {
                 console.error('Error al realizar la transaccion de buscar citas By Usuario error ::>', error.message);
                 if (error.errors) {

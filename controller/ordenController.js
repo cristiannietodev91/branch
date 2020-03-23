@@ -3,6 +3,7 @@ var citaDAO = require('../dao/citaDAO');
 var sms = require('../utils/sendSms')
 var HttpStatus = require('http-status-codes');
 var moment = require('moment');
+var debug = require('debug')('branch:server');
 
 
 const createOrden = (req, res, next) => {
@@ -26,13 +27,14 @@ const createOrden = (req, res, next) => {
                             IdTaller: orden.IdTaller,
                             IdEtapa: orden.IdEtapa,
                             IdCita: orden.IdCita,
-                            IdMecanico: orden.mecanico,
+                            IdMecanico: orden.IdMecanico,
                             IdVehiculo: cita.IdVehiculo,
                             kilometraje: orden.kilometraje,
                             DocumentosDeja: orden.documentosDeja,
                             CodigoOrden: CodigoOrden,
                             Observaciones: orden.Observaciones,
-                            documentos: orden.documentos
+                            documentos: orden.documentos,
+                            estado: orden.estado
                         }
 
                         if(cita.vehiculo.usuario.celular & orden.IdEtapa == 2){
@@ -43,6 +45,12 @@ const createOrden = (req, res, next) => {
 
                         if(cita.vehiculo.usuario.celular & orden.IdEtapa == 3){
                             var textoSms = "Su vehiculo "+cita.vehiculo.placa+" ha sido DIAGNOSTICADO  en el taller BRANCH";
+                            sms.sendSMSTwilio(cita.vehiculo.usuario.celular,textoSms);
+                            sms.sendNotificacionToUser(cita.vehiculo.usuario.tokenCM,textoSms);
+                        }
+
+                        if(cita.vehiculo.usuario.celular & orden.IdEtapa == 4){
+                            var textoSms = "Ingrese a BRANCH ya se encuentra disponible la cotización para su vehiculo "+cita.vehiculo.placa;
                             sms.sendSMSTwilio(cita.vehiculo.usuario.celular,textoSms);
                             sms.sendNotificacionToUser(cita.vehiculo.usuario.tokenCM,textoSms);
                         }
@@ -97,6 +105,71 @@ const createOrden = (req, res, next) => {
     }
 }
 
+const updateOrden = (req, res, next) => {
+    try {
+        var IdOrdenTrabajo = req.params.Id;
+        var orden = req.body;
+        if (IdOrdenTrabajo) {
+            
+            let ordenDb = {
+                IdTaller: orden.IdTaller,
+                CodigoOrden: orden.CodigoOrden,
+                IdEtapa: orden.IdEtapa,
+                IdCita: orden.IdCita,
+                IdMecanico: orden.IdMecanico,
+                IdVehiculo: orden.IdVehiculo,
+                Observaciones: orden.Observaciones,
+                estado: orden.estado
+            }
+            
+            ordenDAO.update(IdOrdenTrabajo, ordenDb, function (error, orden) {
+                if (error) {
+                    console.error('Error al realizar la transaccion de actualizar orden:::>', 'error ::>', error.message);
+                    if (error.errors) {
+                        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
+                    } else {
+                        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+                    }
+                } else {
+                    if (orden) {
+                        ordenDAO.getById(IdOrdenTrabajo, (error, orden) => {
+                            if (error) {
+                                console.error('Error al realizar la transaccion de actualizar orden, getOrdenByID:::>', 'error ::>', error.message);
+                                if (error.errors) {
+                                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
+                                } else {
+                                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+                                }
+                            } else {
+                                if (orden) {
+                                    debug('Datos para envio de SMS ::>', orden.vehiculo.usuario.celular);
+                                    /*if (orden.vehiculo.usuario.celular) {
+                                        let textoSms = ""
+                                        //Texto de cita con mecanico
+                                        debug('Estado de la cita ::>', orden.estado);
+                                        if(orden.estado == 'Rechazado'){
+                                            sms.sendNotificacionToUser(orden.vehiculo.usuario.tokenCM,'Se confirmo su cita exitosamente')
+                                        }
+                                    }*/
+                                }
+                            }
+                        })
+                        return res.status(HttpStatus.ACCEPTED).json({ message: 'Se actualizo la orden ' + IdOrdenTrabajo + ' correctamente' });
+                    } else {
+                        return res.status(HttpStatus.OK).json({ error: "No se actualizo la cita" });
+                    }
+                }
+            });
+            
+        } else {
+            return res.status(HttpStatus.BAD_REQUEST).json({ message: "El parametro IdOrdenTrabajo es requerido" });
+        }
+    } catch (error) {
+        console.error('Error al actualizar la OrdenTrabajo ', error);
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+    }
+}
+
 const getAllEtapas = (req, res, next) => {
     try {
         ordenDAO.findAllEtapas(function (error, etapas) {
@@ -113,6 +186,8 @@ const getAllEtapas = (req, res, next) => {
         return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
     }
 }
+
+
 
 const getAllOrdenesByIdTaller = (req, res, next) =>{
     try {
@@ -166,6 +241,7 @@ const getOrdenById = (req, res, next) => {
 
 module.exports = {
     createOrden,
+    updateOrden,
     getAllEtapas,
     getAllOrdenesByIdTaller,
     getOrdenById

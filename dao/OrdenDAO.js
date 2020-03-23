@@ -56,6 +56,17 @@ module.exports = {
                 include: [
                     {
                         model: models.mecanico
+                    },
+                    {
+                        model: models.vehiculo,
+                        include: [
+                            {
+                                model: models.marca
+                            },
+                            {
+                                model: models.usuarios
+                            }
+                        ] 
                     }
                 ]
             }).then(orden => {
