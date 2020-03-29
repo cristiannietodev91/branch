@@ -54,6 +54,18 @@ const createOrden = (req, res, next) => {
                             sms.sendSMSTwilio(cita.vehiculo.usuario.celular,textoSms);
                             sms.sendNotificacionToUser(cita.vehiculo.usuario.tokenCM,textoSms);
                         }
+
+                        if(cita.vehiculo.usuario.celular & orden.IdEtapa == 6){
+                            var textoSms = "Se realizo la reparación de su vehiculo "+cita.vehiculo.placa + " en el taller BRANCH, ya puedes ver las fotos de tu reparación";
+                            sms.sendSMSTwilio(cita.vehiculo.usuario.celular,textoSms);
+                            sms.sendNotificacionToUser(cita.vehiculo.usuario.tokenCM,textoSms);
+                        }
+
+                        if(cita.vehiculo.usuario.celular & orden.IdEtapa == 7){
+                            var textoSms = "El taller BRANCH ya tiene listo su vehiculo "+cita.vehiculo.placa + " ya esta disponible la factura y puedes ir a recoger tu vehiculo";
+                            sms.sendSMSTwilio(cita.vehiculo.usuario.celular,textoSms);
+                            sms.sendNotificacionToUser(cita.vehiculo.usuario.tokenCM,textoSms);
+                        }
     
                         ordenDAO.create(ordenDB, (error, orden) => {
                             if (error) {
@@ -66,10 +78,16 @@ const createOrden = (req, res, next) => {
                             } else {
                                 if (orden) {
                                     if(orden.IdEtapa){
-                                        cita.estado = 'Cumplida'
+
+                                        if(orden.IdEtapa == 7){
+                                            cita.estado = 'Finalizada'
+                                        }else{
+                                            cita.estado = 'Cumplida'
+                                        }
+                                        
                                         citaDAO.update(cita.IdCita,cita,(error,cita)=>{
                                             if (error) {
-                                                console.error('Error al realizar la transaccion de crear actualizar cita:::>', 'error ::>', error);
+                                                console.error('Error al realizar la transaccion de actualizar cita:::>', 'error ::>', error);
                                                 if (error.errors) {
                                                     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
                                                 } else {

@@ -72,10 +72,12 @@ const createCita = (req, res, next) => {
                                                 //Texto de cita con mecanico
                                                 textoSms = "Hola " + vehiculo.usuario.firstName + "! Te esperamos el " + moment(cita.fechaCita).format('D [de] MMMM YYYY') + " a las " + cita.horaCita + " con tu " + vehiculo.tipoVehiculo + "  " + vehiculo.placa + ", " + mecanico.firstName + " de BRANCH tendra el gusto de recibirte. Tu experiencia nuestro motor! BRANCH"
                                                 sms.sendSMSTwilio(vehiculo.usuario.celular, textoSms);
+                                                sms.sendNotificacionToUser(vehiculo.usuario.tokenCM,textoSms);
                                             } else {
                                                 //Texto de cita sin mecanico
                                                 textoSms = "Hola " + vehiculo.usuario.firstName + "! Te esperamos el " + moment(cita.fechaCita).format('D [de] MMMM YYYY') + " a las " + cita.horaCita + " con tu " + vehiculo.tipoVehiculo + "  " + vehiculo.placa + ", BRANCH tendra el gusto de recibirte. Tu experiencia nuestro motor! BRANCH"
                                                 sms.sendSMSTwilio(vehiculo.usuario.celular, textoSms);
+                                                sms.sendNotificacionToUser(vehiculo.usuario.tokenCM,textoSms);
                                             }
                                         }
                                     })
@@ -283,8 +285,8 @@ const getAllCitasPasadasByIdUsuario = (req, res, next) => {
     try {
         var IdUsuario = req.params.Id;
 
-        citaDAO.findAllByFilter({ [Op.or]: [{ estado: 'Cancelada'}, { estado: 'Incumplida'} ] }
-           , { IdUsuario: IdUsuario }, {IdEtapa: 2}, function (error, citas) {
+        citaDAO.findAllByFilter({ [Op.or]: [{ estado: 'Cancelada'}, { estado: 'Incumplida'} , { estado: 'Finalizada'} ] }
+           , { IdUsuario: IdUsuario }, {}, function (error, citas) {
             if (error) {
                 console.error('Error al realizar la transaccion de buscar citas By Usuario error ::>', error.message);
                 if (error.errors) {

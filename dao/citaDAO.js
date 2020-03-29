@@ -130,6 +130,7 @@ module.exports = {
                 order: [
                     ['fechaCita'],
                     ['horaCita'],
+                    [models.ordentrabajo, 'IdEtapa']
                 ]
             }).then(citas => {
                 return citas;

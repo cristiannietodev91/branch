@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
             type: Sequelize.STRING
         },
         estado: {
-            type: Sequelize.ENUM('Solicitada','Confirmada','Cancelada','Incumplida','Cumplida')
+            type: Sequelize.ENUM('Solicitada','Confirmada','Cancelada','Incumplida','Cumplida', 'Finalizada')
         }
     }, {});
     Cita.associate = function (models) {
