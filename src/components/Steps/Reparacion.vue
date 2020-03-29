@@ -64,7 +64,7 @@
           >
             <b-card class="flex-row" no-body>
               <b-link :href="documento.url" target="_blank"> 
-                <img alt="Thumbnail" :src="documento.url" class="list-thumbnail responsive border-0" />
+                <img alt="Thumbnail" :src="documento.url.replace('branchmedia','branchmedia-resized')" class="list-thumbnail responsive border-0" />
                 <div class="pl-2 d-flex flex-grow-1 min-width-zero">
                   <b-card-body class="align-self-center d-flex min-width-zero">
                     <p class="list-item-heading mb-1 truncated">{{documento.nombrearchivo}}</p>
