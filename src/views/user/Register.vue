@@ -143,7 +143,7 @@ export default {
       this.$v.form.$touch();
       if (!this.$v.form.$anyError) {
         this.register({
-          fullname: this.form.fullname,
+          firstName: this.form.fullname,
           identificacion: this.form.identificacion,
           email: this.form.email,
           password: this.form.password
