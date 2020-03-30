@@ -1,10 +1,10 @@
-var citaDAO = require('../dao/citaDAO');
-var vehiculoDAO = require('../dao/vehiculoDAO');
+let citaDAO = require('../dao/citaDAO');
+let vehiculoDAO = require('../dao/vehiculoDAO');
 let mecanicoDAO = require('../dao/mecanicoDAO');
-var sms = require('../utils/sendSms')
-var HttpStatus = require('http-status-codes');
-var moment = require('moment');
-var debug = require('debug')('branch:server');
+let sms = require('../utils/sendSms')
+let HttpStatus = require('http-status-codes');
+let moment = require('moment');
+let debug = require('debug')('branch:server');
 const { Op } = require("sequelize");
 
 moment.locale('es')

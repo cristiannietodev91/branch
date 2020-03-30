@@ -9,7 +9,7 @@ router.get('/getById/:Id', userController.findUsuarioById);
 
 router.get('/loginUsuario/:uid', userController.loginUserTallerByUID);
 
-//router.get('/config', userController.helloWorld);
+router.get('/getByEmail/:email',userController.findUserByEmail);
 
 router.post('/createFireBaseUser', userController.createFireBaseUsuario);
 

@@ -1,14 +1,8 @@
-var usersDAO = require('../dao/usersDAO');
-var HttpStatus = require('http-status-codes');
-var admin = require('firebase-admin');
+let usersDAO = require('../dao/usersDAO');
+let HttpStatus = require('http-status-codes');
 
+let userAdapater = require('../adapter/userAdapter');
 
-var serviceAccount = require("../serviceAccountKey.json");
-
-var app = admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: 'https://branch-263701.firebaseio.com'
-});
 
 /*exports.helloWorld = functions.https.onRequest((request, response) => {
     response.json(app.options);
@@ -33,18 +27,20 @@ const getAllUsuarios = (req, res, next) => {
 
 const createFireBaseUsuario = async (req, res, next) => {
     try {
-        var usuario = req.body;
+        let usuario = req.body;
         console.debug('Parametro de usuario recibido :::::>', usuario);
-        var usuario = {
+
+        let usuarioDB = {
             email: usuario.email,
             password: usuario.password,
-            fullname: usuario.fullname,
+            firstName: usuario.firstName,
             celular: usuario.celular,
             identificacion: usuario.identificacion,
-            tipoUsuario: usuario.tipoUsuario
+            tipoUsuario: usuario.tipoUsuario,
+            uid: usuario.uid
         }
 
-        createUsuarioNew(usuario, function (error, usuarioResult) {
+        userAdapater.createUsuarioNew(usuarioDB, function (error, usuarioResult) {
             if (error) {
                 return res.status(HttpStatus.METHOD_FAILURE).send({ message: error.message });
             } else {
@@ -167,40 +163,33 @@ const loginUserTallerByUID = (req, res, next) => {
 }
 
 
-const createUsuarioNew = (usuario, cb) => {
-    admin.auth().createUser({
-        email: usuario.email,
-        emailVerified: false,
-        phoneNumber: usuario.celular,
-        password: usuario.password,
-        displayName: usuario.fullname,
-        disabled: false
-    }).then(function (userRecord) {
+const findUserByEmail = (req, res , next) => {
+    try {
+        let email = req.params.email;
 
-        var usuarioDb = {
-            firstName: userRecord.displayName,
-            email: userRecord.email,
-            uid: userRecord.uid,
-            celular: userRecord.phoneNumber,
-            identificacion: usuario.identificacion,
-            tipoUsuario: usuario.tipoUsuario,
-            estado: 'Pendiente'
-        }
-        usersDAO.create(usuarioDb, function (error, usuario) {
-            if (error) {
-                cb(error, null);
-            } else {
-                if (usuario) {
-                    cb(null, usuario);
+        userAdapater.findUserByEmail(email,(error,usuario)=>{
+            if(error){
+                console.error('Error al buscar usuario por email ::>', error.message);
+                if (error.errors) {
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
                 } else {
-                    cb({ message: "No se creo el usuario" }, null)
+                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+                }
+            }else{
+                if (usuario) {
+                    res.status(HttpStatus.OK).json(usuario);                   
+                }else{
+                    res.status(HttpStatus.OK).json({});
                 }
             }
-        });
-    }).catch(function (error) {
-        cb(error, null);
-    });
+        })
+    }catch (error) {
+        console.error('Error al buscar usuario By Email ', error);
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+    }
 }
+
+
 
 
 module.exports = {
@@ -209,6 +198,6 @@ module.exports = {
     updateUsuarioByUid,
     deleteUsuarioById,
     findUsuarioById,
-    createUsuarioNew,
-    loginUserTallerByUID
+    loginUserTallerByUID,
+    findUserByEmail
 }

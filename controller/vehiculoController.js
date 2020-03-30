@@ -1,9 +1,13 @@
 const vehiculoDAO = require('../dao/vehiculoDAO');
 const marcaDAO = require('../dao/marcaDAO')
-var userController = require('../controller/userController');
-var sms = require('../utils/sendSms')
-var HttpStatus = require('http-status-codes');
+let sms = require('../utils/sendSms')
+let HttpStatus = require('http-status-codes');
 const { Op } = require("sequelize");
+let userAdapter = require('../adapter/userAdapter');
+let vehiculoAdapter = require('../adapter/vehiculoAdapter');
+let moment = require('moment');
+
+moment.locale('es')
 
 const getAllVehiculos = (req, res, next) => {
     try {
@@ -24,8 +28,9 @@ const getAllVehiculos = (req, res, next) => {
 
 const createVehiculo = (req, res, next) => {
     try {
-        var vehiculo = req.body;
+        let vehiculo = req.body;
         console.debug('Parametro de vehiculo recibido :::::>', vehiculo);
+
         vehiculoDAO.findOneByFilter({ placa: vehiculo.placa }, function (error, vehiculoResult) {
             if (error) {
                 console.error('Error al buscar vehiculo por placa:::>', 'error ::>', error.message);
@@ -39,7 +44,22 @@ const createVehiculo = (req, res, next) => {
                     //TODO : Placa ya existe, si no tiene taller si coloca el ID de taller que esta registrando                    
                 } else {
                     if (vehiculo.usuario) {
-                        crearVehiculoDB(vehiculo.usuario, vehiculo, function (error, vehiculo) {
+
+                        let vehiculoDB = {
+                            alias: vehiculo.alias,
+                            color: vehiculo.color,
+                            fechaCompra: moment(vehiculo.fechaCompraText,"DD/MM/YYYY"),
+                            fotos: vehiculo.fotos,
+                            kilometraje: vehiculo.kilometraje,
+                            marca: vehiculo.marca,
+                            modelo: vehiculo.modelo,
+                            placa: vehiculo.placa,
+                            tipoVehiculo: vehiculo.tipoVehiculo,
+                            usuario: vehiculo.usuario
+                        }
+                        
+
+                        vehiculoAdapter.crearVehiculo(vehiculoDB.usuario, vehiculoDB, function (error, vehiculo) {
                             if (error) {
                                 console.error('Error al realizar la transaccion de crear vehiculo con usuario existente:::>', 'error ::>', error);
                                 if (error.errors) {
@@ -58,24 +78,31 @@ const createVehiculo = (req, res, next) => {
                         });
                     } else {
                         //TODO: No existe el usuario
-                        var usuario = {
-                            email: vehiculo.email,
-                            celular: '+57' + vehiculo.celular,
-                            password: '123456',
-                            fullname: 'Sin nombre',
-                            tipoUsuario: 'Cliente'
-                        }
-                        userController.createUsuarioNew(usuario, function (error, userRecord) {
-                            if (error) {
-                                console.error('Error al realizar la transaccion de crear vehiculo:::>', 'error ::>', error);
+                        userAdapter.findUserByEmail(vehiculo.email,(error,usuario)=>{
+                            if(error){
                                 if (error.errors) {
                                     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
-                                } else {
+                                }
+                                else {
                                     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
                                 }
-                            } else {
-                                if (userRecord) {
-                                    crearVehiculoDB(userRecord, vehiculo, function (error, vehiculo) {
+                            }else{
+                                if(usuario){
+                                    //Encontro un usuario
+                                    let vehiculoDB = {
+                                        alias: vehiculo.alias,
+                                        color: vehiculo.color,
+                                        fechaCompra: moment(vehiculo.fechaCompraText,"DD/MM/YYYY"),
+                                        fotos: vehiculo.fotos,
+                                        kilometraje: vehiculo.kilometraje,
+                                        marca: vehiculo.marca,
+                                        modelo: vehiculo.modelo,
+                                        placa: vehiculo.placa,
+                                        tipoVehiculo: vehiculo.tipoVehiculo,
+                                        usuario: usuario
+                                    }
+
+                                    vehiculoAdapter.crearVehiculo(usuario, vehiculoDB, function (error, vehiculo) {
                                         if (error) {
                                             console.error('Error al realizar la transaccion de crear vehiculo con usuario existente:::>', 'error ::>', error);
                                             if (error.errors) {
@@ -92,10 +119,67 @@ const createVehiculo = (req, res, next) => {
                                             }
                                         }
                                     });
+
+                                }else{
+                                    //No Encontro usuario lo va a crear
+                                    let usuario = {
+                                        email: vehiculo.email,
+                                        celular: '+57' + vehiculo.celular,
+                                        password: '123456',
+                                        fullname: 'Sin nombre',
+                                        tipoUsuario: 'Cliente'
+                                    }            
+            
+                                    userAdapter.createUsuarioNew(usuario, function (error, userRecord) {
+                                        if (error) {
+                                            console.error('Error al realizar la transaccion de crear vehiculo:::>', 'error ::>', error);
+                                            if (error.errors) {
+                                                return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
+                                            } else {
+                                                return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+                                            }
+                                        } else {
+                                            if (userRecord) {
+                                                 //Encontro un usuario
+                                                let vehiculoDB = {
+                                                    alias: vehiculo.alias,
+                                                    color: vehiculo.color,
+                                                    fechaCompra: moment(vehiculo.fechaCompra.fechaCita,"DD/MM/YYYY"),
+                                                    fotos: vehiculo.fotos,
+                                                    kilometraje: vehiculo.kilometraje,
+                                                    marca: vehiculo.marca,
+                                                    modelo: vehiculo.modelo,
+                                                    placa: vehiculo.placa,
+                                                    tipoVehiculo: vehiculo.tipoVehiculo,
+                                                    usuario: userRecord
+                                                }
+
+                                                vehiculoAdapter.crearVehiculo(userRecord, vehiculoDB, function (error, vehiculo) {
+                                                    if (error) {
+                                                        console.error('Error al realizar la transaccion de crear vehiculo con usuario existente:::>', 'error ::>', error);
+                                                        if (error.errors) {
+                                                            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
+                                                        }
+                                                        else {
+                                                            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
+                                                        }
+                                                    } else {
+                                                        if (vehiculo) {
+                                                            return res.status(HttpStatus.OK).json(vehiculo);
+                                                        } else {
+                                                            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'Error indefinido al crear vehiculo' });
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        }
+            
+                                    });
                                 }
                             }
+                        })
 
-                        });
+                        
                     }
 
                 }
@@ -351,84 +435,5 @@ module.exports = {
 }
 
 
-function crearVehiculoDB(userRecord, vehiculo, cb) {
 
-    if (vehiculo.marca) {
-        marcaDAO.findOneByFilter({ marca: vehiculo.marca.marca, referencia: vehiculo.marca.referencia }, (error, marca) => {
-            if (error) {
-                cb(error, null);
-            } else {
-                if (marca) {
-                    var vehiculoRegister = {
-                        IdMarca: marca.IdMarca,
-                        IdUsuario: userRecord.uid,
-                        IdTaller: vehiculo.IdTaller,
-                        tipoVehiculo: 'Moto',
-                        placa: vehiculo.placa,
-                        estado: 'Pendiente',
-                        alias: vehiculo.alias,
-                        color: vehiculo.color,
-                        fechaCompra: vehiculo.fechaCompra,
-                        kilometraje: vehiculo.kilometraje,
-                        modelo: vehiculo.modelo
-                    };
-                    vehiculoDAO.create(vehiculoRegister, function (error, vehiculo) {
-                        if (error) {
-                            cb(error, null);
-                        }
-                        else {
-                            if (vehiculo) {
-                                //Send SMS al usuario al que pertenece el vehiculo para que ingrese a administrar el vehiculo
-                                /*if (userRecord.celular) {
-                                    var textoSms = "Se ha registrado el vehiculo " + vehiculo.placa + " por el taller BRANCH lo invitamos a que se registre en el siguiente link para que disfrute los beneficios BRANCH http://localhost:8080";
-                                    sms.sendSMSTwilio(userRecord.celular, textoSms);
-                                }*/
-                                cb(null, vehiculo);
-                            }
-                            else {
-                                cb({ error: "No se creo el vehiculo" }, null);
-                            }
-                        }
-                    });
-                } else {
-                    cb({ error: 'No se encontro una marca para registrar el vehiculo' }, null);
-                }
-            }
-        })
-    } else {
-        let vehiculoRegister = {
-            IdMarca: 1,
-            IdUsuario: userRecord.uid,
-            IdTaller: vehiculo.IdTaller,
-            tipoVehiculo: 'Moto',
-            placa: vehiculo.placa,
-            estado: 'Pendiente',
-            alias: vehiculo.alias,
-            color: vehiculo.color,
-            fechaCompra: vehiculo.fechaCompra,
-            kilometraje: vehiculo.kilometraje,
-            modelo: vehiculo.modelo
-        };
-        vehiculoDAO.create(vehiculoRegister, function (error, vehiculo) {
-            if (error) {
-                cb(error, null);
-            }
-            else {
-                if (vehiculo) {
-                    //Send SMS al usuario al que pertenece el vehiculo para que ingrese a administrar el vehiculo
-                    /*if (userRecord.celular) {
-                        var textoSms = "Se ha registrado el vehiculo " + vehiculo.placa + " por el taller BRANCH lo invitamos a que se registre en el siguiente link para que disfrute los beneficios BRANCH http://localhost:8080";
-                        sms.sendSMSTwilio(userRecord.celular, textoSms);
-                    }*/
-                    cb(null, vehiculo);
-                }
-                else {
-                    cb({ error: "No se creo el vehiculo" }, null);
-                }
-            }
-        });
-    }
-
-
-}
 
