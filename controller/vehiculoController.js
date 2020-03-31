@@ -42,42 +42,8 @@ const createVehiculo = (req, res, next) => {
             } else {
                 if (vehiculoResult) {
                     //TODO : Placa ya existe, si no tiene taller si coloca el ID de taller que esta registrando                    
-                } else {
-                    if (vehiculo.usuario) {
-
-                        let vehiculoDB = {
-                            alias: vehiculo.alias,
-                            color: vehiculo.color,
-                            fechaCompra: moment(vehiculo.fechaCompraText,"DD/MM/YYYY"),
-                            fotos: vehiculo.fotos,
-                            kilometraje: vehiculo.kilometraje,
-                            marca: vehiculo.marca,
-                            modelo: vehiculo.modelo,
-                            placa: vehiculo.placa,
-                            tipoVehiculo: vehiculo.tipoVehiculo,
-                            usuario: vehiculo.usuario
-                        }
-                        
-
-                        vehiculoAdapter.crearVehiculo(vehiculoDB.usuario, vehiculoDB, function (error, vehiculo) {
-                            if (error) {
-                                console.error('Error al realizar la transaccion de crear vehiculo con usuario existente:::>', 'error ::>', error);
-                                if (error.errors) {
-                                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
-                                }
-                                else {
-                                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
-                                }
-                            } else {
-                                if (vehiculo) {
-                                    return res.status(HttpStatus.OK).json(vehiculo);
-                                } else {
-                                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: 'Error indefinido al crear vehiculo' });
-                                }
-                            }
-                        });
-                    } else {
-                        //TODO: No existe el usuario
+                } else {                    
+                        //Valida si usuario ya existe
                         userAdapter.findUserByEmail(vehiculo.email,(error,usuario)=>{
                             if(error){
                                 if (error.errors) {
@@ -89,17 +55,21 @@ const createVehiculo = (req, res, next) => {
                             }else{
                                 if(usuario){
                                     //Encontro un usuario
+                                    let fechaCompraBD = vehiculo.fechaCompraText ? moment(vehiculo.fechaCompraText,"DD/MM/YYYY") : null;
+
+                                    console.log('Fecha compra valor para BD ',vehiculo.fechaCompraText,' Valor ::>',fechaCompraBD );
+
                                     let vehiculoDB = {
                                         alias: vehiculo.alias,
                                         color: vehiculo.color,
-                                        fechaCompra: moment(vehiculo.fechaCompraText,"DD/MM/YYYY"),
+                                        fechaCompra: fechaCompraBD,
                                         fotos: vehiculo.fotos,
                                         kilometraje: vehiculo.kilometraje,
                                         marca: vehiculo.marca,
                                         modelo: vehiculo.modelo,
                                         placa: vehiculo.placa,
                                         tipoVehiculo: vehiculo.tipoVehiculo,
-                                        usuario: usuario
+                                        IdTaller: vehiculo.IdTaller
                                     }
 
                                     vehiculoAdapter.crearVehiculo(usuario, vehiculoDB, function (error, vehiculo) {
@@ -141,17 +111,19 @@ const createVehiculo = (req, res, next) => {
                                         } else {
                                             if (userRecord) {
                                                  //Encontro un usuario
+                                                let fechaCompraBD = vehiculo.fechaCompraText ? moment(vehiculo.fechaCompraText,"DD/MM/YYYY") : null; 
+
                                                 let vehiculoDB = {
                                                     alias: vehiculo.alias,
                                                     color: vehiculo.color,
-                                                    fechaCompra: moment(vehiculo.fechaCompra.fechaCita,"DD/MM/YYYY"),
+                                                    fechaCompra: fechaCompraBD,
                                                     fotos: vehiculo.fotos,
                                                     kilometraje: vehiculo.kilometraje,
                                                     marca: vehiculo.marca,
                                                     modelo: vehiculo.modelo,
                                                     placa: vehiculo.placa,
                                                     tipoVehiculo: vehiculo.tipoVehiculo,
-                                                    usuario: userRecord
+                                                    IdTaller: vehiculo.IdTaller
                                                 }
 
                                                 vehiculoAdapter.crearVehiculo(userRecord, vehiculoDB, function (error, vehiculo) {
@@ -177,10 +149,8 @@ const createVehiculo = (req, res, next) => {
                                     });
                                 }
                             }
-                        })
-
-                        
-                    }
+                        })                      
+                    
 
                 }
             }

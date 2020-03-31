@@ -4,6 +4,7 @@ const marcaDAO = require('../dao/marcaDAO');
 
 function crearVehiculo(userRecord, vehiculo, cb) {
     console.debug('Vehiculo a persistir en la BD',vehiculo);
+    console.debug('Usuario a asociar el vehiculo BD',userRecord.uid);
     if (vehiculo.marca) {
         marcaDAO.findOneByFilter({ marca: vehiculo.marca.marca, referencia: vehiculo.marca.referencia }, (error, marca) => {
             if (error) {
