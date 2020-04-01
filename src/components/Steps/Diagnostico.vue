@@ -1,42 +1,23 @@
-<template>
+  <template>
   <b-card>
     <b-form @submit.prevent="onValitadeAddOrden" v-if="!data.etapa" class="p-5 w-90 ml-5">
       <b-form-group :label="$t('branch.orden.mecanico')">
-        <v-select
-          :options="data.mecanicos"
-          v-model="newOrden.mecanico"
-          label="fullName"
-          :reduce="mecanico => mecanico.IdMecanico"
-        >
+        <v-select :options="data.mecanicos" v-model="newOrden.mecanico" label="fullName" :reduce="mecanico => mecanico.IdMecanico">
           <template #search="{attributes, events}">
-            <input
-              class="vs__search"
-              :required="!newOrden.mecanico"
-              v-bind="attributes"
-              v-on="events"
-            />
+            <input class="vs__search" :required="!newOrden.mecanico" v-bind="attributes" v-on="events"/>
           </template>
-          <template
-            v-slot:option="option"
-          >{{ option.fullName }} - {{option.identificacion}}</template>
+          <template v-slot:option="option">
+            {{ option.fullName }} - {{option.identificacion}}
+          </template>
         </v-select>
       </b-form-group>
       <b-form-group :label="$t('branch.orden.observaciones')">
-        <b-textarea
-          v-model.trim="$v.newOrden.observacion.$model"
-          :state="!$v.newOrden.observacion.$error"
-        ></b-textarea>
-        <b-form-invalid-feedback
-          v-if="!$v.newOrden.observacion.required"
-        >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
+        <b-textarea v-model.trim="$v.newOrden.observacion.$model" :state="!$v.newOrden.observacion.$error"></b-textarea>
+        <b-form-invalid-feedback v-if="!$v.newOrden.observacion.required">
+          {{$t('branch.forms.validations.required')}}
+        </b-form-invalid-feedback>
       </b-form-group>
-      <vue-dropzone
-        ref="myVueDropzone"
-        id="dropzone"
-        :awss3="awss3"
-        :options="dropzoneOptions"
-        v-on:vdropzone-complete="complete"
-        v-on:vdropzone-removed-file="removeFile"
+      <vue-dropzone ref="myVueDropzone" id="dropzone" :awss3="awss3" :options="dropzoneOptions" v-on:vdropzone-complete="complete" v-on:vdropzone-removed-file="removeFile"
       ></vue-dropzone>
       <div class="btn-icon">
         <b-button type="submit" variant="primary" class="mt-4" size="lg">
@@ -49,40 +30,49 @@
     <div v-else>
       <b-row>
         <b-colxx xxs="3">
-          <p class="text-muted text-small mb-2">{{$t('branch.orden.fechaIngreso')}}</p>
-          <h5 class="mb-1 card-subtitle truncate">{{data.etapa.createdAt | moment("D MMMM YYYY hh:mm A")}}</h5>
+          <p class="text-muted text-small mb-2">
+            {{$t('branch.orden.fechaIngreso')}}
+          </p>
+          <h5 class="mb-1 card-subtitle truncate">
+            {{data.etapa.createdAt | moment("D MMMM YYYY hh:mm A")}}
+          </h5>
         </b-colxx>
         <b-colxx xxs="3" v-if="data.etapa.mecanico">
-          <p class="text-muted text-small mb-2">{{$t('branch.orden.mecanico')}}</p>
-          <h5 class="mb-1 card-subtitle truncate">{{data.etapa.mecanico.identificacion}} {{data.etapa.mecanico.firstName}}</h5>
+          <p class="text-muted text-small mb-2">
+            {{$t('branch.orden.mecanico')}}
+          </p>
+          <h5 class="mb-1 card-subtitle truncate">
+            {{data.etapa.mecanico.identificacion}} {{data.etapa.mecanico.firstName}}
+          </h5>
         </b-colxx>
         <b-colxx>
-          <p class="text-muted text-small mb-2">{{$t('branch.orden.observaciones')}}</p>
-          <h5 class="mb-1 card-subtitle truncate">{{data.etapa.Observaciones}}</h5>
+          <p class="text-muted text-small mb-2">
+            {{$t('branch.orden.observaciones')}}
+          </p>
+          <h5 class="mb-1 card-subtitle truncate">
+            {{data.etapa.Observaciones}}
+          </h5>
         </b-colxx>
       </b-row>
       <div class="icon-cards-row">
-        <glide-component :settings="glideBasicOption" v-if="data.etapa.documentos">
-          <div
-            class="pr-3 pl-3 mb-4 glide__slide"
-            v-for="(documento,index) in data.etapa.documentos"
-            :key="`contact${index}`"
-          >
-            <b-card class="flex-row" no-body>
-              <b-link :href="documento.url" target="_blank"> 
-                <img alt="Thumbnail" :src="documento.url.replace('branchmedia','branchmedia-resized')" class="list-thumbnail responsive border-0" />
-                <div class="pl-2 d-flex flex-grow-1 min-width-zero">
-                  <b-card-body class="align-self-center d-flex min-width-zero">
-                    <p class="list-item-heading mb-1 truncated">{{documento.nombrearchivo}}</p>
-                    <p
-                      class="text-muted text-small mb-0 font-weight-light"
-                    >{{ documento.date | moment("D MMMM YYYY hh:mm A") }}</p>
-                  </b-card-body>
-                </div>
-              </b-link>
-            </b-card>
-          </div>
-        </glide-component>
+        <div v-if="data.etapa.documentos" class="branch-gallery">
+          <b-collapse id="collapse-diagnostico">
+            <div class="branch-image" v-for="(documento,index) in data.etapa.documentos" :key="`contact${index}`">
+              <b-card no-body>
+                <single-lightbox :thumb="documento.url.replace('branchmedia','branchmedia-resized')" :large="documento.url" class-name="responsive" />
+                <!-- <p class="list-item-heading mb-1 truncated">
+                  {{documento.nombrearchivo}}
+                </p> -->
+                <b-card-text>
+                  {{ documento.date | moment("D MMMM YYYY hh:mm A") }}
+                </b-card-text>
+              </b-card>
+            </div>
+          </b-collapse>
+          <b-button v-b-toggle="'collapse-diagnostico'" class="m-1">
+            Ver fotos del diagnóstico
+          </b-button>
+        </div>
         <div class="pl-2 d-flex flex-grow-1 min-width-zero" v-else>
           <b-card-body class="align-self-center d-flex min-width-zero">
             <p class="text-muted text-small mb-0 font-weight-light">Sin documentos asociados</p>
@@ -90,7 +80,7 @@
         </div>
       </div>
     </div>
-  </b-card>
+</b-card>
 </template>
 <script>
 import SingleLightbox from "../Pages/SingleLightbox";
@@ -107,6 +97,7 @@ import ServicesCore from "./../../services/service";
 export default {
   props: ["clickedNext", "currentStep", "data"],
   components: {
+    "single-lightbox": SingleLightbox,
     "vue-dropzone": vue2Dropzone,
     "v-select": vSelect,
     "glide-component": GlideComponent

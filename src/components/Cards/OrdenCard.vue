@@ -157,8 +157,8 @@ export default {
 
     this.demoSteps.push({
       icon: "help",
-      name: "diagnostico",
-      title: "Diagnostico",
+      name: "diagnstico",
+      title: "Diagnóstico",
       component: Diagnostico,
       data: dataDiagnostico,
       completed: idxDiagnostico > -1
@@ -248,7 +248,7 @@ export default {
     this.demoSteps.push({
       icon: "report_problem",
       name: "reparacion",
-      title: "Reparacion",
+      title: "Reparación",
       component: Reparacion,
       data: dataReparacion,
       completed: idxReparacion > -1
