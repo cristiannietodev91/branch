@@ -22,7 +22,8 @@ function crearVehiculo(userRecord, vehiculo, cb) {
                         color: vehiculo.color,
                         fechaCompra: vehiculo.fechaCompra,
                         kilometraje: vehiculo.kilometraje,
-                        modelo: vehiculo.modelo
+                        modelo: vehiculo.modelo,
+                        fotos: vehiculo.fotos
                     };
                     vehiculoDAO.create(vehiculoRegister, function (error, vehiculo) {
                         if (error) {
@@ -59,7 +60,8 @@ function crearVehiculo(userRecord, vehiculo, cb) {
             color: vehiculo.color,
             fechaCompra: vehiculo.fechaCompra,
             kilometraje: vehiculo.kilometraje,
-            modelo: vehiculo.modelo
+            modelo: vehiculo.modelo,
+            fotos: vehiculo.fotos
         };
         vehiculoDAO.create(vehiculoRegister, function (error, vehiculo) {
             if (error) {

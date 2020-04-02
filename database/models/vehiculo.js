@@ -47,6 +47,15 @@ module.exports = (sequelize, DataTypes) => {
         fotos: {
             type: Sequelize.JSON
         },
+        tarjetapropiedad: {
+            type: Sequelize.JSON
+        },
+        tecnomecanica: {
+            type: Sequelize.JSON
+        },
+        soat: {
+            type: Sequelize.JSON
+        },
         estado: {
             type: Sequelize.ENUM('Registrado', 'Pendiente'),
             allowNull: false

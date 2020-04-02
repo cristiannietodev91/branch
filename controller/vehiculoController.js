@@ -40,11 +40,13 @@ const createVehiculo = (req, res, next) => {
                     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
                 }
             } else {
+                console.log('Resultado find by Placa ::::>',vehiculoResult);
                 if (vehiculoResult) {
                     //TODO : Placa ya existe, si no tiene taller si coloca el ID de taller que esta registrando                    
                 } else {                    
                         //Valida si usuario ya existe
-                        userAdapter.findUserByEmail(vehiculo.email,(error,usuario)=>{
+                        console.log('Resultado find by Placa ::::>',vehiculoResult);
+                        userAdapter.findUserByEmail(vehiculo.usuario.email,(error,usuario)=>{
                             if(error){
                                 if (error.errors) {
                                     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
@@ -100,7 +102,7 @@ const createVehiculo = (req, res, next) => {
                                         tipoUsuario: 'Cliente'
                                     }            
             
-                                    userAdapter.createUsuarioNew(usuario, function (error, userRecord) {
+                                    userAdapter.createUsuario(usuario, function (error, userRecord) {
                                         if (error) {
                                             console.error('Error al realizar la transaccion de crear vehiculo:::>', 'error ::>', error);
                                             if (error.errors) {
@@ -184,7 +186,9 @@ const updateVehiculo = (req, res, next) => {
                             fechaCompra: vehiculo.fechaCompra,
                             kilometraje: vehiculo.kilometraje,
                             modelo: vehiculo.modelo,
-                            fotos: vehiculo.fotos
+                            fotos: vehiculo.fotos,
+                            soat: vehiculo.soat,
+                            tecnomecanica: vehiculo.tecnomecanica
                         };
 
                         vehiculoDAO.update(IdVehiculo, vehiculoUpdate, function (error, vehiculo) {

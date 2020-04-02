@@ -40,7 +40,7 @@ const createFireBaseUsuario = async (req, res, next) => {
             uid: usuario.uid
         }
 
-        userAdapater.createUsuarioNew(usuarioDB, function (error, usuarioResult) {
+        userAdapater.createUsuario(usuarioDB, function (error, usuarioResult) {
             if (error) {
                 return res.status(HttpStatus.METHOD_FAILURE).send({ message: error.message });
             } else {
@@ -59,29 +59,30 @@ const createFireBaseUsuario = async (req, res, next) => {
 
 const updateUsuarioByUid = (req, res, next) => {
     try {
-        var uid = req.params.uid;
-        var usuario = req.body;
+        let uid = req.params.uid;
+        let usuario = req.body;
+
         console.debug(' Usuario recibido para actualizar :::>', usuario);
-        if (uid) {
-            usersDAO.update({ uid: uid }, usuario, function (error, usuario) {
-                if (error) {
-                    console.error('Error al realizar la transaccion de buscar usuario por UID error ::>', error.message);
-                    if (error.errors) {
-                        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.errors[0] });
-                    } else {
-                        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
-                    }
-                } else {
-                    if (usuario) {
-                        return res.status(HttpStatus.ACCEPTED).json({ message: 'Se actualizo el IdUsuario ' + uid + ' correctamente' });
-                    } else {
-                        return res.status(HttpStatus.OK).json({ error: "No se actualizo el usuario" });
-                    }
-                }
-            });
-        } else {
-            return res.status(HttpStatus.BAD_REQUEST).json({ message: "El parametro IdUsuario es requerido" });
+        let usuarioDB = {
+            email: usuario.email,
+            password: usuario.password,
+            firstName: usuario.firstName,
+            celular: usuario.celular,
+            identificacion: usuario.identificacion,
+            tipoUsuario: usuario.tipoUsuario,
+            uid: uid
         }
+
+        userAdapater.updateUsuario(usuarioDB,(error,usuario)=>{
+            if(error){
+                return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.error });
+            }else{
+                if(usuario){
+                    return res.status(HttpStatus.ACCEPTED).json({ message: 'Se actualizo el IdUsuario ' + uid + ' correctamente' });
+                }
+            }
+        })        
+        
     } catch (error) {
         console.error('Error al actualizar usuario ', error);
         return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: error.message });
