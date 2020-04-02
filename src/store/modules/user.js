@@ -82,7 +82,7 @@ export default {
                 commit('setUser', { uid: newUser.uid, ...newUser })
 
               }
-            }).catch(error => {
+            }).catch(err => {
                 localStorage.removeItem('user')
                 commit('setError', err.message)
                 setTimeout(() => {
