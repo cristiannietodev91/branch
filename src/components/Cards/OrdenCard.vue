@@ -13,7 +13,7 @@
         <h5 class="mb-1 card-subtitle truncate">{{data.vehiculo.marca.marca}}</h5>
         <p class="text-muted text-small mb-2">{{$t('branch.orden.marca')}}</p>
       </b-colxx>
-      <!--
+      
       <b-colxx md="6" sm="6" lg="4" xxs="4" class="btn-icon">
         <b-button
             @click="openModal"
@@ -26,7 +26,7 @@
         </b-button>
           <modal-add-chat :data="data" :currentUser="currentUser"></modal-add-chat>
       </b-colxx>
-      -->
+      
     </b-row>
     <horizontal-stepper
       locale="es"
