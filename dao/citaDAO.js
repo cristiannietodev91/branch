@@ -123,6 +123,12 @@ module.exports = {
                     {
                         model: models.ordentrabajo,
                         where: filterOrden,
+                        include: [
+                            {
+                                model: models.mecanico,
+                                required:false
+                            }
+                        ],
                         required:false
                     }
                 ],
