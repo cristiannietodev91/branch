@@ -23,7 +23,7 @@
         }}</b-button>
         <modal-open-chat :data="data" v-if="showModal"></modal-open-chat>
       </b-colxx>
-      <!--
+      
       <b-colxx md="6" sm="6" lg="4" xxs="4" class="btn-icon">
         <b-button
             @click="openModal"
@@ -36,7 +36,7 @@
         </b-button>
           <modal-add-chat :data="data" :currentUser="currentUser"></modal-add-chat>
       </b-colxx>
-      -->
+      
     </b-row>
     <horizontal-stepper
       locale="es"
