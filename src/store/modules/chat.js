@@ -1,14 +1,14 @@
-import axios from 'axios'
-import { apiUrl } from '../../constants/config'
+import axios from "axios";
+import { apiUrl } from "../../constants/config";
 
 const state = {
   isLoadContacts: false,
   isLoadConversations: false,
-  error: '',
+  error: "",
   contacts: null,
   contactsSearchResult: null,
   conversations: null
-}
+};
 
 const getters = {
   isLoadContacts: state => state.isLoadContacts,
@@ -17,31 +17,30 @@ const getters = {
   contacts: state => state.contacts,
   conversations: state => state.conversations,
   contactsSearchResult: state => state.contactsSearchResult
-
-}
+};
 
 const mutations = {
   getContactsSuccess(state, payload) {
-    state.isLoadContacts = true
-    state.contacts = payload.contacts
-    state.contactsSearchResult = payload.contacts
+    state.isLoadContacts = true;
+    state.contacts = payload.contacts;
+    state.contactsSearchResult = payload.contacts;
   },
   getContactsSearchSuccess(state, payload) {
-    state.contactsSearchResult = payload.contacts
+    state.contactsSearchResult = payload.contacts;
   },
   getContactsError(state, error) {
-    state.isLoadContacts = false
-    state.error = error
+    state.isLoadContacts = false;
+    state.error = error;
   },
   getConversationsSuccess(state, payload) {
-    state.isLoadConversations = true
-    state.conversations = payload.conversations
+    state.isLoadConversations = true;
+    state.conversations = payload.conversations;
   },
   getConversationsError(state, error) {
-    state.isLoadConversations = false
-    state.error = error
+    state.isLoadConversations = false;
+    state.error = error;
   }
-}
+};
 
 const actions = {
   searchContacts({ commit, state }, { userId, searchKey }) {
@@ -51,13 +50,19 @@ const actions = {
         .then(r => r.data)
         .then(res => {
           if (res.status) {
-            commit('getContactsSearchSuccess', { contacts: res.data, userId: userId })
+            commit("getContactsSearchSuccess", {
+              contacts: res.data,
+              userId: userId
+            });
           } else {
-            commit('getContactsError', 'error:getContacts')
+            commit("getContactsError", "error:getContacts");
           }
-        })
+        });
     } else {
-      commit('getContactsSearchSuccess', { contacts: state.contacts, userId: userId })
+      commit("getContactsSearchSuccess", {
+        contacts: state.contacts,
+        userId: userId
+      });
     }
   },
   getContacts({ commit }, userId) {
@@ -66,11 +71,11 @@ const actions = {
       .then(r => r.data)
       .then(res => {
         if (res.status) {
-          commit('getContactsSuccess', { contacts: res.data, userId: userId })
+          commit("getContactsSuccess", { contacts: res.data, userId: userId });
         } else {
-          commit('getContactsError', 'error:getContacts')
+          commit("getContactsError", "error:getContacts");
         }
-      })
+      });
   },
   getConversations({ commit }, userId) {
     axios
@@ -78,17 +83,26 @@ const actions = {
       .then(r => r.data)
       .then(res => {
         if (res.status) {
-          commit('getConversationsSuccess', { conversations: res.data, userId: userId })
+          commit("getConversationsSuccess", {
+            conversations: res.data,
+            userId: userId
+          });
         } else {
-          commit('getConversationsError', 'error:getConversations')
+          commit("getConversationsError", "error:getConversations");
         }
-      })
+      });
+  },
+  SOCKET_connect({ commit }) {
+    console.log("From vuexxx:::> coonect");
+  },
+  SOCKET_message({ commit }, data) {
+    console.log("Message received ", data);
   }
-}
+};
 
 export default {
   state,
   getters,
   mutations,
   actions
-}
+};

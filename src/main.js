@@ -1,42 +1,43 @@
-import Vue from 'vue'
-import App from './App'
+import Vue from "vue";
+import App from "./App";
 
 // BootstrapVue add
-import BootstrapVue from 'bootstrap-vue'
+import BootstrapVue from "bootstrap-vue";
 // Router & Store add
-import router from './router'
-import store from './store'
+import router from "./router";
+import store from "./store";
 // Multi Language Add
-import en from './locales/en.json'
-import es from './locales/es.json'
-import VueI18n from 'vue-i18n'
-import { defaultLocale, firebaseConfig } from './constants/config'
+import en from "./locales/en.json";
+import es from "./locales/es.json";
+import VueI18n from "vue-i18n";
+import { defaultLocale, firebaseConfig } from "./constants/config";
 // Notification Component Add
-import Notifications from './components/Common/Notification'
+import Notifications from "./components/Common/Notification";
 // Breadcrumb Component Add
-import Breadcrumb from './components/Common/Breadcrumb'
+import Breadcrumb from "./components/Common/Breadcrumb";
 // RefreshButton Component Add
-import RefreshButton from './components/Common/RefreshButton'
+import RefreshButton from "./components/Common/RefreshButton";
 // Colxx Component Add
-import Colxx from './components/Common/Colxx'
+import Colxx from "./components/Common/Colxx";
 // Perfect Scrollbar Add
-import vuePerfectScrollbar from 'vue-perfect-scrollbar'
-import contentmenu from 'v-contextmenu'
-import VueLineClamp from 'vue-line-clamp'
-import VCalendar from 'v-calendar'
-import 'v-calendar/lib/v-calendar.min.css'
-import VueScrollTo from 'vue-scrollto'
-const moment = require('moment-timezone');
-require('moment/locale/es')
+import vuePerfectScrollbar from "vue-perfect-scrollbar";
+import contentmenu from "v-contextmenu";
+import VueLineClamp from "vue-line-clamp";
+import VCalendar from "v-calendar";
+import "v-calendar/lib/v-calendar.min.css";
+import VueScrollTo from "vue-scrollto";
+import VueSocketIO from "vue-socket.io";
+const moment = require("moment-timezone");
+require("moment/locale/es");
 
 moment.tz.setDefault("UTC");
 
-import VueMoment from 'vue-moment'
-import firebase from 'firebase/app'
+import VueMoment from "vue-moment";
+import firebase from "firebase/app";
 //import * as admin from 'firebase-admin';
-import 'firebase/auth'
+import "firebase/auth";
 
-import Vuelidate from 'vuelidate'
+import Vuelidate from "vuelidate";
 
 Vue.use(Vuelidate);
 
@@ -49,37 +50,49 @@ const messages = { en: en, es: es };
 const locale = defaultLocale;
 const i18n = new VueI18n({
   locale: locale,
-  fallbackLocale: 'es',
+  fallbackLocale: "es",
   messages
 });
 
 Vue.use(Notifications);
-Vue.component('piaf-breadcrumb', Breadcrumb);
-Vue.component('b-refresh-button', RefreshButton);
-Vue.component('b-colxx', Colxx);
-Vue.component('vue-perfect-scrollbar', vuePerfectScrollbar);
-Vue.use(require('vue-shortkey'));
+Vue.component("piaf-breadcrumb", Breadcrumb);
+Vue.component("b-refresh-button", RefreshButton);
+Vue.component("b-colxx", Colxx);
+Vue.component("vue-perfect-scrollbar", vuePerfectScrollbar);
+Vue.use(require("vue-shortkey"));
 Vue.use(contentmenu);
 Vue.use(VueLineClamp, {
   importCss: true
-})
+});
 Vue.use(VCalendar, {
   firstDayOfWeek: 2, // ...other defaults,
   formats: {
-    title: 'MMM YYYY',
-    weekdays: 'WW',
-    navMonths: 'MMMM',
-    input: ['L', 'YYYY-MM-DD', 'YYYY/MM/DD'],
-    dayPopover: 'L'
+    title: "MMM YYYY",
+    weekdays: "WW",
+    navMonths: "MMMM",
+    input: ["L", "YYYY-MM-DD", "YYYY/MM/DD"],
+    dayPopover: "L"
   },
   datePickerShowDayPopover: false,
   popoverExpanded: true,
-  popoverDirection: 'bottom'
+  popoverDirection: "bottom"
 });
 Vue.use(VueScrollTo);
 
 firebase.initializeApp(firebaseConfig);
 
+Vue.use(
+  new VueSocketIO({
+    debug: true,
+    connection: process.env.VUE_APP_URLBACKSERVICES,
+    vuex: {
+      store,
+      actionPrefix: "SOCKET_",
+      mutationPrefix: "SOCKET_"
+    },
+    options: { transports: ["websocket"] }
+  })
+);
 
 /*firebase.auth().onAuthStateChanged(user => {
   if(user){
@@ -87,11 +100,11 @@ firebase.initializeApp(firebaseConfig);
   }  
 });*/
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 export default new Vue({
   i18n,
   router,
   store,
   render: h => h(App)
-}).$mount('#app')
+}).$mount("#app");

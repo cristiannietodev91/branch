@@ -26,8 +26,8 @@
         "required": "Esta campo es requerido",
         "longitud": "La longitud del campo es incorrecta",
         "email": "Debe ingresar un email valido",
-        "nit" : "El formato del NIT no es valido (XXXXX-X)",
-        "url" : "El campo debe ser una URL"
+        "nit": "El formato del NIT no es valido (XXXXX-X)",
+        "url": "El campo debe ser una URL"
       }
     },
     "clientes": {
@@ -37,10 +37,10 @@
       "placa": "Placa",
       "celular": "Celular",
       "email": "E-mail",
-      "dueno" : "Dueño",
-      "modelo" : "Modelo",
-      "tipo" : "Tipo",
-      "kilometraje" : "Kilometraje"
+      "dueno": "Dueño",
+      "modelo": "Modelo",
+      "tipo": "Tipo",
+      "kilometraje": "Kilometraje"
     },
     "cita": {
       "cita": "CITA",
@@ -63,14 +63,14 @@
       "fechaAprobacion": "Fecha aprobación",
       "sinetapa": "El cliente aún no ha aprobado la cotización"
     },
-    "marca" : {
-      "marca" : "Marca",
-      "referencia" : "Referencia"
+    "marca": {
+      "marca": "Marca",
+      "referencia": "Referencia"
     },
-    "usuario" : {
-      "identificacion" : "Cedula",
-      "telefono" : "Telefono",
-      "email" : "Correo electronico"
+    "usuario": {
+      "identificacion": "Cedula",
+      "telefono": "Telefono",
+      "email": "Correo electronico"
     }
   },
   "user": {
@@ -304,7 +304,7 @@
     },
     "branch": {
       "mecanicos": "MECANICOS",
-      "ordentrabajo" : "ORDENES DE TRABAJO",
+      "ordentrabajo": "ORDENES DE TRABAJO",
       "add-new-mecanico": "Agregar nuevo mecanico",
       "add-new-vehiculo": "Agregar nuevo vehiculo",
       "add-new-cita": "Agregar nueva cita",
@@ -315,7 +315,8 @@
   "chat": {
     "messages": "Mensajes",
     "contacts": "Contactos",
-    "saysomething": "Di algo.."
+    "saysomething": "Di algo..",
+    "chat": "Chatear"
   },
   "survey": {
     "delete": "Borrar",

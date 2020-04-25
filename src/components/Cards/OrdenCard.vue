@@ -1,17 +1,27 @@
 <template>
-  <b-card >
+  <b-card>
     <b-row>
       <b-colxx md="6" sm="6" lg="4" xxs="12">
-        <h5 class="mb-1 card-subtitle truncate">{{data.CodigoOrden}}</h5>
-        <p class="text-muted text-small mb-2">{{$t('branch.orden.codigoOrden')}}</p>
+        <h5 class="mb-1 card-subtitle truncate">{{ data.CodigoOrden }}</h5>
+        <p class="text-muted text-small mb-2">
+          {{ $t("branch.orden.codigoOrden") }}
+        </p>
       </b-colxx>
       <b-colxx md="6" sm="6" lg="2" xxs="4">
-        <h5 class="mb-1 card-subtitle truncate">{{data.vehiculo.placa}}</h5>
-        <p class="text-muted text-small mb-2">{{$t('branch.orden.placa')}}</p>
+        <h5 class="mb-1 card-subtitle truncate">{{ data.vehiculo.placa }}</h5>
+        <p class="text-muted text-small mb-2">{{ $t("branch.orden.placa") }}</p>
       </b-colxx>
       <b-colxx md="6" sm="6" lg="2" xxs="4">
-        <h5 class="mb-1 card-subtitle truncate">{{data.vehiculo.marca.marca}}</h5>
-        <p class="text-muted text-small mb-2">{{$t('branch.orden.marca')}}</p>
+        <h5 class="mb-1 card-subtitle truncate">
+          {{ data.vehiculo.marca.marca }}
+        </h5>
+        <p class="text-muted text-small mb-2">{{ $t("branch.orden.marca") }}</p>
+      </b-colxx>
+      <b-colxx md="6" sm="6" lg="2" xxs="4">
+        <b-button class="top-right-button" @click="openChat">{{
+          $t("chat.chat")
+        }}</b-button>
+        <modal-open-chat :data="data" v-if="showModal"></modal-open-chat>
       </b-colxx>
       <!--
       <b-colxx md="6" sm="6" lg="4" xxs="4" class="btn-icon">
@@ -36,21 +46,6 @@
       @active-step="isStepActive"
       @stepper-finished="alert"
     ></horizontal-stepper>
-    <!--
-        <div class="min-width-zero">
-          <router-link :to="link || '#'">
-            <b-card-sub-title class="truncate mb-1">{{data.CodigoOrden}}</b-card-sub-title>
-          </router-link>
-          <b-card-text class="text-muted text-small mb-2">{{data.kilometraje}}</b-card-text>
-          <b-card-text class="text-muted text-small mb-2">{{data.vehiculo.tipoVehiculo}}</b-card-text>
-          <b-card-text class="text-muted text-small mb-2">{{data.vehiculo.marca.marca}}</b-card-text>
-          <b-card-text class="text-muted text-small mb-2">{{data.vehiculo.color}}</b-card-text>
-          <b-card-text class="text-muted text-small mb-2">{{data.vehiculo.placa}}</b-card-text>
-          <b-card-text class="text-muted text-small mb-2">{{data.vehiculo.modelo}}</b-card-text>
-          <b-card-text class="text-muted text-small mb-2">{{data.etapa.NombreEtapa}}</b-card-text>
-          <b-card-text class="text-muted text-small mb-2">{{data.createdAt}}</b-card-text>
-        </div>
-    -->
   </b-card>
 </template>
 <script>
@@ -63,17 +58,19 @@ import Cotizacion from "./../Steps/Cotizacion";
 import Aprobacion from "./../Steps/Aprobacion";
 import Reparacion from "./../Steps/Reparacion";
 import Entrega from "./../Steps/Entrega";
-
+import ModalOpenChat from "../Modals/chatmodal";
 
 export default {
   props: ["link", "data", "mecanicos"],
   components: {
     ThumbnailImage,
-    HorizontalStepper
+    HorizontalStepper,
+    "modal-open-chat": ModalOpenChat
   },
   data() {
     return {
-      demoSteps: []      
+      demoSteps: [],
+      showModal: false
     };
   },
   computed: {
@@ -82,8 +79,10 @@ export default {
     })
   },
   methods: {
-    openModal(){
-      this.$bvModal.show("ModalChat"+data.codigoOrden);
+    openChat() {
+      console.log("Data ::>", this.currentUser);
+      this.showModal = true;
+      this.$bvModal.show("modalChat_" + this.data.CodigoOrden);
     },
     // Executed when @completed-step event is triggered
     completeStep(payload) {
@@ -115,14 +114,12 @@ export default {
     }
   },
   created() {
-
+    console.log("Create view ::>");
     var idxIngreso = this.data.etapas.findIndex(element => {
       if (element.IdEtapa == 2) {
         return true;
       }
     });
-
-    console.log("Indice Ingreso :::>", idxIngreso);
 
     let etapaIngreso = idxIngreso > -1 ? this.data.etapas[idxIngreso] : null;
 
@@ -141,9 +138,8 @@ export default {
       }
     });
 
-    console.log("Indice Diagnostico :::>", idxDiagnostico);
-
-    let etapaDiagnostico = idxDiagnostico > -1 ? this.data.etapas[idxDiagnostico] : null;
+    let etapaDiagnostico =
+      idxDiagnostico > -1 ? this.data.etapas[idxDiagnostico] : null;
 
     let dataDiagnostico = {
       IdCita: this.data.IdCita,
@@ -169,8 +165,6 @@ export default {
         return true;
       }
     });
-
-    console.log("Indice Cotizacion :::>", idxCotizacion);
 
     let etapaCotizacion =
       idxDiagnostico > -1 ? this.data.etapas[idxCotizacion] : null;
@@ -200,8 +194,6 @@ export default {
       }
     });
 
-    console.log("Indice Aprobacion :::>", idxAprobacion);
-
     let etapaAprobacion =
       idxAprobacion > -1 ? this.data.etapas[idxAprobacion] : null;
 
@@ -229,8 +221,6 @@ export default {
         return true;
       }
     });
-
-    console.log("Indice Reparacion :::>", idxReparacion);
 
     let etapaReparacion =
       idxReparacion > -1 ? this.data.etapas[idxReparacion] : null;
@@ -260,10 +250,7 @@ export default {
       }
     });
 
-    console.log("Indice Entrega :::>", idxEntrega);
-
-    let etapaEntrega =
-      idxEntrega > -1 ? this.data.etapas[idxEntrega] : null;
+    let etapaEntrega = idxEntrega > -1 ? this.data.etapas[idxEntrega] : null;
 
     let dataEntrega = {
       IdCita: this.data.IdCita,
@@ -283,8 +270,6 @@ export default {
       data: dataEntrega,
       completed: idxEntrega > -1
     });
-
-
   }
 };
 </script>
