@@ -1,10 +1,12 @@
-var express = require('express');
-var fileController = require('../controller/fileController')
+var express = require("express");
+var fileController = require("../controller/fileController");
 var router = express.Router();
-var cors = require('cors')
+var cors = require("cors");
 
-router.post('/signed', cors(), fileController.signedS3);
+router.post("/signed", cors(), fileController.signedS3);
 
-router.post('/sendFile',cors(), fileController.sendFile);
+router.post("/signedURL", cors(), fileController.signedURL);
+
+router.post("/sendFile", cors(), fileController.sendFile);
 
 module.exports = router;
