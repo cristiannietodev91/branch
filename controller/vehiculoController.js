@@ -312,6 +312,61 @@ const updateVehiculo = (req, res, next) => {
   }
 };
 
+const updateFechaVencimiento = (req, res, next) => {
+  try {
+    var IdVehiculo = req.params.Id;
+    var vehiculo = req.body;
+    console.debug(
+      "Parametro de vehiculo recibido para actualizar :::::>",
+      vehiculo
+    );
+    if (IdVehiculo) {
+      var vehiculoUpdate = {
+        fvtecnomecanica: vehiculo.fvtecnomecanica
+          ? moment(vehiculo.fvtecnomecanica, "DD/MM/YYYY")
+          : null,
+        fvsoat: vehiculo.fvsoat ? moment(vehiculo.fvsoat, "DD/MM/YYYY") : null,
+      };
+
+      vehiculoDAO.update(IdVehiculo, vehiculoUpdate, function (
+        error,
+        vehiculo
+      ) {
+        if (error) {
+          console.error(
+            "Error al realizar la transaccion de actualizar vehiculo:::>",
+            "error ::>",
+            error.message
+          );
+          return res
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .json({ error: error });
+        } else {
+          if (vehiculo) {
+            return res.status(HttpStatus.ACCEPTED).json({
+              message:
+                "Se actualizo el Vehiculo " + IdVehiculo + " correctamente",
+            });
+          } else {
+            return res
+              .status(HttpStatus.OK)
+              .json({ error: "No se actualizo el vehiculo" });
+          }
+        }
+      });
+    } else {
+      return res
+        .status(HttpStatus.BAD_REQUEST)
+        .json({ message: "El parametro IdVehiculo es requerido" });
+    }
+  } catch (error) {
+    console.error("Error al actualizar vehiculo ", error);
+    return res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ error: error.message });
+  }
+};
+
 const deleteVehiculoById = (req, res, next) => {
   try {
     var IdVehiculo = req.params.Id;
@@ -572,4 +627,5 @@ module.exports = {
   getAllVehiculosByIdUsuario,
   getAllPaginateFilterVehiculosByIdTaller,
   getVehiculoByPlaca,
+  updateFechaVencimiento,
 };
