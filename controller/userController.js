@@ -67,12 +67,16 @@ const updateUsuarioByUid = (req, res, next) => {
     let uid = req.params.uid;
     let usuario = req.body;
 
-    console.debug(" Usuario recibido para actualizar :::>", usuario);
+    console.log("Usuario recibido como parametro", usuario);
+
     let usuarioDB = {
       email: usuario.email,
       password: usuario.password,
       firstName: usuario.firstName,
-      celular: usuario.celular,
+      celular:
+        usuario.celular.length != 10
+          ? usuario.celular
+          : "+57" + usuario.celular,
       identificacion: usuario.identificacion,
       tipoUsuario: usuario.tipoUsuario,
       uid: uid,
@@ -81,16 +85,27 @@ const updateUsuarioByUid = (req, res, next) => {
 
     userAdapater.updateUsuario(usuarioDB, (error, usuario) => {
       if (error) {
-        return res
-          .status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .json({ error: error.error });
+        if (error.error) {
+          return res
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .json({ error: error.error });
+        }
+        if (error.errorInfo) {
+          if (error.errorInfo.code == "auth/invalid-phone-number") {
+            return res
+              .status(HttpStatus.INTERNAL_SERVER_ERROR)
+              .json({ error: "Error en el formato del telefono" });
+          } else {
+            return res
+              .status(HttpStatus.INTERNAL_SERVER_ERROR)
+              .json({ error: "Error al actualizar el usuario" });
+          }
+        }
       } else {
         if (usuario) {
-          return res
-            .status(HttpStatus.ACCEPTED)
-            .json({
-              message: "Se actualizo el IdUsuario " + uid + " correctamente",
-            });
+          return res.status(HttpStatus.ACCEPTED).json({
+            message: "Se actualizo el IdUsuario " + uid + " correctamente",
+          });
         }
       }
     });
@@ -113,12 +128,9 @@ const deleteUsuarioById = (req, res, next) => {
           .json({ error: error.errors[0] });
       } else {
         if (result) {
-          return res
-            .status(HttpStatus.ACCEPTED)
-            .json({
-              message:
-                "Se elimino el IdUsuario " + Idusuario + " correctamente",
-            });
+          return res.status(HttpStatus.ACCEPTED).json({
+            message: "Se elimino el IdUsuario " + Idusuario + " correctamente",
+          });
         } else {
           return res
             .status(HttpStatus.OK)
