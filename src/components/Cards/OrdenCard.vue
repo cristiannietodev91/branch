@@ -18,15 +18,8 @@
         <p class="text-muted text-small mb-2">{{ $t("branch.orden.marca") }}</p>
       </b-colxx>
       <b-colxx md="6" sm="6" lg="2" xxs="4">
-        <b-button class="top-right-button" @click="openChat">{{
-          $t("chat.chat")
-        }}</b-button>
-        <modal-open-chat :data="data" v-if="showModal"></modal-open-chat>
-      </b-colxx>
-      
-      <b-colxx md="6" sm="6" lg="4" xxs="4" class="btn-icon">
         <b-button
-            @click="openModal"
+            @click="openChat"
             variant="primary"
             size="lg"
             class="top-right-button"
@@ -34,8 +27,10 @@
           <i class="iconsminds-speach-bubble-8"></i>
           {{ $t('Enviar mensaje') }}
         </b-button>
-          <modal-add-chat :data="data" :currentUser="currentUser"></modal-add-chat>
-      </b-colxx>
+       
+        <modal-open-chat :data="data" v-if="showModal"></modal-open-chat>
+      </b-colxx>    
+      
       
     </b-row>
     <horizontal-stepper
