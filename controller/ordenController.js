@@ -31,7 +31,8 @@ const createOrden = (req, res, next) => {
           if (cita) {
             let CodigoOrden = orden.CodigoOrden
               ? orden.CodigoOrden
-              : moment().format("MMDDYYYYHHMM") + cita.vehiculo.placa;
+              : moment(new Date()).format("MMDDYYYYHHMMSS") +
+                cita.vehiculo.placa;
             let ordenDB = {
               //IdVehiculo: vehiculo.IdVehiculo,
               IdTaller: orden.IdTaller,
