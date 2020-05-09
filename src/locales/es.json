@@ -61,7 +61,9 @@
       "placa": "Placa",
       "marca": "Marca",
       "fechaAprobacion": "Fecha aprobación",
-      "sinetapa": "El cliente aún no ha aprobado la cotización"
+      "sinetapa": "El cliente aún no ha aprobado la cotización",
+      "nrcotizacionrechadaza": "# Cotizaciones rechazadas",
+      "cotizacionrechadaza": "Cotizaciones rechazadas"
     },
     "marca": {
       "marca": "Marca",

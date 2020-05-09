@@ -112,7 +112,17 @@
           </b-tab>
 
           <b-tab :title="$t('pages.branch.ordentrabajo')">
-            <b-row>
+            <b-row class="m-3">
+              <div class="d-flex align-items-center navbar-left">
+              <div :class="{'search':true, 'mobile-view':isMobileSearch}" ref="searchContainer" @mouseenter="isSearchOver=true" @mouseleave="isSearchOver=false">
+                    <b-input :placeholder="$t('menu.search')" @keypress.native.enter="search" v-model="searchKeyword" />
+                    <span class="search-icon" @click="searchClick">
+                        <i class="simple-icon-magnifier"></i>
+                    </span>
+                </div>
+              </div>  
+            </b-row>
+            <b-row>            
               <b-colxx
                 xxs="12"
                 class="ordenes-branch"
@@ -203,7 +213,9 @@ export default {
         showDate: this.thisMonth(1),
         events: []
       },
-      ordenes: []
+      ordenes: [],
+      searchKeyword: '',
+      isMobileSearch: false,
     };
   },
   computed: {
@@ -228,69 +240,7 @@ export default {
         });
     },
     loadOrdenesTaller() {
-      ServicesCore.getOrdenesByIdTaller(this.currentUser.IdTaller)
-        .then(async response => {
-          if (response.status == 200) {
-            let ordenList = [];
-            let codeorden = "";
-            let objMyOrden = null;
-            for await (const orden of response.data) {
-              if (orden.CodigoOrden != codeorden) {
-                codeorden = orden.CodigoOrden;
-                objMyOrden = {
-                  CodigoOrden: orden.CodigoOrden,
-                  IdTaller: orden.IdTaller,
-                  IdCita: orden.IdCita,
-                  IdVehiculo: orden.IdVehiculo,
-                  vehiculo: orden.vehiculo,
-                  taller: orden.taller,
-                  etapas: []
-                };
-                let etapa = {
-                  CodigoOrden: orden.CodigoOrden,
-                  IdOrdenTrabajo: orden.IdOrdenTrabajo,
-                  IdEtapa: orden.IdEtapa,
-                  IdMecanico: orden.IdMecanico,
-                  kilometraje: orden.kilometraje,
-                  DocumentosDeja: orden.DocumentosDeja,
-                  Observaciones: orden.Observaciones,
-                  createdAt: orden.createdAt,
-                  mecanico: orden.mecanico,
-                  etapa: orden.etapa,
-                  documentos: orden.documentos
-                };
-                objMyOrden.etapas.push(etapa);
-
-                ordenList.push(objMyOrden);
-              } else {
-                //Si es la misma orden agrega la etapa unicamanete
-                let etapa = {
-                  CodigoOrden: orden.CodigoOrden,
-                  IdOrdenTrabajo: orden.IdOrdenTrabajo,
-                  IdEtapa: orden.IdEtapa,
-                  IdMecanico: orden.IdMecanico,
-                  kilometraje: orden.kilometraje,
-                  DocumentosDeja: orden.DocumentosDeja,
-                  Observaciones: orden.Observaciones,
-                  createdAt: orden.createdAt,
-                  mecanico: orden.mecanico,
-                  etapa: orden.etapa,
-                  documentos: orden.documentos
-                };
-                //objMyOrden.etapas.push(etapa);
-                ordenList[ordenList.length - 1].etapas.push(etapa);
-              }
-            }
-
-            this.ordenes = ordenList;
-          }
-        })
-        .catch(error => {
-          this.$notify("error filled", "ERROR", error.response.data.error, {
-            duration: 3000,
-            permanent: false
-          });
-        });
+      
     },
     hideModal(refname) {
       this.$refs[refname].hide();
@@ -329,7 +279,97 @@ export default {
     },
     setShowDate(d) {
       this.calendar.showDate = d;
-    }
+    },
+    search() {
+        //this.$router.push(`${this.searchPath}?search=${this.searchKeyword}`)        
+        ServicesCore.getOrdenesByIdTallerAndFilter(this.currentUser.IdTaller,this.searchKeyword)
+        .then(async response => {
+          if (response.status == 200) {
+            let ordenList = [];
+            let codeorden = "";
+            let objMyOrden = null;
+            for await (const orden of response.data) {
+              if (orden.CodigoOrden != codeorden) {
+                codeorden = orden.CodigoOrden;
+                objMyOrden = {
+                  CodigoOrden: orden.CodigoOrden,
+                  IdTaller: orden.IdTaller,
+                  IdCita: orden.IdCita,
+                  IdVehiculo: orden.IdVehiculo,
+                  vehiculo: orden.vehiculo,
+                  taller: orden.taller,
+                  etapas: [],
+                  olderCotizaciones: []
+                };
+                let etapa = {
+                  CodigoOrden: orden.CodigoOrden,
+                  IdOrdenTrabajo: orden.IdOrdenTrabajo,
+                  IdEtapa: orden.IdEtapa,
+                  IdMecanico: orden.IdMecanico,
+                  kilometraje: orden.kilometraje,
+                  DocumentosDeja: orden.DocumentosDeja,
+                  Observaciones: orden.Observaciones,
+                  createdAt: orden.createdAt,
+                  mecanico: orden.mecanico,
+                  etapa: orden.etapa,
+                  documentos: orden.documentos,
+                  estado: orden.estado
+                };
+                objMyOrden.etapas.push(etapa);
+                
+                if(orden.estado == "Rechazado"){
+                  objMyOrden.olderCotizaciones.push(etapa);
+                }                
+
+                ordenList.push(objMyOrden);
+              } else {
+                //Si es la misma orden agrega la etapa unicamanete
+                let etapa = {
+                  CodigoOrden: orden.CodigoOrden,
+                  IdOrdenTrabajo: orden.IdOrdenTrabajo,
+                  IdEtapa: orden.IdEtapa,
+                  IdMecanico: orden.IdMecanico,
+                  kilometraje: orden.kilometraje,
+                  DocumentosDeja: orden.DocumentosDeja,
+                  Observaciones: orden.Observaciones,
+                  createdAt: orden.createdAt,
+                  mecanico: orden.mecanico,
+                  etapa: orden.etapa,
+                  documentos: orden.documentos,
+                  estado: orden.estado
+                };
+                if(orden.estado != "Rechazado"){
+                  ordenList[ordenList.length - 1].etapas.push(etapa);
+                }else{
+                  ordenList[ordenList.length - 1].olderCotizaciones.push(etapa);
+                }
+                //objMyOrden.etapas.push(etapa);
+                
+              }
+            }
+
+            this.ordenes = ordenList;
+          }
+        })
+        .catch(error => {
+          this.$notify("error filled", "ERROR", error.response.data.error, {
+            duration: 3000,
+            permanent: false
+          });
+        });
+    },
+    searchClick() {
+            if (window.innerWidth < this.menuHiddenBreakpoint) {
+                if (!this.isMobileSearch) {
+                    this.isMobileSearch = true
+                } else {
+                    this.search()
+                    this.isMobileSearch = false
+                }
+            } else {
+                this.search()
+            }
+        },
   },
   created() {
     setTimeout(() => {

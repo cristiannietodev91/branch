@@ -1,5 +1,6 @@
 <template>
   <b-card>
+    
     <b-row>
       <b-colxx md="6" sm="6" lg="4" xxs="12">
         <h5 class="mb-1 card-subtitle truncate">{{ data.CodigoOrden }}</h5>
@@ -163,6 +164,9 @@ export default {
 
     let etapaCotizacion =
       idxDiagnostico > -1 ? this.data.etapas[idxCotizacion] : null;
+    
+    let olderCotizaciones =
+      idxDiagnostico > -1 ? this.data.olderCotizaciones : null;
 
     let dataCotizacion = {
       IdCita: this.data.IdCita,
@@ -171,7 +175,8 @@ export default {
       IdVehiculo: this.data.IdVehiculo,
       kilometraje: this.data.kilometraje,
       etapa: etapaCotizacion,
-      mecanicos: this.mecanicos
+      mecanicos: this.mecanicos,
+      olderCotizaciones: olderCotizaciones
     };
 
     this.demoSteps.push({

@@ -52,7 +52,7 @@
           <h5 class="mb-1 card-subtitle truncate">
             {{data.etapa.Observaciones}}
           </h5>
-        </b-colxx>
+        </b-colxx>                
       </b-row>
       <div class="icon-cards-row">
         <div v-if="data.etapa.documentos" class="branch-gallery">

@@ -1,6 +1,7 @@
 <template>
   <b-card>
-    <b-form @submit.prevent="uploadFiles" v-if="!data.etapa" class="p-5 w-90 ml-5">
+    <b-form @submit.prevent="uploadFiles" v-if="!data.etapa || data.etapa.estado=='Rechazado'" class="p-5 w-90 ml-5">
+      <info-cotizacion :data="data" v-if="data.etapa.estado=='Rechazado'"/>
       <b-form-group :label="$t('branch.orden.mecanico')">
         <v-select :options="data.mecanicos" v-model="newOrden.mecanico" label="firstName" :reduce="mecanico => mecanico.IdMecanico">
           <template #search="{attributes, events}">
@@ -20,55 +21,7 @@
         </b-button>
       </div>
     </b-form>
-    <div v-else>
-      <b-row>
-        <b-colxx xxs="3">
-          <p class="text-muted text-small mb-2">
-            {{$t('branch.orden.fechaIngreso')}}
-          </p>
-          <h5 class="mb-1 card-subtitle truncate">
-            {{ data.etapa.createdAt | moment("D MMMM YYYY hh:mm A") }}
-          </h5>
-        </b-colxx>
-        <b-colxx xxs="3" v-if="data.etapa.mecanico">
-          <p class="text-muted text-small mb-2">
-            {{$t('branch.orden.mecanico')}}
-          </p>
-          <h5 class="mb-1 card-subtitle truncate">
-            {{data.etapa.mecanico.identificacion}} {{data.etapa.mecanico.fullName}}
-          </h5>
-        </b-colxx>
-        <b-colxx>
-          <p class="text-muted text-small mb-2">
-            {{$t('branch.orden.observaciones')}}
-          </p>
-          <h5 class="mb-1 card-subtitle truncate">
-            {{data.etapa.Observaciones}}
-          </h5>
-        </b-colxx>
-      </b-row>
-      <div class="icon-cards-row">
-        <div class="branch-gallery">
-          <b-collapse id="collapse-cotizacion">
-            <div class="branch-image" v-for="(documento,index) in data.etapa.documentos" :key="`contact${index}`">
-              <b-card no-body>
-                <b-link :href="documento.url" target="_blank"> 
-                  <img alt="Thumbnail" src="/assets/img/pdflogo.jpg" class="list-thumbnail responsive border-0" />
-                  <b-card-text>
-                    <span>{{documento.nombrearchivo}}</span>
-                    <span>{{ documento.date | moment("D MMMM YYYY hh:mm A") }}</span>
-                  </b-card-text>
-                </b-link>
-              </b-card>
-            </div>
-          </b-collapse>
-          <b-button v-b-toggle="'collapse-cotizacion'" class="m-1">
-            Ver cotizaciones
-          </b-button>
-        </div>
-      </div>
-    </div>
-
+    <info-cotizacion :data="data" v-else />
 
 
     </div>
@@ -84,6 +37,7 @@ import vue2Dropzone from "vue2-dropzone";
 import { validationMixin } from "vuelidate";
 import { required, email } from "vuelidate/lib/validators";
 import ServicesCore from "./../../services/service";
+import InfoCotizacion from "./InfoCotizacion"
 
 export default {
   props: ["clickedNext", "currentStep", "data"],
@@ -91,7 +45,8 @@ export default {
     "vue-dropzone": vue2Dropzone,
     "v-select": vSelect,
     "glide-component": GlideComponent,
-    "icon-card": IconCard
+    "icon-card": IconCard,
+    "info-cotizacion": InfoCotizacion
   },
   mixins: [validationMixin],
   data() {

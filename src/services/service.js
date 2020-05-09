@@ -1,13 +1,12 @@
 import http from "../http-common";
 
 class ServiceCrm {
-
   registrarUsuario(usuario) {
-    return http.post("/usuario/createFireBaseUser",usuario);
+    return http.post("/usuario/createFireBaseUser", usuario);
   }
 
   loginUserTaller(uid) {
-    return http.get("/usuario/loginUsuario/"+uid);
+    return http.get("/usuario/loginUsuario/" + uid);
   }
 
   getAllTalleres() {
@@ -22,8 +21,8 @@ class ServiceCrm {
     return http.get("/taller/getById/" + IdTaller);
   }
 
-  getOrdenById(IdOrden){
-    return http.get("/orden/getById/"+IdOrden)
+  getOrdenById(IdOrden) {
+    return http.get("/orden/getById/" + IdOrden);
   }
 
   createMecanico(mecanico) {
@@ -34,8 +33,14 @@ class ServiceCrm {
     return http.get("/vehiculo/getByIdTaller/" + IdTaller);
   }
 
-  getPaginateVehiculosByIdTaller(IdTaller,page,perPage,columnFilter,filter) {
-    return http.get("/vehiculo/getPaginateByIdTaller/" + IdTaller,{
+  getPaginateVehiculosByIdTaller(
+    IdTaller,
+    page,
+    perPage,
+    columnFilter,
+    filter
+  ) {
+    return http.get("/vehiculo/getPaginateByIdTaller/" + IdTaller, {
       params: {
         page: page,
         perPage: perPage,
@@ -54,7 +59,7 @@ class ServiceCrm {
   }
 
   updateCita(cita) {
-    return http.put("/cita/update/"+cita.IdCita, cita);
+    return http.put("/cita/update/" + cita.IdCita, cita);
   }
 
   createOrden(orden) {
@@ -62,14 +67,21 @@ class ServiceCrm {
   }
 
   getCitasByIdTaller(IdTaller) {
-    console.log(`Buscar citas IdTaller :::> ${IdTaller}`)
+    console.log(`Buscar citas IdTaller :::> ${IdTaller}`);
     return http.get("/cita/getByIdTaller/" + IdTaller);
   }
-  
+
   getOrdenesByIdTaller(IdTaller) {
     return http.get("/orden/getByIdTaller/" + IdTaller);
   }
 
+  getOrdenesByIdTallerAndFilter(IdTaller, filter) {
+    return http.get("/orden/getByIdTallerAndFilter/" + IdTaller, {
+      params: {
+        filter: filter
+      }
+    });
+  }
 }
 
 export default new ServiceCrm();
