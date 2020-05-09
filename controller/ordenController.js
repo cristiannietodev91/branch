@@ -4,6 +4,7 @@ var sms = require("../utils/sendSms");
 var HttpStatus = require("http-status-codes");
 var moment = require("moment");
 var debug = require("debug")("branch:server");
+const { Op } = require("sequelize");
 
 const createOrden = (req, res, next) => {
   try {
@@ -184,6 +185,8 @@ const updateOrden = (req, res, next) => {
   try {
     var IdOrdenTrabajo = req.params.Id;
     var orden = req.body;
+
+    console.log("Orden recibida para actualizar :::>", orden);
     if (IdOrdenTrabajo) {
       let ordenDb = {
         IdTaller: orden.IdTaller,
@@ -360,10 +363,55 @@ const getOrdenById = (req, res, next) => {
   }
 };
 
+const getAllOrdenesByIdTallerAndFilter = (req, res, next) => {
+  try {
+    let IdTaller = req.params.Id;
+    let filter = req.query.filter;
+
+    ordenDAO.findAllByFilter(
+      {
+        IdTaller: IdTaller,
+        CodigoOrden: {
+          [Op.substring]: filter,
+        },
+      },
+      {},
+      function (error, ordenes) {
+        if (error) {
+          console.error(
+            "Error al realizar la transaccion de buscar ordenes By Taller:::>",
+            "error ::>",
+            error.message
+          );
+          if (error.errors) {
+            return res
+              .status(HttpStatus.INTERNAL_SERVER_ERROR)
+              .json({ error: error.errors[0] });
+          } else {
+            return res
+              .status(HttpStatus.INTERNAL_SERVER_ERROR)
+              .json({ error: error.message });
+          }
+        } else {
+          if (ordenes) {
+            res.status(HttpStatus.OK).json(ordenes);
+          }
+        }
+      }
+    );
+  } catch (error) {
+    console.error("Error al listar ordenes ::::> ", error);
+    return res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ error: error.message });
+  }
+};
+
 module.exports = {
   createOrden,
   updateOrden,
   getAllEtapas,
   getAllOrdenesByIdTaller,
   getOrdenById,
+  getAllOrdenesByIdTallerAndFilter,
 };

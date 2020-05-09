@@ -149,11 +149,9 @@ const createCita = (req, res, next) => {
               }
             });
           } else {
-            return res
-              .status(HttpStatus.PRECONDITION_REQUIRED)
-              .send({
-                error: "No se encontro un vehiculo con la placa " + cita.placa,
-              });
+            return res.status(HttpStatus.PRECONDITION_REQUIRED).send({
+              error: "No se encontro un vehiculo con la placa " + cita.placa,
+            });
           }
         }
       }
@@ -317,11 +315,9 @@ const updateCita = (req, res, next) => {
                   }
                 }
               });
-              return res
-                .status(HttpStatus.ACCEPTED)
-                .json({
-                  message: "Se actualizo la cita " + IdCita + " correctamente",
-                });
+              return res.status(HttpStatus.ACCEPTED).json({
+                message: "Se actualizo la cita " + IdCita + " correctamente",
+              });
             } else {
               return res
                 .status(HttpStatus.OK)
@@ -330,11 +326,9 @@ const updateCita = (req, res, next) => {
           }
         });
       } else {
-        return res
-          .status(HttpStatus.EXPECTATION_FAILED)
-          .json({
-            error: "Solo se puede cancelar una cita hasta 24 horas antes.",
-          });
+        return res.status(HttpStatus.EXPECTATION_FAILED).json({
+          error: "Solo se puede cancelar una cita hasta 24 horas antes.",
+        });
       }
     } else {
       return res
@@ -360,11 +354,9 @@ const deleteCitaById = (req, res, next) => {
           .json({ error: error.errors[0] });
       } else {
         if (result) {
-          return res
-            .status(HttpStatus.ACCEPTED)
-            .json({
-              message: "Se elimino la IdCita " + IdCita + " correctamente",
-            });
+          return res.status(HttpStatus.ACCEPTED).json({
+            message: "Se elimino la IdCita " + IdCita + " correctamente",
+          });
         } else {
           return res
             .status(HttpStatus.OK)
@@ -655,6 +647,46 @@ const castCitasToEvents = (citas) => {
   return events;
 };
 
+const getAllCitasByfilter = (req, res, next) => {
+  try {
+    let IdTaller = req.params.Id;
+    let filter = req.body.value;
+
+    citaDAO.findAllByFilter(
+      { IdTaller: IdTaller, estado: { [Op.ne]: "Cancelada" } },
+      {},
+      { CodigoOrden: filter },
+      function (error, citas) {
+        if (error) {
+          console.error(
+            "Error al realizar la transaccion de buscar citas por Taller error ::>",
+            error.message
+          );
+          if (error.errors) {
+            return res
+              .status(HttpStatus.INTERNAL_SERVER_ERROR)
+              .json({ error: error.errors[0] });
+          } else {
+            return res
+              .status(HttpStatus.INTERNAL_SERVER_ERROR)
+              .json({ error: error.message });
+          }
+        } else {
+          if (citas) {
+            var events = castCitasToEvents(citas);
+            res.status(HttpStatus.OK).json(events);
+          }
+        }
+      }
+    );
+  } catch (error) {
+    console.error("Error al listar citas ::::> ", error);
+    return res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ error: error.message });
+  }
+};
+
 module.exports = {
   getAllCitas,
   createCita,
@@ -666,4 +698,5 @@ module.exports = {
   getAllCitasPasadasByIdUsuario,
   getAllCitasActivasByIdUsuario,
   getAllCitasFuturasByIdUsuario,
+  getAllCitasByfilter,
 };
