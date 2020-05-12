@@ -234,7 +234,7 @@
 
 <script>
 import GlideComponent from '../../../components/Carousel/GlideComponent'
-
+import { mapGetters } from "vuex";
 import {
     CalendarView,
     CalendarViewHeader,
@@ -452,7 +452,6 @@ export default {
             },
         }
     },
-
     methods: {
         refreshButtonClick() {
             console.log('refreshButtonClick')

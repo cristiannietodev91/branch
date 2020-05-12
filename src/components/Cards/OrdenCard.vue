@@ -27,6 +27,7 @@
           >
           <i class="iconsminds-speach-bubble-8"></i>
           {{ $t('Enviar mensaje') }}
+          <b-badge variant="light" v-if="newmessages>0">{{newmessages}}</b-badge>
         </b-button>
        
         <modal-open-chat :data="data" v-if="showModal"></modal-open-chat>
@@ -66,7 +67,8 @@ export default {
   data() {
     return {
       demoSteps: [],
-      showModal: false
+      showModal: false,
+      newmessages: 0
     };
   },
   computed: {
@@ -269,6 +271,13 @@ export default {
       component: Entrega,
       data: dataEntrega,
       completed: idxEntrega > -1
+    });
+
+    this.sockets.subscribe("sendmessage", newmessage => {
+      console.log("New Message ::>", newmessage);
+      if(newmessage.cita == this.data.IdCita){        
+        this.newmessages+=1;
+      }
     });
   }
 };

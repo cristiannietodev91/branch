@@ -25,13 +25,28 @@ export default {
         'sidebar': Sidebar,
         'footer-component': Footer
     },
+    sockets: {
+        sendmessage: (data) =>{
+           
+        }
+    },
+    created(){
+        this.sockets.subscribe('sendmessage', (data) => {
+            this.$notification.show(data.user.name, {
+                body: data.text
+            }, {})
+        });
+        this.$socket.emit("jointaller", this.currentUser.IdTaller, (result)=>{
+            console.log("resultado join to room taller",result);
+        })
+    },
     data() {
         return {
             show: false
         }
     },
     computed: {
-        ...mapGetters(['getMenuType'])
+        ...mapGetters(['getMenuType',"currentUser"])
     }
 }
 </script>

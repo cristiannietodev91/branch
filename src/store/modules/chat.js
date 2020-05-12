@@ -97,6 +97,12 @@ const actions = {
   },
   SOCKET_message({ commit }, data) {
     console.log("Message received ", data);
+  },
+  SOCKET_newcliente({ commit }, data) {
+    console.log("New cliente data ", data);
+    this._vm.$socket.emit("joinroom", { room: data.room }, result => {
+      console.log("Result unir a room del cliente", result);
+    });
   }
 };
 

@@ -27,6 +27,7 @@ import VCalendar from "v-calendar";
 import "v-calendar/lib/v-calendar.min.css";
 import VueScrollTo from "vue-scrollto";
 import VueSocketIO from "vue-socket.io";
+import VueNativeNotification from "vue-native-notification";
 const moment = require("moment-timezone");
 require("moment/locale/es");
 
@@ -93,6 +94,12 @@ Vue.use(
     options: { transports: ["websocket"] }
   })
 );
+
+Vue.use(VueNativeNotification, {
+  // Automatic permission request before
+  // showing notification (default: true)
+  requestOnNotify: true
+});
 
 /*firebase.auth().onAuthStateChanged(user => {
   if(user){

@@ -133,7 +133,7 @@ export default {
   },
   created() {
     this.otherUser = this.data.vehiculo.usuario;
-    this.$socket.emit("joinroom", this.data.vehiculo.IdUsuario, resultado => {
+    this.$socket.emit("joinroom", { room: this.data.vehiculo.IdUsuario }, resultado => {
       console.log("Se unio correctmente al room del usuario ya pueden chatear");
     });
 
