@@ -18,4 +18,9 @@ router.get(
   ordenController.getAllOrdenesByIdTallerAndFilter
 );
 
+router.get(
+  "/getByIdTallerAndIdCita/:Id",
+  ordenController.getAllOrdenesByIdTallerAndIdCita
+);
+
 module.exports = router;

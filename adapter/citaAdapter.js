@@ -1,4 +1,4 @@
-let citaDAO = require("../dao/citaDAO");
+const citaDAO = require("../dao/citaDAO");
 const { Op } = require("sequelize");
 
 /**
