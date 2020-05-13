@@ -31,13 +31,24 @@ export default {
         }
     },
     created(){
+        console.log("Conversations :::>",this.conversations)
         this.sockets.subscribe('sendmessage', (data) => {
             this.$notification.show(data.user.name, {
                 body: data.text
-            }, {})
+            }, 
+            {
+                onclick:  () => {
+                    console.log('Custom click event was called');
+                }
+            })
         });
         this.$socket.emit("jointaller", this.currentUser.IdTaller, (result)=>{
             console.log("resultado join to room taller",result);
+        })
+        this.conversations.forEach(conversacion =>{
+            this.$socket.emit("joinroom", { room: conversacion }, result => {
+                console.log("Se unio de nuevo exitosamente a las conversacion::>",conversacion)
+            });
         })
     },
     data() {
@@ -46,7 +57,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['getMenuType',"currentUser"])
+        ...mapGetters(['getMenuType',"currentUser", "conversations"])
     }
 }
 </script>

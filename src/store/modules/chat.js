@@ -7,7 +7,10 @@ const state = {
   error: "",
   contacts: null,
   contactsSearchResult: null,
-  conversations: null
+  conversations:
+    localStorage.getItem("conversations") != null
+      ? JSON.parse(localStorage.getItem("conversations"))
+      : []
 };
 
 const getters = {
@@ -95,12 +98,17 @@ const actions = {
   SOCKET_connect({ commit }) {
     console.log("From vuexxx:::> coonect");
   },
-  SOCKET_message({ commit }, data) {
-    console.log("Message received ", data);
-  },
-  SOCKET_newcliente({ commit }, data) {
+  SOCKET_newcliente({ commit, state }, data) {
     console.log("New cliente data ", data);
     this._vm.$socket.emit("joinroom", { room: data.room }, result => {
+      const conversations = [...state.conversations];
+      const existConversions = conversations.find(element => {
+        element == data.room;
+      });
+      if (!existConversions) {
+        conversations.push(data.room);
+      }
+      localStorage.setItem("conversations", JSON.stringify(conversations));
       console.log("Result unir a room del cliente", result);
     });
   }

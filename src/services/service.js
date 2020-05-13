@@ -82,6 +82,14 @@ class ServiceCrm {
       }
     });
   }
+
+  getOrdenesByIdTallerAndIdCita(IdTaller, IdCita) {
+    return http.get("/orden/getByIdTallerAndIdCita/" + IdTaller, {
+      params: {
+        IdCita: IdCita
+      }
+    });
+  }
 }
 
 export default new ServiceCrm();
