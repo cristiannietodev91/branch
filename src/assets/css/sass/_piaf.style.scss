@@ -2648,18 +2648,18 @@ button {
     margin-left: -10px;
     padding-right: 10px;
     margin-right: 0;
-    height: calc(100vh - #{$navbar-height} - 270px);
+    height: calc(100vh - #{$navbar-height} - 160px);
 
     @include respond-below(xl) {
-      height: calc(100vh - #{$navbar-height-lg} - 270px);
+      height: calc(100vh - #{$navbar-height-lg} - 160px);
     }
 
     @include respond-below(lg) {
-      height: calc(100vh - #{$navbar-height-md} - 270px);
+      height: calc(100vh - #{$navbar-height-md} - 160px);
     }
 
     @include respond-below(sm) {
-      height: calc(100vh - #{$navbar-height-xs} - 220px);
+      height: calc(100vh - #{$navbar-height-xs} - 160px);
     }
 
     .ps__scrollbar-y {
@@ -2679,6 +2679,10 @@ button {
     @include respond-below(sm) {
       font-size: 0.9rem;
     }
+  }
+
+  .body-chat {
+    min-width: 130px;
   }
 
   .card .card-body {
@@ -9631,9 +9635,7 @@ footer.page-footer {
     } 
   }
   .vue-switcher{
-    label{
-
-    }
+    
     input{
       left: 0;
     }

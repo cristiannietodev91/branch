@@ -1,63 +1,67 @@
 <template>
-<div id="app-container" :class="getMenuType">
+  <div id="app-container" :class="getMenuType">
     <top-nav />
     <sidebar />
     <main>
-        <div class="container-fluid">
-            <router-view />
-        </div>
+      <div class="container-fluid">
+        <router-view />
+      </div>
     </main>
-    <footer-component/>
-</div>
+    <footer-component />
+  </div>
 </template>
 
 <script>
-import Sidebar from '../../containers/Sidebar'
-import TopNav from '../../containers/TopNav'
-import Footer from '../../containers/Footer'
-import {
-    mapGetters
-} from 'vuex'
+import Sidebar from "../../containers/Sidebar";
+import TopNav from "../../containers/TopNav";
+import Footer from "../../containers/Footer";
+import { mapGetters } from "vuex";
 
 export default {
-    components: {
-        'top-nav': TopNav,
-        'sidebar': Sidebar,
-        'footer-component': Footer
-    },
-    sockets: {
-        sendmessage: (data) =>{
-           
-        }
-    },
-    created(){
-        console.log("Conversations :::>",this.conversations)
-        this.sockets.subscribe('sendmessage', (data) => {
-            this.$notification.show(data.user.name, {
-                body: data.text
-            }, 
-            {
-                onclick:  () => {
-                    console.log('Custom click event was called');
-                }
-            })
-        });
-        this.$socket.emit("jointaller", this.currentUser.IdTaller, (result)=>{
-            console.log("resultado join to room taller",result);
-        })
-        this.conversations.forEach(conversacion =>{
-            this.$socket.emit("joinroom", { room: conversacion }, result => {
-                console.log("Se unio de nuevo exitosamente a las conversacion::>",conversacion)
+  components: {
+    "top-nav": TopNav,
+    sidebar: Sidebar,
+    "footer-component": Footer
+  },
+  sockets: {
+    sendmessage: data => {}
+  },
+  created() {
+    console.log("Conversations :::>", this.conversations);
+    this.sockets.subscribe("sendmessage", data => {
+      this.$notification.show(
+        data.user.name,
+        {
+          body: data.text
+        },
+        {
+          onclick: () => {
+            this.$router.push({
+              path: `/app/taller/detailTaller/ordenes/${data.cita}`
             });
-        })
-    },
-    data() {
-        return {
-            show: false
+          }
         }
-    },
-    computed: {
-        ...mapGetters(['getMenuType',"currentUser", "conversations"])
-    }
-}
+      );
+    });
+    this.$socket.emit("jointaller", this.currentUser.IdTaller, result => {
+      console.log("resultado join to room taller", result);
+    });
+    this.conversations.forEach(conversacion => {
+      this.$socket.emit("joinroom", { room: conversacion }, result => {
+        console.log(
+          "Se unio de nuevo exitosamente a las conversacion::>",
+          conversacion
+        );
+      });
+    });
+  },
+  data() {
+    return {
+      show: false
+    };
+  },
+  computed: {
+    ...mapGetters(["getMenuType", "currentUser", "conversations"])
+  }
+};
 </script>

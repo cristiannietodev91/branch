@@ -1,66 +1,44 @@
-<template>
-  <b-modal
-    :id="`modalChat_${data.CodigoOrden}`"
-    :ref="`modalChat_${data.CodigoOrden}`"
-    :title="data.CodigoOrden"
-    modal-class="modal-right"
-    hide-footer
-  >
-    <div>
-      <b-row>
-        <b-colxx xxs="12" class="chat-app">
-          <conversation-detail
-            v-if="otherUser!=null"
-            key="conversation"
-            :current-user="currentUser"
-            :other-user="otherUser"
-            :messages="conversationMessages"
-          />
-          <div v-else class="loading" key="conversationLoading"></div>
-        </b-colxx>
-      </b-row>
-      <div class="d-flex justify-content-between align-items-center">
-        <b-input
-          type="text"
-          :placeholder="$t('chat.saysomething')"
-          v-model="message"
-          @keyup.native.enter="sendMessage"
+<template v-slot:default="{ hide }">
+  <div class="p-3">
+    <b-button variant="primary" block @click="hide">Cerrar Chat</b-button>
+    <b-row>
+      <b-colxx xxs="12" class="chat-app">
+        <conversation-detail
+          v-if="otherUser != null"
+          key="conversation"
+          :current-user="currentUser"
+          :other-user="otherUser"
+          :messages="conversationMessages"
         />
-        <div>
-          <b-button variant="outline-primary" class="icon-button large ml-1">
-            <i class="simple-icon-paper-clip" />
-          </b-button>
-          <b-button variant="primary" class="icon-button large ml-1" @click="sendMessage">
-            <i class="simple-icon-arrow-right" />
-          </b-button>
-        </div>
+        <div v-else class="loading" key="conversationLoading"></div>
+      </b-colxx>
+    </b-row>
+    <div class="d-flex justify-content-between align-items-center">
+      <b-input
+        type="text"
+        :placeholder="$t('chat.saysomething')"
+        v-model="message"
+        @keyup.native.enter="sendMessage"
+      />
+      <div class="d-flex flex-row">
+        <b-button variant="outline-primary" class="icon-button small ml-1">
+          <i class="simple-icon-paper-clip" />
+        </b-button>
+        <b-button
+          variant="primary"
+          class="icon-button small ml-1"
+          @click="sendMessage"
+        >
+          <i class="simple-icon-arrow-right" />
+        </b-button>
       </div>
-      <!-- <div class="pt-4 spaced-content pb-0 mt-2"></div>
-                    <conversation-list v-if="isLoadContacts && isLoadConversations" key="conversationList" :current-user="currentUser" :conversations="conversations" :contacts="contacts" @select-conversation="selectConversation" />
-      <div v-else class="loading" key="conversationListLoading"></div>-->
-      <!-- <application-menu>
-            <b-tabs no-fade class="pl-0 pr-0 h-100" content-class="chat-app-tab-content" nav-class="card-header-tabs ml-0 mr-0" v-model="tabIndex">
-                <b-tab :title="$t('chat.messages')" active title-item-class="w-50 text-center" no-body class="chat-app-tab-pane">
-                    <div class="pt-4 spaced-content pb-0 mt-2">
-
-                    </div>
-                    <conversation-list v-if="isLoadContacts && isLoadConversations" key="conversationList" :current-user="currentUser" :conversations="conversations" :contacts="contacts" @select-conversation="selectConversation" />
-                    <div v-else class="loading" key="conversationListLoading"></div>
-                </b-tab>
-                <b-tab :title="$t('chat.contacts')" title-item-class="w-50 text-center" no-body class="chat-app-tab-pane">
-                    <div class="pt-4 spaced-content pb-0 mt-2">
-                        <div class="form-group">
-                            <b-input type="text" class="rounded" :placeholder="$t('menu.search')" v-model="searchKey" />
-                        </div>
-                    </div>
-                    <contact-list v-if="isLoadContacts" key="contactList" :data="contactsSearchResult" @select-contact="selectContact" />
-                    <div v-else class="loading" key="contactListLoading"></div>
-                </b-tab>
-            </b-tabs>
-      </application-menu>-->
     </div>
-  </b-modal>
+  </div>
 </template>
+<!-- <div>
+    
+   
+  </div> -->
 
 <script>
 import { mapGetters, mapActions } from "vuex";
@@ -129,13 +107,22 @@ export default {
         this.data.vehiculo.IdUsuario,
         newmessage
       );
+    },
+    hide() {
+      this.$emit("hide");
     }
   },
   created() {
     this.otherUser = this.data.vehiculo.usuario;
-    this.$socket.emit("joinroom", { room: this.data.vehiculo.IdUsuario }, resultado => {
-      console.log("Se unio correctmente al room del usuario ya pueden chatear");
-    });
+    this.$socket.emit(
+      "joinroom",
+      { room: this.data.vehiculo.IdUsuario },
+      resultado => {
+        console.log(
+          "Se unio correctmente al room del usuario ya pueden chatear"
+        );
+      }
+    );
 
     this.sockets.subscribe("sendmessage", newmessage => {
       this.conversationMessages.push(newmessage);

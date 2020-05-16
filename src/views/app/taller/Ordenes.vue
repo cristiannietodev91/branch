@@ -1,5 +1,5 @@
 <template>
-  <b-row>
+  <div>
     <b-row class="m-3">
       <div class="d-flex align-items-center navbar-left">
         <div
@@ -29,7 +29,7 @@
         <orden-card :data="orden" :mecanicos="taller.mecanicos" />
       </b-colxx>
     </b-row>
-  </b-row>
+  </div>
 </template>
 
 <script>

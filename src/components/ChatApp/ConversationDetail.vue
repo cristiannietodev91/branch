@@ -14,9 +14,10 @@
         >
           <div class="min-width-zero">
             <div>
-              <p class="list-item-heading mb-1 truncate">{{ otherUser.firstName }}</p>
+              <p class="list-item-heading mb-1 truncate">
+                {{ otherUser.firstName }}
+              </p>
             </div>
-            <p class="mb-0 text-muted text-small">{{ otherUser.createdAt }}</p>
           </div>
         </div>
       </div>
@@ -36,46 +37,36 @@
             'float-right': message.user._id === currentUser.uid
           }"
         >
-          <div class="position-absolute pt-1 pr-2 r-0">
-            <span
-              class="text-extra-small text-muted"
-            >{{ new Date(message.createdAt).getHours() + ":" + new Date(message.createdAt).getMinutes() }}</span>
+          <div class="d-flex position-absolute pt-1 pr-2 w-90">
+            <span class="align-self-start ml-2">{{
+              currentUser.displayName
+            }}</span>
+            <div class="position-absolute r-0">
+              <span class="align-self-xl-end text-extra-small text-muted ">{{
+                new Date(message.createdAt).getHours() +
+                  ":" +
+                  new Date(message.createdAt).getMinutes()
+              }}</span>
+            </div>
           </div>
-          <b-card-body>
-            <div class="d-flex flex-row pb-1" v-if="message.user._id === currentUser.uid">
-              <img
-                :alt="currentUser.displayName"
-                src="/assets/img/profile-pic-l.jpg"
-                class="img-thumbnail border-0 rounded-circle mr-3 list-thumbnail align-self-center xsmall"
+          <b-card-body class="body-chat">
+            <div
+              class="d-flex flex-row"
+              v-if="message.user._id === currentUser.uid"
+            ></div>
+            <div class="d-flex flex-row pb-1" v-else></div>
+            <div>
+              <p class="mb-0 text-semi-muted" v-if="message.text">
+                {{ message.text }}
+              </p>
+              <single-lightbox
+                v-else
+                :thumb="
+                  message.image.replace('branchmedia', 'branchmedia-resized')
+                "
+                :large="message.image"
+                class-name="responsive"
               />
-              <div class="d-flex flex-grow-1 min-width-zero">
-                <div
-                  class="m-2 pl-0 align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero"
-                >
-                  <div class="min-width-zero">
-                    <p class="mb-0 truncate list-item-heading">{{ currentUser.displayName }}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="d-flex flex-row pb-1" v-else>
-              <img
-                :alt="otherUser.firstName"
-                src="/assets/img/profile-pic-2.jpg"
-                class="img-thumbnail border-0 rounded-circle mr-3 list-thumbnail align-self-center xsmall"
-              />
-              <div class="d-flex flex-grow-1 min-width-zero">
-                <div
-                  class="m-2 pl-0 align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero"
-                >
-                  <div class="min-width-zero">
-                    <p class="mb-0 truncate list-item-heading">{{ otherUser.firstName }}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="chat-text-left">
-              <p class="mb-0 text-semi-muted">{{ message.text }}</p>
             </div>
           </b-card-body>
         </b-card>
@@ -85,8 +76,13 @@
   </div>
 </template>
 <script>
+import SingleLightbox from "../Pages/SingleLightbox";
+
 export default {
   props: ["currentUser", "otherUser", "messages"],
+  components: {
+    "single-lightbox": SingleLightbox
+  },
   methods: {
     scrollToEnd() {
       setTimeout(() => {

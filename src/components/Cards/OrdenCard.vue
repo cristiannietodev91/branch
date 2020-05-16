@@ -1,6 +1,5 @@
 <template>
   <b-card>
-    
     <b-row>
       <b-colxx md="6" sm="6" lg="4" xxs="12">
         <h5 class="mb-1 card-subtitle truncate">{{ data.CodigoOrden }}</h5>
@@ -20,20 +19,29 @@
       </b-colxx>
       <b-colxx md="6" sm="6" lg="2" xxs="4">
         <b-button
-            @click="openChat"
-            variant="primary"
-            size="lg"
-            class="top-right-button"
-          >
+          @click="openChat"
+          variant="primary"
+          size="lg"
+          class="top-right-button"
+          :aria-controls="`sidebar${data.CodigoOrden}`"
+          :aria-expanded="showModal"
+        >
           <i class="iconsminds-speach-bubble-8"></i>
-          {{ $t('Enviar mensaje') }}
-          <b-badge variant="light" v-if="newmessages>0">{{newmessages}}</b-badge>
+          {{ $t("Enviar mensaje") }}
+          <b-badge variant="light" v-if="newmessages > 0">{{
+            newmessages
+          }}</b-badge>
         </b-button>
-       
-        <modal-open-chat :data="data" v-if="showModal"></modal-open-chat>
-      </b-colxx>    
-      
-      
+        <b-sidebar
+          :id="`sidebar${data.CodigoOrden}`"
+          right
+          shadow
+          v-model="showModal"
+          no-header
+        >
+          <modal-open-chat :data="data" @hide="openChat"></modal-open-chat>
+        </b-sidebar>
+      </b-colxx>
     </b-row>
     <horizontal-stepper
       locale="es"
@@ -78,9 +86,9 @@ export default {
   },
   methods: {
     openChat() {
-      console.log("Data ::>", this.currentUser);
-      this.showModal = true;
-      this.$bvModal.show("modalChat_" + this.data.CodigoOrden);
+      this.showModal = !this.showModal;
+      this.newmessages = 0;
+      //this.$bvModal.show("modalChat_" + this.data.CodigoOrden);
     },
     // Executed when @completed-step event is triggered
     completeStep(payload) {
@@ -166,7 +174,7 @@ export default {
 
     let etapaCotizacion =
       idxDiagnostico > -1 ? this.data.etapas[idxCotizacion] : null;
-    
+
     let olderCotizaciones =
       idxDiagnostico > -1 ? this.data.olderCotizaciones : null;
 
@@ -275,8 +283,10 @@ export default {
 
     this.sockets.subscribe("sendmessage", newmessage => {
       console.log("New Message ::>", newmessage);
-      if(newmessage.cita == this.data.IdCita){        
-        this.newmessages+=1;
+      if (newmessage.cita == this.data.IdCita) {
+        if (!this.showModal) {
+          this.newmessages += 1;
+        }
       }
     });
   }

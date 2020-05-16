@@ -96,8 +96,6 @@ Vue.use(
 );
 
 Vue.use(VueNativeNotification, {
-  // Automatic permission request before
-  // showing notification (default: true)
   requestOnNotify: true
 });
 
