@@ -32,7 +32,7 @@ const getAllVehiculos = (req, res, next) => {
 
 const createVehiculo = (req, res, next) => {
   try {
-    let vehiculo = req.body;
+    const vehiculo = req.body;
     console.debug("Parametro de vehiculo recibido :::::>", vehiculo);
 
     vehiculoDAO.findOneByFilter({ placa: vehiculo.placa }, function (
@@ -314,8 +314,8 @@ const updateVehiculo = (req, res, next) => {
 
 const updateFechaVencimiento = (req, res, next) => {
   try {
-    var IdVehiculo = req.params.Id;
-    var vehiculo = req.body;
+    const IdVehiculo = req.params.Id;
+    const vehiculo = req.body;
     console.debug(
       "Parametro de vehiculo recibido para actualizar :::::>",
       vehiculo
