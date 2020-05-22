@@ -8,7 +8,7 @@
           key="conversation"
           :current-user="currentUser"
           :other-user="otherUser"
-          :messages="conversationMessages"
+          :messages="messages"
         />
         <div v-else class="loading" key="conversationLoading"></div>
       </b-colxx>
@@ -24,11 +24,7 @@
         <b-button variant="outline-primary" class="icon-button small ml-1">
           <i class="simple-icon-paper-clip" />
         </b-button>
-        <b-button
-          variant="primary"
-          class="icon-button small ml-1"
-          @click="sendMessage"
-        >
+        <b-button variant="primary" class="icon-button small ml-1" @click="sendMessage">
           <i class="simple-icon-arrow-right" />
         </b-button>
       </div>
@@ -41,7 +37,7 @@
   </div> -->
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 // import ApplicationMenu from '../Common/ApplicationMenu'
 // import ContactList from '../ChatApp/ContactList'
 import ConversationList from "../ChatApp/ConversationList";
@@ -62,12 +58,11 @@ export default {
       message: "",
       searchKey: "",
       isLoadCurrentConversation: false,
-      otherUser: null,
-      conversationMessages: []
+      otherUser: null
     };
   },
   computed: {
-    ...mapGetters(["currentUser"])
+    ...mapGetters(["currentUser", "messages"])
     //...mapGetters(['currentUser', 'isLoadContacts', 'isLoadConversations', 'error', 'contacts', 'contactsSearchResult', 'conversations'])
   },
   /*sockets: {
@@ -77,7 +72,8 @@ export default {
     }
   },*/
   methods: {
-    // ...mapActions(['getContacts', 'searchContacts', 'getConversations']),
+    ...mapMutations(["addMessageItem"]),
+    ...mapActions(["getMessages"]),
     // selectConversation(otherUser, messages) {
     //     this.otherUser = otherUser
     //     this.conversationMessages = messages
@@ -91,16 +87,18 @@ export default {
         read: false,
         user: {
           _id: this.currentUser.uid,
-          name: this.currentUser.displayName
+          name: this.data.taller.nombre
         },
-        cita: {
-          IdCita: this.data.IdCita,
-          CodigoOrden: this.data.CodigoOrden,
-          IdOrdenTrabajo: this.data.IdOrdenTrabajo,
-          IdEtapa: this.data.IdEtapa
-        }
+        IdCita: this.data.IdCita,
+        CodigoOrden: this.data.CodigoOrden,
+        IdOrdenTrabajo: this.data.IdOrdenTrabajo,
+        IdEtapa: this.data.IdEtapa,
+        IdConversacionUser: this.data.vehiculo.IdUsuario,
+        IdTaller: this.data.IdTaller
       };
-      this.conversationMessages.push(newmessage);
+
+      this.addMessageItem(newmessage);
+
       this.message = "";
       this.$socket.emit(
         "messaggetosomeone",
@@ -125,17 +123,15 @@ export default {
     );
 
     this.sockets.subscribe("sendmessage", newmessage => {
-      this.conversationMessages.push(newmessage);
+      this.addMessageItem(newmessage);
+    });
+  },
+  mounted() {
+    this.getMessages({
+      IdConversacionUser: this.data.vehiculo.IdUsuario,
+      IdTaller: this.data.IdTaller
     });
   }
-  // mounted() {
-  //     this.getContacts({
-  //         userId: this.currentUser.id,
-  //         searchKey: ''
-  //     })
-  //     this.getConversations(this.currentUser.id)
-  //     document.body.classList.add("no-footer");
-  // },
   // beforeDestroy() {
   //     document.body.classList.remove("no-footer");
   // },

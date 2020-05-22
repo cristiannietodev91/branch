@@ -1,5 +1,6 @@
 import axios from "axios";
 import { apiUrl } from "../../constants/config";
+import ServiceCore from "../../services/service";
 
 const state = {
   isLoadContacts: false,
@@ -10,7 +11,8 @@ const state = {
   conversations:
     localStorage.getItem("conversations") != null
       ? JSON.parse(localStorage.getItem("conversations"))
-      : []
+      : [],
+  messages: []
 };
 
 const getters = {
@@ -19,7 +21,8 @@ const getters = {
   error: state => state.error,
   contacts: state => state.contacts,
   conversations: state => state.conversations,
-  contactsSearchResult: state => state.contactsSearchResult
+  contactsSearchResult: state => state.contactsSearchResult,
+  messages: state => state.messages
 };
 
 const mutations = {
@@ -42,6 +45,13 @@ const mutations = {
   getConversationsError(state, error) {
     state.isLoadConversations = false;
     state.error = error;
+  },
+  getMessagesSucess(state, payload) {
+    state.isLoadConversations = true;
+    state.messages = payload.messages;
+  },
+  addMessageItem(state, newMessage) {
+    state.messages.push(newMessage);
   }
 };
 
@@ -94,6 +104,18 @@ const actions = {
           commit("getConversationsError", "error:getConversations");
         }
       });
+  },
+  getMessages({ commit }, { IdConversacionUser, IdTaller }) {
+    ServiceCore.getMessagesByConversacion(IdConversacionUser, IdTaller).then(
+      result => {
+        console.log("Result :::>", result);
+        if (result.status == 200) {
+          commit("getMessagesSucess", {
+            messages: result.data
+          });
+        }
+      }
+    );
   },
   SOCKET_connect({ commit }) {
     console.log("From vuexxx:::> coonect");

@@ -90,6 +90,16 @@ class ServiceCrm {
       }
     });
   }
+
+  getMessagesByConversacion(IdConversacionUser, IdTaller) {
+    return http.get("/message/getMessagesByConversacion", {
+      params: {
+        IdConversacionUser: IdConversacionUser,
+        IdTaller: IdTaller,
+        order: "ASC"
+      }
+    });
+  }
 }
 
 export default new ServiceCrm();
