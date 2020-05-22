@@ -3,23 +3,23 @@ const models = require("../database/models");
 module.exports = {
   findAll: function (cb) {
     // Find all users
-    models.message.findAll().then((messages) => {
-      cb(null, messages);
+    models.conversacion.findAll().then((conversaciones) => {
+      cb(null, conversaciones);
     });
   },
-  create: function (message, cb) {
+  create: function (conversacion, cb) {
     // Find all users
     return models.sequelize
       .transaction((t1) => {
-        return models.message.create(message).then((message) => {
-          return message;
+        return models.conversacion.create(conversacion).then((conversacion) => {
+          return conversacion;
         });
       })
       .then(function (result) {
         if (result) {
           //console.debug('Resultado transaccion crear cita :::: >', result);
-          var messageCreated = result.dataValues;
-          cb(null, messageCreated);
+          var conversacionCreated = result.dataValues;
+          cb(null, conversacionCreated);
         } else {
           cb(null, null);
         }
@@ -28,22 +28,22 @@ module.exports = {
         cb(err, null);
       });
   },
-  update: function (IdMessage, message, cb) {
+  update: function (IdConversacion, conversacion, cb) {
     // Find all users
     return models.sequelize
       .transaction((t1) => {
-        return models.message
-          .update(message, {
-            where: { IdMessage: IdMessage },
+        return models.conversacion
+          .update(conversacion, {
+            where: { IdConversacion: IdConversacion },
           })
-          .then((message) => {
-            return message;
+          .then((conversacion) => {
+            return conversacion;
           });
       })
       .then(function (result) {
         if (result) {
           console.debug(
-            "Resultado despues de actualizar message :::: >",
+            "Resultado despues de actualizar conversacion :::: >",
             result
           );
           cb(null, result);
@@ -55,17 +55,16 @@ module.exports = {
         cb(err, null);
       });
   },
-  findAllByFilter: function (filterMessages, order, cb) {
+  findOneByFilter: function (filter, cb) {
     // Find all users
     return models.sequelize
       .transaction((t1) => {
-        return models.message
-          .findAll({
-            where: filterMessages,
-            order: [["createdAt", order ? order : "DESC"]],
+        return models.conversacion
+          .findOne({
+            where: filter,
           })
-          .then((messages) => {
-            return messages;
+          .then((conversacion) => {
+            return conversacion;
           });
       })
       .then(function (result) {

@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true,
     },
-    Id: {
+    _id: {
       type: Sequelize.STRING,
       allowNull: false,
     },
@@ -24,9 +24,9 @@ module.exports = (sequelize, DataTypes) => {
       type: Sequelize.STRING,
       allowNull: true,
     },
-    cita: {
+    IdCita: {
       type: Sequelize.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
     delivered: {
       type: Sequelize.BOOLEAN,
@@ -40,13 +40,17 @@ module.exports = (sequelize, DataTypes) => {
       type: Sequelize.STRING,
       allowNull: false,
     },
-    idusuario: {
-      type: Sequelize.STRING,
+    user: {
+      type: Sequelize.JSON,
       allowNull: false,
     },
-    nombreusuario: {
-      type: Sequelize.STRING,
-      allowNull: false,
+    IdEtapa: {
+      type: Sequelize.INTEGER,
+      allowNull: true,
+    },
+    IdOrdenTrabajo: {
+      type: Sequelize.INTEGER,
+      allowNull: true,
     },
   });
   Message.associate = function (models) {};

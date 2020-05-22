@@ -1,7 +1,7 @@
 "use strict";
 const Sequelize = require("sequelize");
 const sequelizePaginate = require("sequelize-paginate");
-//TODO: Pendiente foreing key tabla vehiculo columna IdMarca
+
 module.exports = (sequelize, DataTypes) => {
   const Vehiculo = sequelize.define(
     "vehiculo",

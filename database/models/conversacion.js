@@ -8,15 +8,15 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true,
     },
-    idusuario: {
+    uid: {
       type: Sequelize.STRING,
       allowNull: false,
     },
     keyconversacion: {
       type: Sequelize.STRING,
-      allowNull: false,
+      allowNull: true,
     },
-    idtaller: {
+    IdTaller: {
       type: Sequelize.INTEGER,
       allowNull: true,
     },
