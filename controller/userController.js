@@ -37,7 +37,10 @@ const createFireBaseUsuario = async (req, res, next) => {
       email: usuario.email,
       password: usuario.password,
       firstName: usuario.firstName,
-      celular: usuario.celular,
+      celular:
+        usuario.celular.length == 10
+          ? "+57" + usuario.celular
+          : usuario.celular,
       identificacion: usuario.identificacion,
       tipoUsuario: usuario.tipoUsuario,
       uid: usuario.uid,
