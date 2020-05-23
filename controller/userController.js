@@ -48,9 +48,34 @@ const createFireBaseUsuario = async (req, res, next) => {
 
     userAdapater.createUsuario(usuarioDB, function (error, usuarioResult) {
       if (error) {
-        return res
-          .status(HttpStatus.METHOD_FAILURE)
-          .send({ message: error.message });
+        const { errorInfo } = error;
+        console.log("Error generado al crear el usuario", error);
+        if (errorInfo) {
+          const { code } = errorInfo;
+          switch (code) {
+            case "auth/invalid-phone-number":
+              return res
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .json({ error: "Error en el formato del telefono" });
+
+            case "auth/email-already-exists":
+              return res
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .json({ error: "Ya existe usuario registrado con ese email" });
+            case "auth/phone-number-already-exists":
+              return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                error: "Ya exite un usuario registrado con ese celular",
+              });
+            default:
+              return res
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .json({ error: "Error al actualizar el usuario" });
+          }
+        } else {
+          return res
+            .status(HttpStatus.METHOD_FAILURE)
+            .send({ error: error.message });
+        }
       } else {
         if (usuarioResult) {
           res.status(HttpStatus.OK).json(usuarioResult);
