@@ -58,7 +58,7 @@ const sendSMSTwilio = (to, text) => {
     .done();
 };
 
-const sendNotificacionToUser = async (token, messageText) => {
+const sendNotificacionToUser = async (token, messageText, type) => {
   /*let message = {
     data: {
       message: messageText,
@@ -77,6 +77,9 @@ const sendNotificacionToUser = async (token, messageText) => {
       notification: {
         title: "Branch",
         body: messageText,
+      },
+      data: {
+        type: type,
       },
     })
     .then((response) => {

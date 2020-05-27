@@ -1,11 +1,16 @@
 const vehiculoDAO = require("../dao/vehiculoDAO");
 const marcaDAO = require("../dao/marcaDAO");
+const tallerDAO = require("../dao/tallerDAO");
 let sms = require("../utils/sendSms");
 let HttpStatus = require("http-status-codes");
 const { Op } = require("sequelize");
 let userAdapter = require("../adapter/userAdapter");
 let vehiculoAdapter = require("../adapter/vehiculoAdapter");
 let moment = require("moment");
+const {
+  UPDATEVEHICULO_SUCCESS,
+  ERROR_CREATEVEHICULOTALLERASIGNADO,
+} = require("../utils/resultsMessages");
 
 moment.locale("es");
 
@@ -57,7 +62,60 @@ const createVehiculo = (req, res, next) => {
       } else {
         console.log("Resultado find by Placa ::::>", vehiculoResult);
         if (vehiculoResult) {
-          //TODO : Placa ya existe, si no tiene taller si coloca el ID de taller que esta registrando
+          if (vehiculoResult.taller) {
+            return res
+              .status(HttpStatus.OK)
+              .json(ERROR_CREATEVEHICULOTALLERASIGNADO);
+          } else {
+            const { IdTaller } = vehiculo;
+            vehiculoResult.IdTaller = IdTaller;
+            vehiculoDAO.update(
+              vehiculoResult.IdVehiculo,
+              vehiculoResult,
+              (error, vehiculo) => {
+                if (error) {
+                  console.error("Error al actualizar vehiculo :::>", error);
+                } else {
+                  if (vehiculo) {
+                    const { usuario } = vehiculoResult;
+
+                    const { tokenCM } = usuario;
+                    console.log("Usuario a enviar notificacion :::>", tokenCM);
+
+                    tallerDAO.getById(IdTaller, (error, taller) => {
+                      if (error) {
+                        console.error(
+                          "Error al obtener Taller para enviar notificacion",
+                          error
+                        );
+                      } else {
+                        console.log(
+                          "Voy a enviar notificacion al taller ::>",
+                          taller
+                        );
+                        if (taller) {
+                          const textoSms = `El taller ${taller.nombre} acaba de registrar tu vehiculo ${vehiculoResult.placa}, ahora podras hacer seguimiento a las reparaciones y acceder a excelentes funcionalidades`;
+                          sms.sendNotificacionToUser(
+                            tokenCM,
+                            textoSms,
+                            "vehiculo"
+                          );
+                        }
+                      }
+                    });
+
+                    return res
+                      .status(HttpStatus.OK)
+                      .json(UPDATEVEHICULO_SUCCESS);
+                  } else {
+                    return res
+                      .status(HttpStatus.OK)
+                      .json(UPDATEVEHICULO_SUCCESS);
+                  }
+                }
+              }
+            );
+          }
         } else {
           //Valida si usuario ya existe
           console.log("Resultado find by Placa ::::>", vehiculoResult);

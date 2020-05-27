@@ -14,6 +14,7 @@ const mecanicoRouter = require("./routes/mecanicoRoute");
 const ordenRouter = require("./routes/ordenRoute");
 const fileRouter = require("./routes/fileRoute");
 const messageRouter = require("./routes/messageRoute");
+const servicioRouter = require("./routes/serviciosRoute");
 
 var app = express();
 
@@ -40,6 +41,7 @@ app.use("/mecanico", mecanicoRouter);
 app.use("/orden", ordenRouter);
 app.use("/file", fileRouter);
 app.use("/message", messageRouter);
+app.use("/servicios", servicioRouter);
 
 app.use(logErrors);
 app.use(clientErrorHandler);

@@ -18,7 +18,8 @@ module.exports = {
       .then(function (result) {
         if (result) {
           //console.debug('Resultado transaccion crear cita :::: >', result);
-          var citaCreated = result.dataValues;
+          const { dataValues: citaCreated } = result;
+
           cb(null, citaCreated);
         } else {
           cb(null, null);
@@ -84,7 +85,7 @@ module.exports = {
       })
       .then(function (result) {
         if (result) {
-          var citaCreated = result.dataValues;
+          const { dataValues: citaCreated } = result;
           cb(null, citaCreated);
         } else {
           cb(null, null);
