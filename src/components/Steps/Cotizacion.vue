@@ -1,18 +1,39 @@
 <template>
   <b-card>
-    <b-form @submit.prevent="uploadFiles" v-if="!data.etapa || data.etapa.estado=='Rechazado'" class="p-5 w-90 ml-5">
-      <info-cotizacion :data="data" v-if="data.etapa.estado=='Rechazado'"/>
+    <b-form
+      @submit.prevent="uploadFiles"
+      v-if="!data.etapa || data.etapa.estado=='Rechazado'"
+      class="p-5 w-90 ml-5"
+    >
+      <info-cotizacion :data="data" v-if="data.etapa && data.etapa.estado=='Rechazado'" />
       <b-form-group :label="$t('branch.orden.mecanico')">
-        <v-select :options="data.mecanicos" v-model="newOrden.mecanico" label="firstName" :reduce="mecanico => mecanico.IdMecanico">
+        <v-select
+          :options="data.mecanicos"
+          v-model="newOrden.mecanico"
+          label="firstName"
+          :reduce="mecanico => mecanico.IdMecanico"
+        >
           <template #search="{attributes, events}">
-            <input class="vs__search" :required="!newOrden.mecanico" v-bind="attributes" v-on="events"/>
+            <input
+              class="vs__search"
+              :required="!newOrden.mecanico"
+              v-bind="attributes"
+              v-on="events"
+            />
           </template>
-          <template v-slot:option="option">
-            {{ option.firstName }} {{ option.lastName }} - {{option.identificacion}}
-          </template>
+          <template
+            v-slot:option="option"
+          >{{ option.firstName }} {{ option.lastName }} - {{option.identificacion}}</template>
         </v-select>
       </b-form-group>
-      <vue-dropzone ref="myVueDropzone" id="dropzone" :awss3="awss3" :options="dropzoneOptions" v-on:vdropzone-complete="complete" v-on:vdropzone-removed-file="removeFile"></vue-dropzone>
+      <vue-dropzone
+        ref="myVueDropzone"
+        id="dropzone"
+        :awss3="awss3"
+        :options="dropzoneOptions"
+        v-on:vdropzone-complete="complete"
+        v-on:vdropzone-removed-file="removeFile"
+      ></vue-dropzone>
       <div class="btn-icon">
         <b-button type="submit" variant="primary" class="mt-4" size="lg">
           <i class="iconsminds-upload-1"></i>
@@ -22,22 +43,19 @@
       </div>
     </b-form>
     <info-cotizacion :data="data" v-else />
-
-
-    </div>
   </b-card>
 </template>
 <script>
 import GlideComponent from "../Carousel/GlideComponent";
 import IconCard from "../Cards/IconCard";
 import vSelect from "vue-select";
-import moment from 'moment-timezone';
+import moment from "moment-timezone";
 import "vue-select/dist/vue-select.css";
 import vue2Dropzone from "vue2-dropzone";
 import { validationMixin } from "vuelidate";
 import { required, email } from "vuelidate/lib/validators";
 import ServicesCore from "./../../services/service";
-import InfoCotizacion from "./InfoCotizacion"
+import InfoCotizacion from "./InfoCotizacion";
 
 export default {
   props: ["clickedNext", "currentStep", "data"],
@@ -57,8 +75,8 @@ export default {
       },
       filesEtapa: [],
       dropzoneOptions: {
-        url: process.env.VUE_APP_URLBACKSERVICES+`file/sendFile`,
-        method: 'post',
+        url: process.env.VUE_APP_URLBACKSERVICES + `file/sendFile`,
+        method: "post",
         autoProcessQueue: true,
         acceptedFiles: "application/pdf",
         thumbnailHeight: 160,
@@ -69,7 +87,9 @@ export default {
       awss3: {
         signingURL: f => {
           // The server REST endpoint we setup earlier
-          const key = process.env.VUE_APP_URLBACKSERVICES+`file/signed?filename=${f.name}`;
+          const key =
+            process.env.VUE_APP_URLBACKSERVICES +
+            `file/signed?filename=${f.name}`;
           // Save this for later use
           return key;
         },
@@ -102,13 +122,15 @@ export default {
   },
   methods: {
     complete(response) {
-      if(response.status == 'success'){
+      if (response.status == "success") {
         console.log("Se completo la subida de archivos :::>", response);
-        let dateCreated = moment().tz('UTC').format();
-        
+        let dateCreated = moment()
+          .tz("UTC")
+          .format();
+
         let documento = {
           nombrearchivo: response.name,
-          url: response.s3Url+'/'+response.s3Signature.key,
+          url: response.s3Url + "/" + response.s3Signature.key,
           type: response.type,
           date: dateCreated,
           size: response.size,
@@ -117,11 +139,11 @@ export default {
         this.filesEtapa.push(documento);
       }
     },
-    removeFile(file, error, xhr){
-      this.filesEtapa = this.filesEtapa.filter((value)=> {
-        value.key != file.s3Signature.key
+    removeFile(file, error, xhr) {
+      this.filesEtapa = this.filesEtapa.filter(value => {
+        value.key != file.s3Signature.key;
       });
-      console.log('Se removio el file ::::>',this.filesEtapa);
+      console.log("Se removio el file ::::>", this.filesEtapa);
     },
     uploadFiles() {
       if (this.filesEtapa.length > 0) {
@@ -134,7 +156,7 @@ export default {
           IdEtapa: 4,
           Observaciones: this.newOrden.observacion,
           documentos: this.filesEtapa,
-          estado: 'Pendiente'
+          estado: "Pendiente"
         };
         console.log("Se va a agregar la siguiente orden ::>", orden);
 
@@ -210,7 +232,7 @@ export default {
             permanent: false
           }
         );
-      }      
+      }
     },
     dropzoneTemplate() {
       return `<div class="dz-preview dz-file-preview mb-3">
@@ -234,6 +256,7 @@ export default {
     }
   },
   mounted() {
+    console.log("Data :::>", this.data);
     if (this.data.etapa) {
       this.$emit("can-continue", { value: true });
     } else {
