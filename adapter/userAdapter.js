@@ -162,8 +162,19 @@ const updateUsuario = (usuario, cb) => {
   }
 };
 
+const findUsuarioByUid = (uid, cb) => {
+  usersDAO.findOneByFilter({ uid: uid }, (error, usuario) => {
+    if (error) {
+      cb(error, null);
+    } else {
+      cb(null, usuario);
+    }
+  });
+};
+
 module.exports = {
   findUserByEmail,
   createUsuario,
   updateUsuario,
+  findUsuarioByUid,
 };

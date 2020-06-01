@@ -2,6 +2,8 @@ const Server = require("socket.io");
 const citaAdapter = require("../adapter/citaAdapter");
 const conversacionAdapter = require("../adapter/conversacionAdapter");
 const messageAdapter = require("../adapter/messageAdapter");
+const usuarioAdapter = require("../adapter/userAdapter");
+const sms = require("../utils/sendSms");
 
 class socket {
   constructor(http) {
@@ -122,7 +124,29 @@ class socket {
                       }
                     });
 
-                    console.log("Etapa activa", message);
+                    usuarioAdapter.findUsuarioByUid(
+                      IdConversacionUser,
+                      (error, usuario) => {
+                        if (error) {
+                          console.error(
+                            "error al buscar usuario para enviar notificacion "
+                          );
+                        } else {
+                          console.log("Usuario");
+                          if (usuario && usuario.tokenCM) {
+                            console.debug(
+                              "Se envio la notificacion al usuario"
+                            );
+                            sms.sendNotificacionToUser(
+                              usuario.tokenCM,
+                              msg.text,
+                              "chat",
+                              IdTaller
+                            );
+                          }
+                        }
+                      }
+                    );
 
                     socket.to(id).emit("sendmessage", message);
                   }

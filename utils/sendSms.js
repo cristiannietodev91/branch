@@ -58,13 +58,7 @@ const sendSMSTwilio = (to, text) => {
     .done();
 };
 
-const sendNotificacionToUser = async (token, messageText, type) => {
-  /*let message = {
-    data: {
-      message: messageText,
-    },
-  };*/
-
+const sendNotificacionToUser = async (token, messageText, type, IdTaller) => {
   console.log("Mensaje a enviar :::>", messageText, "Token :::>" + token);
 
   await admin
@@ -80,6 +74,7 @@ const sendNotificacionToUser = async (token, messageText, type) => {
       },
       data: {
         type: type,
+        IdTaller: String(IdTaller),
       },
     })
     .then((response) => {
