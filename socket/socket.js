@@ -141,7 +141,7 @@ class socket {
                               usuario.tokenCM,
                               msg.text,
                               "chat",
-                              IdTaller
+                              { IdTaller: IdTaller }
                             );
                           }
                         }

@@ -58,25 +58,32 @@ const sendSMSTwilio = (to, text) => {
     .done();
 };
 
-const sendNotificacionToUser = async (token, messageText, type, IdTaller) => {
+const sendNotificacionToUser = async (token, messageText, type, params) => {
   console.log("Mensaje a enviar :::>", messageText, "Token :::>" + token);
 
   await admin
     .messaging()
-    .sendMulticast({
-      tokens: [
-        token,
-        /* ... */
-      ], // ['token_1', 'token_2', ...]
-      notification: {
-        title: "Branch",
-        body: messageText,
+    .sendToDevice(
+      token,
+      {
+        notification: {
+          title: "Branch",
+          body: messageText,
+          icon: "ic_logo_neg_con",
+          sound: "iphonenotificacion",
+        },
+        data: {
+          type: type,
+          params: JSON.stringify(params),
+        },
       },
-      data: {
-        type: type,
-        IdTaller: String(IdTaller),
-      },
-    })
+      {
+        // Required for background/quit data-only messages on iOS
+        contentAvailable: true,
+        // Required for background/quit data-only messages on Android
+        priority: "high",
+      }
+    )
     .then((response) => {
       // Response is a message ID string.
       console.log("Successfully sent message:", response);
