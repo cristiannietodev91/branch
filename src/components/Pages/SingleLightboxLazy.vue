@@ -36,7 +36,6 @@ export default {
     };
   },
   created() {
-    console.log("Thum recibido ", this.thumb);
     this.getImageUrl(this.thumb);
   },
   methods: {

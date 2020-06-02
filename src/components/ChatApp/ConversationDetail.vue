@@ -38,7 +38,7 @@
           <div class="d-flex position-absolute pt-1 pr-2 w-90">
             <span class="align-self-start ml-2">
               {{
-              currentUser.displayName
+              message.user.name
               }}
             </span>
             <div class="position-absolute r-0">

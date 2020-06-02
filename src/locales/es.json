@@ -184,7 +184,8 @@
     "taller": "Taller",
     "listTalleres": "Lista talleres",
     "detailTaller": "Ver mi taller",
-    "listClients": "Mis clientes"
+    "listClients": "Mis clientes",
+    "ordenes": "Ordenes de trabajo"
   },
   "dashboards": {
     "pending-orders": "Pedidos Pendientes",
@@ -318,7 +319,8 @@
     "messages": "Mensajes",
     "contacts": "Contactos",
     "saysomething": "Di algo..",
-    "chat": "Chatear"
+    "chat": "Chatear",
+    "send": "Enviar mensaje"
   },
   "survey": {
     "delete": "Borrar",
