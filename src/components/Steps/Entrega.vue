@@ -118,7 +118,7 @@ export default {
         autoProcessQueue: true,
         acceptedFiles: "application/pdf",
         thumbnailHeight: 160,
-        maxFilesize: 2,
+        maxFilesize: 4,
         maxFiles: 1,
         previewTemplate: this.dropzoneTemplate()
       },

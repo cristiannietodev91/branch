@@ -128,7 +128,7 @@ export default {
         autoProcessQueue: true,
         acceptedFiles: "image/*",
         thumbnailHeight: 160,
-        maxFilesize: 2,
+        maxFilesize: 4,
         previewTemplate: this.dropzoneTemplate()
       },
       awss3: {
