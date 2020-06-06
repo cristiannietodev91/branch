@@ -38,12 +38,12 @@ const createFireBaseUsuario = async (req, res, next) => {
       password: usuario.password,
       firstName: usuario.firstName,
       celular:
-        usuario.celular.length == 10
+        usuario.celular && usuario.celular.length == 10
           ? "+57" + usuario.celular
           : usuario.celular,
       identificacion: usuario.identificacion,
       tipoUsuario: usuario.tipoUsuario,
-      uid: usuario.uid,
+      uid: usuario.uid
     };
 
     userAdapater.createUsuario(usuarioDB, function (error, usuarioResult) {
@@ -64,7 +64,7 @@ const createFireBaseUsuario = async (req, res, next) => {
                 .json({ error: "Ya existe usuario registrado con ese email" });
             case "auth/phone-number-already-exists":
               return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                error: "Ya exite un usuario registrado con ese celular",
+                error: "Ya exite un usuario registrado con ese celular"
               });
             default:
               return res
@@ -108,7 +108,7 @@ const updateUsuarioByUid = (req, res, next) => {
       identificacion: usuario.identificacion,
       tipoUsuario: usuario.tipoUsuario,
       uid: uid,
-      tokenCM: usuario.tokenCM,
+      tokenCM: usuario.tokenCM
     };
 
     userAdapater.updateUsuario(usuarioDB, (error, usuario) => {
@@ -132,7 +132,7 @@ const updateUsuarioByUid = (req, res, next) => {
       } else {
         if (usuario) {
           return res.status(HttpStatus.ACCEPTED).json({
-            message: "Se actualizo el IdUsuario " + uid + " correctamente",
+            message: "Se actualizo el IdUsuario " + uid + " correctamente"
           });
         }
       }
@@ -157,7 +157,7 @@ const deleteUsuarioById = (req, res, next) => {
       } else {
         if (result) {
           return res.status(HttpStatus.ACCEPTED).json({
-            message: "Se elimino el IdUsuario " + Idusuario + " correctamente",
+            message: "Se elimino el IdUsuario " + Idusuario + " correctamente"
           });
         } else {
           return res
@@ -278,5 +278,5 @@ module.exports = {
   deleteUsuarioById,
   findUsuarioById,
   loginUserTallerByUID,
-  findUserByEmail,
+  findUserByEmail
 };
