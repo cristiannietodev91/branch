@@ -47,65 +47,55 @@ const createOrden = (req, res, next) => {
               CodigoOrden: CodigoOrden,
               Observaciones: orden.Observaciones,
               documentos: orden.documentos,
-              estado: orden.estado,
+              estado: orden.estado
             };
 
-            if (cita.vehiculo.usuario.celular && orden.IdEtapa == 2) {
-              var textoSms =
+            let textoSms = "";
+
+            if (orden.IdEtapa == 2) {
+              textoSms =
                 "Su vehiculo " +
                 cita.vehiculo.placa +
                 " ha sido INGRESADO  en el taller BRANCH";
-              sms.sendSMSTwilio(cita.vehiculo.usuario.celular, textoSms);
-              sms.sendNotificacionToUser(
-                cita.vehiculo.usuario.tokenCM,
-                textoSms
-              );
             }
 
-            if (cita.vehiculo.usuario.celular && orden.IdEtapa == 3) {
-              var textoSms =
+            if (orden.IdEtapa == 3) {
+              textoSms =
                 "Su vehiculo " +
                 cita.vehiculo.placa +
                 " ha sido DIAGNOSTICADO  en el taller BRANCH";
-              sms.sendSMSTwilio(cita.vehiculo.usuario.celular, textoSms);
-              sms.sendNotificacionToUser(
-                cita.vehiculo.usuario.tokenCM,
-                textoSms
-              );
             }
 
-            if (cita.vehiculo.usuario.celular && orden.IdEtapa == 4) {
-              var textoSms =
+            if (orden.IdEtapa == 4) {
+              textoSms =
                 "Ingrese a BRANCH ya se encuentra disponible la cotización para su vehiculo " +
                 cita.vehiculo.placa;
-              sms.sendSMSTwilio(cita.vehiculo.usuario.celular, textoSms);
-              sms.sendNotificacionToUser(
-                cita.vehiculo.usuario.tokenCM,
-                textoSms
-              );
             }
 
-            if (cita.vehiculo.usuario.celular && orden.IdEtapa == 6) {
-              var textoSms =
+            if (orden.IdEtapa == 6) {
+              textoSms =
                 "Se realizo la reparación de su vehiculo " +
                 cita.vehiculo.placa +
                 " en el taller BRANCH, ya puedes ver las fotos de tu reparación";
-              sms.sendSMSTwilio(cita.vehiculo.usuario.celular, textoSms);
-              sms.sendNotificacionToUser(
-                cita.vehiculo.usuario.tokenCM,
-                textoSms
-              );
             }
 
-            if (cita.vehiculo.usuario.celular & (orden.IdEtapa == 7)) {
-              var textoSms =
+            if (orden.IdEtapa == 7) {
+              textoSms =
                 "El taller BRANCH ya tiene listo su vehiculo " +
                 cita.vehiculo.placa +
                 " ya esta disponible la factura y puedes ir a recoger tu vehiculo";
+            }
+
+            //Envio de notificaciones
+            if (cita.vehiculo.usuario.celular && textoSms != "") {
               sms.sendSMSTwilio(cita.vehiculo.usuario.celular, textoSms);
+            }
+            if (cita.vehiculo.usuario.tokenCM && textoSms != "") {
               sms.sendNotificacionToUser(
                 cita.vehiculo.usuario.tokenCM,
-                textoSms
+                textoSms,
+                "Citas",
+                { IdCita: orden.IdCita }
               );
             }
 
@@ -197,7 +187,7 @@ const updateOrden = (req, res, next) => {
         IdMecanico: orden.IdMecanico,
         IdVehiculo: orden.IdVehiculo,
         Observaciones: orden.Observaciones,
-        estado: orden.estado,
+        estado: orden.estado
       };
 
       ordenDAO.update(IdOrdenTrabajo, ordenDb, function (error, orden) {
@@ -253,7 +243,7 @@ const updateOrden = (req, res, next) => {
             });
             return res.status(HttpStatus.ACCEPTED).json({
               message:
-                "Se actualizo la orden " + IdOrdenTrabajo + " correctamente",
+                "Se actualizo la orden " + IdOrdenTrabajo + " correctamente"
             });
           } else {
             return res
@@ -450,5 +440,5 @@ module.exports = {
   getAllOrdenesByIdTaller,
   getOrdenById,
   getAllOrdenesByIdTallerAndFilter,
-  getAllOrdenesByIdTallerAndIdCita,
+  getAllOrdenesByIdTallerAndIdCita
 };

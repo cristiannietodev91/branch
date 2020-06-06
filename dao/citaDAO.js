@@ -35,7 +35,7 @@ module.exports = {
       .transaction((t1) => {
         return models.cita
           .update(cita, {
-            where: { IdCita: IdCita },
+            where: { IdCita: IdCita }
           })
           .then((cita) => {
             return cita;
@@ -64,20 +64,20 @@ module.exports = {
                 model: models.vehiculo,
                 include: [
                   {
-                    model: models.marca,
+                    model: models.marca
                   },
                   {
-                    model: models.usuarios,
-                  },
-                ],
+                    model: models.usuarios
+                  }
+                ]
               },
               {
-                model: models.taller,
+                model: models.taller
               },
               {
-                model: models.mecanico,
-              },
-            ],
+                model: models.mecanico
+              }
+            ]
           })
           .then((cita) => {
             return cita;
@@ -101,7 +101,7 @@ module.exports = {
       .transaction((t1) => {
         return models.cita
           .destroy({
-            where: { IdCita: IdCita },
+            where: { IdCita: IdCita }
           })
           .then((deleted) => {
             return deleted;
@@ -127,18 +127,18 @@ module.exports = {
                 where: filterVehiculo,
                 include: [
                   {
-                    model: models.marca,
+                    model: models.marca
                   },
                   {
-                    model: models.usuarios,
-                  },
-                ],
+                    model: models.usuarios
+                  }
+                ]
               },
               {
-                model: models.taller,
+                model: models.taller
               },
               {
-                model: models.mecanico,
+                model: models.mecanico
               },
               {
                 model: models.ordentrabajo,
@@ -146,18 +146,18 @@ module.exports = {
                 include: [
                   {
                     model: models.mecanico,
-                    required: false,
-                  },
+                    required: false
+                  }
                 ],
-                required: false,
-              },
+                required: false
+              }
             ],
             where: filterCita,
             order: [
-              ["fechaCita"],
-              ["horaCita"],
-              [models.ordentrabajo, "IdEtapa"],
-            ],
+              ["fechaCita", "DESC"],
+              ["horaCita", "DESC"],
+              [models.ordentrabajo, "IdEtapa"]
+            ]
           })
           .then((citas) => {
             return citas;
@@ -174,5 +174,5 @@ module.exports = {
       .catch(function (err) {
         cb(err, null);
       });
-  },
+  }
 };

@@ -16,7 +16,7 @@ const client = require("twilio")(accountSid, authToken);
 
 const nexmo = new Nexmo({
   apiKey: "b094304a",
-  apiSecret: "dQ0CdPNRkrbBUQQY",
+  apiSecret: "dQ0CdPNRkrbBUQQY"
 });
 
 const sendSMSNexmo = (to, text) => {
@@ -42,7 +42,7 @@ const sendSMSTwilio = (to, text) => {
     .create({
       body: text,
       messagingServiceSid: "MG8ce2560e8f755612739a05bef0699d6c",
-      to: to,
+      to: to
     })
     .then((message) => {
       console.log(
@@ -58,7 +58,12 @@ const sendSMSTwilio = (to, text) => {
     .done();
 };
 
-const sendNotificacionToUser = async (token, messageText, type, params) => {
+const sendNotificacionToUser = async (
+  token,
+  messageText,
+  type = "Orden",
+  params = {}
+) => {
   console.log("Mensaje a enviar :::>", messageText, "Token :::>" + token);
 
   await admin
@@ -70,18 +75,18 @@ const sendNotificacionToUser = async (token, messageText, type, params) => {
           title: "Branch",
           body: messageText,
           icon: "ic_logo_neg_con",
-          sound: "iphonenotificacion",
+          sound: "iphonenotificacion"
         },
         data: {
           type: type,
-          params: JSON.stringify(params),
-        },
+          params: JSON.stringify(params)
+        }
       },
       {
         // Required for background/quit data-only messages on iOS
         contentAvailable: true,
         // Required for background/quit data-only messages on Android
-        priority: "high",
+        priority: "high"
       }
     )
     .then((response) => {
@@ -114,5 +119,5 @@ const sendNotificacionToUser = async (token, messageText, type, params) => {
 module.exports = {
   sendSMSNexmo,
   sendSMSTwilio,
-  sendNotificacionToUser,
+  sendNotificacionToUser
 };
