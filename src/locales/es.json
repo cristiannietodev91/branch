@@ -27,7 +27,8 @@
         "longitud": "La longitud del campo es incorrecta",
         "email": "Debe ingresar un email valido",
         "nit": "El formato del NIT no es valido (XXXXX-X)",
-        "url": "El campo debe ser una URL"
+        "url": "El campo debe ser una URL",
+        "numeric": "El valor debe ser numerico"
       }
     },
     "clientes": {
@@ -185,7 +186,8 @@
     "listTalleres": "Lista talleres",
     "detailTaller": "Ver mi taller",
     "listClients": "Mis clientes",
-    "ordenes": "Ordenes de trabajo"
+    "ordenes": "Ordenes de trabajo",
+    "citas": "Citas"
   },
   "dashboards": {
     "pending-orders": "Pedidos Pendientes",

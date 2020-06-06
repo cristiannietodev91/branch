@@ -16,6 +16,9 @@
           v-if="!$v.newMecanico.identificacion.required"
         >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
         <b-form-invalid-feedback
+          v-else-if="!$v.newMecanico.identificacion.numeric || !$v.newMecanico.identificacion.numeric"
+        >{{$t('branch.forms.validations.numeric')}}</b-form-invalid-feedback>
+        <b-form-invalid-feedback
           v-else-if="!$v.newMecanico.identificacion.minLength || !$v.newMecanico.identificacion.maxLength"
         >{{$t('branch.forms.validations.longitud')}}</b-form-invalid-feedback>
       </b-form-group>
@@ -55,7 +58,7 @@
 
 <script>
 import InputTag from "../../components/Form/InputTag";
-import { required } from "vuelidate/lib/validators";
+import { required, numeric } from "vuelidate/lib/validators";
 import ServicesCore from "../../services/service";
 
 export default {
@@ -76,7 +79,8 @@ export default {
   validations: {
     newMecanico: {
       identificacion: {
-        required
+        required,
+        numeric
       },
       firstName: {
         required
@@ -119,7 +123,7 @@ export default {
           if (response.status == 200) {
             //this.loadItems();
             this.hideModal("modalAddMecanico");
-            
+
             this.$emit("loadcitastalleres");
             this.newMecanico = {
               identificacion: "",

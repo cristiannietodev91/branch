@@ -47,7 +47,7 @@
               :title="$t('pages.branch.add-new-vehiculo')"
               hide-footer
             >
-              <b-form @submit.prevent="onValitadeFormSubmit" class="av-tooltip tooltip-label-right">
+              <b-form @submit.prevent="onValitadeFormSubmit" class="av-tooltip">
                 <b-form-group :label="$t('branch.vehiculo.placa')">
                   <b-form-input
                     type="text"
@@ -73,7 +73,7 @@
                   >{{$t('branch.forms.validations.longitud')}}</b-form-invalid-feedback>
                 </b-form-group>
 
-                <b-form-group :label="$t('branch.vehiculo.email')">
+                <b-form-group :label="$t('branch.vehiculo.email')" class="tooltip-left-bottom">
                   <b-form-input
                     type="text"
                     v-model="$v.newItem.email.$model"
@@ -287,26 +287,30 @@ export default {
     }
   },
   methods: {
-    loadItems(page,perPage,columnFilter,filter) {
+    loadItems(page, perPage, columnFilter, filter) {
       this.isLoad = false;
       console.log("Carga lista de clientes ::::>", this.currentUser);
-      ServicesCore.getPaginateVehiculosByIdTaller(this.currentUser.IdTaller,page,perPage,columnFilter,filter).then(
-        response => {
-          if (response.status == 200) {
-            console.debug("Resultado lista de talleres ::::>", response.data);
-            this.items = response.data.docs;
-            this.total = response.data.total;
-            this.lastPage = response.data.pages;
-            this.to = page*perPage;
-            if(this.to > this.total){
-              this.to = this.total
-            }
-            this.from = this.to - (this.items.length-1);                        
-            this.selectedItems = [];
-            this.isLoad = true;
+      ServicesCore.getPaginateVehiculosByIdTaller(
+        this.currentUser.IdTaller,
+        page,
+        perPage,
+        columnFilter,
+        filter
+      ).then(response => {
+        if (response.status == 200) {
+          console.debug("Resultado lista de talleres ::::>", response.data);
+          this.items = response.data.docs;
+          this.total = response.data.total;
+          this.lastPage = response.data.pages;
+          this.to = page * perPage;
+          if (this.to > this.total) {
+            this.to = this.total;
           }
+          this.from = this.to - (this.items.length - 1);
+          this.selectedItems = [];
+          this.isLoad = true;
         }
-      );
+      });
     },
     hideModal(refname) {
       this.$refs[refname].hide();
@@ -422,11 +426,17 @@ export default {
               }
             );
             this.hideModal("modaladdvehiculo");
-            this.loadItems(this.page,this.perPage,this.filter.column,this.search);
+            this.loadItems(
+              this.page,
+              this.perPage,
+              this.filter.column,
+              this.search
+            );
           }
         })
         .catch(error => {
-          this.$notify("error filled", "ERROR", error.response.data.error, {
+          console.log("Error al registrar cliente :::>", error);
+          this.$notify("error filled", "ERROR", "Error al registrar cliente", {
             duration: 3000,
             permanent: false
           });
@@ -447,17 +457,17 @@ export default {
   },
   watch: {
     search() {
-      console.log('Value to search ::> ',this.search);
+      console.log("Value to search ::> ", this.search);
       this.page = 1;
-      this.loadItems(this.page,this.perPage,this.filter.column,this.search);
+      this.loadItems(this.page, this.perPage, this.filter.column, this.search);
     },
-    page(){
-      console.log('New Page ::>',this.page);
-      this.loadItems(this.page,this.perPage,this.filter.column,this.search);
+    page() {
+      console.log("New Page ::>", this.page);
+      this.loadItems(this.page, this.perPage, this.filter.column, this.search);
     }
   },
   mounted() {
-    this.loadItems(this.page,this.perPage,this.filter.column,this.search);
+    this.loadItems(this.page, this.perPage, this.filter.column, this.search);
   }
 };
 </script>
