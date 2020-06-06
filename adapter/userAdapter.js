@@ -1,9 +1,10 @@
-let usersDAO = require("../dao/usersDAO");
-let admin = require("firebase-admin");
+const usersDAO = require("../dao/usersDAO");
+const vehiculoDAO = require("../dao/vehiculoDAO");
+const admin = require("firebase-admin");
 
-let serviceAccount = require("../serviceAccountKey.json");
+const serviceAccount = require("../serviceAccountKey.json");
 
-let app = admin.initializeApp({
+admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://branch-263701.firebaseio.com"
 });
@@ -103,7 +104,7 @@ const createUsuario = (usuario, cb) => {
       let usuarioDb = {
         firstName: usuario.firstName,
         email: usuario.email,
-        uid: usuario.uid,
+        uid: usuario.email, // Se deja el email de UID mientras el usuario no este registrado en la APP
         celular: usuario.celular,
         tipoUsuario: usuario.tipoUsuario,
         estado: "Pendiente"
@@ -186,6 +187,51 @@ const updateUsuario = (usuario, cb) => {
   }
 };
 
+const updateUsuarioByIdUsuario = (IdUsuario, usuario, cb) => {
+  if (IdUsuario) {
+    vehiculoDAO.update(
+      { IdUsuario: usuario.email },
+      { IdUsuario: usuario.uid },
+      (error, vehiculo) => {
+        if (error) {
+          console.log("Error al actualizar vehiculos asignados a un UID email");
+        } else {
+          console.log("Se actualizaron los vehiculos");
+        }
+      }
+    );
+
+    usersDAO.update({ IdUsuario: IdUsuario }, usuario, function (
+      error,
+      usuario
+    ) {
+      if (error) {
+        console.error("Error al actualizar el usuario ::>", error.message);
+        if (error.errors) {
+          if (error.errors[0].message.includes("must be unique")) {
+            cb({
+              error: "Ya existe un usuario con ese número de identificacion"
+            });
+          } else {
+            cb(error, null);
+          }
+        } else {
+          cb(error, null);
+        }
+        11;
+      } else {
+        if (usuario) {
+          cb(null, usuario);
+        } else {
+          cb({ error: "No se actualizo el usuario" }, null);
+        }
+      }
+    });
+  } else {
+    cb({ error: "El parametro IdUsuario es requerido" }, null);
+  }
+};
+
 const findUsuarioByUid = (uid, cb) => {
   usersDAO.findOneByFilter({ uid: uid }, (error, usuario) => {
     if (error) {
@@ -200,5 +246,6 @@ module.exports = {
   findUserByEmail,
   createUsuario,
   updateUsuario,
+  updateUsuarioByIdUsuario,
   findUsuarioByUid
 };

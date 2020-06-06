@@ -70,7 +70,7 @@ const createVehiculo = (req, res, next) => {
             const { IdTaller } = vehiculo;
             vehiculoResult.IdTaller = IdTaller;
             vehiculoDAO.update(
-              vehiculoResult.IdVehiculo,
+              { IdVehiculo: vehiculoResult.IdVehiculo },
               vehiculoResult,
               (error, vehiculo) => {
                 if (error) {
@@ -233,6 +233,8 @@ const createVehiculo = (req, res, next) => {
                         IdTaller: vehiculo.IdTaller
                       };
 
+                      //Se coloca Id de la tabla usuarios como UID mientras el usuario no este registrado en la BD
+
                       vehiculoAdapter.crearVehiculo(
                         userRecord,
                         vehiculoDB,
@@ -319,34 +321,35 @@ const updateVehiculo = (req, res, next) => {
                 tecnomecanica: vehiculo.tecnomecanica
               };
 
-              vehiculoDAO.update(IdVehiculo, vehiculoUpdate, function (
-                error,
-                vehiculo
-              ) {
-                if (error) {
-                  console.error(
-                    "Error al realizar la transaccion de actualizar vehiculo:::>",
-                    "error ::>",
-                    error.message
-                  );
-                  return res
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .json({ error: error.errors[0] });
-                } else {
-                  if (vehiculo) {
-                    return res.status(HttpStatus.ACCEPTED).json({
-                      message:
-                        "Se actualizo el Vehiculo " +
-                        IdVehiculo +
-                        " correctamente"
-                    });
-                  } else {
+              vehiculoDAO.update(
+                { IdVehiculo: IdVehiculo },
+                vehiculoUpdate,
+                function (error, vehiculo) {
+                  if (error) {
+                    console.error(
+                      "Error al realizar la transaccion de actualizar vehiculo:::>",
+                      "error ::>",
+                      error.message
+                    );
                     return res
-                      .status(HttpStatus.OK)
-                      .json({ error: "No se actualizo el vehiculo" });
+                      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                      .json({ error: error.errors[0] });
+                  } else {
+                    if (vehiculo) {
+                      return res.status(HttpStatus.ACCEPTED).json({
+                        message:
+                          "Se actualizo el Vehiculo " +
+                          IdVehiculo +
+                          " correctamente"
+                      });
+                    } else {
+                      return res
+                        .status(HttpStatus.OK)
+                        .json({ error: "No se actualizo el vehiculo" });
+                    }
                   }
                 }
-              });
+              );
             }
           }
         }
@@ -380,7 +383,7 @@ const updateFechaVencimiento = (req, res, next) => {
         fvsoat: vehiculo.fvsoat ? moment(vehiculo.fvsoat, "DD/MM/YYYY") : null
       };
 
-      vehiculoDAO.update(IdVehiculo, vehiculoUpdate, function (
+      vehiculoDAO.update({ IdVehiculo: IdVehiculo }, vehiculoUpdate, function (
         error,
         vehiculo
       ) {

@@ -50,6 +50,9 @@ module.exports = (sequelize, DataTypes) => {
       },
       tokenCM: {
         type: Sequelize.STRING
+      },
+      typeDevice: {
+        type: Sequelize.STRING
       }
     },
     {}

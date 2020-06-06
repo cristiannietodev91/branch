@@ -28,13 +28,13 @@ module.exports = {
         cb(err, null);
       });
   },
-  update: function (IdVehiculo, vehiculo, cb) {
+  update: function (filterVehiculo, vehiculo, cb) {
     // Find all users
     return models.sequelize
       .transaction((t1) => {
         return models.vehiculo
           .update(vehiculo, {
-            where: { IdVehiculo: IdVehiculo },
+            where: filterVehiculo
           })
           .then((vehiculo) => {
             return vehiculo;
@@ -82,7 +82,7 @@ module.exports = {
       .transaction((t1) => {
         return models.vehiculo
           .destroy({
-            where: { IdVehiculo: IdVehiculo },
+            where: { IdVehiculo: IdVehiculo }
           })
           .then((deleted) => {
             return deleted;
@@ -104,17 +104,17 @@ module.exports = {
           .findAll({
             include: [
               {
-                model: models.marca,
+                model: models.marca
               },
               {
-                model: models.usuarios,
+                model: models.usuarios
               },
               {
-                model: models.taller,
-              },
+                model: models.taller
+              }
             ],
 
-            where: filter,
+            where: filter
           })
           .then((vehiculos) => {
             return vehiculos;
@@ -144,17 +144,18 @@ module.exports = {
       paginate: paginate,
       include: [
         {
-          model: models.marca,
+          model: models.marca
         },
         {
           model: models.usuarios,
           where: filterUsuario,
+          required: false
         },
         {
-          model: models.taller,
-        },
+          model: models.taller
+        }
       ],
-      where: filterVehiculo,
+      where: filterVehiculo
     };
     // Find all users
     return models.sequelize
@@ -183,16 +184,16 @@ module.exports = {
           .findOne({
             include: [
               {
-                model: models.marca,
+                model: models.marca
               },
               {
-                model: models.usuarios,
+                model: models.usuarios
               },
               {
-                model: models.taller,
-              },
+                model: models.taller
+              }
             ],
-            where: filter,
+            where: filter
           })
           .then((vehiculo) => {
             return vehiculo;
@@ -209,5 +210,5 @@ module.exports = {
       .catch(function (err) {
         cb(err, null);
       });
-  },
+  }
 };

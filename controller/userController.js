@@ -97,19 +97,33 @@ const updateUsuarioByUid = (req, res, next) => {
 
     console.log("Usuario recibido como parametro", usuario);
 
-    let usuarioDB = {
-      email: usuario.email,
-      password: usuario.password,
-      firstName: usuario.firstName,
-      celular:
-        usuario.celular.length != 10
-          ? usuario.celular
-          : "+57" + usuario.celular,
-      identificacion: usuario.identificacion,
-      tipoUsuario: usuario.tipoUsuario,
-      uid: uid,
-      tokenCM: usuario.tokenCM
-    };
+    let usuarioDB = null;
+
+    if (usuario.celular) {
+      usuarioDB = {
+        email: usuario.email,
+        password: usuario.password,
+        firstName: usuario.firstName,
+        celular:
+          usuario.celular.length != 10
+            ? usuario.celular
+            : "+57" + usuario.celular,
+        identificacion: usuario.identificacion,
+        tipoUsuario: usuario.tipoUsuario,
+        uid: uid,
+        tokenCM: usuario.tokenCM
+      };
+    } else {
+      usuarioDB = {
+        email: usuario.email,
+        password: usuario.password,
+        firstName: usuario.firstName,
+        identificacion: usuario.identificacion,
+        tipoUsuario: usuario.tipoUsuario,
+        uid: uid,
+        tokenCM: usuario.tokenCM
+      };
+    }
 
     userAdapater.updateUsuario(usuarioDB, (error, usuario) => {
       if (error) {
@@ -133,6 +147,47 @@ const updateUsuarioByUid = (req, res, next) => {
         if (usuario) {
           return res.status(HttpStatus.ACCEPTED).json({
             message: "Se actualizo el IdUsuario " + uid + " correctamente"
+          });
+        }
+      }
+    });
+  } catch (error) {
+    console.error("Error al actualizar usuario ", error);
+    return res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ error: error.message });
+  }
+};
+
+const updateUsuarioByIdUsuario = (req, res, next) => {
+  try {
+    let id = req.params.id;
+    let usuario = req.body;
+
+    console.log("Usuario recibido como parametro", usuario);
+
+    let usuarioDB = {
+      firstName: usuario.firstName,
+      uid: usuario.uid,
+      typeDevice: usuario.typeDevice,
+      email: usuario.email
+    };
+
+    userAdapater.updateUsuarioByIdUsuario(id, usuarioDB, (error, usuario) => {
+      if (error) {
+        if (error.error) {
+          return res
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .json({ error: error.error });
+        } else {
+          return res
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .json({ error: error.error });
+        }
+      } else {
+        if (usuario) {
+          return res.status(HttpStatus.ACCEPTED).json({
+            message: "Se actualizo el IdUsuario " + id + " correctamente"
           });
         }
       }
@@ -275,6 +330,7 @@ module.exports = {
   getAllUsuarios,
   createFireBaseUsuario,
   updateUsuarioByUid,
+  updateUsuarioByIdUsuario,
   deleteUsuarioById,
   findUsuarioById,
   loginUserTallerByUID,

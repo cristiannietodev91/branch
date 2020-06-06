@@ -1,21 +1,22 @@
-var express = require('express');
-var userController = require('../controller/userController')
+var express = require("express");
+var userController = require("../controller/userController");
 var router = express.Router();
 
 /* GET users listing. */
-router.get('/getAll', userController.getAllUsuarios);
+router.get("/getAll", userController.getAllUsuarios);
 
-router.get('/getById/:Id', userController.findUsuarioById);
+router.get("/getById/:Id", userController.findUsuarioById);
 
-router.get('/loginUsuario/:uid', userController.loginUserTallerByUID);
+router.get("/loginUsuario/:uid", userController.loginUserTallerByUID);
 
-router.get('/getByEmail/:email',userController.findUserByEmail);
+router.get("/getByEmail/:email", userController.findUserByEmail);
 
-router.post('/createFireBaseUser', userController.createFireBaseUsuario);
+router.post("/createFireBaseUser", userController.createFireBaseUsuario);
 
-router.put('/update/:uid', userController.updateUsuarioByUid);
+router.put("/update/:uid", userController.updateUsuarioByUid);
 
-router.delete('/deleteById/:Id', userController.deleteUsuarioById);
+router.put("/updateByIdUsuario/:id", userController.updateUsuarioByIdUsuario);
 
+router.delete("/deleteById/:Id", userController.deleteUsuarioById);
 
 module.exports = router;
