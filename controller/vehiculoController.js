@@ -9,7 +9,7 @@ let vehiculoAdapter = require("../adapter/vehiculoAdapter");
 let moment = require("moment");
 const {
   UPDATEVEHICULO_SUCCESS,
-  ERROR_CREATEVEHICULOTALLERASIGNADO,
+  ERROR_CREATEVEHICULOTALLERASIGNADO
 } = require("../utils/resultsMessages");
 
 moment.locale("es");
@@ -117,167 +117,161 @@ const createVehiculo = (req, res, next) => {
             );
           }
         } else {
-          //Valida si usuario ya existe
-          console.log("Resultado find by Placa ::::>", vehiculoResult);
-          userAdapter.findUserByEmail(
-            vehiculo.usuario.email,
-            (error, usuario) => {
-              if (error) {
-                if (error.errors) {
-                  return res
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .json({ error: error.errors[0] });
-                } else {
-                  return res
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .json({ error: error.message });
-                }
+          userAdapter.findUserByEmail(vehiculo.email, (error, usuario) => {
+            if (error) {
+              if (error.errors) {
+                return res
+                  .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                  .json({ error: error.errors[0] });
               } else {
-                if (usuario) {
-                  //Encontro un usuario
-                  let fechaCompraBD = vehiculo.fechaCompraText
-                    ? moment(vehiculo.fechaCompraText, "DD/MM/YYYY")
-                    : null;
+                return res
+                  .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                  .json({ error: error.message });
+              }
+            } else {
+              if (usuario) {
+                //Encontro un usuario
+                let fechaCompraBD = vehiculo.fechaCompraText
+                  ? moment(vehiculo.fechaCompraText, "DD/MM/YYYY")
+                  : null;
 
-                  console.log(
-                    "Fecha compra valor para BD ",
-                    vehiculo.fechaCompraText,
-                    " Valor ::>",
-                    fechaCompraBD
-                  );
+                console.log(
+                  "Fecha compra valor para BD ",
+                  vehiculo.fechaCompraText,
+                  " Valor ::>",
+                  fechaCompraBD
+                );
 
-                  let vehiculoDB = {
-                    alias: vehiculo.alias,
-                    color: vehiculo.color,
-                    fechaCompra: fechaCompraBD,
-                    fotos: vehiculo.fotos,
-                    kilometraje: vehiculo.kilometraje,
-                    marca: vehiculo.marca,
-                    modelo: vehiculo.modelo,
-                    placa: vehiculo.placa,
-                    tipoVehiculo: vehiculo.tipoVehiculo,
-                    IdTaller: vehiculo.IdTaller,
-                  };
+                let vehiculoDB = {
+                  alias: vehiculo.alias,
+                  color: vehiculo.color,
+                  fechaCompra: fechaCompraBD,
+                  fotos: vehiculo.fotos,
+                  kilometraje: vehiculo.kilometraje,
+                  marca: vehiculo.marca,
+                  modelo: vehiculo.modelo,
+                  placa: vehiculo.placa,
+                  tipoVehiculo: vehiculo.tipoVehiculo,
+                  IdTaller: vehiculo.IdTaller
+                };
 
-                  vehiculoAdapter.crearVehiculo(usuario, vehiculoDB, function (
-                    error,
-                    vehiculo
-                  ) {
-                    if (error) {
-                      console.error(
-                        "Error al realizar la transaccion de crear vehiculo con usuario existente:::>",
-                        "error ::>",
-                        error
-                      );
-                      if (error.errors) {
-                        return res
-                          .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                          .json({ error: error.errors[0] });
-                      } else {
-                        return res
-                          .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                          .json({ error: error.message });
-                      }
+                vehiculoAdapter.crearVehiculo(usuario, vehiculoDB, function (
+                  error,
+                  vehiculo
+                ) {
+                  if (error) {
+                    console.error(
+                      "Error al realizar la transaccion de crear vehiculo con usuario existente:::>",
+                      "error ::>",
+                      error
+                    );
+                    if (error.errors) {
+                      return res
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .json({ error: error.errors[0] });
                     } else {
-                      if (vehiculo) {
-                        return res.status(HttpStatus.OK).json(vehiculo);
-                      } else {
-                        return res
-                          .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                          .json({
-                            error: "Error indefinido al crear vehiculo",
-                          });
-                      }
+                      return res
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .json({ error: error.message });
                     }
-                  });
-                } else {
-                  //No Encontro usuario lo va a crear
-                  let usuario = {
-                    email: vehiculo.email,
-                    celular: "+57" + vehiculo.celular,
-                    password: "123456",
-                    fullname: "Sin nombre",
-                    tipoUsuario: "Cliente",
-                  };
-
-                  userAdapter.createUsuario(usuario, function (
-                    error,
-                    userRecord
-                  ) {
-                    if (error) {
-                      console.error(
-                        "Error al realizar la transaccion de crear vehiculo:::>",
-                        "error ::>",
-                        error
-                      );
-                      if (error.errors) {
-                        return res
-                          .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                          .json({ error: error.errors[0] });
-                      } else {
-                        return res
-                          .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                          .json({ error: error.message });
-                      }
+                  } else {
+                    if (vehiculo) {
+                      return res.status(HttpStatus.OK).json(vehiculo);
                     } else {
-                      if (userRecord) {
-                        //Encontro un usuario
-                        let fechaCompraBD = vehiculo.fechaCompraText
-                          ? moment(vehiculo.fechaCompraText, "DD/MM/YYYY")
-                          : null;
+                      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                        error: "Error indefinido al crear vehiculo"
+                      });
+                    }
+                  }
+                });
+              } else {
+                //No Encontro usuario lo va a crear
+                let usuario = {
+                  email: vehiculo.email,
+                  celular: "+57" + vehiculo.celular,
+                  password: "123456",
+                  fullname: "Sin nombre",
+                  tipoUsuario: "Cliente"
+                };
 
-                        let vehiculoDB = {
-                          alias: vehiculo.alias,
-                          color: vehiculo.color,
-                          fechaCompra: fechaCompraBD,
-                          fotos: vehiculo.fotos,
-                          kilometraje: vehiculo.kilometraje,
-                          marca: vehiculo.marca,
-                          modelo: vehiculo.modelo,
-                          placa: vehiculo.placa,
-                          tipoVehiculo: vehiculo.tipoVehiculo,
-                          IdTaller: vehiculo.IdTaller,
-                        };
+                userAdapter.createUsuario(usuario, function (
+                  error,
+                  userRecord
+                ) {
+                  if (error) {
+                    console.error(
+                      "Error al realizar la transaccion de crear vehiculo:::>",
+                      "error ::>",
+                      error
+                    );
+                    if (error.errors) {
+                      return res
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .json({ error: error.errors[0] });
+                    } else {
+                      return res
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .json({ error: error.message });
+                    }
+                  } else {
+                    if (userRecord) {
+                      //Encontro un usuario
+                      let fechaCompraBD = vehiculo.fechaCompraText
+                        ? moment(vehiculo.fechaCompraText, "DD/MM/YYYY")
+                        : null;
 
-                        vehiculoAdapter.crearVehiculo(
-                          userRecord,
-                          vehiculoDB,
-                          function (error, vehiculo) {
-                            if (error) {
-                              console.error(
-                                "Error al realizar la transaccion de crear vehiculo con usuario existente:::>",
-                                "error ::>",
-                                error
-                              );
-                              if (error.errors) {
-                                return res
-                                  .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                  .json({ error: error.errors[0] });
-                              } else {
-                                return res
-                                  .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                  .json({ error: error.message });
-                              }
+                      let vehiculoDB = {
+                        alias: vehiculo.alias,
+                        color: vehiculo.color,
+                        fechaCompra: fechaCompraBD,
+                        fotos: vehiculo.fotos,
+                        kilometraje: vehiculo.kilometraje,
+                        marca: vehiculo.marca,
+                        modelo: vehiculo.modelo,
+                        placa: vehiculo.placa,
+                        tipoVehiculo: vehiculo.tipoVehiculo,
+                        IdTaller: vehiculo.IdTaller
+                      };
+
+                      vehiculoAdapter.crearVehiculo(
+                        userRecord,
+                        vehiculoDB,
+                        function (error, vehiculo) {
+                          if (error) {
+                            console.error(
+                              "Error al realizar la transaccion de crear vehiculo con usuario existente:::>",
+                              "error ::>",
+                              error
+                            );
+                            if (error.errors) {
+                              return res
+                                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                .json({ error: error.errors[0] });
                             } else {
-                              if (vehiculo) {
-                                return res.status(HttpStatus.OK).json(vehiculo);
-                              } else {
-                                return res
-                                  .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                  .json({
-                                    error: "Error indefinido al crear vehiculo",
-                                  });
-                              }
+                              return res
+                                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                .json({ error: error.message });
+                            }
+                          } else {
+                            if (vehiculo) {
+                              //TODO Enviar SMS al usuario que fue registrado
+                              return res.status(HttpStatus.OK).json(vehiculo);
+                            } else {
+                              return res
+                                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                .json({
+                                  error: "Error indefinido al crear vehiculo"
+                                });
                             }
                           }
-                        );
-                      }
+                        }
+                      );
                     }
-                  });
-                }
+                  }
+                });
               }
             }
-          );
+          });
         }
       }
     });
@@ -322,7 +316,7 @@ const updateVehiculo = (req, res, next) => {
                 modelo: vehiculo.modelo,
                 fotos: vehiculo.fotos,
                 soat: vehiculo.soat,
-                tecnomecanica: vehiculo.tecnomecanica,
+                tecnomecanica: vehiculo.tecnomecanica
               };
 
               vehiculoDAO.update(IdVehiculo, vehiculoUpdate, function (
@@ -344,7 +338,7 @@ const updateVehiculo = (req, res, next) => {
                       message:
                         "Se actualizo el Vehiculo " +
                         IdVehiculo +
-                        " correctamente",
+                        " correctamente"
                     });
                   } else {
                     return res
@@ -383,7 +377,7 @@ const updateFechaVencimiento = (req, res, next) => {
         fvtecnomecanica: vehiculo.fvtecnomecanica
           ? moment(vehiculo.fvtecnomecanica, "DD/MM/YYYY")
           : null,
-        fvsoat: vehiculo.fvsoat ? moment(vehiculo.fvsoat, "DD/MM/YYYY") : null,
+        fvsoat: vehiculo.fvsoat ? moment(vehiculo.fvsoat, "DD/MM/YYYY") : null
       };
 
       vehiculoDAO.update(IdVehiculo, vehiculoUpdate, function (
@@ -403,7 +397,7 @@ const updateFechaVencimiento = (req, res, next) => {
           if (vehiculo) {
             return res.status(HttpStatus.ACCEPTED).json({
               message:
-                "Se actualizo el Vehiculo " + IdVehiculo + " correctamente",
+                "Se actualizo el Vehiculo " + IdVehiculo + " correctamente"
             });
           } else {
             return res
@@ -437,8 +431,7 @@ const deleteVehiculoById = (req, res, next) => {
       } else {
         if (result) {
           return res.status(HttpStatus.ACCEPTED).json({
-            message:
-              "Se elimino el IdVehiculo " + IdVehiculo + " correctamente",
+            message: "Se elimino el IdVehiculo " + IdVehiculo + " correctamente"
           });
         } else {
           return res
@@ -575,25 +568,25 @@ const getAllPaginateFilterVehiculosByIdTaller = (req, res, next) => {
         filterVehiculo = {
           IdTaller: IdTaller,
           placa: {
-            [Op.substring]: valueSearch,
-          },
+            [Op.substring]: valueSearch
+          }
         };
       } else {
         filterVehiculo = {
-          IdTaller: IdTaller,
+          IdTaller: IdTaller
         };
       }
     } else {
       filterVehiculo = {
-        IdTaller: IdTaller,
+        IdTaller: IdTaller
       };
       if (columnFilter == "firstName" || columnFilter == "identificacion") {
         if (valueSearch) {
           filterUsuario = {
             IdTaller: IdTaller,
             [columnFilter]: {
-              [Op.substring]: valueSearch,
-            },
+              [Op.substring]: valueSearch
+            }
           };
         } else {
           filterUsuario = {};
@@ -685,5 +678,5 @@ module.exports = {
   getAllVehiculosByIdUsuario,
   getAllPaginateFilterVehiculosByIdTaller,
   getVehiculoByPlaca,
-  updateFechaVencimiento,
+  updateFechaVencimiento
 };

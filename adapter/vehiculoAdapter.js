@@ -1,5 +1,6 @@
 const vehiculoDAO = require("../dao/vehiculoDAO");
 const marcaDAO = require("../dao/marcaDAO");
+let sms = require("../utils/sendSms");
 
 const crearVehiculo = (userRecord, vehiculo, cb) => {
   if (vehiculo.marca) {
@@ -22,7 +23,7 @@ const crearVehiculo = (userRecord, vehiculo, cb) => {
               fechaCompra: vehiculo.fechaCompra,
               kilometraje: vehiculo.kilometraje,
               modelo: vehiculo.modelo,
-              fotos: vehiculo.fotos,
+              fotos: vehiculo.fotos
             };
             vehiculoDAO.create(vehiculoRegister, function (error, vehiculo) {
               if (error) {
@@ -62,7 +63,7 @@ const crearVehiculo = (userRecord, vehiculo, cb) => {
       fechaCompra: vehiculo.fechaCompra,
       kilometraje: vehiculo.kilometraje,
       modelo: vehiculo.modelo,
-      fotos: vehiculo.fotos,
+      fotos: vehiculo.fotos
     };
     vehiculoDAO.create(vehiculoRegister, function (error, vehiculo) {
       if (error) {
@@ -70,10 +71,13 @@ const crearVehiculo = (userRecord, vehiculo, cb) => {
       } else {
         if (vehiculo) {
           //Send SMS al usuario al que pertenece el vehiculo para que ingrese a administrar el vehiculo
-          /*if (userRecord.celular) {
-                        var textoSms = "Se ha registrado el vehiculo " + vehiculo.placa + " por el taller BRANCH lo invitamos a que se registre en el siguiente link para que disfrute los beneficios BRANCH http://localhost:8080";
-                        sms.sendSMSTwilio(userRecord.celular, textoSms);
-                    }*/
+          if (userRecord.celular) {
+            var textoSms =
+              "Se ha registrado el vehiculo " +
+              vehiculo.placa +
+              " por el taller BRANCH lo invitamos a que se registre en el siguiente link para que disfrute los beneficios BRANCH http://localhost:8080";
+            sms.sendSMSTwilio(userRecord.celular, textoSms);
+          }
           cb(null, vehiculo);
         } else {
           cb({ error: "No se creo el vehiculo" }, null);
@@ -84,5 +88,5 @@ const crearVehiculo = (userRecord, vehiculo, cb) => {
 };
 
 module.exports = {
-  crearVehiculo,
+  crearVehiculo
 };

@@ -9,65 +9,65 @@ module.exports = (sequelize, DataTypes) => {
       IdVehiculo: {
         type: Sequelize.INTEGER,
         primaryKey: true,
-        autoIncrement: true,
+        autoIncrement: true
       },
       IdMarca: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: false
       },
       IdUsuario: {
         type: Sequelize.STRING(50),
-        allowNull: false,
+        allowNull: true
       },
       IdTaller: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
       tipoVehiculo: {
         type: Sequelize.ENUM("Moto", "Carro"),
-        allowNull: false,
+        allowNull: false
       },
       placa: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true,
+        unique: true
       },
       kilometraje: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
       modelo: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
       color: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING
       },
       fechaCompra: {
-        type: Sequelize.DATEONLY,
+        type: Sequelize.DATEONLY
       },
       alias: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING
       },
       fotos: {
-        type: Sequelize.JSON,
+        type: Sequelize.JSON
       },
       tarjetapropiedad: {
-        type: Sequelize.JSON,
+        type: Sequelize.JSON
       },
       tecnomecanica: {
-        type: Sequelize.JSON,
+        type: Sequelize.JSON
       },
       soat: {
-        type: Sequelize.JSON,
+        type: Sequelize.JSON
       },
       fvtecnomecanica: {
-        type: Sequelize.DATEONLY,
+        type: Sequelize.DATEONLY
       },
       fvsoat: {
-        type: Sequelize.DATEONLY,
+        type: Sequelize.DATEONLY
       },
       estado: {
         type: Sequelize.ENUM("Registrado", "Pendiente"),
-        allowNull: false,
-      },
+        allowNull: false
+      }
     },
     {}
   );
@@ -75,24 +75,24 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     Vehiculo.belongsTo(models.marca, {
       foreignKey: "IdMarca",
-      target_id: "IdMarca",
+      target_id: "IdMarca"
     });
 
     Vehiculo.belongsTo(models.taller, {
       foreignKey: "IdTaller",
-      target_id: "IdTaller",
+      target_id: "IdTaller"
     });
 
     Vehiculo.hasMany(models.cita, {
       foreignKey: "IdVehiculo",
       as: "citas",
-      onDelete: "CASCADE",
+      onDelete: "CASCADE"
     });
 
     Vehiculo.belongsTo(models.usuarios, {
       foreignKey: "IdUsuario",
       targetKey: "uid",
-      target_id: "uid",
+      target_id: "uid"
     });
   };
   sequelizePaginate.paginate(Vehiculo);

@@ -5,7 +5,7 @@ let serviceAccount = require("../serviceAccountKey.json");
 
 let app = admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://branch-263701.firebaseio.com",
+  databaseURL: "https://branch-263701.firebaseio.com"
 });
 
 const findUserByEmail = (email, cb) => {
@@ -26,10 +26,11 @@ const createUsuario = (usuario, cb) => {
       email: usuario.email,
       uid: usuario.uid,
       celular: usuario.celular,
-      identificacion: usuario.identificacion,
+      identificacion: usuario.identificacion ? usuario.identificacion : null,
       tipoUsuario: usuario.tipoUsuario,
-      estado: "Pendiente",
+      estado: "Pendiente"
     };
+    console.debug("Usuario a registrar en la DB", usuarioDb);
     usersDAO.create(usuarioDb, function (error, usuario) {
       if (error) {
         cb(error, null);
@@ -42,61 +43,84 @@ const createUsuario = (usuario, cb) => {
       }
     });
   } else {
-    usersDAO.findOneByFilter(
-      { identificacion: usuario.identificacion },
-      (error, existusuario) => {
-        if (error) {
-          console.log("Error en la creacion del usuario", error);
-        } else {
-          if (existusuario) {
-            cb(
-              {
-                message:
-                  "Usuario con ese número de identificacion ya esta registrado",
-              },
-              null
-            );
+    if (usuario.identificacion) {
+      usersDAO.findOneByFilter(
+        { identificacion: usuario.identificacion },
+        (error, existusuario) => {
+          if (error) {
+            console.log("Error en la creacion del usuario", error);
           } else {
-            //Si no existe el usuario en firebase lo crea
-            admin
-              .auth()
-              .createUser({
-                email: usuario.email,
-                emailVerified: false,
-                phoneNumber: usuario.celular,
-                password: usuario.password,
-                displayName: usuario.firstName,
-                disabled: false,
-              })
-              .then(function (userRecord) {
-                let usuarioDb = {
-                  firstName: userRecord.displayName,
-                  email: userRecord.email,
-                  uid: userRecord.uid,
-                  celular: userRecord.phoneNumber,
-                  identificacion: usuario.identificacion,
-                  tipoUsuario: usuario.tipoUsuario,
-                  estado: "Pendiente",
-                };
-                usersDAO.create(usuarioDb, function (error, usuario) {
-                  if (error) {
-                    cb(error, null);
-                  } else {
-                    if (usuario) {
-                      cb(null, usuario);
+            if (existusuario) {
+              cb(
+                {
+                  message:
+                    "Usuario con ese número de identificacion ya esta registrado"
+                },
+                null
+              );
+            } else {
+              //Si no existe el usuario en firebase lo crea
+              admin
+                .auth()
+                .createUser({
+                  email: usuario.email,
+                  emailVerified: false,
+                  phoneNumber: usuario.celular,
+                  password: usuario.password,
+                  displayName: usuario.firstName,
+                  disabled: false
+                })
+                .then(function (userRecord) {
+                  let usuarioDb = {
+                    firstName: userRecord.displayName,
+                    email: userRecord.email,
+                    uid: userRecord.uid,
+                    celular: userRecord.phoneNumber,
+                    identificacion: usuario.identificacion,
+                    tipoUsuario: usuario.tipoUsuario,
+                    estado: "Pendiente"
+                  };
+                  usersDAO.create(usuarioDb, function (error, usuario) {
+                    if (error) {
+                      cb(error, null);
                     } else {
-                      cb({ message: "No se creo el usuario" }, null);
+                      if (usuario) {
+                        cb(null, usuario);
+                      } else {
+                        cb({ message: "No se creo el usuario" }, null);
+                      }
                     }
-                  }
+                  });
+                })
+                .catch(function (error) {
+                  cb(error, null);
                 });
-              })
-              .catch(function (error) {
-                cb(error, null);
-              });
+            }
           }
         }
-      }
-    );
+      );
+    } else {
+      let usuarioDb = {
+        firstName: usuario.firstName,
+        email: usuario.email,
+        uid: usuario.uid,
+        celular: usuario.celular,
+        tipoUsuario: usuario.tipoUsuario,
+        estado: "Pendiente"
+      };
+      console.debug("Usuario a registrar en la DB", usuarioDb);
+      usersDAO.create(usuarioDb, function (error, usuario) {
+        if (error) {
+          cb(error, null);
+        } else {
+          if (usuario) {
+            cb(null, usuario);
+          } else {
+            cb({ message: "No se creo el usuario" }, null);
+          }
+        }
+      });
+    }
   }
 };
 
@@ -107,7 +131,7 @@ const updateUsuario = (usuario, cb) => {
       .updateUser(usuario.uid, {
         email: usuario.email,
         phoneNumber: usuario.celular,
-        displayName: usuario.firstName,
+        displayName: usuario.firstName
       })
       .then(function (userRecord) {
         // See the UserRecord reference doc for the contents of userRecord.
@@ -115,7 +139,7 @@ const updateUsuario = (usuario, cb) => {
           .auth()
           .setCustomUserClaims(usuario.uid, {
             identificacion: usuario.identificacion,
-            tipoUsuario: usuario.tipoUsuario,
+            tipoUsuario: usuario.tipoUsuario
           })
           .then(() => {
             // The new custom claims will propagate to the user's ID token the
@@ -134,7 +158,7 @@ const updateUsuario = (usuario, cb) => {
                   if (error.errors[0].message.includes("must be unique")) {
                     cb({
                       error:
-                        "Ya existe un usuario con ese número de identificacion",
+                        "Ya existe un usuario con ese número de identificacion"
                     });
                   } else {
                     cb(error, null);
@@ -176,5 +200,5 @@ module.exports = {
   findUserByEmail,
   createUsuario,
   updateUsuario,
-  findUsuarioByUid,
+  findUsuarioByUid
 };
