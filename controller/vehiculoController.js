@@ -319,7 +319,7 @@ const updateVehiculo = (req, res, next) => {
                 estado: "Pendiente",
                 alias: vehiculo.alias,
                 color: vehiculo.color,
-                fechaCompra: vehiculo.fechaCompra,
+                fechaCompra: vehiculo.fechacompra,
                 kilometraje: vehiculo.kilometraje,
                 modelo: vehiculo.modelo,
                 fotos: vehiculo.fotos,
