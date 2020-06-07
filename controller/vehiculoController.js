@@ -117,163 +117,169 @@ const createVehiculo = (req, res, next) => {
             );
           }
         } else {
-          userAdapter.findUserByEmail(vehiculo.email, (error, usuario) => {
-            if (error) {
-              if (error.errors) {
-                return res
-                  .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                  .json({ error: error.errors[0] });
+          userAdapter.findUserByEmail(
+            vehiculo.usuario.email,
+            (error, usuario) => {
+              if (error) {
+                console.error("Error la buscar usuario por mail :::>", error);
+                if (error.errors) {
+                  return res
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .json({ error: error.errors[0] });
+                } else {
+                  return res
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .json({ error: error.message });
+                }
               } else {
-                return res
-                  .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                  .json({ error: error.message });
-              }
-            } else {
-              if (usuario) {
-                //Encontro un usuario
-                let fechaCompraBD = vehiculo.fechaCompraText
-                  ? moment(vehiculo.fechaCompraText, "DD/MM/YYYY")
-                  : null;
+                if (usuario) {
+                  //Encontro un usuario
+                  let fechaCompraBD = vehiculo.fechaCompraText
+                    ? moment(vehiculo.fechaCompraText, "DD/MM/YYYY")
+                    : null;
 
-                console.log(
-                  "Fecha compra valor para BD ",
-                  vehiculo.fechaCompraText,
-                  " Valor ::>",
-                  fechaCompraBD
-                );
+                  console.log(
+                    "Fecha compra valor para BD ",
+                    vehiculo.fechaCompraText,
+                    " Valor ::>",
+                    fechaCompraBD
+                  );
 
-                let vehiculoDB = {
-                  alias: vehiculo.alias,
-                  color: vehiculo.color,
-                  fechaCompra: fechaCompraBD,
-                  fotos: vehiculo.fotos,
-                  kilometraje: vehiculo.kilometraje,
-                  marca: vehiculo.marca,
-                  modelo: vehiculo.modelo,
-                  placa: vehiculo.placa,
-                  tipoVehiculo: vehiculo.tipoVehiculo,
-                  IdTaller: vehiculo.IdTaller
-                };
+                  let vehiculoDB = {
+                    alias: vehiculo.alias,
+                    color: vehiculo.color,
+                    fechaCompra: fechaCompraBD,
+                    fotos: vehiculo.fotos,
+                    kilometraje: vehiculo.kilometraje,
+                    marca: vehiculo.marca,
+                    modelo: vehiculo.modelo,
+                    placa: vehiculo.placa,
+                    tipoVehiculo: vehiculo.tipoVehiculo,
+                    IdTaller: vehiculo.IdTaller
+                  };
 
-                vehiculoAdapter.crearVehiculo(usuario, vehiculoDB, function (
-                  error,
-                  vehiculo
-                ) {
-                  if (error) {
-                    console.error(
-                      "Error al realizar la transaccion de crear vehiculo con usuario existente:::>",
-                      "error ::>",
-                      error
-                    );
-                    if (error.errors) {
-                      return res
-                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .json({ error: error.errors[0] });
+                  vehiculoAdapter.crearVehiculo(usuario, vehiculoDB, function (
+                    error,
+                    vehiculo
+                  ) {
+                    if (error) {
+                      console.error(
+                        "Error al realizar la transaccion de crear vehiculo con usuario existente:::>",
+                        "error ::>",
+                        error
+                      );
+                      if (error.errors) {
+                        return res
+                          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                          .json({ error: error.errors[0] });
+                      } else {
+                        return res
+                          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                          .json({ error: error.message });
+                      }
                     } else {
-                      return res
-                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .json({ error: error.message });
+                      if (vehiculo) {
+                        return res.status(HttpStatus.OK).json(vehiculo);
+                      } else {
+                        return res
+                          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                          .json({
+                            error: "Error indefinido al crear vehiculo"
+                          });
+                      }
                     }
-                  } else {
-                    if (vehiculo) {
-                      return res.status(HttpStatus.OK).json(vehiculo);
+                  });
+                } else {
+                  //No Encontro usuario lo va a crear
+                  let usuario = {
+                    email: vehiculo.email,
+                    celular: "+57" + vehiculo.celular,
+                    password: "123456",
+                    fullname: "Sin nombre",
+                    tipoUsuario: "Cliente"
+                  };
+
+                  userAdapter.createUsuario(usuario, function (
+                    error,
+                    userRecord
+                  ) {
+                    if (error) {
+                      console.error(
+                        "Error al realizar la transaccion de crear vehiculo:::>",
+                        "error ::>",
+                        error
+                      );
+                      if (error.errors) {
+                        return res
+                          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                          .json({ error: error.errors[0] });
+                      } else {
+                        return res
+                          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                          .json({ error: error.message });
+                      }
                     } else {
-                      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                        error: "Error indefinido al crear vehiculo"
-                      });
-                    }
-                  }
-                });
-              } else {
-                //No Encontro usuario lo va a crear
-                let usuario = {
-                  email: vehiculo.email,
-                  celular: "+57" + vehiculo.celular,
-                  password: "123456",
-                  fullname: "Sin nombre",
-                  tipoUsuario: "Cliente"
-                };
+                      if (userRecord) {
+                        //Encontro un usuario
+                        let fechaCompraBD = vehiculo.fechaCompraText
+                          ? moment(vehiculo.fechaCompraText, "DD/MM/YYYY")
+                          : null;
 
-                userAdapter.createUsuario(usuario, function (
-                  error,
-                  userRecord
-                ) {
-                  if (error) {
-                    console.error(
-                      "Error al realizar la transaccion de crear vehiculo:::>",
-                      "error ::>",
-                      error
-                    );
-                    if (error.errors) {
-                      return res
-                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .json({ error: error.errors[0] });
-                    } else {
-                      return res
-                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .json({ error: error.message });
-                    }
-                  } else {
-                    if (userRecord) {
-                      //Encontro un usuario
-                      let fechaCompraBD = vehiculo.fechaCompraText
-                        ? moment(vehiculo.fechaCompraText, "DD/MM/YYYY")
-                        : null;
+                        let vehiculoDB = {
+                          alias: vehiculo.alias,
+                          color: vehiculo.color,
+                          fechaCompra: fechaCompraBD,
+                          fotos: vehiculo.fotos,
+                          kilometraje: vehiculo.kilometraje,
+                          marca: vehiculo.marca,
+                          modelo: vehiculo.modelo,
+                          placa: vehiculo.placa,
+                          tipoVehiculo: vehiculo.tipoVehiculo,
+                          IdTaller: vehiculo.IdTaller
+                        };
 
-                      let vehiculoDB = {
-                        alias: vehiculo.alias,
-                        color: vehiculo.color,
-                        fechaCompra: fechaCompraBD,
-                        fotos: vehiculo.fotos,
-                        kilometraje: vehiculo.kilometraje,
-                        marca: vehiculo.marca,
-                        modelo: vehiculo.modelo,
-                        placa: vehiculo.placa,
-                        tipoVehiculo: vehiculo.tipoVehiculo,
-                        IdTaller: vehiculo.IdTaller
-                      };
+                        //Se coloca Id de la tabla usuarios como UID mientras el usuario no este registrado en la BD
 
-                      //Se coloca Id de la tabla usuarios como UID mientras el usuario no este registrado en la BD
-
-                      vehiculoAdapter.crearVehiculo(
-                        userRecord,
-                        vehiculoDB,
-                        function (error, vehiculo) {
-                          if (error) {
-                            console.error(
-                              "Error al realizar la transaccion de crear vehiculo con usuario existente:::>",
-                              "error ::>",
-                              error
-                            );
-                            if (error.errors) {
-                              return res
-                                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                .json({ error: error.errors[0] });
+                        vehiculoAdapter.crearVehiculo(
+                          userRecord,
+                          vehiculoDB,
+                          function (error, vehiculo) {
+                            if (error) {
+                              console.error(
+                                "Error al realizar la transaccion de crear vehiculo con usuario existente:::>",
+                                "error ::>",
+                                error
+                              );
+                              if (error.errors) {
+                                return res
+                                  .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                  .json({ error: error.errors[0] });
+                              } else {
+                                return res
+                                  .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                  .json({ error: error.message });
+                              }
                             } else {
-                              return res
-                                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                .json({ error: error.message });
-                            }
-                          } else {
-                            if (vehiculo) {
-                              //TODO Enviar SMS al usuario que fue registrado
-                              return res.status(HttpStatus.OK).json(vehiculo);
-                            } else {
-                              return res
-                                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                .json({
-                                  error: "Error indefinido al crear vehiculo"
-                                });
+                              if (vehiculo) {
+                                //TODO Enviar SMS al usuario que fue registrado
+                                return res.status(HttpStatus.OK).json(vehiculo);
+                              } else {
+                                return res
+                                  .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                  .json({
+                                    error: "Error indefinido al crear vehiculo"
+                                  });
+                              }
                             }
                           }
-                        }
-                      );
+                        );
+                      }
                     }
-                  }
-                });
+                  });
+                }
               }
             }
-          });
+          );
         }
       }
     });
