@@ -402,7 +402,7 @@ export default {
       var vehiculo = {
         placa: this.newItem.placa,
         celular: this.newItem.celular,
-        email: this.newItem.email,
+        usuario: { email: this.newItem.email },
         IdTaller: this.currentUser.IdTaller
       };
       // if its still pending or an error is returned do not submit
