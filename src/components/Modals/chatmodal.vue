@@ -32,8 +32,8 @@
   </div>
 </template>
 <!-- <div>
-    
-   
+
+
   </div> -->
 
 <script>
@@ -94,7 +94,8 @@ export default {
         IdOrdenTrabajo: this.data.IdOrdenTrabajo,
         IdEtapa: this.data.IdEtapa,
         IdConversacionUser: this.data.vehiculo.IdUsuario,
-        IdTaller: this.data.IdTaller
+        IdTaller: this.data.IdTaller,
+        typeusuario: "taller"
       };
 
       this.addMessageItem(newmessage);
