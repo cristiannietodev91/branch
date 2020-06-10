@@ -14,7 +14,7 @@ class socket {
 
   init() {
     this.io = new Server(this.http, {
-      transports: ["websocket"],
+      transports: ["websocket"]
     });
   }
 
@@ -30,7 +30,7 @@ class socket {
         socket.join(room, () => {
           callback({
             status: "OK",
-            message: "Se unio exitosamente al room" + room,
+            message: "Se unio exitosamente al room" + room
           });
         });
       });
@@ -39,7 +39,7 @@ class socket {
         socket.join(IdTaller, () => {
           callback({
             status: "OK",
-            message: "Se unio exitosamente el Taller" + IdTaller,
+            message: "Se unio exitosamente el Taller" + IdTaller
           });
         });
       });
@@ -47,7 +47,7 @@ class socket {
       socket.on("messaggetosomeone", (id, msg) => {
         console.log("Params received :::>", id, "messsage ::>", msg);
         // send a private message to the socket with the given id
-        const { user, IdTaller, IdConversacionUser } = msg;
+        const { user, IdTaller, IdConversacionUser, typeusuario } = msg;
         const { _id: IdUsuario, name: nombreusuario } = user;
         citaAdapter.getAllCitasActivasByIdUsuario(
           IdConversacionUser,
@@ -63,7 +63,7 @@ class socket {
               }
               const conversacion = {
                 uid: IdConversacionUser,
-                IdTaller: IdTaller,
+                IdTaller: IdTaller
               };
 
               conversacionAdapter.createOrGetConversacion(
@@ -86,14 +86,14 @@ class socket {
                         read: false,
                         user: {
                           _id: IdUsuario,
-                          name: nombreusuario,
+                          name: nombreusuario
                         },
-                        typeusuario: "test",
+                        typeusuario: typeusuario,
                         uid: IdUsuario,
                         nombreusuario: nombreusuario,
                         IdEtapa: etapa.IdEtapa,
                         IdOrdenTrabajo: etapa.IdOrdenTrabajo,
-                        createdAt: msg.createdAt,
+                        createdAt: msg.createdAt
                       };
                     } else {
                       message = {
@@ -105,10 +105,10 @@ class socket {
                         read: false,
                         user: {
                           _id: IdUsuario,
-                          name: nombreusuario,
+                          name: nombreusuario
                         },
-                        typeusuario: "test",
-                        createdAt: msg.createdAt,
+                        typeusuario: typeusuario,
+                        createdAt: msg.createdAt
                       };
                     }
 
@@ -124,29 +124,31 @@ class socket {
                       }
                     });
 
-                    usuarioAdapter.findUsuarioByUid(
-                      IdConversacionUser,
-                      (error, usuario) => {
-                        if (error) {
-                          console.error(
-                            "error al buscar usuario para enviar notificacion "
-                          );
-                        } else {
-                          console.log("Usuario");
-                          if (usuario && usuario.tokenCM) {
-                            console.debug(
-                              "Se envio la notificacion al usuario"
+                    if (typeusuario == "taller") {
+                      usuarioAdapter.findUsuarioByUid(
+                        IdConversacionUser,
+                        (error, usuario) => {
+                          if (error) {
+                            console.error(
+                              "error al buscar usuario para enviar notificacion "
                             );
-                            sms.sendNotificacionToUser(
-                              usuario.tokenCM,
-                              msg.text,
-                              "chat",
-                              { IdTaller: IdTaller }
-                            );
+                          } else {
+                            console.log("Usuario");
+                            if (usuario && usuario.tokenCM) {
+                              console.debug(
+                                "Se envio la notificacion al usuario"
+                              );
+                              sms.sendNotificacionToUser(
+                                usuario.tokenCM,
+                                msg.text,
+                                "chat",
+                                { IdTaller: IdTaller }
+                              );
+                            }
                           }
                         }
-                      }
-                    );
+                      );
+                    }
 
                     socket.to(id).emit("sendmessage", message);
                   }
