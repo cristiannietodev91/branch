@@ -1,7 +1,7 @@
 <template>
-    <b-colxx md="6" sm="6" lg="4" xxs="12">
+    <b-colxx md="2" sm="2" lg="2" xxs="12">
         <b-card class="mb-4 d-flex flex-row" no-body>
-            <img src="/assets/img/profile-pic-l.jpg" alt="Card image cap" class="img-thumbnail list-thumbnail  rounded-circle align-self-center m-4" />
+            <!-- <img src="/assets/img/profile-pic-l.jpg" alt="Card image cap" class="img-thumbnail list-thumbnail  rounded-circle align-self-center m-4" /> -->
             <div class=" d-flex flex-grow-1 min-width-zero">
                 <div class=" pl-0 align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero">
                     <div class="min-width-zero">

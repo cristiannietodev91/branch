@@ -17,7 +17,6 @@
         <b-button
           @click="openChat"
           variant="primary"
-          size="lg"
           class="top-right-button"
           :aria-controls="`sidebar${data.CodigoOrden}`"
           :aria-expanded="showModal"
@@ -30,9 +29,9 @@
             }}
           </b-badge>
         </b-button>
-        <b-sidebar :id="`sidebar${data.CodigoOrden}`" right shadow v-model="showModal" no-header>
+        <b-modal :id="`sidebar${data.CodigoOrden}`" right shadow v-model="showModal" no-header>
           <modal-open-chat :data="data" @hide="openChat"></modal-open-chat>
-        </b-sidebar>
+        </b-modal>
       </b-colxx>
     </b-row>
     <horizontal-stepper

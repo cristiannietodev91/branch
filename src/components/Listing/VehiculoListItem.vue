@@ -41,13 +41,13 @@
           <p class="text-muted text-small mb-1">{{ $t('branch.vehiculo.tipo') }}</p>
           <p class="mb-1 text-small">{{data.tipoVehiculo}}</p>
         </div>
-        <div class="w-15 w-sm-100">
+        <!-- <div class="w-15 w-sm-100">
           <b-badge pill variant="primary">{{ data.estado }}</b-badge>
-        </div>
+        </div> -->
       </div>
-      <div class="custom-control custom-checkbox pl-1 align-self-center pr-4">
+      <!-- <div class="custom-control custom-checkbox pl-1 align-self-center pr-4">
         <b-form-checkbox :checked="selectedItems.includes(data.IdTaller)" class="itemCheck mb-0" />
-      </div>
+      </div> -->
     </div>
   </b-card>
 </template>

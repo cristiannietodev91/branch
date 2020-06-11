@@ -1,6 +1,6 @@
-<template v-slot:default="{ hide }">
+<template v-slot:default="{ hide }" class="modal-chat">
   <div class="p-3">
-    <b-button variant="primary" block @click="hide">Cerrar Chat</b-button>
+    <!-- <b-button variant="primary" block @click="hide">Cerrar Chat</b-button> -->
     <b-row>
       <b-colxx xxs="12" class="chat-app">
         <conversation-detail

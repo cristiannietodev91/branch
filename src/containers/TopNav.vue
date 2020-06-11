@@ -7,12 +7,12 @@
         <a href="#" class="menu-button-mobile d-xs-block d-sm-block d-md-none" @click.prevent="changeSideMenuForMobile(menuType)">
             <mobile-menu-icon />
         </a>
-        <div :class="{'search':true, 'mobile-view':isMobileSearch}" ref="searchContainer" @mouseenter="isSearchOver=true" @mouseleave="isSearchOver=false">
+        <!-- <div :class="{'search':true, 'mobile-view':isMobileSearch}" ref="searchContainer" @mouseenter="isSearchOver=true" @mouseleave="isSearchOver=false">
             <b-input :placeholder="$t('menu.search')" @keypress.native.enter="search" v-model="searchKeyword" />
             <span class="search-icon" @click="searchClick">
                 <i class="simple-icon-magnifier"></i>
             </span>
-        </div>
+        </div> -->
         <!-- <div class="d-inline-block">
             <b-dropdown id="langddm" class="ml-2" variant="light" size="sm" toggle-class="language-button">
                 <template slot="button-content">
@@ -31,10 +31,10 @@
     </router-link>
 
     <div class="navbar-right">
-        <div class="d-none d-md-inline-block align-middle mr-3">
+        <!-- <div class="d-none d-md-inline-block align-middle mr-3">
             <switches id="tool-mode-switch" v-model="isDarkActive" theme="custom" class="vue-switcher-small switch_branch" color="primary" />
             <b-tooltip target="tool-mode-switch" placement="top-left" title="Modo oscuro"></b-tooltip>
-        </div>
+        </div> -->
         <div class="header-icons d-inline-block align-middle">
             <!-- <div class="position-relative d-none d-sm-inline-block">
                 <b-dropdown variant="empty" size="sm" right toggle-class="header-icon" menu-class="position-absolute mt-3 iconMenuDropdown" no-caret>
@@ -72,10 +72,10 @@
 
             <div class="position-relative d-inline-block">
                 <b-dropdown variant="empty" size="sm" right toggle-class="header-icon notificationButton" menu-class="position-absolute mt-3 notificationDropdown" no-caret>
-                    <template slot="button-content">
+                    <!-- <template slot="button-content">
                         <i class="simple-icon-bell" />
                         <span class="count">3</span>
-                    </template>
+                    </template> -->
                     <vue-perfect-scrollbar :settings="{ suppressScrollX: true, wheelPropagation: false }">
                         <div class="d-flex flex-row mb-3 pb-3 border-bottom" v-for="(n,index) in notifications" :key="index">
                             <router-link tag="a" to="/app/pages/product/details">
@@ -107,12 +107,12 @@
                         <span class="name mr-1">{{currentUser.displayName}}</span>
                         <!-- <span class="name mr-1">{{currentUser.email}}</span> -->
                     </template>
-                    <b-dropdown-item>Account</b-dropdown-item>
+                    <!-- <b-dropdown-item>Account</b-dropdown-item>
                     <b-dropdown-item>Features</b-dropdown-item>
                     <b-dropdown-item>History</b-dropdown-item>
-                    <b-dropdown-item>Support</b-dropdown-item>
+                    <b-dropdown-item>Support</b-dropdown-item> -->
                     <b-dropdown-divider />
-                    <b-dropdown-item @click="logout">Sign out</b-dropdown-item>
+                    <b-dropdown-item @click="logout">Cerrar sesión</b-dropdown-item>
                 </b-dropdown>
             </div>
         </div>
@@ -123,7 +123,7 @@
 <script>
 import Switches from 'vue-switches'
 import notifications from '../data/notifications'
-
+import ServicesCore from "../services/service";
 import {
     mapGetters,
     mapMutations,
@@ -257,33 +257,33 @@ export default {
     beforeDestroy() {
         document.removeEventListener('click', this.handleDocumentforMobileSearch)
     },
-    created() {
-        const color = this.getThemeColor()
-        this.isDarkActive = color.indexOf('dark') > -1
-    },
+    // created() {
+    //     const color = this.getThemeColor()
+    //     this.isDarkActive = color.indexOf('dark') > -1
+    // },
     watch: {
         '$i18n.locale'(to, from) {
             if (from !== to) {
                 this.$router.go(this.$route.path)
             }
         },
-        isDarkActive(val) {
-            let color = this.getThemeColor()
-            let isChange = false
-            if (val && color.indexOf('light') > -1) {
-                isChange = true
-                color = color.replace('light', 'dark')
-            } else if (!val && color.indexOf('dark') > -1) {
-                isChange = true
-                color = color.replace('dark', 'light')
-            }
-            if (isChange) {
-                localStorage.setItem('themeColor', color)
-                setTimeout(() => {
-                    window.location.reload()
-                }, 500)
-            }
-        },
+        // isDarkActive(val) {
+        //     let color = this.getThemeColor()
+        //     let isChange = false
+        //     if (val && color.indexOf('light') > -1) {
+        //         isChange = true
+        //         color = color.replace('light', 'dark')
+        //     } else if (!val && color.indexOf('dark') > -1) {
+        //         isChange = true
+        //         color = color.replace('dark', 'light')
+        //     }
+        //     if (isChange) {
+        //         localStorage.setItem('themeColor', color)
+        //         setTimeout(() => {
+        //             window.location.reload()
+        //         }, 500)
+        //     }
+        // },
         isMobileSearch(val) {
             if (val) {
                 document.addEventListener('click', this.handleDocumentforMobileSearch)

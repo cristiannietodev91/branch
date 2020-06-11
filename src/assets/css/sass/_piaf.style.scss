@@ -46,6 +46,7 @@ Table of Contents
 */
 
 /* 00.Variables and Imports */
+@import "../_mixins.scss";
 @import url("https://fonts.googleapis.com/css?family=IBM+Plex+Sans:300,400,400i,600,700&display=swap");
 
 $main-menu-item-height: 110px;
@@ -9662,7 +9663,7 @@ footer.page-footer {
 .mecanicos-branch{
   display: flex;
   .card{
-    padding: 1em 1em 1em 0;
+    padding: 1em;
   }
 }
 .detalle-taller{
@@ -10023,4 +10024,39 @@ footer.page-footer {
       }
     }
   }
+}
+
+// CHAT STYLES
+.modal-chat{
+  position: fixed;
+  width: 50%;
+  height: 50%;
+}
+.modal-body{
+  padding: 1em !important;
+}
+.chat-app{
+  height: 450px;
+  .p-3, .modal-body{
+    padding: 0 !important;
+  }
+  .ps-container{
+    height: 330px !important;
+  }
+  div[class*="float-"]{
+    max-width: 70%;
+  }
+  .float-left{
+    background-color: $branch-blue-2;
+  }
+  .float-right{
+    background-color: $branch-blue-4;
+    color: white;
+    .text-muted{
+      color: white !important;
+    }
+  }
+}
+.modal-header{
+  padding: .5em 1em !important;
 }
