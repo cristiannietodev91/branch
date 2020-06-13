@@ -17,6 +17,7 @@ pipelines:
           caches:
           - node
           script:
+          - apt-get install zip unzip
           - npm install
           - zip -r branchcore.zip .
           # Define an artifact to pass the zip file to the next step
