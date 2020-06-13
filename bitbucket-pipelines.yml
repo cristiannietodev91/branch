@@ -11,7 +11,7 @@ pipelines:
           - echo "This script runs default"
   branches:
     master:
-      - step:
+      step:
         name: "Build and Test"
         image: node:10.15.0
         caches:
@@ -23,7 +23,7 @@ pipelines:
         # Define an artifact to pass the zip file to the next step
         artifacts: 
           - branchcore.zip
-      - step:
+      step:
         name: "Deploy to Production"
         # Track production environments builds using deployments.
         deployment: production
