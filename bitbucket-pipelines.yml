@@ -2,7 +2,7 @@
 # Only use spaces to indent your .yml configuration.
 # -----
 # You can specify a custom docker image from Docker Hub as your build environment.
-image: atlassian/default-image:2
+image: mkboice/alpine-node-zip
 
 pipelines:
   default:
@@ -17,7 +17,6 @@ pipelines:
           caches:
           - node
           script:
-          - apt-get install zip unzip
           - npm install
           - zip -r branchcore.zip .
           # Define an artifact to pass the zip file to the next step
