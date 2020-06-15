@@ -19,10 +19,10 @@ pipelines:
           script:
           - apt-get update && apt-get install --yes zip
           - npm install
-          - zip -r branchcore.zip .
+          - zip -r branchservices.zip .
           # Define an artifact to pass the zip file to the next step
           artifacts: 
-            - branchcore.zip
+            - branchservices.zip
       - step:
           name: "Deploy to Production"
           # Track production environments builds using deployments.
