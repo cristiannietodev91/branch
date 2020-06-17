@@ -84,7 +84,7 @@ firebase.initializeApp(firebaseConfig);
 
 Vue.use(
   new VueSocketIO({
-    debug: true,
+    debug: false,
     connection: process.env.VUE_APP_URLBACKSERVICES,
     vuex: {
       store,
@@ -102,7 +102,7 @@ Vue.use(VueNativeNotification, {
 /*firebase.auth().onAuthStateChanged(user => {
   if(user){
     store.dispatch("fetchUser", user);
-  }  
+  }
 });*/
 
 Vue.config.productionTip = false;
