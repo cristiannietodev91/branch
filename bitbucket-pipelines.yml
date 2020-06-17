@@ -19,7 +19,7 @@ pipelines:
           script:
           - apt-get update && apt-get install --yes zip
           - npm install
-          - npm build
+          - npm run build
           - zip -r branchweb.zip .
           # Define an artifact to pass the zip file to the next step
           artifacts: 
