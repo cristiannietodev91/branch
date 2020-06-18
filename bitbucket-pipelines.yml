@@ -17,24 +17,21 @@ pipelines:
           caches:
           - node
           script:
-          - apt-get update && apt-get install --yes zip
           - npm install
           - npm run build
-          - zip -r branchweb.zip .
-          # Define an artifact to pass the zip file to the next step
-          artifacts: 
-            - branchweb.zip
+          artifacts:
+            - dist/*
+            - dist/**/*
+            - dist/**/**          
       - step:
           name: "Deploy to Production"
           # Track production environments builds using deployments.
           deployment: production
           script:
-          - pipe: atlassian/aws-elasticbeanstalk-deploy:0.5.0
+          - pipe: atlassian/aws-s3-deploy:0.3.8
             variables:
               AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
               AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
-              AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
-              APPLICATION_NAME: $APPLICATION_NAME
-              ENVIRONMENT_NAME: 'Branchtaller-env'
-              ZIP_FILE: $ZIP_FILE
-              S3_BUCKET: elasticbeanstalk-us-east-2-926354684240
+              AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION              
+              S3_BUCKET: $S3_BUCKET_NAME
+              ACL: 'public-read'

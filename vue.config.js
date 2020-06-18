@@ -1,22 +1,21 @@
-const CopyWebpackPlugin = require('copy-webpack-plugin')
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
-
   pages: {
     index: {
-      entry: 'src/index.js',
-      template: 'public/index.html',
-      filename: 'index.html'
+      entry: "src/index.js",
+      template: "public/index.html",
+      filename: "index.html"
     }
   },
   devServer: {
-    clientLogLevel: 'warning',
+    clientLogLevel: "warning",
     hot: true,
-    contentBase: 'dist',
+    contentBase: "dist",
     compress: true,
     open: true,
     overlay: { warnings: false, errors: true },
-    publicPath: '/',
+    publicPath: "/",
     quiet: true,
     watchOptions: {
       poll: false,
@@ -25,20 +24,20 @@ module.exports = {
   },
   chainWebpack: config => {
     config.module
-      .rule('vue')
-        .use('vue-loader')
-          .tap(args => {
-            args.compilerOptions.whitespace = 'preserve'
-          })
+      .rule("vue")
+      .use("vue-loader")
+      .tap(args => {
+        args.compilerOptions.whitespace = "preserve";
+      });
   },
   productionSourceMap: false,
-  assetsDir: './assets/',
+  assetsDir: "./assets/",
   configureWebpack: {
     plugins: [
       new CopyWebpackPlugin([
-        { from: 'src/assets/img', to: 'assets/img' },
-        { from: 'src/assets/fonts', to: 'assets/fonts' }
+        { from: "src/assets/img", to: "assets/img" },
+        { from: "src/assets/fonts", to: "assets/fonts" }
       ])
     ]
   }
-}
+};
