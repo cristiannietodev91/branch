@@ -256,7 +256,7 @@ const findUsuarioById = (req, res, next) => {
 
 const loginUserTallerByUID = (req, res, next) => {
   try {
-    var uid = req.params.uid;
+    var uid = req.query.uid;
 
     usersDAO.findOneByFilter({ uid: uid }, function (error, usuario) {
       if (error) {
