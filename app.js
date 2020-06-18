@@ -18,12 +18,7 @@ const servicioRouter = require("./routes/serviciosRoute");
 
 var app = express();
 
-app.use(
-  cors({
-    origin: "*", //servidor que deseas que consuma o (*) en caso que sea acceso libre
-    credentials: true,
-  })
-);
+app.use(cors());
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -66,6 +61,6 @@ function errorHandler(err, req, res, next) {
   res.status(err.status || 500);
   res.json({
     message: err.message,
-    error: err,
+    error: err
   });
 }
