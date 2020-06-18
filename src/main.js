@@ -91,7 +91,7 @@ Vue.use(
       actionPrefix: "SOCKET_",
       mutationPrefix: "SOCKET_"
     },
-    options: { transports: ["websocket"] }
+    options: { transports: ["websocket"], secure: true }
   })
 );
 
