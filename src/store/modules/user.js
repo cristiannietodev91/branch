@@ -68,32 +68,50 @@ export default {
             ServicesCore.loginUserTaller(user.user.uid)
               .then(response => {
                 if (response.status == 200) {
-                  let usuario = response.data;
+                  const { data: usuario } = response;
+                  if (usuario) {
+                    const newUser = {
+                      uid: usuario.uid,
+                      displayName: usuario.firstName,
+                      email: usuario.email,
+                      celular: usuario.celular,
+                      identificacion: usuario.identificacion,
+                      IdTaller: usuario.IdTaller
+                    };
 
-                  const newUser = {
-                    uid: usuario.uid,
-                    displayName: usuario.firstName,
-                    email: usuario.email,
-                    celular: usuario.celular,
-                    identificacion: usuario.identificacion,
-                    IdTaller: usuario.IdTaller
-                  };
-
-                  //console.log('Resultado usuario autenticado :::: > ', newUser);
-                  const item = { uid: newUser.uid, ...newUser };
-                  localStorage.setItem("user", JSON.stringify(item));
-                  commit("setUser", { uid: newUser.uid, ...newUser });
+                    const item = { uid: newUser.uid, ...newUser };
+                    localStorage.setItem("user", JSON.stringify(item));
+                    commit("setUser", { uid: newUser.uid, ...newUser });
+                  } else {
+                    localStorage.removeItem("user");
+                    commit("setError", "No se encontro el usuario");
+                    setTimeout(() => {
+                      commit("clearError");
+                    }, 3000);
+                  }
                 }
               })
-              .catch(err => {
-                localStorage.removeItem("user");
-                commit("setError", err.message);
-                setTimeout(() => {
-                  commit("clearError");
-                }, 3000);
+              .catch(error => {
+                const { response } = error;
+                if (response) {
+                  const { data } = response;
+
+                  localStorage.removeItem("user");
+                  commit("setError", data.error);
+                  setTimeout(() => {
+                    commit("clearError");
+                  }, 3000);
+                } else {
+                  localStorage.removeItem("user");
+                  commit("setError", error.message);
+                  setTimeout(() => {
+                    commit("clearError");
+                  }, 3000);
+                }
               });
           },
           err => {
+            console.log("Errr :::>", err);
             localStorage.removeItem("user");
             commit("setError", err.message);
             setTimeout(() => {
