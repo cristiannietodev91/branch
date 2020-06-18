@@ -256,7 +256,7 @@ const findUsuarioById = (req, res, next) => {
 
 const loginUserTallerByUID = (req, res, next) => {
   try {
-    var uid = req.query.uid;
+    var uid = req.params.uid;
 
     usersDAO.findOneByFilter({ uid: uid }, function (error, usuario) {
       if (error) {
@@ -282,6 +282,10 @@ const loginUserTallerByUID = (req, res, next) => {
               .status(HttpStatus.PRECONDITION_FAILED)
               .json({ error: "Usuario no tiene acceso a ningun taller" });
           }
+        } else {
+          res
+            .status(HttpStatus.PRECONDITION_FAILED)
+            .json({ error: "No se encontro el usuario" });
         }
       }
     });
