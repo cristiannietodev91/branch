@@ -15,6 +15,8 @@ const prodServiceConf = {
   databaseURL: "https://branchprod-a9bec.firebaseio.com"
 };
 
+console.log("Process Environment :::>", process.env.NODE_ENV);
+
 admin.initializeApp(
   process.env.NODE_ENV == "production" ? prodServiceConf : devServiceConf
 );
