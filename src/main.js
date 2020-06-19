@@ -10,7 +10,11 @@ import store from "./store";
 import en from "./locales/en.json";
 import es from "./locales/es.json";
 import VueI18n from "vue-i18n";
-import { defaultLocale, firebaseConfig } from "./constants/config";
+import {
+  defaultLocale,
+  firebaseConfigDev,
+  firebaseConfigProd
+} from "./constants/config";
 // Notification Component Add
 import Notifications from "./components/Common/Notification";
 // Breadcrumb Component Add
@@ -80,7 +84,9 @@ Vue.use(VCalendar, {
 });
 Vue.use(VueScrollTo);
 
-firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(
+  process.env.NODE_ENV == "production" ? firebaseConfigProd : firebaseConfigDev
+);
 
 Vue.use(
   new VueSocketIO({
