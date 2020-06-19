@@ -2,12 +2,22 @@ const usersDAO = require("../dao/usersDAO");
 const vehiculoDAO = require("../dao/vehiculoDAO");
 const admin = require("firebase-admin");
 
-const serviceAccount = require("../serviceAccountKey.json");
+const serviceAccountDev = require("../serviceAccountKey.json");
+const serviceAccountProd = require("../serviceAccountKeyProd.json");
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
+const devServiceConf = {
+  credential: admin.credential.cert(serviceAccountDev),
   databaseURL: "https://branch-263701.firebaseio.com"
-});
+};
+
+const prodServiceConf = {
+  credential: admin.credential.cert(serviceAccountProd),
+  databaseURL: "https://branchprod-a9bec.firebaseio.com"
+};
+
+admin.initializeApp(
+  process.env.NODE_ENV == "production" ? prodServiceConf : devServiceConf
+);
 
 const findUserByEmail = (email, cb) => {
   usersDAO.findOneByFilter({ email: email }, (error, usuario) => {
