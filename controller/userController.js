@@ -43,7 +43,8 @@ const createFireBaseUsuario = async (req, res, next) => {
           : usuario.celular,
       identificacion: usuario.identificacion,
       tipoUsuario: usuario.tipoUsuario,
-      uid: usuario.uid
+      uid: usuario.uid,
+      typeDevice: usuario.typeDevice
     };
 
     userAdapater.createUsuario(usuarioDB, function (error, usuarioResult) {

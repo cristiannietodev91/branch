@@ -60,7 +60,6 @@ const createVehiculo = (req, res, next) => {
             .json({ error: error.message });
         }
       } else {
-        console.log("Resultado find by Placa ::::>", vehiculoResult);
         if (vehiculoResult) {
           if (vehiculoResult.taller) {
             return res
@@ -89,10 +88,6 @@ const createVehiculo = (req, res, next) => {
                           error
                         );
                       } else {
-                        console.log(
-                          "Voy a enviar notificacion al taller ::>",
-                          taller
-                        );
                         if (taller) {
                           const textoSms = `El taller ${taller.nombre} acaba de registrar tu vehiculo ${vehiculoResult.placa}, ahora podras hacer seguimiento a las reparaciones y acceder a excelentes funcionalidades`;
                           sms.sendNotificacionToUser(
@@ -179,6 +174,31 @@ const createVehiculo = (req, res, next) => {
                       }
                     } else {
                       if (vehiculo) {
+                        // Despues de registrar el vehiculo envia notificacion al usuario del registro del vehiculo
+                        const { tokenCM } = usuario;
+                        tallerDAO.getById(
+                          vehiculo.IdTaller,
+                          (error, taller) => {
+                            if (error) {
+                              console.error(
+                                "Error al obtener Taller para enviar notificacion",
+                                error
+                              );
+                            } else {
+                              if (taller) {
+                                const textoNotificacion = `El taller ${taller.nombre} acaba de registrar tu vehiculo ${vehiculo.placa}, ahora podras hacer seguimiento a las reparaciones y acceder a excelentes funcionalidades`;
+                                sms.sendNotificacionToUser(
+                                  tokenCM,
+                                  textoNotificacion,
+                                  "vehiculo"
+                                );
+                                const textoSms = `El taller ${taller.nombre} acaba de registrar tu vehiculo ${vehiculo.placa}, te invitamos a descargar la aplicación BRANCH si aun no la tienes para que puedas hacer seguimiento y controlar tu vehiculo`;
+                                sms.sendSMStoInfoBip(usuario.celular, textoSms);
+                              }
+                            }
+                          }
+                        );
+
                         return res.status(HttpStatus.OK).json(vehiculo);
                       } else {
                         return res
@@ -246,7 +266,7 @@ const createVehiculo = (req, res, next) => {
                           function (error, vehiculo) {
                             if (error) {
                               console.error(
-                                "Error al realizar la transaccion de crear vehiculo con usuario existente:::>",
+                                "Error al realizar la transaccion de crear vehiculo con usuario no existente:::>",
                                 "error ::>",
                                 error
                               );
@@ -261,7 +281,26 @@ const createVehiculo = (req, res, next) => {
                               }
                             } else {
                               if (vehiculo) {
-                                //TODO Enviar SMS al usuario que fue registrado
+                                tallerDAO.getById(
+                                  vehiculo.IdTaller,
+                                  (error, taller) => {
+                                    if (error) {
+                                      console.error(
+                                        "Error al obtener Taller para enviar notificacion",
+                                        error
+                                      );
+                                    } else {
+                                      if (taller) {
+                                        const textoSms = `El taller ${taller.nombre} acaba de registrar tu vehiculo ${vehiculo.placa}, te invitamos a descargar la aplicación para que puedas hacer seguimiento y controlar tu vehiculo`;
+                                        sms.sendSMStoInfoBip(
+                                          userRecord.celular,
+                                          textoSms
+                                        );
+                                      }
+                                    }
+                                  }
+                                );
+
                                 return res.status(HttpStatus.OK).json(vehiculo);
                               } else {
                                 return res

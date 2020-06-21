@@ -63,7 +63,7 @@ const createCita = (req, res, next) => {
               fechaCita: moment(cita.fechaCita, "DD/MM/YYYY"),
               horaCita: cita.horaCita,
               servicio: cita.servicio,
-              estado: cita.estado,
+              estado: cita.estado
             };
             console.log("Cita a persistir en la BD", citaDb);
             citaDAO.create(citaDb, function (error, cita) {
@@ -113,7 +113,10 @@ const createCita = (req, res, next) => {
                             ", " +
                             mecanico.firstName +
                             " de BRANCH tendra el gusto de recibirte. Tu experiencia nuestro motor! BRANCH";
-                          sms.sendSMSTwilio(vehiculo.usuario.celular, textoSms);
+                          sms.sendSMStoInfoBip(
+                            vehiculo.usuario.celular,
+                            textoSms
+                          );
                           sms.sendNotificacionToUser(
                             vehiculo.usuario.tokenCM,
                             textoSms
@@ -132,7 +135,10 @@ const createCita = (req, res, next) => {
                             "  " +
                             vehiculo.placa +
                             ", BRANCH tendra el gusto de recibirte. Tu experiencia nuestro motor! BRANCH";
-                          sms.sendSMSTwilio(vehiculo.usuario.celular, textoSms);
+                          sms.sendSMStoInfoBip(
+                            vehiculo.usuario.celular,
+                            textoSms
+                          );
                           sms.sendNotificacionToUser(
                             vehiculo.usuario.tokenCM,
                             textoSms
@@ -151,7 +157,7 @@ const createCita = (req, res, next) => {
             });
           } else {
             return res.status(HttpStatus.PRECONDITION_REQUIRED).send({
-              error: "No se encontro un vehiculo con la placa " + cita.placa,
+              error: "No se encontro un vehiculo con la placa " + cita.placa
             });
           }
         }
@@ -190,7 +196,7 @@ const updateCita = (req, res, next) => {
         fechaCita: moment(cita.fechaCita, "DD/MM/YYYY"),
         horaCita: cita.horaCita,
         servicio: cita.servicio,
-        estado: cita.estado,
+        estado: cita.estado
       };
 
       if (
@@ -260,7 +266,7 @@ const updateCita = (req, res, next) => {
                             "  " +
                             cita.vehiculo.placa +
                             ", BRANCH tendra el gusto de recibirte en una proxima oportunidad. Tu experiencia nuestro motor! BRANCH";
-                          sms.sendSMSTwilio(
+                          sms.sendSMStoInfoBip(
                             cita.vehiculo.usuario.celular,
                             textoSms
                           );
@@ -284,7 +290,7 @@ const updateCita = (req, res, next) => {
                               "  " +
                               cita.vehiculo.placa +
                               ", esto afectara tu puntuacion en nuestra plataforma. BRANCH tendra el gusto de recibirte en una proxima oportunidad. Tu experiencia nuestro motor! BRANCH";
-                            sms.sendSMSTwilio(
+                            sms.sendSMStoInfoBip(
                               cita.vehiculo.usuario.celular,
                               textoSms
                             );
@@ -305,7 +311,7 @@ const updateCita = (req, res, next) => {
                               ", " +
                               cita.mecanico.firstName +
                               " de BRANCH tendra el gusto de recibirte. Tu experiencia nuestro motor! BRANCH";
-                            sms.sendSMSTwilio(
+                            sms.sendSMStoInfoBip(
                               cita.vehiculo.usuario.celular,
                               textoSms
                             );
@@ -317,7 +323,7 @@ const updateCita = (req, res, next) => {
                 }
               });
               return res.status(HttpStatus.ACCEPTED).json({
-                message: "Se actualizo la cita " + IdCita + " correctamente",
+                message: "Se actualizo la cita " + IdCita + " correctamente"
               });
             } else {
               return res
@@ -328,7 +334,7 @@ const updateCita = (req, res, next) => {
         });
       } else {
         return res.status(HttpStatus.EXPECTATION_FAILED).json({
-          error: "Solo se puede cancelar una cita hasta 24 horas antes.",
+          error: "Solo se puede cancelar una cita hasta 24 horas antes."
         });
       }
     } else {
@@ -356,7 +362,7 @@ const deleteCitaById = (req, res, next) => {
       } else {
         if (result) {
           return res.status(HttpStatus.ACCEPTED).json({
-            message: "Se elimino la IdCita " + IdCita + " correctamente",
+            message: "Se elimino la IdCita " + IdCita + " correctamente"
           });
         } else {
           return res
@@ -608,7 +614,7 @@ const castCitasToEvents = (citas) => {
       title: "Cita vehiculo =>" + dataCita.vehiculo.placa,
       classes: classEstado(dataCita.estado),
       citaObject: dataCita,
-      estado: dataCita.estado,
+      estado: dataCita.estado
     };
     events.push(event);
   });
@@ -666,5 +672,5 @@ module.exports = {
   getAllCitasPasadasByIdUsuario,
   getAllCitasActivasByIdUsuario,
   getAllCitasFuturasByIdUsuario,
-  getAllCitasByfilter,
+  getAllCitasByfilter
 };

@@ -33,7 +33,7 @@ const crearVehiculo = (userRecord, vehiculo, cb) => {
                   //Send SMS al usuario al que pertenece el vehiculo para que ingrese a administrar el vehiculo
                   /*if (userRecord.celular) {
                                     var textoSms = "Se ha registrado el vehiculo " + vehiculo.placa + " por el taller BRANCH lo invitamos a que se registre en el siguiente link para que disfrute los beneficios BRANCH http://localhost:8080";
-                                    sms.sendSMSTwilio(userRecord.celular, textoSms);
+                                    sms.sendSMStoInfoBip(userRecord.celular, textoSms);
                                 }*/
                   cb(null, vehiculo);
                 } else {
@@ -76,7 +76,7 @@ const crearVehiculo = (userRecord, vehiculo, cb) => {
               "Se ha registrado el vehiculo " +
               vehiculo.placa +
               " por el taller BRANCH lo invitamos a que se registre en el siguiente link para que disfrute los beneficios BRANCH http://localhost:8080";
-            sms.sendSMSTwilio(userRecord.celular, textoSms);
+            sms.sendSMStoInfoBip(userRecord.celular, textoSms);
           }
           cb(null, vehiculo);
         } else {

@@ -88,7 +88,7 @@ const createOrden = (req, res, next) => {
 
             //Envio de notificaciones
             if (cita.vehiculo.usuario.celular && textoSms != "") {
-              sms.sendSMSTwilio(cita.vehiculo.usuario.celular, textoSms);
+              sms.sendSMStoInfoBip(cita.vehiculo.usuario.celular, textoSms);
             }
             if (cita.vehiculo.usuario.tokenCM && textoSms != "") {
               sms.sendNotificacionToUser(

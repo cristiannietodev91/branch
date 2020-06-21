@@ -41,7 +41,8 @@ const createUsuario = (usuario, cb) => {
       celular: usuario.celular,
       identificacion: usuario.identificacion ? usuario.identificacion : null,
       tipoUsuario: usuario.tipoUsuario,
-      estado: "Pendiente"
+      estado: "Pendiente",
+      typeDevice: usuario.typeDevice
     };
     console.debug("Usuario a registrar en la DB", usuarioDb);
     usersDAO.create(usuarioDb, function (error, usuario) {
@@ -91,7 +92,8 @@ const createUsuario = (usuario, cb) => {
                     celular: userRecord.phoneNumber,
                     identificacion: usuario.identificacion,
                     tipoUsuario: usuario.tipoUsuario,
-                    estado: "Pendiente"
+                    estado: "Pendiente",
+                    typeDevice: usuario.typeDevice
                   };
                   usersDAO.create(usuarioDb, function (error, usuario) {
                     if (error) {
@@ -119,7 +121,8 @@ const createUsuario = (usuario, cb) => {
         uid: usuario.email, // Se deja el email de UID mientras el usuario no este registrado en la APP
         celular: usuario.celular,
         tipoUsuario: usuario.tipoUsuario,
-        estado: "Pendiente"
+        estado: "Pendiente",
+        typeDevice: usuario.typeDevice
       };
       console.debug("Usuario a registrar en la DB", usuarioDb);
       usersDAO.create(usuarioDb, function (error, usuario) {
