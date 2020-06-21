@@ -212,7 +212,7 @@ const createVehiculo = (req, res, next) => {
                 } else {
                   //No Encontro usuario lo va a crear
                   let usuario = {
-                    email: vehiculo.email,
+                    email: vehiculo.usuario.email,
                     celular: "+57" + vehiculo.celular,
                     password: "123456",
                     fullname: "Sin nombre",
