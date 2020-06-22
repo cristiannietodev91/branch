@@ -104,8 +104,10 @@ Vue.use(
 );
 
 Vue.use(VueNativeNotification, {
-  requestOnNotify: true
+  requestOnNotify: false
 });
+
+Vue.notification.requestPermission().then(console.log);
 
 /*firebase.auth().onAuthStateChanged(user => {
   if(user){

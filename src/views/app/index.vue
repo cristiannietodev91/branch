@@ -24,24 +24,8 @@ export default {
     "footer-component": Footer
   },
   sockets: {
-    sendmessage: data => {}
-  },
-  created() {
-    this.$socket.emit("jointaller", this.currentUser.IdTaller, result => {
-      console.log("resultado join to room taller", result);
-    });
-    this.conversations.forEach(conversacion => {
-      this.$socket.emit("joinroom", { room: conversacion }, result => {
-        console.log(
-          "Se unio de nuevo exitosamente a las conversacion::>",
-          conversacion
-        );
-      });
-    });
-  },
-  mounted() {
-    console.log("Conversations :::>", this.conversations);
-    this.sockets.subscribe("sendmessage", data => {
+    sendmessage: function(data) {
+      console.log("Data :::>", data);
       this.$notification.show(
         data.user.name,
         {
@@ -55,6 +39,19 @@ export default {
           }
         }
       );
+    }
+  },
+  created() {
+    this.$socket.emit("jointaller", this.currentUser.IdTaller, result => {
+      console.log("resultado join to room taller", result);
+    });
+    this.conversations.forEach(conversacion => {
+      this.$socket.emit("joinroom", { room: conversacion }, result => {
+        console.log(
+          "Se unio de nuevo exitosamente a las conversacion::>",
+          conversacion
+        );
+      });
     });
   },
   data() {
