@@ -20,12 +20,7 @@ const getters = {
 const mutations = {
   changeSideMenuStatus(state, payload) {
     let { classNames, step: clickIndex, selectedMenuHasSubItems } = payload;
-    console.log(
-      "Click Indexxxx 11111:::>",
-      clickIndex,
-      " Modulo :::> ",
-      clickIndex % 4
-    );
+
     const currentClasses = classNames
       ? classNames.split(" ").filter(x => x !== "")
       : "";
@@ -46,12 +41,7 @@ const mutations = {
       )
         clickIndex = 0;
     }
-    console.log(
-      "Click Indexxxx:::>",
-      clickIndex,
-      " Modulo :::> ",
-      clickIndex % 4
-    );
+
     if (clickIndex % 4 === 0) {
       if (
         currentClasses.includes("menu-default") &&

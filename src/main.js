@@ -84,8 +84,10 @@ Vue.use(VCalendar, {
 });
 Vue.use(VueScrollTo);
 
+console.log("Process env :::>", process.env.NODE_ENV);
+
 firebase.initializeApp(
-  process.env.NODE_ENV == "production" ? firebaseConfigProd : firebaseConfigDev
+  process.env.NODE_ENV == "production" ? firebaseConfigDev : firebaseConfigDev
 );
 
 Vue.use(

@@ -1,44 +1,70 @@
 <template>
-    <div class="stepper-box">
-        <div class="top">
-            <!-- <div class="divider-line" :style="{width: `${(100/(steps.length) * (steps.length - 1)) - 10}%`}"></div> -->
-            <div class="steps-wrapper">
-                <!-- <template v-if="topButtons">
+  <div class="stepper-box">
+    <div class="top">
+      <!-- <div class="divider-line" :style="{width: `${(100/(steps.length) * (steps.length - 1)) - 10}%`}"></div> -->
+      <div class="steps-wrapper">
+        <!-- <template v-if="topButtons">
                     <div v-if="currentStep.index > 0" class="stepper-button-top previous" @click="backStep()">
                         <i class="material-icons">keyboard_arrow_left</i>
                     </div>
-                </template> -->
-                <template v-for="(step, index) in steps">
-                    <div :class="['step', isStepActive(index, step)]" :key="index" :style="{width: `${100 / steps.length}%`}"  @click="nextStep(index)">
-                        <!-- <div class="circle"> -->
-                        <!-- </div> -->
-                        <!-- <div class="step-title"> -->
-                            <h4>
-                              <i class="material-icons md-18">
-                                  {{ (step.completed) ? 'done' : step.icon }}
-                              </i>
-                              {{step.title}}
-                            </h4>
-                            <!-- <h5 class="step-subtitle">{{step.subtitle}}</h5> -->
-                        <!-- </div> -->
-                    </div>
-                </template>
-                <div v-if="topButtons" :class="['stepper-button-top next', !canContinue ? 'deactivated' : '']" @click="nextStep()">
-                    <i class="material-icons">keyboard_arrow_right</i>
-                </div>
-            </div>
+        </template>-->
+        <template v-for="(step, index) in steps">
+          <div
+            :class="['step', isStepActive(index, step)]"
+            :key="index"
+            :style="{width: `${100 / steps.length}%`}"
+            @click="nextStep(index)"
+          >
+            <!-- <div class="circle"> -->
+            <!-- </div> -->
+            <!-- <div class="step-title"> -->
+            <h4>
+              <i class="material-icons md-18">{{ (step.completed) ? 'done' : step.icon }}</i>
+              {{step.title}}
+            </h4>
+            <!-- <h5 class="step-subtitle">{{step.subtitle}}</h5> -->
+            <!-- </div> -->
+          </div>
+        </template>
+        <div
+          v-if="topButtons"
+          :class="['stepper-button-top next', !canContinue ? 'deactivated' : '']"
+          @click="nextStep()"
+        >
+          <i class="material-icons">keyboard_arrow_right</i>
         </div>
-        <div class="content">
-            <transition :enter-active-class="enterAnimation" :leave-active-class="leaveAnimation" mode="out-in">
-                <!--If keep alive-->
-                <keep-alive v-if="keepAliveData">
-                    <component :is="steps[currentStep.index].component" :data="steps[currentStep.index].data" :clickedNext="nextButton[currentStep.name]" @can-continue="proceed" @change-next="changeNextBtnValue" :current-step="currentStep"></component>
-                </keep-alive>
-                <!--If not show component and destroy it in each step change-->
-                <component v-else :is="steps[currentStep.index].component" :data="steps[currentStep.index].data" :clickedNext="nextButton[currentStep.name]" @can-continue="proceed" @change-next="changeNextBtnValue" :current-step="currentStep"></component>
-            </transition>
-        </div>
-        <!--
+      </div>
+    </div>
+    <div class="content">
+      <transition
+        :enter-active-class="enterAnimation"
+        :leave-active-class="leaveAnimation"
+        mode="out-in"
+      >
+        <!--If keep alive-->
+        <keep-alive v-if="keepAliveData">
+          <component
+            :is="steps[currentStep.index].component"
+            :data="steps[currentStep.index].data"
+            :clickedNext="nextButton[currentStep.name]"
+            @can-continue="proceed"
+            @change-next="changeNextBtnValue"
+            :current-step="currentStep"
+          ></component>
+        </keep-alive>
+        <!--If not show component and destroy it in each step change-->
+        <component
+          v-else
+          :is="steps[currentStep.index].component"
+          :data="steps[currentStep.index].data"
+          :clickedNext="nextButton[currentStep.name]"
+          @can-continue="proceed"
+          @change-next="changeNextBtnValue"
+          :current-step="currentStep"
+        ></component>
+      </transition>
+    </div>
+    <!--
         <div :class="['bottom', (currentStep.index > 0) ? '' : 'only-next']">
             <div v-if="currentStep.index > 0" class="btn top-right-button btn-primary btn-lg" @click="backStep()">
                 <i class="material-icons">keyboard_arrow_left</i>
@@ -48,9 +74,9 @@
                 <span>{{ (finalStep) ? 'finish' : 'next' | translate(locale) }}</span>
                 <i class="material-icons">keyboard_arrow_right</i>
             </div>
-        </div> 
-        -->
-    </div>
+        </div>
+    -->
+  </div>
 </template>
 
 <script>
@@ -133,67 +159,66 @@ export default {
       }
     },
     activateStep(index, back = false) {
-      console.log('Activate stepp :::>',index, ' back ::>',back);
       if (this.steps[index]) {
-          this.previousStep = this.currentStep;
-          this.currentStep = {
-            name: this.steps[index].name,
-            index: index
-          };
+        this.previousStep = this.currentStep;
+        this.currentStep = {
+          name: this.steps[index].name,
+          index: index
+        };
 
-          if (index + 1 === this.steps.length) {
-            this.finalStep = true;
-          } else {
-            this.finalStep = false;
-          }
-          if (!back) {
-            this.$emit("completed-step", this.previousStep);
-          }
+        if (index + 1 === this.steps.length) {
+          this.finalStep = true;
+        } else {
+          this.finalStep = false;
+        }
+        if (!back) {
+          this.$emit("completed-step", this.previousStep);
+        }
       }
-      this.$emit("active-step", this.currentStep);     
+      this.$emit("active-step", this.currentStep);
     },
     nextStepAction(index) {
-      //console.log('Next step Index ::>',index);
-      //console.log('Next step Current ::>',this.currentStep.index);
-      console.log('Cant continue::>',this.canContinue);
-      //this.nextButton[this.currentStep.name] = true;      
-      //Adelanto
-      if(index >= this.currentStep.index){
+      console.log("Cant continue::>", this.canContinue);
+      //this.nextButton[this.currentStep.name] = true;
+
+      if (index >= this.currentStep.index) {
         if (this.canContinue) {
           if (this.finalStep) {
             this.$emit("stepper-finished", this.currentStep);
           }
-          console.log('Adelanto');
+
           let currentIndex = index + 1;
           this.activateStep(index);
-          }
+        }
         this.canContinue = false;
-        this.$forceUpdate();  
-      }else{
-        console.log('Retraso');
+        this.$forceUpdate();
+      } else {
         this.$emit("clicking-back");
         let currentIndex = index;
         if (currentIndex >= 0) {
           this.activateStep(currentIndex, true);
         }
-      }       
-     
+      }
     },
-    nextStep (index) {
-      if (!this.$listeners || !this.$listeners['before-next-step']) {
-        console.log('Next step action');
-        this.nextStepAction(index)
+    nextStep(index) {
+      if (!this.$listeners || !this.$listeners["before-next-step"]) {
+        console.log("Next step action");
+        this.nextStepAction(index);
       }
       this.canContinue = false;
-      console.log('Before Next step action');
-      this.$emit("before-next-step", { currentStep: this.currentStep }, (next = true) => {
-        this.canContinue = true;
-        console.log('Before next',next);
-        if (next) {
-          console.log('If next');
-          this.nextStepAction()
+      console.log("Before Next step action");
+      this.$emit(
+        "before-next-step",
+        { currentStep: this.currentStep },
+        (next = true) => {
+          this.canContinue = true;
+          console.log("Before next", next);
+          if (next) {
+            console.log("If next");
+            this.nextStepAction();
+          }
         }
-      });
+      );
     },
     backStep() {
       this.$emit("clicking-back");
@@ -203,7 +228,6 @@ export default {
       }
     },
     proceed(payload) {
-      console.log('Cantt continue ::::>',payload);
       this.canContinue = payload.value;
     },
     changeNextBtnValue(payload) {
@@ -220,7 +244,7 @@ export default {
   },
   watch: {
     reset(val) {
-      if(!val) {
+      if (!val) {
         return;
       }
       this.keepAliveData = false;
@@ -228,7 +252,7 @@ export default {
       this.previousStep = {};
       this.$nextTick(() => {
         this.keepAliveData = this.keepAlive;
-        this.$emit('reset', true);
+        this.$emit("reset", true);
       });
     }
   },
