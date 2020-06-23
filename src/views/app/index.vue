@@ -23,9 +23,22 @@ export default {
     sidebar: Sidebar,
     "footer-component": Footer
   },
-  sockets: {
-    sendmessage: function(data) {
-      console.log("Data :::>", data);
+  created() {
+    this.$socket.emit("jointaller", this.currentUser.IdTaller, result => {
+      console.log("resultado join to room taller", result);
+    });
+    this.conversations.forEach(conversacion => {
+      this.$socket.emit("joinroom", { room: conversacion }, result => {
+        console.log(
+          "Se unio de nuevo exitosamente a las conversacion::>",
+          conversacion
+        );
+      });
+    });
+  },
+  mounted() {
+    this.sockets.listener.subscribe("sendmessage", data => {
+      // console.log("Log in mounted", data);
       this.$notification.show(
         data.user.name,
         {
@@ -39,19 +52,6 @@ export default {
           }
         }
       );
-    }
-  },
-  created() {
-    this.$socket.emit("jointaller", this.currentUser.IdTaller, result => {
-      console.log("resultado join to room taller", result);
-    });
-    this.conversations.forEach(conversacion => {
-      this.$socket.emit("joinroom", { room: conversacion }, result => {
-        console.log(
-          "Se unio de nuevo exitosamente a las conversacion::>",
-          conversacion
-        );
-      });
     });
   },
   data() {
