@@ -31,6 +31,7 @@ import VCalendar from "v-calendar";
 import "v-calendar/lib/v-calendar.min.css";
 import VueScrollTo from "vue-scrollto";
 import VueSocketIO from "vue-socket.io";
+import SocketIO from "socket.io-client";
 import VueNativeNotification from "vue-native-notification";
 const moment = require("moment-timezone");
 require("moment/locale/es");
@@ -90,16 +91,16 @@ firebase.initializeApp(
   process.env.NODE_ENV == "production" ? firebaseConfigProd : firebaseConfigDev
 );
 
+const options = { transports: ["websocket"], secure: true };
+
 Vue.use(
   new VueSocketIO({
     debug: true,
-    connection: process.env.VUE_APP_URLBACKSERVICES,
+    connection: SocketIO(process.env.VUE_APP_URLBACKSERVICES, options),
     vuex: {
       store,
-      actionPrefix: "SOCKET_",
-      mutationPrefix: "SOCKET_"
-    },
-    options: { transports: ["websocket"], secure: true }
+      actionPrefix: "SOCKET_"
+    }
   })
 );
 
