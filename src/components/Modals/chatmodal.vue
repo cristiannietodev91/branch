@@ -65,12 +65,12 @@ export default {
     ...mapGetters(["currentUser", "messages"])
     //...mapGetters(['currentUser', 'isLoadContacts', 'isLoadConversations', 'error', 'contacts', 'contactsSearchResult', 'conversations'])
   },
-  /*sockets: {
-    sendmessage: newmessage => {
-      console.log("Recibi el mensaje ::>", newmessage, "this ::>", this);
-      //this.conversationMessages.push(newmessage);
+  sockets: {
+    sendmessage: function(newmessage) {
+      console.log("New Message 2 ::>", newmessage);
+      this.addMessageItem(newmessage);
     }
-  },*/
+  },
   methods: {
     ...mapMutations(["addMessageItem"]),
     ...mapActions(["getMessages"]),
@@ -122,10 +122,6 @@ export default {
         );
       }
     );
-
-    this.sockets.subscribe("sendmessage", newmessage => {
-      this.addMessageItem(newmessage);
-    });
   },
   mounted() {
     this.getMessages({

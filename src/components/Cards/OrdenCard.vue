@@ -63,6 +63,16 @@ export default {
     HorizontalStepper,
     "modal-open-chat": ModalOpenChat
   },
+  sockets: {
+    sendmessage: function(newmessage) {
+      console.log("New Message ::>", newmessage);
+      if (newmessage.cita == this.data.IdCita) {
+        if (!this.showModal) {
+          this.newmessages += 1;
+        }
+      }
+    }
+  },
   data() {
     return {
       demoSteps: [],
@@ -270,15 +280,6 @@ export default {
       component: Entrega,
       data: dataEntrega,
       completed: idxEntrega > -1
-    });
-
-    this.sockets.subscribe("sendmessage", newmessage => {
-      console.log("New Message ::>", newmessage);
-      if (newmessage.cita == this.data.IdCita) {
-        if (!this.showModal) {
-          this.newmessages += 1;
-        }
-      }
     });
   }
 };
