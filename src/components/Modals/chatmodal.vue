@@ -24,14 +24,17 @@
         <b-button variant="outline-primary" class="icon-button small ml-1">
           <i class="simple-icon-paper-clip" />
         </b-button>
-        <b-button variant="primary" class="icon-button small ml-1" @click="sendMessage">
+        <b-button
+          variant="primary"
+          class="icon-button small ml-1"
+          @click="sendMessage"
+        >
           <i class="simple-icon-arrow-right" />
         </b-button>
       </div>
     </div>
   </div>
 </template>
-
 
 <script>
 import { mapGetters, mapActions, mapMutations } from "vuex";
@@ -61,12 +64,6 @@ export default {
   computed: {
     ...mapGetters(["currentUser", "messages"])
     //...mapGetters(['currentUser', 'isLoadContacts', 'isLoadConversations', 'error', 'contacts', 'contactsSearchResult', 'conversations'])
-  },
-  sockets: {
-    sendmessage: function(newmessage) {
-      console.log("New Message 2 ::>", newmessage);
-      this.addMessageItem(newmessage);
-    }
   },
   methods: {
     ...mapMutations(["addMessageItem"]),
@@ -124,6 +121,11 @@ export default {
     this.getMessages({
       IdConversacionUser: this.data.vehiculo.IdUsuario,
       IdTaller: this.data.IdTaller
+    });
+
+    this.sockets.listener.subscribe("sendmessage", newmessage => {
+      console.log("New Message 2 ::>", newmessage);
+      this.addMessageItem(newmessage);
     });
   }
   // beforeDestroy() {

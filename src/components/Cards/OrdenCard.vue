@@ -3,14 +3,18 @@
     <b-row>
       <b-colxx md="6" sm="6" lg="4" xxs="12">
         <h5 class="mb-1 card-subtitle truncate">{{ data.CodigoOrden }}</h5>
-        <p class="text-muted text-small mb-2">{{ $t("branch.orden.codigoOrden") }}</p>
+        <p class="text-muted text-small mb-2">
+          {{ $t("branch.orden.codigoOrden") }}
+        </p>
       </b-colxx>
       <b-colxx md="6" sm="6" lg="2" xxs="4">
         <h5 class="mb-1 card-subtitle truncate">{{ data.vehiculo.placa }}</h5>
         <p class="text-muted text-small mb-2">{{ $t("branch.orden.placa") }}</p>
       </b-colxx>
       <b-colxx md="6" sm="6" lg="2" xxs="4">
-        <h5 class="mb-1 card-subtitle truncate">{{ data.vehiculo.marca.marca }}</h5>
+        <h5 class="mb-1 card-subtitle truncate">
+          {{ data.vehiculo.marca.marca }}
+        </h5>
         <p class="text-muted text-small mb-2">{{ $t("branch.orden.marca") }}</p>
       </b-colxx>
       <b-colxx md="6" sm="6" lg="2" xxs="4">
@@ -24,12 +28,16 @@
           <i class="iconsminds-speach-bubble-8"></i>
           {{ $t("chat.send") }}
           <b-badge variant="light" v-if="newmessages > 0">
-            {{
-            newmessages
-            }}
+            {{ newmessages }}
           </b-badge>
         </b-button>
-        <b-modal :id="`sidebar${data.CodigoOrden}`" right shadow v-model="showModal" no-header>
+        <b-modal
+          :id="`sidebar${data.CodigoOrden}`"
+          right
+          shadow
+          v-model="showModal"
+          no-header
+        >
           <modal-open-chat :data="data" @hide="openChat"></modal-open-chat>
         </b-modal>
       </b-colxx>
@@ -62,16 +70,6 @@ export default {
     ThumbnailImage,
     HorizontalStepper,
     "modal-open-chat": ModalOpenChat
-  },
-  sockets: {
-    sendmessage: function(newmessage) {
-      console.log("New Message ::>", newmessage);
-      if (newmessage.cita == this.data.IdCita) {
-        if (!this.showModal) {
-          this.newmessages += 1;
-        }
-      }
-    }
   },
   data() {
     return {
@@ -119,6 +117,16 @@ export default {
     alert(payload) {
       alert("end");
     }
+  },
+  mounted() {
+    this.sockets.listener.subscribe("sendmessage", newmessage => {
+      console.log("New Message ::>", newmessage);
+      if (newmessage.cita == this.data.IdCita) {
+        if (!this.showModal) {
+          this.newmessages += 1;
+        }
+      }
+    });
   },
   created() {
     console.log("Create view ::>");
