@@ -31,10 +31,7 @@
     </div>
   </div>
 </template>
-<!-- <div>
 
-
-  </div> -->
 
 <script>
 import { mapGetters, mapActions, mapMutations } from "vuex";

@@ -92,7 +92,7 @@ firebase.initializeApp(
 
 Vue.use(
   new VueSocketIO({
-    debug: false,
+    debug: true,
     connection: process.env.VUE_APP_URLBACKSERVICES,
     vuex: {
       store,
