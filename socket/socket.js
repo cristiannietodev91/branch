@@ -25,6 +25,12 @@ class socket {
         const { room, IdTaller } = params;
         console.log("Trying to join room ", room, "IdTaller ::>", IdTaller);
         if (IdTaller) {
+          console.log(
+            "Emit new cliente to taller :::::>",
+            IdTaller,
+            "room :::>",
+            room
+          );
           socket.to(IdTaller).emit("newcliente", { room: room });
         }
         socket.join(room, () => {
