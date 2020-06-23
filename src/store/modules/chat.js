@@ -108,7 +108,6 @@ const actions = {
   getMessages({ commit }, { IdConversacionUser, IdTaller }) {
     ServiceCore.getMessagesByConversacion(IdConversacionUser, IdTaller).then(
       result => {
-        console.log("Result :::>", result);
         if (result.status == 200) {
           commit("getMessagesSucess", {
             messages: result.data

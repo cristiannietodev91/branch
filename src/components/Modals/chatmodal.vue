@@ -124,7 +124,6 @@ export default {
     });
 
     this.sockets.listener.subscribe("sendmessage", newmessage => {
-      console.log("New Message 2 ::>", newmessage);
       this.addMessageItem(newmessage);
     });
   }

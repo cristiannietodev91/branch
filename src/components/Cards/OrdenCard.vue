@@ -120,7 +120,6 @@ export default {
   },
   mounted() {
     this.sockets.listener.subscribe("sendmessage", newmessage => {
-      console.log("New Message ::>", newmessage);
       if (newmessage.cita == this.data.IdCita) {
         if (!this.showModal) {
           this.newmessages += 1;
@@ -129,7 +128,6 @@ export default {
     });
   },
   created() {
-    console.log("Create view ::>");
     var idxIngreso = this.data.etapas.findIndex(element => {
       if (element.IdEtapa == 2) {
         return true;

@@ -95,7 +95,7 @@ const options = { transports: ["websocket"], secure: true };
 
 Vue.use(
   new VueSocketIO({
-    debug: true,
+    debug: false,
     connection: SocketIO(process.env.VUE_APP_URLBACKSERVICES, options),
     vuex: {
       store,
