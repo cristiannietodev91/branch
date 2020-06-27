@@ -28,7 +28,8 @@
         "email": "Debe ingresar un email valido",
         "nit": "El formato del NIT no es valido (XXXXX-X)",
         "url": "El campo debe ser una URL",
-        "numeric": "El valor debe ser numerico"
+        "numeric": "El valor debe ser numerico",
+        "formatPlaca": "El formato de la placa debe ser AAA00A o AAA000"
       }
     },
     "clientes": {
@@ -190,6 +191,12 @@
     "citas": "Citas"
   },
   "dashboards": {
+    "clients": "Clientes",
+    "vehiculos": "Vehiculos",
+    "citasSolicitadas": "Citas solicitas",
+    "ordenenesCurso": "Ordenes en curso",
+    "citasByMonth": "Citas por mes",
+    "citasByState": "Citas por estado",
     "pending-orders": "Pedidos Pendientes",
     "completed-orders": "Pedidos Completados",
     "refund-requests": "Petición de Reembolso",

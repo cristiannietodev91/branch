@@ -202,11 +202,10 @@ export default {
     },
     nextStep(index) {
       if (!this.$listeners || !this.$listeners["before-next-step"]) {
-        console.log("Next step action");
         this.nextStepAction(index);
       }
       this.canContinue = false;
-      console.log("Before Next step action");
+
       this.$emit(
         "before-next-step",
         { currentStep: this.currentStep },

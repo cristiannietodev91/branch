@@ -45,7 +45,8 @@
               id="modalAddTaller"
               ref="modalAddTaller"
               :title="$t('branch.taller.add-new-taller-title')"
-              hide-footer>
+              hide-footer
+            >
               <b-form @submit.prevent="onValitadeFormSubmit" class="av-tooltip tooltip-label-right">
                 <b-form-group label-cols="2" horizontal :label="$t('branch.taller.nombreTaller')">
                   <b-form-input
@@ -147,7 +148,8 @@
             <b-button
               variant="empty"
               class="pt-0 pl-0 d-inline-block d-md-none"
-              v-b-toggle.displayOptions>
+              v-b-toggle.displayOptions
+            >
               {{ $t('pages.display-options') }}
               <i class="simple-icon-arrow-down align-middle" />
             </b-button>
@@ -194,8 +196,7 @@
         </b-colxx>
       </b-row>
       <template v-if="isLoad">
-        
-        <b-row >
+        <b-row>
           <b-colxx xxs="12" class="mb-3" v-for="(item,index) in items" :key="index" :id="item.id">
             <taller-list-item
               :key="item.id"
@@ -275,7 +276,7 @@ import ImageListItem from "../../../components/Listing/ImageListItem";
 import ThumbListItem from "../../../components/Listing/ThumbListItem";
 import TallerListItem from "../../../components/Listing/TallerListItem";
 
-const alpha = helpers.regex('alpha', /(^[0-9]+-{1}[0-9]{1})/)
+const alpha = helpers.regex("alpha", /(^[0-9]+-{1}[0-9]{1})/);
 
 export default {
   components: {
@@ -371,7 +372,7 @@ export default {
         required,
         email
       },
-      urlLogo:{
+      urlLogo: {
         required,
         url
       }
@@ -381,7 +382,6 @@ export default {
     loadItems() {
       this.isLoad = false;
       ServicesCore.getAllTalleres().then(response => {
-        console.debug("Resultado lista de talleres ::::>", response.data);
         this.total = response.total;
         this.from = response.from;
         this.to = response.to;
@@ -391,7 +391,7 @@ export default {
         this.lastPage = response.last_page;
         this.isLoad = true;
         return response.data;
-      });      
+      });
     },
     hideModal(refname) {
       this.$refs[refname].hide();

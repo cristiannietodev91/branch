@@ -57,6 +57,9 @@
                   <b-form-invalid-feedback
                     v-if="!$v.newItem.placa.required"
                   >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
+                  <b-form-invalid-feedback
+                    v-if="!$v.newItem.placa.placaValidate"
+                  >{{$t('branch.forms.validations.formatPlaca')}}</b-form-invalid-feedback>
                 </b-form-group>
 
                 <b-form-group :label="$t('branch.vehiculo.celular')">
@@ -206,8 +209,14 @@ import {
   requiredIf,
   minLength,
   maxLength,
-  email
+  email,
+  helpers
 } from "vuelidate/lib/validators";
+
+const placaValidate = helpers.regex(
+  "placa",
+  /^[a-zA-Z]{3}[0-9]{2}[a-zA-Z0-9]$/
+);
 
 import {
   DataListIcon,
@@ -269,7 +278,8 @@ export default {
   validations: {
     newItem: {
       placa: {
-        required
+        required,
+        placaValidate
       },
       celular: {
         required: requiredIf(function(celular) {
@@ -289,7 +299,6 @@ export default {
   methods: {
     loadItems(page, perPage, columnFilter, filter) {
       this.isLoad = false;
-      console.log("Carga lista de clientes ::::>", this.currentUser);
       ServicesCore.getPaginateVehiculosByIdTaller(
         this.currentUser.IdTaller,
         page,
@@ -298,7 +307,6 @@ export default {
         filter
       ).then(response => {
         if (response.status == 200) {
-          console.debug("Resultado lista de talleres ::::>", response.data);
           this.items = response.data.docs;
           this.total = response.data.total;
           this.lastPage = response.data.pages;
@@ -457,12 +465,10 @@ export default {
   },
   watch: {
     search() {
-      console.log("Value to search ::> ", this.search);
       this.page = 1;
       this.loadItems(this.page, this.perPage, this.filter.column, this.search);
     },
     page() {
-      console.log("New Page ::>", this.page);
       this.loadItems(this.page, this.perPage, this.filter.column, this.search);
     }
   },

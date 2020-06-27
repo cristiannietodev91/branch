@@ -149,9 +149,7 @@
           <div v-for="(s, index) in profileStatuses" :key="index" class="mb-4">
             <p class="mb-2">
               {{ s.title }}
-              <span class="float-right text-muted"
-                >{{ s.status }}/{{ s.total }}</span
-              >
+              <span class="float-right text-muted">{{ s.status }}/{{ s.total }}</span>
             </p>
             <b-progress :value="(s.status / s.total) * 100"></b-progress>
           </div>
@@ -160,12 +158,12 @@
 
       <b-colxx md="6" lg="4" class="mb-4">
         <gradient-card>
-          <b-badge pill variant="theme-3" class="align-self-start mb-3">{{
+          <b-badge pill variant="theme-3" class="align-self-start mb-3">
+            {{
             $t("dashboards.piaf")
-          }}</b-badge>
-          <p class="lead text-white">
-            {{ $t("dashboards.magic-is-in-the-details") }}
-          </p>
+            }}
+          </b-badge>
+          <p class="lead text-white">{{ $t("dashboards.magic-is-in-the-details") }}</p>
           <p class="text-white">{{ $t("dashboards.yes-it-is-indeed") }}</p>
         </gradient-card>
       </b-colxx>
@@ -179,28 +177,16 @@
 
     <draggable class="row">
       <b-colxx xl="3" lg="6" class="mb-4">
-        <radial-progress-card
-          :title="$t('dashboards.payment-status')"
-          :percent="64"
-        />
+        <radial-progress-card :title="$t('dashboards.payment-status')" :percent="64" />
       </b-colxx>
       <b-colxx xl="3" lg="6" class="mb-4">
-        <radial-progress-card
-          :title="$t('dashboards.work-progress')"
-          :percent="75"
-        />
+        <radial-progress-card :title="$t('dashboards.work-progress')" :percent="75" />
       </b-colxx>
       <b-colxx xl="3" lg="6" class="mb-4">
-        <radial-progress-card
-          :title="$t('dashboards.tasks-completed')"
-          :percent="32"
-        />
+        <radial-progress-card :title="$t('dashboards.tasks-completed')" :percent="32" />
       </b-colxx>
       <b-colxx xl="3" lg="6" class="mb-4">
-        <radial-progress-card
-          :title="$t('dashboards.payments-done')"
-          :percent="45"
-        />
+        <radial-progress-card :title="$t('dashboards.payments-done')" :percent="45" />
       </b-colxx>
     </draggable>
 
@@ -211,9 +197,11 @@
             <div class="float-left float-none-xs">
               <div class="d-inline-block">
                 <h5 class="d-inline">{{ $t("dashboards.website-visits") }}</h5>
-                <span class="text-muted text-small d-block">{{
+                <span class="text-muted text-small d-block">
+                  {{
                   $t("dashboards.unique-visitors")
-                }}</span>
+                  }}
+                </span>
               </div>
             </div>
             <b-dropdown
@@ -223,12 +211,16 @@
               variant="outline-primary"
               class="float-right float-none-xs mt-2"
             >
-              <b-dropdown-item>{{
+              <b-dropdown-item>
+                {{
                 $t("dashboards.last-week")
-              }}</b-dropdown-item>
-              <b-dropdown-item>{{
+                }}
+              </b-dropdown-item>
+              <b-dropdown-item>
+                {{
                 $t("dashboards.this-month")
-              }}</b-dropdown-item>
+                }}
+              </b-dropdown-item>
             </b-dropdown>
           </b-card-body>
           <div class="chart card-body pt-0">
@@ -241,12 +233,12 @@
           <b-card-body>
             <div class="float-left float-none-xs">
               <div class="d-inline-block">
-                <h5 class="d-inline">
-                  {{ $t("dashboards.conversion-rates") }}
-                </h5>
-                <span class="text-muted text-small d-block">{{
+                <h5 class="d-inline">{{ $t("dashboards.conversion-rates") }}</h5>
+                <span class="text-muted text-small d-block">
+                  {{
                   $t("dashboards.per-session")
-                }}</span>
+                  }}
+                </span>
               </div>
             </div>
             <b-dropdown
@@ -256,12 +248,16 @@
               variant="outline-secondary"
               class="float-right float-none-xs mt-2"
             >
-              <b-dropdown-item>{{
+              <b-dropdown-item>
+                {{
                 $t("dashboards.last-week")
-              }}</b-dropdown-item>
-              <b-dropdown-item>{{
+                }}
+              </b-dropdown-item>
+              <b-dropdown-item>
+                {{
                 $t("dashboards.this-month")
-              }}</b-dropdown-item>
+                }}
+              </b-dropdown-item>
             </b-dropdown>
           </b-card-body>
           <div class="chart card-body pt-0">
@@ -307,9 +303,7 @@
       <b-colxx lg="6" md="6" xl="4" sm="12" class="mb-4">
         <b-card class="dashboard-search" no-body>
           <b-card-body>
-            <h5 class="card-title text-white">
-              {{ $t("dashboards.advanced-search") }}
-            </h5>
+            <h5 class="card-title text-white">{{ $t("dashboards.advanced-search") }}</h5>
             <b-form class="form-container">
               <b-form-group :label="$t('dashboards.toppings')">
                 <v-select :options="selectData" />
@@ -318,20 +312,21 @@
                 <v-select :options="selectData" />
               </b-form-group>
               <b-form-group :label="$t('dashboards.keyword')">
-                <b-form-input
-                  type="text"
-                  :placeholder="$t('dashboards.keyword')"
-                ></b-form-input>
+                <b-form-input type="text" :placeholder="$t('dashboards.keyword')"></b-form-input>
               </b-form-group>
               <b-form-group>
-                <b-form-checkbox>{{
+                <b-form-checkbox>
+                  {{
                   $t("forms.custom-checkbox")
-                }}</b-form-checkbox>
+                  }}
+                </b-form-checkbox>
               </b-form-group>
               <b-form-group class="text-center">
-                <b-button type="submit" variant="primary" class="mt-4 btn-lg">{{
+                <b-button type="submit" variant="primary" class="mt-4 btn-lg">
+                  {{
                   $t("dashboards.search")
-                }}</b-button>
+                  }}
+                </b-button>
               </b-form-group>
             </b-form>
           </b-card-body>
@@ -370,10 +365,7 @@
           </b-colxx>
         </b-row>
 
-        <b-card
-          class="dashboard-top-rated"
-          :title="$t('dashboards.top-rated-items')"
-        >
+        <b-card class="dashboard-top-rated" :title="$t('dashboards.top-rated-items')">
           <glide-component :settings="glideTopRatedOption">
             <top-rated-slide-item
               image="/assets/img/carousel-1.jpg"

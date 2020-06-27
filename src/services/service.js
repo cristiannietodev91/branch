@@ -67,7 +67,6 @@ class ServiceCrm {
   }
 
   getCitasByIdTaller(IdTaller) {
-    console.log(`Buscar citas IdTaller :::> ${IdTaller}`);
     return http.get("/cita/getByIdTaller/" + IdTaller);
   }
 
@@ -99,6 +98,30 @@ class ServiceCrm {
         order: "ASC"
       }
     });
+  }
+
+  countVehiculosByTaller(IdTaller) {
+    return http.get("/vehiculo/countByIdTaller/" + IdTaller);
+  }
+
+  countClientesByTaller(IdTaller) {
+    return http.get("/usuario/countByIdTaller/" + IdTaller);
+  }
+
+  countCitasByTaller(IdTaller) {
+    return http.get("/cita/countByIdTaller/" + IdTaller);
+  }
+
+  countCitasByTallerAndDate(IdTaller) {
+    return http.get("/cita/countByDate/" + IdTaller);
+  }
+
+  countCitasByTallerAndEstado(IdTaller) {
+    return http.get("/cita/countByEstado/" + IdTaller);
+  }
+
+  countOrdenesByTaller(IdTaller) {
+    return http.get("/orden/countByIdTaller/" + IdTaller);
   }
 }
 

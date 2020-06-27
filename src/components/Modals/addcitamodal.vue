@@ -44,9 +44,7 @@
           label="fullName"
           :reduce="mecanico => mecanico.IdMecanico"
         >
-          <template
-            v-slot:option="option"
-          >{{ option.fullName }} - {{option.identificacion}}</template>
+          <template v-slot:option="option">{{ option.fullName }} - {{option.identificacion}}</template>
         </v-select>
       </b-form-group>
       <b-form-group :label="$t('branch.cita.servicio')" class="has-float-label">
@@ -83,7 +81,6 @@ import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 import { required } from "vuelidate/lib/validators";
 import ServicesCore from "../../services/service";
-
 
 export default {
   props: ["taller", "cita"],
@@ -154,7 +151,6 @@ export default {
       if (this.$v.newCita.$pending || this.$v.newCita.$error) return;
 
       //console.log(JSON.stringify(this.newCita));
-      
 
       var citaCreate = {
         IdCita: this.newCita.IdCita,
@@ -243,7 +239,7 @@ export default {
           })
           .catch(error => {
             //this.hideModal("modalAddCita");
-            console.error("Error al crear cita :::>",error);
+            console.error("Error al crear cita :::>", error);
             if (error.response) {
               this.$notify("error filled", "ERROR", error.response.data.error, {
                 duration: 3000,
@@ -264,7 +260,6 @@ export default {
       "cita",
       () => {
         if (this.cita.vehiculo) {
-          console.log(`Cita recibida como parametro :::>`, this.cita);
           this.newCita.placa = this.cita.vehiculo.placa;
           this.newCita.IdCita = this.cita.IdCita;
           this.newCita.mecanico = this.cita.IdMecanico;
@@ -272,9 +267,6 @@ export default {
           this.newCita.horaCita = this.cita.horaCita;
           this.newCita.servicio = this.cita.servicio;
           this.newCita.estado = this.cita.estado;
-        } else {
-          
-          //console.log(`Cita recibida como parametro en else:::>`, this.cita);
         }
         this.$forceUpdate();
       },

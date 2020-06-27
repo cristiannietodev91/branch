@@ -44,6 +44,13 @@ const routes = [
               import(
                 /* webpackChunkName: "dashboards" */ "./views/app/dashboards/Content"
               )
+          },
+          {
+            path: "taller",
+            component: () =>
+              import(
+                /* webpackChunkName: "dashboards" */ "./views/app/dashboards/TallerDash"
+              )
           }
         ]
       },

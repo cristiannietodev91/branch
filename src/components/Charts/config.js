@@ -1,4 +1,4 @@
-import { chartTooltip } from '../../utils'
+import { chartTooltip } from "../../utils";
 
 export const lineChartOptions = {
   legend: {
@@ -18,7 +18,7 @@ export const lineChartOptions = {
         gridLines: {
           display: true,
           lineWidth: 1,
-          color: 'rgba(0,0,0,0.1)',
+          color: "rgba(0,0,0,0.1)",
           drawBorder: false
         },
         ticks: {
@@ -38,10 +38,51 @@ export const lineChartOptions = {
       }
     ]
   }
-}
+};
+
+export const lineCitasDateOptions = {
+  legend: {
+    display: false
+  },
+  responsive: true,
+  maintainAspectRatio: false,
+  tooltips: chartTooltip,
+  plugins: {
+    datalabels: {
+      display: false
+    }
+  },
+  scales: {
+    yAxes: [
+      {
+        gridLines: {
+          display: true,
+          lineWidth: 1,
+          color: "rgba(0,0,0,0.1)",
+          drawBorder: false
+        },
+        ticks: {
+          beginAtZero: true,
+          stepSize: 1,
+          min: 0,
+          max: 10,
+          padding: 20
+        }
+      }
+    ],
+    xAxes: [
+      {
+        gridLines: {
+          display: false
+        }
+      }
+    ]
+  }
+};
+
 export const polarAreaChartOptions = {
   legend: {
-    position: 'bottom',
+    position: "bottom",
     labels: {
       padding: 30,
       usePointStyle: true,
@@ -61,7 +102,7 @@ export const polarAreaChartOptions = {
     }
   },
   tooltips: chartTooltip
-}
+};
 
 export const areaChartOptions = {
   legend: {
@@ -76,7 +117,7 @@ export const areaChartOptions = {
         gridLines: {
           display: true,
           lineWidth: 1,
-          color: 'rgba(0,0,0,0.1)',
+          color: "rgba(0,0,0,0.1)",
           drawBorder: false
         },
         ticks: {
@@ -96,11 +137,11 @@ export const areaChartOptions = {
       }
     ]
   }
-}
+};
 
 export const scatterChartOptions = {
   legend: {
-    position: 'bottom',
+    position: "bottom",
     labels: {
       padding: 30,
       usePointStyle: true,
@@ -115,7 +156,7 @@ export const scatterChartOptions = {
         gridLines: {
           display: true,
           lineWidth: 1,
-          color: 'rgba(0,0,0,0.1)',
+          color: "rgba(0,0,0,0.1)",
           drawBorder: false
         },
         ticks: {
@@ -132,17 +173,17 @@ export const scatterChartOptions = {
         gridLines: {
           display: true,
           lineWidth: 1,
-          color: 'rgba(0,0,0,0.1)'
+          color: "rgba(0,0,0,0.1)"
         }
       }
     ]
   },
   tooltips: chartTooltip
-}
+};
 
 export const barChartOptions = {
   legend: {
-    position: 'bottom',
+    position: "bottom",
     labels: {
       padding: 30,
       usePointStyle: true,
@@ -157,7 +198,7 @@ export const barChartOptions = {
         gridLines: {
           display: true,
           lineWidth: 1,
-          color: 'rgba(0,0,0,0.1)',
+          color: "rgba(0,0,0,0.1)",
           drawBorder: false
         },
         ticks: {
@@ -178,11 +219,11 @@ export const barChartOptions = {
     ]
   },
   tooltips: chartTooltip
-}
+};
 
 export const radarChartOptions = {
   legend: {
-    position: 'bottom',
+    position: "bottom",
     labels: {
       padding: 30,
       usePointStyle: true,
@@ -197,11 +238,11 @@ export const radarChartOptions = {
     }
   },
   tooltips: chartTooltip
-}
+};
 
 export const pieChartOptions = {
   legend: {
-    position: 'bottom',
+    position: "bottom",
     labels: {
       padding: 30,
       usePointStyle: true,
@@ -219,11 +260,11 @@ export const pieChartOptions = {
     }
   },
   tooltips: chartTooltip
-}
+};
 
 export const doughnutChartOptions = {
   legend: {
-    position: 'bottom',
+    position: "bottom",
     labels: {
       padding: 30,
       usePointStyle: true,
@@ -242,7 +283,7 @@ export const doughnutChartOptions = {
     }
   },
   tooltips: chartTooltip
-}
+};
 
 export const smallLineChartOptions = {
   layout: {
@@ -295,4 +336,4 @@ export const smallLineChartOptions = {
   //     }
   //   }
   // ]}
-}
+};
