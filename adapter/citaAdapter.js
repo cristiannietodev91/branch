@@ -1,5 +1,5 @@
 const citaDAO = require("../dao/citaDAO");
-const { Op } = require("sequelize");
+const { Op, Sequelize } = require("sequelize");
 
 /**
  *
@@ -70,8 +70,8 @@ const getAllCitasPasadasByIdUsuario = (IdUsuario, cb) => {
       [Op.or]: [
         { estado: "Cancelada" },
         { estado: "Incumplida" },
-        { estado: "Finalizada" },
-      ],
+        { estado: "Finalizada" }
+      ]
     },
     { IdUsuario: IdUsuario },
     {},
@@ -95,7 +95,7 @@ const getAllCitasFuturasByIdUsuario = (IdUsuario, cb) => {
   citaDAO.findAllByFilter(
     {
       [Op.or]: [{ estado: "Solicitada" }, { estado: "Confirmada" }],
-      fechaCita: { [Op.gte]: new Date() },
+      fechaCita: { [Op.gte]: new Date() }
     },
     { IdUsuario: IdUsuario },
     { IdOrdenTrabajo: { [Op.is]: null } },
@@ -133,6 +133,46 @@ const getAllCitasActivasByIdUsuario = (IdUsuario, cb) => {
   );
 };
 
+const countCitasByIdTaller = (IdTaller, cb) => {
+  citaDAO.count({ IdTaller: IdTaller }, null, null, (error, result) => {
+    if (error) {
+      cb(error, null);
+    } else {
+      cb(null, result);
+    }
+  });
+};
+
+const countCitasByEstadoIdTaller = (IdTaller, cb) => {
+  citaDAO.count(
+    { IdTaller: IdTaller },
+    ["estado"],
+    ["estado"],
+    (error, result) => {
+      if (error) {
+        cb(error, null);
+      } else {
+        cb(null, result);
+      }
+    }
+  );
+};
+
+const countCitasByDateAndIdTaller = (IdTaller, cb) => {
+  citaDAO.count(
+    { IdTaller: IdTaller },
+    ["date"],
+    [[Sequelize.literal(`DATE(createdAt)`), "date"]],
+    (error, result) => {
+      if (error) {
+        cb(error, null);
+      } else {
+        cb(null, result);
+      }
+    }
+  );
+};
+
 module.exports = {
   findCitaByFilter,
   getAllCitasByIdTaller,
@@ -140,4 +180,7 @@ module.exports = {
   getAllCitasPasadasByIdUsuario,
   getAllCitasFuturasByIdUsuario,
   getAllCitasActivasByIdUsuario,
+  countCitasByIdTaller,
+  countCitasByEstadoIdTaller,
+  countCitasByDateAndIdTaller
 };

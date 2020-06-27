@@ -569,10 +569,141 @@ const getAllCitasFuturasByIdUsuario = (req, res, next) => {
   }
 };
 
+const countCitasByIdTaller = (req, res, next) => {
+  try {
+    var IdTaller = req.params.Id;
+
+    citaAdapter.countCitasByIdTaller(IdTaller, (error, citas) => {
+      if (error) {
+        return res
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .json({ error: error });
+      } else {
+        if (citas) {
+          return res.status(HttpStatus.OK).json(citas);
+        } else {
+          return res.status(HttpStatus.OK).json({});
+        }
+      }
+    });
+  } catch (error) {
+    console.error(
+      "Error al contar Citas By Taller :::>",
+      IdTaller,
+      " Error :::>",
+      error
+    );
+    return res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ error: error.message });
+  }
+};
+
+const countCitasByEstadoIdTaller = (req, res, next) => {
+  try {
+    var IdTaller = req.params.Id;
+
+    citaAdapter.countCitasByEstadoIdTaller(IdTaller, (error, citas) => {
+      if (error) {
+        return res
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .json({ error: error });
+      } else {
+        if (citas) {
+          return res.status(HttpStatus.OK).json(citas);
+        } else {
+          return res.status(HttpStatus.OK).json({});
+        }
+      }
+    });
+  } catch (error) {
+    console.error(
+      "Error al contar Citas By Taller :::>",
+      IdTaller,
+      " Error :::>",
+      error
+    );
+    return res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ error: error.message });
+  }
+};
+
+const countCitasByDateAndIdTaller = (req, res, next) => {
+  try {
+    var IdTaller = req.params.Id;
+
+    citaAdapter.countCitasByDateAndIdTaller(IdTaller, (error, citas) => {
+      if (error) {
+        return res
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .json({ error: error });
+      } else {
+        if (citas) {
+          return res.status(HttpStatus.OK).json(citas);
+        } else {
+          return res.status(HttpStatus.OK).json({});
+        }
+      }
+    });
+  } catch (error) {
+    console.error(
+      "Error al contar Citas By Taller :::>",
+      IdTaller,
+      " Error :::>",
+      error
+    );
+    return res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ error: error.message });
+  }
+};
+
+const getAllCitasByfilter = (req, res, next) => {
+  try {
+    let IdTaller = req.params.Id;
+    let filter = req.body.value;
+
+    citaDAO.findAllByFilter(
+      { IdTaller: IdTaller, estado: { [Op.ne]: "Cancelada" } },
+      {},
+      { CodigoOrden: filter },
+      function (error, citas) {
+        if (error) {
+          console.error(
+            "Error al realizar la transaccion de buscar citas por Taller error ::>",
+            error.message
+          );
+          if (error.errors) {
+            return res
+              .status(HttpStatus.INTERNAL_SERVER_ERROR)
+              .json({ error: error.errors[0] });
+          } else {
+            return res
+              .status(HttpStatus.INTERNAL_SERVER_ERROR)
+              .json({ error: error.message });
+          }
+        } else {
+          if (citas) {
+            var events = castCitasToEvents(citas);
+            res.status(HttpStatus.OK).json(events);
+          }
+        }
+      }
+    );
+  } catch (error) {
+    console.error("Error al listar citas ::::> ", error);
+    return res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ error: error.message });
+  }
+};
+
 const castCitasToEvents = (citas) => {
   let events = [];
   citas.forEach((cita) => {
     var dataCita = cita.dataValues;
+
     let hour = 0;
     if (cita.dataValues.horaCita) {
       hour = moment(cita.dataValues.horaCita, "HH:mm:ss");
@@ -621,46 +752,6 @@ const castCitasToEvents = (citas) => {
   return events;
 };
 
-const getAllCitasByfilter = (req, res, next) => {
-  try {
-    let IdTaller = req.params.Id;
-    let filter = req.body.value;
-
-    citaDAO.findAllByFilter(
-      { IdTaller: IdTaller, estado: { [Op.ne]: "Cancelada" } },
-      {},
-      { CodigoOrden: filter },
-      function (error, citas) {
-        if (error) {
-          console.error(
-            "Error al realizar la transaccion de buscar citas por Taller error ::>",
-            error.message
-          );
-          if (error.errors) {
-            return res
-              .status(HttpStatus.INTERNAL_SERVER_ERROR)
-              .json({ error: error.errors[0] });
-          } else {
-            return res
-              .status(HttpStatus.INTERNAL_SERVER_ERROR)
-              .json({ error: error.message });
-          }
-        } else {
-          if (citas) {
-            var events = castCitasToEvents(citas);
-            res.status(HttpStatus.OK).json(events);
-          }
-        }
-      }
-    );
-  } catch (error) {
-    console.error("Error al listar citas ::::> ", error);
-    return res
-      .status(HttpStatus.INTERNAL_SERVER_ERROR)
-      .json({ error: error.message });
-  }
-};
-
 module.exports = {
   getAllCitas,
   createCita,
@@ -672,5 +763,8 @@ module.exports = {
   getAllCitasPasadasByIdUsuario,
   getAllCitasActivasByIdUsuario,
   getAllCitasFuturasByIdUsuario,
-  getAllCitasByfilter
+  getAllCitasByfilter,
+  countCitasByIdTaller,
+  countCitasByEstadoIdTaller,
+  countCitasByDateAndIdTaller
 };

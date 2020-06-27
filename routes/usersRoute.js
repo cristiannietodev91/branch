@@ -11,6 +11,8 @@ router.get("/loginUsuario/:uid", userController.loginUserTallerByUID);
 
 router.get("/getByEmail/:email", userController.findUserByEmail);
 
+router.get("/countByIdTaller/:Id", userController.countUsuariosByIdTaller);
+
 router.post("/createFireBaseUser", userController.createFireBaseUsuario);
 
 router.put("/update/:uid", userController.updateUsuarioByUid);

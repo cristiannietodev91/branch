@@ -6,8 +6,8 @@ const getOrdenesByIdTallerAndFilter = (IdTaller, filter, cb) => {
     {
       IdTaller: IdTaller,
       CodigoOrden: {
-        [Op.substring]: filter,
-      },
+        [Op.substring]: filter
+      }
     },
     {},
     function (error, ordenes) {
@@ -26,7 +26,7 @@ const getOrdenesByIdTallerAndIdCita = (IdTaller, IdCita, cb) => {
   ordenDAO.findAllByFilter(
     {
       IdTaller: IdTaller,
-      IdCita: IdCita,
+      IdCita: IdCita
     },
     {},
     function (error, ordenes) {
@@ -41,7 +41,29 @@ const getOrdenesByIdTallerAndIdCita = (IdTaller, IdCita, cb) => {
   );
 };
 
+const countOrdenesByIdTaller = (IdTaller, cb) => {
+  ordenDAO.count({ IdTaller: IdTaller }, null, (error, result) => {
+    if (error) {
+      cb(error, null);
+    } else {
+      cb(null, result);
+    }
+  });
+};
+
+const countOrdenesByEstadoIdTaller = (IdTaller, cb) => {
+  ordenDAO.count({ IdTaller: IdTaller }, ["estado"], (error, result) => {
+    if (error) {
+      cb(error, null);
+    } else {
+      cb(null, result);
+    }
+  });
+};
+
 module.exports = {
   getOrdenesByIdTallerAndFilter,
   getOrdenesByIdTallerAndIdCita,
+  countOrdenesByIdTaller,
+  countOrdenesByEstadoIdTaller
 };

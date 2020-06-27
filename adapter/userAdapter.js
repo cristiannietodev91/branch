@@ -257,10 +257,21 @@ const findUsuarioByUid = (uid, cb) => {
   });
 };
 
+const countUsuariosByIdTaller = (IdTaller, cb) => {
+  usersDAO.count({}, { IdTaller: IdTaller }, (error, count) => {
+    if (error) {
+      cb(error, null);
+    } else {
+      cb(null, count);
+    }
+  });
+};
+
 module.exports = {
   findUserByEmail,
   createUsuario,
   updateUsuario,
   updateUsuarioByIdUsuario,
-  findUsuarioByUid
+  findUsuarioByUid,
+  countUsuariosByIdTaller
 };

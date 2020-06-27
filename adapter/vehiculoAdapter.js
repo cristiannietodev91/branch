@@ -87,6 +87,17 @@ const crearVehiculo = (userRecord, vehiculo, cb) => {
   }
 };
 
+const countVehiculosByIdTaller = (IdTaller, cb) => {
+  vehiculoDAO.count({ IdTaller: IdTaller }, (error, count) => {
+    if (error) {
+      cb(error, null);
+    } else {
+      cb(null, count);
+    }
+  });
+};
+
 module.exports = {
-  crearVehiculo
+  crearVehiculo,
+  countVehiculosByIdTaller
 };

@@ -11,6 +11,8 @@ router.post("/create", ordenController.createOrden);
 
 router.get("/getByIdTaller/:Id", ordenController.getAllOrdenesByIdTaller);
 
+router.get("/countByIdTaller/:Id", ordenController.countOrdenesByIdTaller);
+
 router.put("/update/:Id", ordenController.updateOrden);
 
 router.get(

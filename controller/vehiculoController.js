@@ -716,6 +716,39 @@ const getAllVehiculosByIdUsuario = (req, res, next) => {
   }
 };
 
+const countVehiculosByIdTaller = (req, res, next) => {
+  try {
+    var IdTaller = req.params.Id;
+    vehiculoAdapter.countVehiculosByIdTaller(IdTaller, (error, count) => {
+      if (error) {
+        console.error(
+          "Error al realizar la transaccion de contar vehiculos by idTaller:::>",
+          "error ::>",
+          error.message
+        );
+        if (error.errors) {
+          return res
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .json({ error: error.errors[0] });
+        } else {
+          return res
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .json({ error: error.message });
+        }
+      } else {
+        if (count) {
+          res.status(HttpStatus.OK).json(count);
+        }
+      }
+    });
+  } catch (error) {
+    console.error("Error al contar  vehiculos ", error);
+    return res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ error: error.message });
+  }
+};
+
 module.exports = {
   getAllVehiculos,
   createVehiculo,
@@ -726,5 +759,6 @@ module.exports = {
   getAllVehiculosByIdUsuario,
   getAllPaginateFilterVehiculosByIdTaller,
   getVehiculoByPlaca,
-  updateFechaVencimiento
+  updateFechaVencimiento,
+  countVehiculosByIdTaller
 };

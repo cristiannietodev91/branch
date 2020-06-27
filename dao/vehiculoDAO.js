@@ -210,5 +210,27 @@ module.exports = {
       .catch(function (err) {
         cb(err, null);
       });
+  },
+  count: (filter, cb) => {
+    return models.sequelize
+      .transaction((t1) => {
+        return models.vehiculo
+          .count({
+            where: filter
+          })
+          .then((usuario) => {
+            return usuario;
+          });
+      })
+      .then((result) => {
+        if (result) {
+          cb(null, result);
+        } else {
+          cb(null, null);
+        }
+      })
+      .catch((err) => {
+        cb(err, null);
+      });
   }
 };

@@ -39,7 +39,7 @@ module.exports = {
       .transaction((t1) => {
         return models.ordentrabajo
           .update(orden, {
-            where: { IdOrdenTrabajo: IdOrdenTrabajo },
+            where: { IdOrdenTrabajo: IdOrdenTrabajo }
           })
           .then((orden) => {
             return orden;
@@ -64,20 +64,20 @@ module.exports = {
           .findByPk(IdOrdenTrabajo, {
             include: [
               {
-                model: models.mecanico,
+                model: models.mecanico
               },
               {
                 model: models.vehiculo,
                 include: [
                   {
-                    model: models.marca,
+                    model: models.marca
                   },
                   {
-                    model: models.usuarios,
-                  },
-                ],
-              },
-            ],
+                    model: models.usuarios
+                  }
+                ]
+              }
+            ]
           })
           .then((orden) => {
             return orden;
@@ -100,7 +100,7 @@ module.exports = {
       .transaction((t1) => {
         return models.ordentrabajo
           .destroy({
-            where: { IdOrdenTrabajo: IdOrdenTrabajo },
+            where: { IdOrdenTrabajo: IdOrdenTrabajo }
           })
           .then((deleted) => {
             return deleted;
@@ -125,25 +125,25 @@ module.exports = {
                 where: filterVehiculo,
                 include: [
                   {
-                    model: models.marca,
+                    model: models.marca
                   },
                   {
-                    model: models.usuarios,
-                  },
-                ],
+                    model: models.usuarios
+                  }
+                ]
               },
               {
-                model: models.taller,
+                model: models.taller
               },
               {
-                model: models.mecanico,
+                model: models.mecanico
               },
               {
-                model: models.etapa,
-              },
+                model: models.etapa
+              }
             ],
             where: filterOrden,
-            order: [["CodigoOrden"], ["createdAt", "DESC"]],
+            order: [["CodigoOrden"], ["createdAt", "DESC"]]
           })
           .then((ordenes) => {
             return ordenes;
@@ -160,4 +160,44 @@ module.exports = {
         cb(err, null);
       });
   },
+  count: (filter, groupBy, cb) => {
+    // Find all users
+    if (groupBy && groupBy.length > 0) {
+      return models.sequelize
+        .transaction((t1) => {
+          return models.ordentrabajo
+            .count({
+              group: groupBy,
+              attributes: groupBy,
+              where: filter
+            })
+            .then((ordenes) => {
+              return ordenes;
+            });
+        })
+        .then((result) => {
+          cb(null, result);
+        })
+        .catch((err) => {
+          cb(err, null);
+        });
+    } else {
+      return models.sequelize
+        .transaction((t1) => {
+          return models.ordentrabajo
+            .count({
+              where: filter
+            })
+            .then((ordenes) => {
+              return ordenes;
+            });
+        })
+        .then((result) => {
+          cb(null, result);
+        })
+        .catch((err) => {
+          cb(err, null);
+        });
+    }
+  }
 };

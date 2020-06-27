@@ -330,6 +330,39 @@ const findUserByEmail = (req, res, next) => {
   }
 };
 
+const countUsuariosByIdTaller = (req, res, next) => {
+  try {
+    var IdTaller = req.params.Id;
+    userAdapater.countUsuariosByIdTaller(IdTaller, (error, count) => {
+      if (error) {
+        console.error(
+          "Error al realizar la transaccion de contar usuarios by idTaller:::>",
+          "error ::>",
+          error.message
+        );
+        if (error.errors) {
+          return res
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .json({ error: error.errors[0] });
+        } else {
+          return res
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .json({ error: error.message });
+        }
+      } else {
+        if (count) {
+          res.status(HttpStatus.OK).json(count);
+        }
+      }
+    });
+  } catch (error) {
+    console.error("Error al contar  usuario ", error);
+    return res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ error: error.message });
+  }
+};
+
 module.exports = {
   getAllUsuarios,
   createFireBaseUsuario,
@@ -338,5 +371,6 @@ module.exports = {
   deleteUsuarioById,
   findUsuarioById,
   loginUserTallerByUID,
-  findUserByEmail
+  findUserByEmail,
+  countUsuariosByIdTaller
 };

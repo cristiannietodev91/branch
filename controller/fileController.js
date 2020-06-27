@@ -3,10 +3,12 @@ let AWS = require("aws-sdk");
 let moment = require("moment");
 //var v4 = require('aws-signature-v4');
 const awsConfig = {
-  accessKeyId: "AKIAJSZW5EH6Z6XEZQTA",
-  secretAccessKey: "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",
-  region: "us-east-2",
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID_MEDIA,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY_MEDIA,
+  region: process.env.AWS_DEFAULT_REGION_MEDIA
 };
+
+const bucketName = process.env.BUCKET_MEDIA_NAME || "branchmedia";
 
 var s3 = new AWS.S3(awsConfig);
 
@@ -17,7 +19,7 @@ const signedS3 = (req, res, next) => {
   //console.log('Peticion recibida 2::::>', paramsss);
   let unicocode = moment().format("MMDDYYYYHHMMSS");
   var key = unicocode + req.query.filename;
-  var bucket = "branchmedia";
+  var bucket = bucketName;
   var params = {
     Bucket: bucket,
     Expires: 3600,
@@ -26,8 +28,8 @@ const signedS3 = (req, res, next) => {
       { acl: "public-read-write" },
       { success_action_status: "201" },
       ["starts-with", "$Content-Type", ""],
-      ["starts-with", "$key", ""],
-    ],
+      ["starts-with", "$key", ""]
+    ]
   };
 
   const resSign = s3.createPresignedPost(params);
@@ -38,9 +40,9 @@ const signedS3 = (req, res, next) => {
       acl: "public-read-write",
       success_action_status: "201",
       key,
-      ...resSign.fields, // Additional fields submitted as headers to S3
+      ...resSign.fields // Additional fields submitted as headers to S3
     },
-    postEndpoint: resSign.url,
+    postEndpoint: resSign.url
   };
 
   res.status(HttpStatus.OK).json(result);
@@ -53,12 +55,12 @@ const signedURL = (req, res, next) => {
   //console.log('Peticion recibida 2::::>', paramsss);
   let unicocode = moment().format("MMDDYYYYHHMMSS");
   var key = unicocode + req.body.fileName;
-  var bucket = "branchmedia";
+  var bucket = bucketName;
   var params = {
     Key: key,
     Bucket: bucket,
     ContentType: "image/jpg",
-    ACL: "public-read",
+    ACL: "public-read"
   };
 
   s3.getSignedUrl("putObject", params, (error, url) => {
@@ -81,5 +83,5 @@ const sendFile = (req, res, next) => {
 module.exports = {
   signedS3,
   sendFile,
-  signedURL,
+  signedURL
 };

@@ -9,6 +9,12 @@ router.get("/getById/:Id", citaController.findCitaById);
 
 router.get("/getByIdTaller/:Id", citaController.getAllCitasByIdTaller);
 
+router.get("/countByIdTaller/:Id", citaController.countCitasByIdTaller);
+
+router.get("/countByEstado/:Id", citaController.countCitasByEstadoIdTaller);
+
+router.get("/countByDate/:Id", citaController.countCitasByDateAndIdTaller);
+
 router.get("/getByIdUsuario/:Id", citaController.getAllCitasByIdUsuario);
 
 router.get(

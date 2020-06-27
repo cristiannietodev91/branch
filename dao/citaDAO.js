@@ -174,5 +174,45 @@ module.exports = {
       .catch(function (err) {
         cb(err, null);
       });
+  },
+  count: (filter, groupBy, attributes, cb) => {
+    // Find all users
+    if (groupBy && groupBy.length > 0) {
+      return models.sequelize
+        .transaction((t1) => {
+          return models.cita
+            .count({
+              group: groupBy,
+              attributes: attributes,
+              where: filter
+            })
+            .then((citas) => {
+              return citas;
+            });
+        })
+        .then((result) => {
+          cb(null, result);
+        })
+        .catch((err) => {
+          cb(err, null);
+        });
+    } else {
+      return models.sequelize
+        .transaction((t1) => {
+          return models.cita
+            .count({
+              where: filter
+            })
+            .then((citas) => {
+              return citas;
+            });
+        })
+        .then((result) => {
+          cb(null, result);
+        })
+        .catch((err) => {
+          cb(err, null);
+        });
+    }
   }
 };

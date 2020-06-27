@@ -1,5 +1,4 @@
 const conversacionDAO = require("../dao/conversacionDAO");
-const { Op } = require("sequelize");
 
 const createConversacion = (conversacion, cb) => {
   conversacionDAO.create(conversacion, (error, conversacion) => {
@@ -38,5 +37,5 @@ const createOrGetConversacion = (paramconversacion, cb) => {
 
 module.exports = {
   createConversacion,
-  createOrGetConversacion,
+  createOrGetConversacion
 };

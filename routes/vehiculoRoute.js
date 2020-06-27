@@ -9,6 +9,8 @@ router.get("/getById/:Id", vehiculoController.findVehiculoById);
 
 router.get("/getByIdTaller/:Id", vehiculoController.getAllVehiculosByIdTaller);
 
+router.get("/countByIdTaller/:Id", vehiculoController.countVehiculosByIdTaller);
+
 router.get(
   "/getPaginateByIdTaller/:Id",
   vehiculoController.getAllPaginateFilterVehiculosByIdTaller

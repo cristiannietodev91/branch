@@ -433,6 +433,36 @@ const getAllOrdenesByIdTallerAndIdCita = (req, res, next) => {
   }
 };
 
+const countOrdenesByIdTaller = (req, res, next) => {
+  try {
+    var IdTaller = req.params.Id;
+
+    ordenAdapter.countOrdenesByIdTaller(IdTaller, (error, citas) => {
+      if (error) {
+        return res
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .json({ error: error });
+      } else {
+        if (citas) {
+          return res.status(HttpStatus.OK).json(citas);
+        } else {
+          return res.status(HttpStatus.OK).json({});
+        }
+      }
+    });
+  } catch (error) {
+    console.error(
+      "Error al contar ordenes By Taller :::>",
+      IdTaller,
+      " Error :::>",
+      error
+    );
+    return res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ error: error.message });
+  }
+};
+
 module.exports = {
   createOrden,
   updateOrden,
@@ -440,5 +470,6 @@ module.exports = {
   getAllOrdenesByIdTaller,
   getOrdenById,
   getAllOrdenesByIdTallerAndFilter,
-  getAllOrdenesByIdTallerAndIdCita
+  getAllOrdenesByIdTallerAndIdCita,
+  countOrdenesByIdTaller
 };
