@@ -11,7 +11,11 @@
       </b-row>
       <template v-if="isLoad">
         <b-colxx xxs="12" class="mb-3" v-for="(item,index) in items" :key="index" :id="item.id">
-          <conversacion-item :key="item.id" :conversacion="item" />
+          <conversacion-item
+            :key="item.id"
+            :conversacion="item"
+            @markreadmessages="markreadmessages"
+          />
         </b-colxx>
       </template>
       <template v-else>
@@ -25,7 +29,6 @@
 import { mapGetters } from "vuex";
 
 import ServicesCore from "../../../services/service";
-
 import ConversacionItem from "../../../components/Listing/ConversacionItem";
 
 export default {
@@ -42,15 +45,31 @@ export default {
   methods: {
     loadItems() {
       this.isLoad = false;
-      ServicesCore.getConversacionesByTaller(this.currentUser.IdTaller).then(
-        response => {
-          if (response.status == 200) {
-            this.items = response.data;
-            this.selectedItems = [];
-            this.isLoad = true;
-          }
+      ServicesCore.getConversacionesUnReadByTaller(
+        this.currentUser.IdTaller
+      ).then(response => {
+        if (response.status == 200) {
+          this.items = response.data;
+          this.selectedItems = [];
+          this.isLoad = true;
         }
-      );
+      });
+    },
+    markreadmessages(data) {
+      const conversacion = {
+        IdConversacionUser: data.IdConversacionUser,
+        IdTaller: data.IdTaller,
+        typeusuario: "cliente"
+      };
+      ServicesCore.markReadMessagesConversacion(conversacion)
+        .then(response => {
+          if (response.status == 200) {
+            console.log("Se marcaron como leidos los mensajes");
+          }
+        })
+        .catch(error => {
+          console.error("Error al marcar como leidos los mensajes");
+        });
     }
   },
   computed: {

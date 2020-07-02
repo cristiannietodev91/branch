@@ -28,6 +28,7 @@
 <script>
 import { mapMutations } from "vuex";
 import ModalOpenChat from "../Modals/chatmodal";
+import ServicesCore from "../../services/service";
 
 export default {
   props: ["conversacion", "detailPath"],
@@ -44,6 +45,13 @@ export default {
     };
   },
   mounted() {
+    ServicesCore.countUnReadMessagesByIdConversacion(
+      this.conversacion.IdConversacion,
+      "cliente"
+    ).then(response => {
+      const { data } = response;
+      this.newmessages = data;
+    });
     this.sockets.listener.subscribe("sendmessage", newmessage => {
       const { user } = newmessage;
       const { _id } = user;
@@ -67,6 +75,10 @@ export default {
       this.showModal = !this.showModal;
       this.newmessages = 0;
       this.resetNewMessages();
+      this.$emit("markreadmessages", {
+        IdConversacionUser: this.conversacion.uid,
+        IdTaller: this.conversacion.IdTaller
+      });
       //this.$bvModal.show("modalChat_" + this.data.CodigoOrden);
     }
   }

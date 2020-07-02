@@ -116,8 +116,24 @@ class ServiceCrm {
     });
   }
 
+  getConversacionesUnReadByTaller(IdTaller) {
+    return http.get("/message/getConversacionUnread/" + IdTaller);
+  }
+
+  markReadMessagesConversacion(conversacion) {
+    return http.put("/message/updatereadAllMessages", conversacion);
+  }
+
   getConversacionesByTaller(IdTaller) {
     return http.get("/conversacion/getAllByIdTaller/" + IdTaller);
+  }
+
+  countUnReadMessagesByIdConversacion(IdConversacion, typeusuario) {
+    return http.get("/message/countByIdConversacion/" + IdConversacion, {
+      params: {
+        typeusuario: typeusuario
+      }
+    });
   }
 
   countVehiculosByTaller(IdTaller) {
