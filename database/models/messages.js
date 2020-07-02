@@ -6,53 +6,58 @@ module.exports = (sequelize, DataTypes) => {
     IdMessage: {
       type: Sequelize.INTEGER,
       primaryKey: true,
-      autoIncrement: true,
+      autoIncrement: true
     },
     _id: {
       type: Sequelize.STRING,
-      allowNull: false,
+      allowNull: false
     },
     IdConversacion: {
       type: Sequelize.INTEGER,
-      allowNull: false,
+      allowNull: false
     },
     text: {
       type: Sequelize.STRING,
-      allowNull: true,
+      allowNull: true
     },
     image: {
       type: Sequelize.STRING,
-      allowNull: true,
+      allowNull: true
     },
     IdCita: {
       type: Sequelize.INTEGER,
-      allowNull: true,
+      allowNull: true
     },
     delivered: {
       type: Sequelize.BOOLEAN,
-      allowNull: false,
+      allowNull: false
     },
     read: {
       type: Sequelize.BOOLEAN,
-      allowNull: false,
+      allowNull: false
     },
     typeusuario: {
       type: Sequelize.STRING,
-      allowNull: false,
+      allowNull: false
     },
     user: {
       type: Sequelize.JSON,
-      allowNull: false,
+      allowNull: false
     },
     IdEtapa: {
       type: Sequelize.INTEGER,
-      allowNull: true,
+      allowNull: true
     },
     IdOrdenTrabajo: {
       type: Sequelize.INTEGER,
-      allowNull: true,
-    },
+      allowNull: true
+    }
   });
-  Message.associate = function (models) {};
+  Message.associate = function (models) {
+    Message.belongsTo(models.conversacion, {
+      foreignKey: "IdConversacion",
+      target_id: "IdConversacion"
+    });
+  };
   return Message;
 };

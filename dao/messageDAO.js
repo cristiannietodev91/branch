@@ -28,13 +28,13 @@ module.exports = {
         cb(err, null);
       });
   },
-  update: function (IdMessage, message, cb) {
+  update: function (filter, message, cb) {
     // Find all users
     return models.sequelize
       .transaction((t1) => {
         return models.message
           .update(message, {
-            where: { IdMessage: IdMessage },
+            where: filter
           })
           .then((message) => {
             return message;
@@ -62,7 +62,7 @@ module.exports = {
         return models.message
           .findAll({
             where: filterMessages,
-            order: [["createdAt", order ? order : "DESC"]],
+            order: [["createdAt", order ? order : "DESC"]]
           })
           .then((messages) => {
             return messages;
@@ -79,4 +79,55 @@ module.exports = {
         cb(err, null);
       });
   },
+  findDistinctAllByFilter: function (
+    filterMessages,
+    filterConversacion,
+    attributes,
+    cb
+  ) {
+    // Find all users
+    return models.sequelize
+      .transaction((t1) => {
+        return models.message
+          .findAll({
+            attributes: attributes,
+            where: filterMessages
+          })
+          .then((messages) => {
+            return messages;
+          });
+      })
+      .then(function (result) {
+        if (result) {
+          cb(null, result);
+        } else {
+          cb(null, null);
+        }
+      })
+      .catch(function (err) {
+        cb(err, null);
+      });
+  },
+  count: (filter, cb) => {
+    return models.sequelize
+      .transaction((t1) => {
+        return models.message
+          .count({
+            where: filter
+          })
+          .then((messages) => {
+            return messages;
+          });
+      })
+      .then((result) => {
+        if (result) {
+          cb(null, result);
+        } else {
+          cb(null, null);
+        }
+      })
+      .catch((err) => {
+        cb(err, null);
+      });
+  }
 };

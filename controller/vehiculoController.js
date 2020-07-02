@@ -332,8 +332,8 @@ const createVehiculo = (req, res, next) => {
 
 const updateVehiculo = (req, res, next) => {
   try {
-    var IdVehiculo = req.params.Id;
-    var vehiculo = req.body;
+    const IdVehiculo = req.params.Id;
+    const vehiculo = req.body;
     console.debug(
       "Parametro de vehiculo recibido para actualizar :::::>",
       vehiculo
