@@ -34,7 +34,7 @@ module.exports = {
       .transaction((t1) => {
         return models.conversacion
           .update(conversacion, {
-            where: { IdConversacion: IdConversacion },
+            where: { IdConversacion: IdConversacion }
           })
           .then((conversacion) => {
             return conversacion;
@@ -61,7 +61,7 @@ module.exports = {
       .transaction((t1) => {
         return models.conversacion
           .findOne({
-            where: filter,
+            where: filter
           })
           .then((conversacion) => {
             return conversacion;
@@ -78,4 +78,67 @@ module.exports = {
         cb(err, null);
       });
   },
+  findAllByFilter: function (filterConversacion, cb) {
+    // Find all users
+    return models.sequelize
+      .transaction((t1) => {
+        return models.conversacion
+          .findAll({
+            include: [
+              {
+                model: models.usuarios
+              },
+              {
+                model: models.taller
+              }
+            ],
+            where: filterConversacion
+          })
+          .then((conversaciones) => {
+            return conversaciones;
+          });
+      })
+      .then(function (result) {
+        if (result) {
+          cb(null, result);
+        } else {
+          cb(null, null);
+        }
+      })
+      .catch(function (err) {
+        cb(err, null);
+      });
+  },
+  findPaginateByFilter: function (page, paginate, filterConversacion, cb) {
+    const options = {
+      page: page,
+      paginate: paginate,
+      include: [
+        {
+          model: models.usuarios
+        },
+        {
+          model: models.taller
+        }
+      ],
+      where: filterConversacion
+    };
+    // Find all users
+    return models.sequelize
+      .transaction((t1) => {
+        return models.conversacion.paginate(options).then((vehiculos) => {
+          return vehiculos;
+        });
+      })
+      .then(function (result) {
+        if (result) {
+          cb(null, result);
+        } else {
+          cb(null, null);
+        }
+      })
+      .catch(function (err) {
+        cb(err, null);
+      });
+  }
 };

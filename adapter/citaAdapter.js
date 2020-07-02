@@ -1,5 +1,25 @@
 const citaDAO = require("../dao/citaDAO");
 const { Op, Sequelize } = require("sequelize");
+const sms = require("../utils/sendSms");
+const moment = require("moment");
+/**
+ *
+ * @param {*} IdCita
+ * @param {*} cb
+ */
+const findCitaByIdCita = (IdCita, cb) => {
+  citaDAO.getById(IdCita, function (error, cita) {
+    if (error) {
+      cb(error, null);
+    } else {
+      if (cita) {
+        cb(null, cita);
+      } else {
+        cb(null, null);
+      }
+    }
+  });
+};
 
 /**
  *
@@ -21,6 +41,140 @@ const findCitaByFilter = (filterCita, filtervehiculo, filterOrden, cb) => {
       }
     }
   });
+};
+
+const updateCitaByIdCita = (IdCita, cita, cb) => {
+  if (IdCita) {
+    let momentHour = moment(cita.horaCita, "hh:mm:ss");
+    let fechaCita = moment(cita.fechaCita, "DD/MM/YYYY")
+      .hour(momentHour.hour())
+      .minute(momentHour.minute());
+
+    let citaDb = {
+      IdTaller: cita.taller,
+      IdMecanico: cita.mecanico,
+      fechaCita: cita.fechaCita
+        ? moment(cita.fechaCita, "DD/MM/YYYY")
+        : cita.fechaCita,
+      horaCita: cita.horaCita,
+      servicio: cita.servicio,
+      estado: cita.estado,
+      calificacion: cita.calificacion
+    };
+
+    console.log("CitaDB :::>", citaDb);
+
+    if (
+      cita.estado != "Cancelada" ||
+      (cita.estado == "Cancelada" && fechaCita >= moment().add(1, "day"))
+    ) {
+      citaDAO.update(IdCita, citaDb, function (error, cita) {
+        if (error) {
+          cb(error, null);
+        } else {
+          if (cita) {
+            citaDAO.getById(IdCita, (error, cita) => {
+              if (error) {
+                cb(error, null);
+              } else {
+                if (cita) {
+                  if (cita.vehiculo.usuario.celular) {
+                    let textoSms = "";
+                    //Texto de cita con mecanico
+
+                    if (cita.estado == "Confirmada") {
+                      sms.sendNotificacionToUser(
+                        cita.vehiculo.usuario.tokenCM,
+                        "Se confirmo su cita exitosamente"
+                      );
+                    } else {
+                      if (cita.estado == "Cancelada") {
+                        textoSms =
+                          "Hola " +
+                          cita.vehiculo.usuario.firstName +
+                          "! Se cancelo la cita que tenias el " +
+                          moment(cita.fechaCita).format("D [de] MMMM YYYY") +
+                          " a las " +
+                          cita.horaCita +
+                          " con tu " +
+                          cita.vehiculo.tipoVehiculo +
+                          "  " +
+                          cita.vehiculo.placa +
+                          ", BRANCH tendra el gusto de recibirte en una proxima oportunidad. Tu experiencia nuestro motor! BRANCH";
+                        sms.sendSMStoInfoBip(
+                          cita.vehiculo.usuario.celular,
+                          textoSms
+                        );
+                        sms.sendNotificacionToUser(
+                          cita.vehiculo.usuario.tokenCM,
+                          textoSms
+                        );
+                      } else {
+                        if (cita.estado == "Incumplida") {
+                          textoSms =
+                            "Hola " +
+                            cita.vehiculo.usuario.firstName +
+                            "! Incumpliste la cita que tenias el " +
+                            moment(cita.fechaCita).format("D [de] MMMM YYYY") +
+                            " a las " +
+                            cita.horaCita +
+                            " con tu " +
+                            cita.vehiculo.tipoVehiculo +
+                            "  " +
+                            cita.vehiculo.placa +
+                            ", esto afectara tu puntuacion en nuestra plataforma. BRANCH tendra el gusto de recibirte en una proxima oportunidad. Tu experiencia nuestro motor! BRANCH";
+                          sms.sendSMStoInfoBip(
+                            cita.vehiculo.usuario.celular,
+                            textoSms
+                          );
+                        } else {
+                          textoSms =
+                            "Hola " +
+                            cita.vehiculo.usuario.firstName +
+                            "! Su cita quedo asignada el " +
+                            moment(cita.fechaCita).format("D [de] MMMM YYYY") +
+                            " a las " +
+                            cita.horaCita +
+                            " con tu " +
+                            cita.vehiculo.tipoVehiculo +
+                            "  " +
+                            cita.vehiculo.placa +
+                            ", " +
+                            cita.mecanico.firstName +
+                            " de BRANCH tendra el gusto de recibirte. Tu experiencia nuestro motor! BRANCH";
+                          sms.sendSMStoInfoBip(
+                            cita.vehiculo.usuario.celular,
+                            textoSms
+                          );
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            });
+            cb(null, cita);
+          } else {
+            cb(null, null);
+          }
+        }
+      });
+    } else {
+      cb(
+        {
+          message: "Solo se puede cancelar una cita hasta 24 horas antes."
+        },
+        null
+      );
+    }
+  } else {
+    cb(
+      {
+        message: "El parametro IdCita es requerido"
+      },
+      null
+    );
+  }
 };
 
 /**
@@ -174,7 +328,9 @@ const countCitasByDateAndIdTaller = (IdTaller, cb) => {
 };
 
 module.exports = {
+  findCitaByIdCita,
   findCitaByFilter,
+  updateCitaByIdCita,
   getAllCitasByIdTaller,
   getAllCitasByIdUsuario,
   getAllCitasPasadasByIdUsuario,

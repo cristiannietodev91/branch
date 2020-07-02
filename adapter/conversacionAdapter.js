@@ -35,7 +35,21 @@ const createOrGetConversacion = (paramconversacion, cb) => {
   });
 };
 
+const getConversacionesByIdTaller = (IdTaller, cb) => {
+  conversacionDAO.findAllByFilter(
+    { IdTaller: IdTaller },
+    (error, conversaciones) => {
+      if (error) {
+        cb(error, null);
+      } else {
+        cb(null, conversaciones);
+      }
+    }
+  );
+};
+
 module.exports = {
   createConversacion,
-  createOrGetConversacion
+  createOrGetConversacion,
+  getConversacionesByIdTaller
 };

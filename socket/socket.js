@@ -4,6 +4,7 @@ const conversacionAdapter = require("../adapter/conversacionAdapter");
 const messageAdapter = require("../adapter/messageAdapter");
 const usuarioAdapter = require("../adapter/userAdapter");
 const sms = require("../utils/sendSms");
+const moment = require("moment");
 
 class socket {
   constructor(http) {
@@ -163,6 +164,35 @@ class socket {
             }
           }
         );
+      });
+
+      socket.on("newcita", (data) => {
+        console.log("message ::::>", data);
+        //socket.emit("newcita", data);
+        const { IdTaller, IdCita, IdVehiculo } = data;
+        citaAdapter.findCitaByIdCita(IdCita, (error, cita) => {
+          if (error) {
+            console.error(
+              "Error al buscar cita para enviar notificacion de nueva cita al taller",
+              error
+            );
+          } else {
+            if (cita) {
+              const { vehiculo } = cita;
+              console.log("vehiculo :::>", vehiculo);
+              socket.to(IdTaller).emit("newcita", {
+                text:
+                  "se acaba de solicitar una cita para el vehiculo " +
+                  vehiculo.placa +
+                  " el dia " +
+                  moment(cita.fechaCita).format("DD-MM-YYYY"),
+                placa: vehiculo.placa
+              });
+            } else {
+              console.debug("No se encontro una cita para enviar notificacion");
+            }
+          }
+        });
       });
 
       socket.on("message", (message) => {

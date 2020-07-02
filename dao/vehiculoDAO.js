@@ -149,7 +149,7 @@ module.exports = {
         {
           model: models.usuarios,
           where: filterUsuario,
-          required: false
+          required: true
         },
         {
           model: models.taller
@@ -166,7 +166,6 @@ module.exports = {
       })
       .then(function (result) {
         if (result) {
-          //console.debug('Resultado despues listar vehiculos By Filter :::: >',filter,' Result ::::> ', result);
           cb(null, result);
         } else {
           cb(null, null);

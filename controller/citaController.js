@@ -84,69 +84,77 @@ const createCita = (req, res, next) => {
                 }
               } else {
                 if (cita) {
-                  if (vehiculo.usuario.celular) {
-                    let textoSms = "";
-                    debug(
-                      " Mecanico a buscar para envio de SMS con Mecancio ::>",
-                      cita.IdMecanico
-                    );
-                    mecanicoDAO.getById(cita.IdMecanico, (error, mecanico) => {
-                      if (error) {
-                        console.error(
-                          "Error al buscar mecanico para SMS de la cita, error ::>",
-                          error
-                        );
-                      } else {
-                        if (mecanico) {
-                          //Texto de cita con mecanico
-                          textoSms =
-                            "Hola " +
-                            vehiculo.usuario.firstName +
-                            "! Te esperamos el " +
-                            moment(cita.fechaCita).format("D [de] MMMM YYYY") +
-                            " a las " +
-                            cita.horaCita +
-                            " con tu " +
-                            vehiculo.tipoVehiculo +
-                            "  " +
-                            vehiculo.placa +
-                            ", " +
-                            mecanico.firstName +
-                            " de BRANCH tendra el gusto de recibirte. Tu experiencia nuestro motor! BRANCH";
+                  let textoSms = "";
+                  debug(
+                    " Mecanico a buscar para envio de SMS con Mecancio ::>",
+                    cita.IdMecanico
+                  );
+                  mecanicoDAO.getById(cita.IdMecanico, (error, mecanico) => {
+                    if (error) {
+                      console.error(
+                        "Error al buscar mecanico para SMS de la cita, error ::>",
+                        error
+                      );
+                    } else {
+                      if (mecanico) {
+                        //Texto de cita con mecanico
+                        textoSms =
+                          "Hola " +
+                          vehiculo.usuario.firstName +
+                          "! Te esperamos el " +
+                          moment(cita.fechaCita).format("D [de] MMMM YYYY") +
+                          " a las " +
+                          cita.horaCita +
+                          " con tu " +
+                          vehiculo.tipoVehiculo +
+                          "  " +
+                          vehiculo.placa +
+                          ", " +
+                          mecanico.firstName +
+                          " de BRANCH tendra el gusto de recibirte. Tu experiencia nuestro motor! BRANCH";
+                        if (vehiculo.usuario.celular) {
                           sms.sendSMStoInfoBip(
                             vehiculo.usuario.celular,
                             textoSms
                           );
+                        }
+                        if (vehiculo.usuario.tokenCM) {
                           sms.sendNotificacionToUser(
                             vehiculo.usuario.tokenCM,
                             textoSms
                           );
-                        } else {
-                          //Texto de cita sin mecanico
-                          textoSms =
-                            "Hola " +
-                            vehiculo.usuario.firstName +
-                            "! Te esperamos el " +
-                            moment(cita.fechaCita).format("D [de] MMMM YYYY") +
-                            " a las " +
-                            cita.horaCita +
-                            " con tu " +
-                            vehiculo.tipoVehiculo +
-                            "  " +
-                            vehiculo.placa +
-                            ", BRANCH tendra el gusto de recibirte. Tu experiencia nuestro motor! BRANCH";
+                        }
+                      } else {
+                        //Texto de cita sin mecanico
+                        textoSms =
+                          "Hola " +
+                          vehiculo.usuario.firstName +
+                          "! Te esperamos el " +
+                          moment(cita.fechaCita).format("D [de] MMMM YYYY") +
+                          " a las " +
+                          cita.horaCita +
+                          " con tu " +
+                          vehiculo.tipoVehiculo +
+                          "  " +
+                          vehiculo.placa +
+                          ", BRANCH tendra el gusto de recibirte. Tu experiencia nuestro motor! BRANCH";
+                        if (vehiculo.usuario.celular) {
                           sms.sendSMStoInfoBip(
                             vehiculo.usuario.celular,
                             textoSms
                           );
+                        }
+                        if (vehiculo.usuario.tokenCM) {
                           sms.sendNotificacionToUser(
                             vehiculo.usuario.tokenCM,
                             textoSms
                           );
                         }
                       }
-                    });
-                  }
+                    }
+                  });
+                  // Si la cita es solicitada se notifica al taller que el cliente solicito una cita
+
                   return res.status(HttpStatus.OK).json(cita);
                 } else {
                   return res
@@ -175,173 +183,23 @@ const updateCita = (req, res, next) => {
   try {
     var IdCita = req.params.Id;
     var cita = req.body;
-    if (IdCita) {
-      debug("Hora actual cita ::>", moment(cita.horaCita, "hh:mm:ss"));
-      debug("Fecha Today -1 ::>", moment().add(1, "day"));
-
-      let momentHour = moment(cita.horaCita, "hh:mm:ss");
-      let fechaCita = moment(cita.fechaCita, "DD/MM/YYYY")
-        .hour(momentHour.hour())
-        .minute(momentHour.minute());
-
-      debug("Fecha actual cita :::>", fechaCita);
-      debug(
-        "Comparacion de cita ::>",
-        fechaCita >= moment().subtract(1, "day")
-      );
-
-      let citaDb = {
-        IdTaller: cita.taller,
-        IdMecanico: cita.mecanico,
-        fechaCita: moment(cita.fechaCita, "DD/MM/YYYY"),
-        horaCita: cita.horaCita,
-        servicio: cita.servicio,
-        estado: cita.estado
-      };
-
-      if (
-        cita.estado != "Cancelada" ||
-        (cita.estado == "Cancelada" && fechaCita >= moment().add(1, "day"))
-      ) {
-        citaDAO.update(IdCita, citaDb, function (error, cita) {
-          if (error) {
-            console.error(
-              "Error al realizar la transaccion de actualizar cita:::>",
-              "error ::>",
-              error.message
-            );
-            if (error.errors) {
-              return res
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .json({ error: error.errors[0] });
-            } else {
-              return res
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .json({ error: error.message });
-            }
-          } else {
-            if (cita) {
-              citaDAO.getById(IdCita, (error, cita) => {
-                if (error) {
-                  console.error(
-                    "Error al realizar la transaccion de actualizar cita:::>",
-                    "error ::>",
-                    error.message
-                  );
-                  if (error.errors) {
-                    return res
-                      .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                      .json({ error: error.errors[0] });
-                  } else {
-                    return res
-                      .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                      .json({ error: error.message });
-                  }
-                } else {
-                  if (cita) {
-                    debug(
-                      "Datos para envio de SMS ::>",
-                      cita.vehiculo.usuario.celular
-                    );
-                    if (cita.vehiculo.usuario.celular) {
-                      let textoSms = "";
-                      //Texto de cita con mecanico
-                      debug("Estado de la cita ::>", cita.estado);
-                      if (cita.estado == "Confirmada") {
-                        sms.sendNotificacionToUser(
-                          cita.vehiculo.usuario.tokenCM,
-                          "Se confirmo su cita exitosamente"
-                        );
-                      } else {
-                        if (cita.estado == "Cancelada") {
-                          textoSms =
-                            "Hola " +
-                            cita.vehiculo.usuario.firstName +
-                            "! Se cancelo la cita que tenias el " +
-                            moment(cita.fechaCita).format("D [de] MMMM YYYY") +
-                            " a las " +
-                            cita.horaCita +
-                            " con tu " +
-                            cita.vehiculo.tipoVehiculo +
-                            "  " +
-                            cita.vehiculo.placa +
-                            ", BRANCH tendra el gusto de recibirte en una proxima oportunidad. Tu experiencia nuestro motor! BRANCH";
-                          sms.sendSMStoInfoBip(
-                            cita.vehiculo.usuario.celular,
-                            textoSms
-                          );
-                          sms.sendNotificacionToUser(
-                            cita.vehiculo.usuario.tokenCM,
-                            textoSms
-                          );
-                        } else {
-                          if (cita.estado == "Incumplida") {
-                            textoSms =
-                              "Hola " +
-                              cita.vehiculo.usuario.firstName +
-                              "! Incumpliste la cita que tenias el " +
-                              moment(cita.fechaCita).format(
-                                "D [de] MMMM YYYY"
-                              ) +
-                              " a las " +
-                              cita.horaCita +
-                              " con tu " +
-                              cita.vehiculo.tipoVehiculo +
-                              "  " +
-                              cita.vehiculo.placa +
-                              ", esto afectara tu puntuacion en nuestra plataforma. BRANCH tendra el gusto de recibirte en una proxima oportunidad. Tu experiencia nuestro motor! BRANCH";
-                            sms.sendSMStoInfoBip(
-                              cita.vehiculo.usuario.celular,
-                              textoSms
-                            );
-                          } else {
-                            textoSms =
-                              "Hola " +
-                              cita.vehiculo.usuario.firstName +
-                              "! Su cita quedo asignada el " +
-                              moment(cita.fechaCita).format(
-                                "D [de] MMMM YYYY"
-                              ) +
-                              " a las " +
-                              cita.horaCita +
-                              " con tu " +
-                              cita.vehiculo.tipoVehiculo +
-                              "  " +
-                              cita.vehiculo.placa +
-                              ", " +
-                              cita.mecanico.firstName +
-                              " de BRANCH tendra el gusto de recibirte. Tu experiencia nuestro motor! BRANCH";
-                            sms.sendSMStoInfoBip(
-                              cita.vehiculo.usuario.celular,
-                              textoSms
-                            );
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              });
-              return res.status(HttpStatus.ACCEPTED).json({
-                message: "Se actualizo la cita " + IdCita + " correctamente"
-              });
-            } else {
-              return res
-                .status(HttpStatus.OK)
-                .json({ error: "No se actualizo la cita" });
-            }
-          }
-        });
+    citaAdapter.updateCitaByIdCita(IdCita, cita, (error, cita) => {
+      if (error) {
+        return res
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .json({ error: error.message });
       } else {
-        return res.status(HttpStatus.EXPECTATION_FAILED).json({
-          error: "Solo se puede cancelar una cita hasta 24 horas antes."
-        });
+        if (cita) {
+          return res.status(HttpStatus.ACCEPTED).json({
+            message: "Se actualizo la cita " + IdCita + " correctamente"
+          });
+        } else {
+          return res
+            .status(HttpStatus.OK)
+            .json({ error: "No se actualizo la cita" });
+        }
       }
-    } else {
-      return res
-        .status(HttpStatus.BAD_REQUEST)
-        .json({ message: "El parametro IdCita es requerido" });
-    }
+    });
   } catch (error) {
     console.error("Error al actualizar la cita ", error);
     return res
@@ -383,7 +241,7 @@ const findCitaById = (req, res, next) => {
   try {
     var IdCita = req.params.Id;
     //console.debug('Parametro de Idusuario recibido :::::>', req.params);
-    citaDAO.getById(IdCita, function (error, cita) {
+    citaAdapter.findCitaByIdCita(IdCita, (error, cita) => {
       if (error) {
         return res
           .status(HttpStatus.INTERNAL_SERVER_ERROR)

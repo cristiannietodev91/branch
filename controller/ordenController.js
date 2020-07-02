@@ -288,7 +288,7 @@ const getAllEtapas = (req, res, next) => {
 
 const getAllOrdenesByIdTaller = (req, res, next) => {
   try {
-    var IdTaller = req.params.Id;
+    const IdTaller = req.params.Id;
 
     ordenDAO.findAllByFilter({ IdTaller: IdTaller }, {}, function (
       error,

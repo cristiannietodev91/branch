@@ -140,6 +140,10 @@ module.exports = {
               },
               {
                 model: models.etapa
+              },
+              {
+                model: models.cita,
+                as: "cita"
               }
             ],
             where: filterOrden,

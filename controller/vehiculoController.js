@@ -631,7 +631,6 @@ const getAllPaginateFilterVehiculosByIdTaller = (req, res, next) => {
       if (columnFilter == "firstName" || columnFilter == "identificacion") {
         if (valueSearch) {
           filterUsuario = {
-            IdTaller: IdTaller,
             [columnFilter]: {
               [Op.substring]: valueSearch
             }

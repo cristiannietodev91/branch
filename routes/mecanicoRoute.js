@@ -1,12 +1,21 @@
 const express = require("express");
-const mecancioController = require("../controller/mecanicoController");
+const mecanicoController = require("../controller/mecanicoController");
 const router = express.Router();
 
 /* GET users listing. */
-router.get("/getAll", mecancioController.getAllMecanicos);
+router.get("/getAll", mecanicoController.getAllMecanicos);
 
-router.get("/getById/:Id", mecancioController.findMecanicoById);
+router.get(
+  "/getAllByIdTaller/:Id",
+  mecanicoController.getAllMecanicosByIdtaller
+);
 
-router.post("/create", mecancioController.createMecanico);
+router.get("/getById/:Id", mecanicoController.findMecanicoById);
+
+router.post("/create", mecanicoController.createMecanico);
+
+router.put("/update/:Id", mecanicoController.updateMecanico);
+
+router.delete("/deleteById/:Id", mecanicoController.deleteCitaById);
 
 module.exports = router;
