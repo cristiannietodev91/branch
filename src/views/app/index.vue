@@ -53,6 +53,21 @@ export default {
         }
       );
     });
+    this.sockets.listener.subscribe("newcita", data => {
+      this.$notification.show(
+        data.placa,
+        {
+          body: data.text
+        },
+        {
+          onclick: () => {
+            this.$router.push({
+              path: `/app/taller/detailTaller/citas`
+            });
+          }
+        }
+      );
+    });
   },
   data() {
     return {

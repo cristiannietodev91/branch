@@ -3,23 +3,19 @@
     <b-row>
       <b-colxx md="6" sm="6" lg="4" xxs="12">
         <h5 class="mb-1 card-subtitle truncate">{{ data.CodigoOrden }}</h5>
-        <p class="text-muted text-small mb-2">
-          {{ $t("branch.orden.codigoOrden") }}
-        </p>
+        <p class="text-muted text-small mb-2">{{ $t("branch.orden.codigoOrden") }}</p>
       </b-colxx>
       <b-colxx md="6" sm="6" lg="2" xxs="4">
         <h5 class="mb-1 card-subtitle truncate">{{ data.vehiculo.placa }}</h5>
         <p class="text-muted text-small mb-2">{{ $t("branch.orden.placa") }}</p>
       </b-colxx>
       <b-colxx md="6" sm="6" lg="2" xxs="4">
-        <h5 class="mb-1 card-subtitle truncate">
-          {{ data.vehiculo.marca.marca }}
-        </h5>
+        <h5 class="mb-1 card-subtitle truncate">{{ data.vehiculo.marca.marca }}</h5>
         <p class="text-muted text-small mb-2">{{ $t("branch.orden.marca") }}</p>
       </b-colxx>
       <b-colxx md="6" sm="6" lg="2" xxs="4">
         <b-button
-          @click="openChat"
+          @click.once="openChat"
           variant="primary"
           class="top-right-button"
           :aria-controls="`sidebar${data.CodigoOrden}`"
@@ -27,20 +23,22 @@
         >
           <i class="iconsminds-speach-bubble-8"></i>
           {{ $t("chat.send") }}
-          <b-badge variant="light" v-if="newmessages > 0">
-            {{ newmessages }}
-          </b-badge>
+          <b-badge variant="light" v-if="newmessages > 0">{{ newmessages }}</b-badge>
         </b-button>
-        <b-modal
-          :id="`sidebar${data.CodigoOrden}`"
-          right
-          shadow
-          v-model="showModal"
-          no-header
-        >
-          <modal-open-chat :data="data" @hide="openChat"></modal-open-chat>
+        <b-modal :id="`sidebar${data.CodigoOrden}`" right shadow v-model="showModal" no-header>
+          <modal-open-chat :conversacion="infoconversacion" @hide="openChat"></modal-open-chat>
         </b-modal>
       </b-colxx>
+    </b-row>
+    <b-row v-if="showQualify">
+      <b-form-rating
+        id="rating-sm-no-border"
+        v-model="qualyfyCita"
+        size="sm"
+        show-value
+        @change="qualifyClient"
+        :readonly="readOnlyQualify"
+      ></b-form-rating>
     </b-row>
     <horizontal-stepper
       locale="es"
@@ -63,6 +61,7 @@ import Aprobacion from "./../Steps/Aprobacion";
 import Reparacion from "./../Steps/Reparacion";
 import Entrega from "./../Steps/Entrega";
 import ModalOpenChat from "../Modals/chatmodal";
+import ServicesCore from "./../../services/service";
 
 export default {
   props: ["link", "data", "mecanicos"],
@@ -75,7 +74,11 @@ export default {
     return {
       demoSteps: [],
       showModal: false,
-      newmessages: 0
+      newmessages: 0,
+      qualyfyCita: null,
+      showQualify: false,
+      readOnlyQualify: false,
+      infoconversacion: {}
     };
   },
   computed: {
@@ -116,6 +119,30 @@ export default {
     // Executed when @stepper-finished event is triggered
     alert(payload) {
       alert("end");
+    },
+    qualifyClient(value) {
+      console.log("Qualyfy client :::>", value, this.data);
+      const { IdCita } = this.data;
+      const cita = {
+        IdCita: IdCita,
+        calificacion: value
+      };
+      ServicesCore.updateCita(cita)
+        .then(response => {
+          if (response.status == 202) {
+            this.readOnlyQualify = true;
+          }
+        })
+        .catch(error => {
+          console.error(
+            "Error al actualizar cita para calificarla :::>",
+            error
+          );
+          this.$notify("error filled", "ERROR", "Error al actualizar cita", {
+            duration: 3000,
+            permanent: false
+          });
+        });
     }
   },
   mounted() {
@@ -126,6 +153,18 @@ export default {
         }
       }
     });
+
+    this.infoconversacion = {
+      IdTaller: this.data.IdTaller,
+      nombreTaller: this.data.taller.nombre,
+      usuario: this.data.vehiculo.usuario,
+      IdConversacionUser: this.data.vehiculo.IdUsuario,
+      IdCita: this.data.IdCita,
+      CodigoOrden: this.data.CodigoOrden,
+      IdOrdenTrabajo: this.data.IdOrdenTrabajo,
+      IdEtapa: this.data.IdEtapa
+    };
+    this.renderModal = true;
   },
   created() {
     var idxIngreso = this.data.etapas.findIndex(element => {
@@ -287,6 +326,15 @@ export default {
       data: dataEntrega,
       completed: idxEntrega > -1
     });
+
+    if (idxEntrega > -1) {
+      this.showQualify = true;
+      const { cita } = this.data;
+      if (cita.calificacion) {
+        this.qualyfyCita = cita.calificacion;
+        this.readOnlyQualify = true;
+      }
+    }
   }
 };
 </script>

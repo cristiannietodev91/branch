@@ -13,7 +13,10 @@
       "direccion": "Direccion",
       "celular": "Celular",
       "email": "E-mail",
-      "logo": "URL Logo"
+      "logo": "URL Logo",
+      "editTaller": "Editar taller",
+      "latitude": "Latitude",
+      "longitud": "Longitud"
     },
     "mecanico": {
       "identificacion": "Identificacion",
@@ -29,7 +32,9 @@
         "nit": "El formato del NIT no es valido (XXXXX-X)",
         "url": "El campo debe ser una URL",
         "numeric": "El valor debe ser numerico",
-        "formatPlaca": "El formato de la placa debe ser AAA00A o AAA000"
+        "formatPlaca": "El formato de la placa debe ser AAA00A o AAA000",
+        "decimal": "Requiere un valor decimal",
+        "alpha": "Solo valores alfabeticos"
       }
     },
     "clientes": {
@@ -75,6 +80,9 @@
       "identificacion": "Cedula",
       "telefono": "Telefono",
       "email": "Correo electronico"
+    },
+    "chat":{
+      "conversaciones": "Conversaciones"
     }
   },
   "user": {
@@ -188,7 +196,9 @@
     "detailTaller": "Ver mi taller",
     "listClients": "Mis clientes",
     "ordenes": "Ordenes de trabajo",
-    "citas": "Citas"
+    "citas": "Citas",
+    "chats": "Chats",
+    "listChats": "Chats"
   },
   "dashboards": {
     "clients": "Clientes",

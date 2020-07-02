@@ -49,7 +49,7 @@
       </b-form-group>
       <b-button
         variant="outline-secondary"
-        @click="hideModal('modalAddMecanico')"
+        @click.once="hideModal('modalAddMecanico')"
       >{{ $t('pages.cancel') }}</b-button>
       <b-button type="submit" variant="primary">{{ $t('forms.submit') }}</b-button>
     </b-form>
@@ -62,7 +62,7 @@ import { required, numeric } from "vuelidate/lib/validators";
 import ServicesCore from "../../services/service";
 
 export default {
-  props: ["taller"],
+  props: ["IdTaller", "mecanicoSelected", "visible"],
   components: {
     "input-tag": InputTag
   },
@@ -93,6 +93,25 @@ export default {
       }
     }
   },
+  mounted() {
+    this.$watch(
+      "mecanicoSelected",
+      () => {
+        if (this.mecanicoSelected && this.mecanicoSelected.IdMecanico) {
+          const myskills = JSON.parse(this.mecanicoSelected.skills);
+
+          this.newMecanico = {
+            identificacion: this.mecanicoSelected.identificacion,
+            firstName: this.mecanicoSelected.firstName,
+            lastName: this.mecanicoSelected.lastName,
+            skills: myskills
+          };
+        }
+        this.$forceUpdate();
+      },
+      { immediate: true }
+    );
+  },
   methods: {
     hideModal(refname) {
       this.$refs[refname].hide();
@@ -110,51 +129,93 @@ export default {
       if (this.$v.newMecanico.$pending || this.$v.newMecanico.$error) return;
 
       var myJsonString = JSON.stringify(this.newMecanico.skills);
-      var mecanico = {
+      const mecanico = {
+        IdMecanico: this.mecanicoSelected.IdMecanico,
         identificacion: this.newMecanico.identificacion,
         firstName: this.newMecanico.firstName,
         lastName: this.newMecanico.lastName,
         skills: myJsonString,
-        taller: this.taller
+        taller: this.IdTaller,
+        estado: "Activo"
       };
 
-      ServicesCore.createMecanico(mecanico)
-        .then(response => {
-          if (response.status == 200) {
-            //this.loadItems();
-            this.hideModal("modalAddMecanico");
+      if (!this.mecanicoSelected.IdMecanico) {
+        ServicesCore.createMecanico(mecanico)
+          .then(response => {
+            if (response.status == 200) {
+              //this.loadItems();
+              this.hideModal("modalAddMecanico");
 
-            this.$emit("loadcitastalleres");
-            this.newMecanico = {
-              identificacion: "",
-              firstName: "",
-              lastName: "",
-              skills: []
-            };
-            this.$notify(
-              "success",
-              "Resultado",
-              "Se creo el mecanico correctamente",
-              {
+              this.$emit("loadInfoTaller");
+              this.newMecanico = {
+                identificacion: "",
+                firstName: "",
+                lastName: "",
+                skills: []
+              };
+              this.$notify(
+                "success",
+                "Resultado",
+                "Se creo el mecanico correctamente",
+                {
+                  duration: 3000,
+                  permanent: false
+                }
+              );
+            }
+          })
+          .catch(error => {
+            if (error.response) {
+              this.$notify("error filled", "ERROR", error.response.data.error, {
                 duration: 3000,
                 permanent: false
-              }
-            );
-          }
-        })
-        .catch(error => {
-          if (error.response) {
-            this.$notify("error filled", "ERROR", error.response.data.error, {
-              duration: 3000,
-              permanent: false
-            });
-          } else {
-            this.$notify("error filled", "ERROR", error.message, {
-              duration: 3000,
-              permanent: false
-            });
-          }
-        });
+              });
+            } else {
+              this.$notify("error filled", "ERROR", error.message, {
+                duration: 3000,
+                permanent: false
+              });
+            }
+          });
+      } else {
+        ServicesCore.updateMecanico(mecanico)
+          .then(response => {
+            if (response.status == 202) {
+              //this.loadItems();
+              this.hideModal("modalAddMecanico");
+
+              this.$emit("loadInfoTaller");
+              this.newMecanico = {
+                identificacion: "",
+                firstName: "",
+                lastName: "",
+                skills: []
+              };
+              this.$notify(
+                "success",
+                "Resultado",
+                "Se actualizo el mecanico correctamente",
+                {
+                  duration: 3000,
+                  permanent: false
+                }
+              );
+            }
+          })
+          .catch(error => {
+            if (error.response) {
+              this.$notify("error filled", "ERROR", error.response.data.error, {
+                duration: 3000,
+                permanent: false
+              });
+            } else {
+              this.$notify("error filled", "ERROR", error.message, {
+                duration: 3000,
+                permanent: false
+              });
+            }
+          });
+      }
     }
   }
 };

@@ -22,9 +22,7 @@
               v-on="events"
             />
           </template>
-          <template
-            v-slot:option="option"
-          >{{ option.fullName }}  - {{option.identificacion}}</template>
+          <template v-slot:option="option">{{ option.fullName }} - {{option.identificacion}}</template>
         </v-select>
       </b-form-group>
       <b-form-group :label="$t('branch.orden.kilometraje')">
@@ -53,7 +51,7 @@
       </b-form-group>
       <b-button
         variant="outline-secondary"
-        @click="hideModal('modalAddOrden')"
+        @click.once="hideModal('modalAddOrden')"
       >{{ $t('pages.cancel') }}</b-button>
       <b-button type="submit" variant="primary">{{ $t('forms.submit') }}</b-button>
     </b-form>
@@ -110,7 +108,7 @@ export default {
           IdTaller: this.taller.IdTaller,
           IdEtapa: 2,
           Observaciones: this.newOrden.observacion,
-          estado: 'Aceptado'
+          estado: "Aceptado"
         };
 
         ServicesCore.createOrden(orden)

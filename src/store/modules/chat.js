@@ -12,7 +12,8 @@ const state = {
     localStorage.getItem("conversations") != null
       ? JSON.parse(localStorage.getItem("conversations"))
       : [],
-  messages: []
+  messages: [],
+  newMessages: 0
 };
 
 const getters = {
@@ -22,7 +23,8 @@ const getters = {
   contacts: state => state.contacts,
   conversations: state => state.conversations,
   contactsSearchResult: state => state.contactsSearchResult,
-  messages: state => state.messages
+  messages: state => state.messages,
+  newMessages: state => state.newMessages
 };
 
 const mutations = {
@@ -52,6 +54,13 @@ const mutations = {
   },
   addMessageItem(state, newMessage) {
     state.messages.push(newMessage);
+    const { typeusuario } = newMessage;
+    if (typeusuario == "cliente") {
+      state.newMessages = state.newMessages + 1;
+    }
+  },
+  resetNewMessages(state, payload) {
+    state.newMessages = 0;
   }
 };
 
@@ -132,6 +141,9 @@ const actions = {
       localStorage.setItem("conversations", JSON.stringify(conversations));
       console.log("Result unir a room del cliente", result);
     });
+  },
+  SOCKET_sendmessage({ commit, state }, data) {
+    commit("addMessageItem", data);
   }
 };
 

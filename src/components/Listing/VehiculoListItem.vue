@@ -9,7 +9,7 @@
   >
     <div
       :style="{
-        backgroundImage: `url('${data.marca.urllogo}')`,
+        backgroundImage: `url('${data.fotos && data.fotos[0] ? data.fotos[0].url : data.marca.urllogo}')`,
         width: `15%`,
         backgroundPosition: `center center`,
         backgroundRepeat: `no-repeat`

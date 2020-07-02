@@ -17,6 +17,10 @@ class ServiceCrm {
     return http.post("/taller/create", taller);
   }
 
+  updateTaller(taller) {
+    return http.put("/taller/update/" + taller.IdTaller, taller);
+  }
+
   getTallerById(IdTaller) {
     return http.get("/taller/getById/" + IdTaller);
   }
@@ -25,8 +29,20 @@ class ServiceCrm {
     return http.get("/orden/getById/" + IdOrden);
   }
 
+  getAllMecanicos(IdTaller) {
+    return http.get("/mecanico/getAllByIdTaller/" + IdTaller);
+  }
+
   createMecanico(mecanico) {
     return http.post("/mecanico/create", mecanico);
+  }
+
+  updateMecanico(mecanico) {
+    return http.put("/mecanico/update/" + mecanico.IdMecanico, mecanico);
+  }
+
+  deleteMecanico(IdMecanico) {
+    return http.delete("/mecanico/deleteById/" + IdMecanico);
   }
 
   getVehiculosByIdTaller(IdTaller) {
@@ -98,6 +114,10 @@ class ServiceCrm {
         order: "ASC"
       }
     });
+  }
+
+  getConversacionesByTaller(IdTaller) {
+    return http.get("/conversacion/getAllByIdTaller/" + IdTaller);
   }
 
   countVehiculosByTaller(IdTaller) {

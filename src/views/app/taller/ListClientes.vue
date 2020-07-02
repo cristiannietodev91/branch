@@ -72,6 +72,9 @@
                     v-if="!$v.newItem.celular.required"
                   >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
                   <b-form-invalid-feedback
+                    v-if="!$v.newItem.celular.numeric"
+                  >{{$t('branch.forms.validations.numeric')}}</b-form-invalid-feedback>
+                  <b-form-invalid-feedback
                     v-else-if="!$v.newItem.celular.minLength || !$v.newItem.celular.maxLength"
                   >{{$t('branch.forms.validations.longitud')}}</b-form-invalid-feedback>
                 </b-form-group>
@@ -210,7 +213,8 @@ import {
   minLength,
   maxLength,
   email,
-  helpers
+  helpers,
+  numeric
 } from "vuelidate/lib/validators";
 
 const placaValidate = helpers.regex(
@@ -285,6 +289,7 @@ export default {
         required: requiredIf(function(celular) {
           return !this.newItem.email;
         }),
+        numeric,
         maxLength: maxLength(10),
         minLength: minLength(10)
       },

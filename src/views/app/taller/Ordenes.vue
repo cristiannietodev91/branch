@@ -111,6 +111,7 @@ export default {
             IdVehiculo: orden.IdVehiculo,
             vehiculo: orden.vehiculo,
             taller: orden.taller,
+            cita: orden.cita,
             etapas: [],
             olderCotizaciones: []
           };

@@ -264,6 +264,13 @@ const routes = [
               import(
                 /* webpackChunkName: "product" */ "./views/app/taller/ListClientes"
               )
+          },
+          {
+            path: "listChats",
+            component: () =>
+              import(
+                /* webpackChunkName: "product" */ "./views/app/taller/ListChats"
+              )
           }
         ]
       },

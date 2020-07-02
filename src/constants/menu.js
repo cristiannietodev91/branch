@@ -37,6 +37,7 @@ const data = [
     icon: "iconsminds-wrench",
     label: "menu.taller",
     to: "/app/taller",
+    notifications: true,
     subs: [
       {
         icon: "simple-icon-list",
@@ -52,6 +53,12 @@ const data = [
         icon: "simple-icon-people",
         label: "menu.listClients",
         to: "/app/taller/listClients"
+      },
+      {
+        icon: "simple-icon-people",
+        label: "menu.chats",
+        to: "/app/taller/listChats",
+        notifications: true
       }
     ]
   }

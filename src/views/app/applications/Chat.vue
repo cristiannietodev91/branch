@@ -13,9 +13,7 @@
         <div v-else class="loading" key="conversationLoading"></div>
       </b-colxx>
     </b-row>
-    <div
-      class="chat-input-container d-flex justify-content-between align-items-center"
-    >
+    <div class="chat-input-container d-flex justify-content-between align-items-center">
       <b-input
         class="flex-grow-1"
         type="text"
@@ -27,11 +25,7 @@
         <b-button variant="outline-primary" class="icon-button large ml-1">
           <i class="simple-icon-paper-clip" />
         </b-button>
-        <b-button
-          variant="primary"
-          class="icon-button large ml-1"
-          @click="sendMessage"
-        >
+        <b-button variant="primary" class="icon-button large ml-1" @click.once="sendMessage">
           <i class="simple-icon-arrow-right" />
         </b-button>
       </div>

@@ -24,11 +24,7 @@
         <b-button variant="outline-primary" class="icon-button small ml-1">
           <i class="simple-icon-paper-clip" />
         </b-button>
-        <b-button
-          variant="primary"
-          class="icon-button small ml-1"
-          @click="sendMessage"
-        >
+        <b-button variant="primary" class="icon-button small ml-1" @click="sendMessage">
           <i class="simple-icon-arrow-right" />
         </b-button>
       </div>
@@ -45,10 +41,8 @@ import ConversationDetail from "../ChatApp/ConversationDetail";
 import { v4 as uuidv4 } from "uuid";
 
 export default {
-  props: ["data"],
+  props: ["conversacion"],
   components: {
-    // 'application-menu': ApplicationMenu,
-    // 'contact-list': ContactList,
     "conversation-list": ConversationList,
     "conversation-detail": ConversationDetail
   },
@@ -74,21 +68,21 @@ export default {
     // },
     sendMessage() {
       let newmessage = {
-        _id: uuidv4(), //TODO: Generate hash
+        _id: uuidv4(),
         createdAt: new Date(),
         text: this.message,
         delivered: false,
         read: false,
         user: {
           _id: this.currentUser.uid,
-          name: this.data.taller.nombre
+          name: this.conversacion.nombreTaller
         },
-        IdCita: this.data.IdCita,
-        CodigoOrden: this.data.CodigoOrden,
-        IdOrdenTrabajo: this.data.IdOrdenTrabajo,
-        IdEtapa: this.data.IdEtapa,
-        IdConversacionUser: this.data.vehiculo.IdUsuario,
-        IdTaller: this.data.IdTaller,
+        IdCita: this.conversacion.IdCita,
+        CodigoOrden: this.conversacion.CodigoOrden,
+        IdOrdenTrabajo: this.conversacion.IdOrdenTrabajo,
+        IdEtapa: this.conversacion.IdEtapa,
+        IdConversacionUser: this.conversacion.IdConversacionUser,
+        IdTaller: this.conversacion.IdTaller,
         typeusuario: "taller"
       };
 
@@ -97,7 +91,7 @@ export default {
       this.message = "";
       this.$socket.emit(
         "messaggetosomeone",
-        this.data.vehiculo.IdUsuario,
+        this.conversacion.IdConversacionUser,
         newmessage
       );
     },
@@ -106,10 +100,10 @@ export default {
     }
   },
   created() {
-    this.otherUser = this.data.vehiculo.usuario;
+    this.otherUser = this.conversacion.usuario;
     this.$socket.emit(
       "joinroom",
-      { room: this.data.vehiculo.IdUsuario },
+      { room: this.conversacion.IdConversacionUser },
       resultado => {
         console.log(
           "Se unio correctmente al room del usuario ya pueden chatear"
@@ -119,12 +113,8 @@ export default {
   },
   mounted() {
     this.getMessages({
-      IdConversacionUser: this.data.vehiculo.IdUsuario,
-      IdTaller: this.data.IdTaller
-    });
-
-    this.sockets.listener.subscribe("sendmessage", newmessage => {
-      this.addMessageItem(newmessage);
+      IdConversacionUser: this.conversacion.IdConversacionUser,
+      IdTaller: this.conversacion.IdTaller
     });
   }
   // beforeDestroy() {
