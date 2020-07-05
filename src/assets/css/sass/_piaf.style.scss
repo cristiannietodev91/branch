@@ -9799,53 +9799,46 @@ footer.page-footer {
     position: relative;
     justify-content: center;
     .steps-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: relative;
-      width: 95%;
-      left: 0;
-      padding: 2% 4%;
-      @include breakpoint(xs) {
-        width: 90%;
-        justify-content: center;
-      }
+     
       .step {
         position: relative;
         display: flex;
         flex-direction: column;
         align-items: center;
         text-align: center; 
-        
         margin-left: 0;
         color: $foreground-color;
         background: rgba($theme-color-2, 1);
         padding: $padding 0 0 $padding*4;
         cursor: pointer;
-        &:before, &:after{
-            position: absolute;
-            top: 50%;
-            content: " ";
-            height: 0;
-            width: 0;
-            pointer-events: none;
-            border: solid transparent;
+        @include breakpoint(xs) {
+          display: block;
         }
-        &:before {
-            left: 100%;
-            border-left-color: $background-color;
-            z-index: 1;
-            border-width: $arrow_size_prev;
-            margin-top: -$arrow_size_prev;
+        @include breakpoint(md) {
+          &:before, &:after{
+              position: absolute;
+              top: 50%;
+              content: " ";
+              height: 0;
+              width: 0;
+              pointer-events: none;
+              border: solid transparent;
+          }
+          &:before {
+              left: 100%;
+              border-left-color: $background-color;
+              z-index: 1;
+              border-width: $arrow_size_prev;
+              margin-top: -$arrow_size_prev;
+          }
+          &:after {
+              left: 100%;
+              border-left-color: rgba($theme-color-2, 1);
+              z-index: 2;
+              border-width: $arrow_size_next;
+              margin-top: -$arrow_size_next;
+          }
         }
-        &:after {
-            left: 100%;
-            border-left-color: rgba($theme-color-2, 1);
-            z-index: 2;
-            border-width: $arrow_size_next;
-            margin-top: -$arrow_size_next;
-        }
-
         i {
           // color: $theme-color-1;
           font-weight: 700 !important;
@@ -9871,7 +9864,7 @@ footer.page-footer {
         }
 
         @include breakpoint(xs) {
-          width: 100% !important;
+          // width: 100% !important;
         }
         &.deactivated {
           background:  rgba($theme-color-2, .3);
@@ -10059,4 +10052,18 @@ footer.page-footer {
 }
 .modal-header{
   padding: .5em 1em !important;
+}
+.img-moto{
+  width: 15%;
+  display: flex;
+  div{
+    width: 90%;
+    height: 80%;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    border-radius: 1em;
+    margin: auto;
+    overflow: hidden;
+  }
 }
