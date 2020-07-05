@@ -18,6 +18,7 @@
           @click.once="openChat"
           variant="primary"
           class="top-right-button"
+          size="xs"
           :aria-controls="`sidebar${data.CodigoOrden}`"
           :aria-expanded="showModal"
         >
@@ -30,7 +31,8 @@
         </b-modal>
       </b-colxx>
     </b-row>
-    <b-row v-if="showQualify">
+    <b-row v-if="showQualify" class="rating-container">
+      <h6>Por favor califica al cliente de este servicio</h6>
       <b-form-rating
         id="rating-sm-no-border"
         v-model="qualyfyCita"

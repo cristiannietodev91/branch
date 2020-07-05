@@ -3,7 +3,6 @@
     <b-form
       @submit.prevent="uploadFiles"
       v-if="!data.etapa || data.etapa.estado=='Rechazado'"
-      class="p-5 w-90 ml-5"
     >
       <info-cotizacion :data="data" v-if="data.etapa && data.etapa.estado=='Rechazado'" />
       <b-form-group :label="$t('branch.orden.mecanico')">

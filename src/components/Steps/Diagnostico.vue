@@ -1,6 +1,7 @@
   <template>
   <b-card>
-    <b-form @submit.prevent="onValitadeAddOrden" v-if="!data.etapa" class="p-5 w-90 ml-5">
+    <!-- <b-form @submit.prevent="onValitadeAddOrden" v-if="!data.etapa" class="p-5 w-90 ml-5"> -->
+    <b-form @submit.prevent="onValitadeAddOrden" v-if="!data.etapa">
       <b-form-group :label="$t('branch.orden.mecanico')">
         <v-select
           :options="data.mecanicos"

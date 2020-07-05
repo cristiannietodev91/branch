@@ -20,7 +20,7 @@
             <!-- <div class="step-title"> -->
             <h4>
               <i class="material-icons md-18">{{ (step.completed) ? 'done' : step.icon }}</i>
-              {{step.title}}
+              <span>{{step.title}}</span>
             </h4>
             <!-- <h5 class="step-subtitle">{{step.subtitle}}</h5> -->
             <!-- </div> -->
