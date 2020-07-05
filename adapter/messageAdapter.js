@@ -40,7 +40,7 @@ const getMessagesByConversacion = (conversacion, order, cb) => {
 
 const getAllConversacionsUnread = (IdTaller, cb) => {
   messageDAO.findDistinctAllByFilter(
-    { read: false },
+    { read: false, typeusuario: "cliente" },
     {},
     [
       [
@@ -58,7 +58,7 @@ const getAllConversacionsUnread = (IdTaller, cb) => {
           IdTaller: IdTaller,
           IdConversacion: Ids
         };
-        conversacionDAO.findAllByFilter(filter, (error, conversaciones) => {
+        conversacionDAO.findAllByFilter(filter, {}, (error, conversaciones) => {
           if (error) {
             cb(error, null);
           } else {

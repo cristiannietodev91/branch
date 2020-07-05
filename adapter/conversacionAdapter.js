@@ -1,4 +1,5 @@
 const conversacionDAO = require("../dao/conversacionDAO");
+const { Op } = require("sequelize");
 
 const createConversacion = (conversacion, cb) => {
   conversacionDAO.create(conversacion, (error, conversacion) => {
@@ -35,9 +36,14 @@ const createOrGetConversacion = (paramconversacion, cb) => {
   });
 };
 
-const getConversacionesByIdTaller = (IdTaller, cb) => {
+const getConversacionesByTallerAndNombreUsuario = (
+  IdTaller,
+  nombreUsuario,
+  cb
+) => {
   conversacionDAO.findAllByFilter(
     { IdTaller: IdTaller },
+    { firstName: { [Op.substring]: nombreUsuario } },
     (error, conversaciones) => {
       if (error) {
         cb(error, null);
@@ -51,5 +57,5 @@ const getConversacionesByIdTaller = (IdTaller, cb) => {
 module.exports = {
   createConversacion,
   createOrGetConversacion,
-  getConversacionesByIdTaller
+  getConversacionesByTallerAndNombreUsuario
 };

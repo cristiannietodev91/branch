@@ -78,7 +78,7 @@ module.exports = {
         cb(err, null);
       });
   },
-  findAllByFilter: function (filterConversacion, cb) {
+  findAllByFilter: function (filterConversacion, filterUsuario, cb) {
     // Find all users
     return models.sequelize
       .transaction((t1) => {
@@ -86,7 +86,8 @@ module.exports = {
           .findAll({
             include: [
               {
-                model: models.usuarios
+                model: models.usuarios,
+                where: filterUsuario
               },
               {
                 model: models.taller

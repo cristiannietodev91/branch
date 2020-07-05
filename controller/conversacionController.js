@@ -5,8 +5,11 @@ const getConversacionesByIdTaller = (req, res, next) => {
   try {
     const IdTaller = req.params.Id;
 
-    conversacionAdapter.getConversacionesByIdTaller(
+    const { firstName } = req.query;
+
+    conversacionAdapter.getConversacionesByTallerAndNombreUsuario(
       IdTaller,
+      firstName,
       (error, conversaciones) => {
         if (error) {
           console.error(
