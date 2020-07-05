@@ -20,8 +20,16 @@
         v-model="message"
         @keyup.native.enter="sendMessage"
       />
+      <vue-dropzone
+        ref="myVueDropzone"
+        id="dropzone"
+        :awss3="awss3"
+        :options="dropzoneOptions"
+        v-on:vdropzone-complete="complete"
+        class="d-none"
+      ></vue-dropzone>
       <div class="d-flex flex-row">
-        <b-button variant="outline-primary" class="icon-button small ml-1">
+        <b-button variant="outline-primary" class="icon-button small ml-1" @click="open">
           <i class="simple-icon-paper-clip" />
         </b-button>
         <b-button variant="primary" class="icon-button small ml-1" @click="sendMessage">
@@ -34,6 +42,7 @@
 
 <script>
 import { mapGetters, mapActions, mapMutations } from "vuex";
+import vue2Dropzone from "vue2-dropzone";
 // import ApplicationMenu from '../Common/ApplicationMenu'
 // import ContactList from '../ChatApp/ContactList'
 import ConversationList from "../ChatApp/ConversationList";
@@ -43,6 +52,7 @@ import { v4 as uuidv4 } from "uuid";
 export default {
   props: ["conversacion"],
   components: {
+    "vue-dropzone": vue2Dropzone,
     "conversation-list": ConversationList,
     "conversation-detail": ConversationDetail
   },
@@ -52,7 +62,30 @@ export default {
       message: "",
       searchKey: "",
       isLoadCurrentConversation: false,
-      otherUser: null
+      otherUser: null,
+      dropzoneOptions: {
+        url: process.env.VUE_APP_URLBACKSERVICES + `file/sendFile`,
+        method: "post",
+        autoProcessQueue: false,
+        acceptedFiles: "image/*",
+        thumbnailHeight: 160,
+        maxFilesize: 4,
+        maxFiles: 1,
+        autoDiscover: false
+      },
+      awss3: {
+        signingURL: f => {
+          // The server REST endpoint we setup earlier
+          const key =
+            process.env.VUE_APP_URLBACKSERVICES +
+            `file/signed?filename=${f.name}`;
+          // Save this for later use
+          return key;
+        },
+        headers: {},
+        params: {},
+        sendFileToServer: false
+      }
     };
   },
   computed: {
@@ -97,6 +130,14 @@ export default {
     },
     hide() {
       this.$emit("hide");
+    },
+    complete(response) {
+      if (response.status == "success") {
+        console.log("Se completo la subida de archivos :::>", response);
+      }
+    },
+    open() {
+      this.$refs.myVueDropzone.dropzone.hiddenFileInput.click();
     }
   },
   created() {

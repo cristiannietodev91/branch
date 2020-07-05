@@ -80,7 +80,6 @@ export default {
   },
   methods: {
     search() {
-      //this.$router.push(`${this.searchPath}?search=${this.searchKeyword}`)
       ServicesCore.getOrdenesByIdTallerAndFilter(
         this.currentUser.IdTaller,
         this.searchKeyword

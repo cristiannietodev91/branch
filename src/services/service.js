@@ -124,8 +124,12 @@ class ServiceCrm {
     return http.put("/message/updatereadAllMessages", conversacion);
   }
 
-  getConversacionesByTaller(IdTaller) {
-    return http.get("/conversacion/getAllByIdTaller/" + IdTaller);
+  getConversacionesByTaller(IdTaller, firstName) {
+    return http.get("/conversacion/getAllByIdTaller/" + IdTaller, {
+      params: {
+        firstName: firstName
+      }
+    });
   }
 
   countUnReadMessagesByIdConversacion(IdConversacion, typeusuario) {

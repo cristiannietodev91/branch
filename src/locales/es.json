@@ -82,7 +82,8 @@
       "email": "Correo electronico"
     },
     "chat":{
-      "conversaciones": "Conversaciones"
+      "conversaciones": "Conversaciones",
+      "conversacionesunread": "Conversaciones sin leer"
     }
   },
   "user": {

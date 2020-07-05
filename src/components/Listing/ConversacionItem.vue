@@ -1,10 +1,8 @@
 <template>
-  <div class="d-flex flex-row mb-3">
-    <div class="pl-3 pt-2 pr-2 pb-2" v-on:click="openChat">
-      <p class="list-item-heading">
-        {{ conversacion.usuario.firstName }}
-        <b-badge variant="light" v-if="newmessages > 0">{{newmessages}}</b-badge>
-      </p>
+  <div class="d-flex flex-row m-2 border-bottom border-top cardChats" v-on:click="openChat">
+    <b-badge variant="light" v-if="newmessages > 0" class="align-self-center">{{newmessages}}</b-badge>
+    <div class="pl-3 pt-2 pr-2 pb-2">
+      <p class="list-item-heading">{{ conversacion.usuario.firstName }}</p>
       <div class="pr-4">
         <p class="text-muted mb-1 text-small">{{ conversacion.usuario.email}}</p>
       </div>
