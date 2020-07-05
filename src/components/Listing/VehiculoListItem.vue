@@ -7,19 +7,17 @@
     }"
     no-body
   >
-    <div
-      :style="{
-        backgroundImage: `url('${data.fotos && data.fotos[0] ? data.fotos[0].url : data.marca.urllogo}')`,
-        width: `15%`,
-        backgroundPosition: `center center`,
-        backgroundRepeat: `no-repeat`
-      }"
-    ></div>
+    <div class="img-moto">
+      <div
+        :style="{
+          backgroundImage: `url('${data.fotos && data.fotos[0] ? data.fotos[0].url : data.marca.urllogo}')`,
+        }"
+      >
+      </div>
+    </div>
 
     <div class="pl-2 d-flex flex-grow-1 min-width-zero">
-      <div
-        class="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center p-3"
-      >
+      <div class="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center p-3">
         <div class="mb-0 w-30 w-sm-100">
           <p class="text-muted text-small mb-1">{{ $t("branch.orden.marca") }}</p>
           <p class="mb-1 text-small mb-3">{{ data.marca.marca }}</p>

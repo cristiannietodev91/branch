@@ -165,7 +165,6 @@ export default {
   methods: {
     complete(response) {
       if (response.status == "success") {
-        console.log("Se completo la subida de archivos :::>", response);
         let dateCreated = moment()
           .tz("UTC")
           .format();

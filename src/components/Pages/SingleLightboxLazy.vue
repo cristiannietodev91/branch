@@ -1,7 +1,14 @@
 <template>
   <div>
     <router-link to="#" @click.native.prevent="onThumbClick(0)">
-      <b-img-lazy v-bind="mainProps" :src="linkThumb" :show="true" :class="className" />
+      <b-img-lazy
+        v-bind="mainProps"
+        :src="linkThumb"
+        :class="className"
+        alt="Image Branch"
+        v-if="show"
+      />
+      <div v-else class="loader-wheel"></div>
     </router-link>
     <LightGallery
       :images="[large]"
@@ -28,11 +35,12 @@ export default {
         center: true,
         fluidGrow: true,
         blank: true,
-        blankColor: "#bbb",
+        blankColor: "transparent",
         width: 300,
         height: 300,
         class: "my-5"
-      }
+      },
+      show: false
     };
   },
   created() {
@@ -46,9 +54,12 @@ export default {
       this.photoIndex = null;
     },
     async getImageUrl(thumb) {
-      setTimeout(() => {
+      await setTimeout(() => {
         this.linkThumb = `${thumb}?${new Date().getTime()}`;
       }, 1500);
+      await setTimeout(() => {
+        this.show = true;
+      }, 2500);
     }
   }
 };

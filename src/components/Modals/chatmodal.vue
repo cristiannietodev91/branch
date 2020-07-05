@@ -13,30 +13,40 @@
         <div v-else class="loading" key="conversationLoading"></div>
       </b-colxx>
     </b-row>
-    <div class="d-flex justify-content-between align-items-center">
-      <b-input
-        type="text"
-        :placeholder="$t('chat.saysomething')"
-        v-model="message"
-        @keyup.native.enter="sendMessage"
-      />
-      <vue-dropzone
-        ref="myVueDropzone"
-        id="dropzone"
-        :awss3="awss3"
-        :options="dropzoneOptions"
-        v-on:vdropzone-complete="complete"
-        class="d-none"
-      ></vue-dropzone>
-      <div class="d-flex flex-row">
-        <b-button variant="outline-primary" class="icon-button small ml-1" @click="open">
-          <i class="simple-icon-paper-clip" />
-        </b-button>
-        <b-button variant="primary" class="icon-button small ml-1" @click="sendMessage">
-          <i class="simple-icon-arrow-right" />
-        </b-button>
+    <div class>
+      <div v-if="!isLoadImage" class="d-flex justify-content-between align-items-center">
+        <b-input
+          type="text"
+          :placeholder="$t('chat.saysomething')"
+          v-model="message"
+          @keyup.native.enter="sendMessage"
+          :readonly="isLoadImage"
+        />
+        <div class="d-flex flex-row">
+          <b-button variant="outline-primary" class="icon-button small ml-1" @click="open">
+            <i class="simple-icon-paper-clip" />
+          </b-button>
+          <b-button variant="primary" class="icon-button small ml-1" @click="sendMessage">
+            <i class="simple-icon-arrow-right" />
+          </b-button>
+        </div>
+        <span v-if="showErrorMessage">{{errorMessage}}</span>
       </div>
+      <template v-else>
+        <div class="loading"></div>
+      </template>
     </div>
+
+    <vue-dropzone
+      ref="myVueDropzone"
+      id="dropzone"
+      :awss3="awss3"
+      :options="dropzoneOptions"
+      v-on:vdropzone-complete="complete"
+      v-on:vdropzone-file-added="starLoad"
+      v-on:vdropzone-error="errorLoadFile"
+      class="d-none"
+    ></vue-dropzone>
   </div>
 </template>
 
@@ -63,15 +73,16 @@ export default {
       searchKey: "",
       isLoadCurrentConversation: false,
       otherUser: null,
+      isLoadImage: false,
+      errorMessage: "",
+      showErrorMessage: false,
       dropzoneOptions: {
         url: process.env.VUE_APP_URLBACKSERVICES + `file/sendFile`,
         method: "post",
-        autoProcessQueue: false,
+        autoProcessQueue: true,
         acceptedFiles: "image/*",
         thumbnailHeight: 160,
-        maxFilesize: 4,
-        maxFiles: 1,
-        autoDiscover: false
+        maxFilesize: 4
       },
       awss3: {
         signingURL: f => {
@@ -128,12 +139,61 @@ export default {
         newmessage
       );
     },
+    starLoad() {
+      this.isLoadImage = true;
+    },
+    errorLoadFile(file, error) {
+      this.isLoadImage = false;
+      const { status } = file;
+      console.error(
+        "Error to load file :::>",
+        file,
+        "status ::>",
+        status,
+        "Error",
+        error
+      );
+      this.showErrorMessage = true;
+      if (error && error.includes("too big")) {
+        this.errorMessage = "Archivo es demasiado grande el maximo es 8 MB";
+        setTimeout(() => {
+          this.showErrorMessage = false;
+        }, 2500);
+      }
+    },
     hide() {
       this.$emit("hide");
     },
     complete(response) {
+      this.isLoadImage = false;
       if (response.status == "success") {
-        console.log("Se completo la subida de archivos :::>", response);
+        let newmessage = {
+          _id: uuidv4(),
+          createdAt: new Date(),
+          image: response.s3Url + "/" + response.s3Signature.key,
+          delivered: false,
+          read: false,
+          user: {
+            _id: this.currentUser.uid,
+            name: this.conversacion.nombreTaller
+          },
+          IdCita: this.conversacion.IdCita,
+          CodigoOrden: this.conversacion.CodigoOrden,
+          IdOrdenTrabajo: this.conversacion.IdOrdenTrabajo,
+          IdEtapa: this.conversacion.IdEtapa,
+          IdConversacionUser: this.conversacion.IdConversacionUser,
+          IdTaller: this.conversacion.IdTaller,
+          typeusuario: "taller"
+        };
+
+        this.addMessageItem(newmessage);
+
+        this.message = "";
+        this.$socket.emit(
+          "messaggetosomeone",
+          this.conversacion.IdConversacionUser,
+          newmessage
+        );
       }
     },
     open() {

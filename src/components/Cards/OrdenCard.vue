@@ -21,7 +21,7 @@
           :aria-controls="`sidebar${data.CodigoOrden}`"
           :aria-expanded="showModal"
         >
-          <i class="iconsminds-speach-bubble-8"></i>
+          <!-- <i class="iconsminds-speach-bubble-8"></i> -->
           {{ $t("chat.send") }}
           <b-badge variant="light" v-if="newmessages > 0">{{ newmessages }}</b-badge>
         </b-button>

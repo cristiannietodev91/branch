@@ -259,7 +259,7 @@ export default {
         },
         {
           column: "identificacion",
-          label: "Identificacion"
+          label: "Identificación"
         }
       ],
       page: 1,
