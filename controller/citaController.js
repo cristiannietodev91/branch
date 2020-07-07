@@ -1,4 +1,5 @@
 const citaAdapter = require("../adapter/citaAdapter");
+const notificacionAdapter = require("../adapter/notificacionAdapter");
 const citaDAO = require("../dao/citaDAO");
 const vehiculoDAO = require("../dao/vehiculoDAO");
 const mecanicoDAO = require("../dao/mecanicoDAO");
@@ -112,18 +113,6 @@ const createCita = (req, res, next) => {
                           ", " +
                           mecanico.firstName +
                           " de BRANCH tendra el gusto de recibirte. Tu experiencia nuestro motor! BRANCH";
-                        if (vehiculo.usuario.celular) {
-                          sms.sendSMStoInfoBip(
-                            vehiculo.usuario.celular,
-                            textoSms
-                          );
-                        }
-                        if (vehiculo.usuario.tokenCM) {
-                          sms.sendNotificacionToUser(
-                            vehiculo.usuario.tokenCM,
-                            textoSms
-                          );
-                        }
                       } else {
                         //Texto de cita sin mecanico
                         textoSms =
@@ -138,19 +127,39 @@ const createCita = (req, res, next) => {
                           "  " +
                           vehiculo.placa +
                           ", BRANCH tendra el gusto de recibirte. Tu experiencia nuestro motor! BRANCH";
-                        if (vehiculo.usuario.celular) {
-                          sms.sendSMStoInfoBip(
-                            vehiculo.usuario.celular,
-                            textoSms
-                          );
-                        }
-                        if (vehiculo.usuario.tokenCM) {
-                          sms.sendNotificacionToUser(
-                            vehiculo.usuario.tokenCM,
-                            textoSms
-                          );
-                        }
                       }
+                      if (vehiculo.usuario.celular) {
+                        sms.sendSMStoInfoBip(
+                          vehiculo.usuario.celular,
+                          textoSms
+                        );
+                      }
+                      if (vehiculo.usuario.tokenCM) {
+                        sms.sendNotificacionToUser(
+                          vehiculo.usuario.tokenCM,
+                          textoSms
+                        );
+                      }
+                      const notificacion = {
+                        IdUsuario: vehiculo.usuario.uid,
+                        text: textoSms,
+                        typenotificacion: "Cita",
+                        read: false,
+                        dataAdicional: { IdCita: cita.IdCita }
+                      };
+                      notificacionAdapter.crearNotificacion(
+                        notificacion,
+                        (error) => {
+                          if (error) {
+                            console.error("Notificacion error :::>", error);
+                          } else {
+                            console.log(
+                              "Se creo la notificacion correctamente :::>",
+                              error
+                            );
+                          }
+                        }
+                      );
                     }
                   });
                   // Si la cita es solicitada se notifica al taller que el cliente solicito una cita
@@ -181,8 +190,8 @@ const createCita = (req, res, next) => {
 
 const updateCita = (req, res, next) => {
   try {
-    var IdCita = req.params.Id;
-    var cita = req.body;
+    const IdCita = req.params.Id;
+    const cita = req.body;
     citaAdapter.updateCitaByIdCita(IdCita, cita, (error, cita) => {
       if (error) {
         return res

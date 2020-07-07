@@ -1,4 +1,5 @@
 const ordenAdapter = require("../adapter/ordenAdapter");
+const notificacionAdapter = require("../adapter/notificacionAdapter");
 const ordenDAO = require("../dao/OrdenDAO");
 const citaDAO = require("../dao/citaDAO");
 const sms = require("../utils/sendSms");
@@ -98,6 +99,24 @@ const createOrden = (req, res, next) => {
                 { IdCita: orden.IdCita }
               );
             }
+
+            const notificacion = {
+              IdUsuario: cita.vehiculo.usuario.uid,
+              text: textoSms,
+              typenotificacion: orden.IdEtapa === 7 ? "Calificación" : "Orden",
+              read: false,
+              dataAdicional: { IdCita: cita.IdCita }
+            };
+            notificacionAdapter.crearNotificacion(notificacion, (error) => {
+              if (error) {
+                console.error("Notificacion error :::>", error);
+              } else {
+                console.log(
+                  "Se creo la notificacion correctamente :::>",
+                  error
+                );
+              }
+            });
 
             ordenDAO.create(ordenDB, (error, orden) => {
               if (error) {
@@ -230,14 +249,6 @@ const updateOrden = (req, res, next) => {
                     "Datos para envio de SMS ::>",
                     orden.vehiculo.usuario.celular
                   );
-                  /*if (orden.vehiculo.usuario.celular) {
-                                        let textoSms = ""
-                                        //Texto de cita con mecanico
-                                        debug('Estado de la cita ::>', orden.estado);
-                                        if(orden.estado == 'Rechazado'){
-                                            sms.sendNotificacionToUser(orden.vehiculo.usuario.tokenCM,'Se confirmo su cita exitosamente')
-                                        }
-                                    }*/
                 }
               }
             });

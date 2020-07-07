@@ -1,4 +1,5 @@
 const citaDAO = require("../dao/citaDAO");
+const notificacionAdapter = require("../adapter/notificacionAdapter");
 const { Op, Sequelize } = require("sequelize");
 const sms = require("../utils/sendSms");
 const moment = require("moment");
@@ -59,7 +60,8 @@ const updateCitaByIdCita = (IdCita, cita, cb) => {
       horaCita: cita.horaCita,
       servicio: cita.servicio,
       estado: cita.estado,
-      calificacion: cita.calificacion
+      calificacion: cita.calificacion,
+      calificacionUsuario: cita.calificacionUsuario
     };
 
     console.log("CitaDB :::>", citaDb);
@@ -83,10 +85,7 @@ const updateCitaByIdCita = (IdCita, cita, cb) => {
                     //Texto de cita con mecanico
 
                     if (cita.estado == "Confirmada") {
-                      sms.sendNotificacionToUser(
-                        cita.vehiculo.usuario.tokenCM,
-                        "Se confirmo su cita exitosamente"
-                      );
+                      textoSms = "Se confirmo su cita exitosamente";
                     } else {
                       if (cita.estado == "Cancelada") {
                         textoSms =
@@ -101,14 +100,6 @@ const updateCitaByIdCita = (IdCita, cita, cb) => {
                           "  " +
                           cita.vehiculo.placa +
                           ", BRANCH tendra el gusto de recibirte en una proxima oportunidad. Tu experiencia nuestro motor! BRANCH";
-                        sms.sendSMStoInfoBip(
-                          cita.vehiculo.usuario.celular,
-                          textoSms
-                        );
-                        sms.sendNotificacionToUser(
-                          cita.vehiculo.usuario.tokenCM,
-                          textoSms
-                        );
                       } else {
                         if (cita.estado == "Incumplida") {
                           textoSms =
@@ -123,10 +114,6 @@ const updateCitaByIdCita = (IdCita, cita, cb) => {
                             "  " +
                             cita.vehiculo.placa +
                             ", esto afectara tu puntuacion en nuestra plataforma. BRANCH tendra el gusto de recibirte en una proxima oportunidad. Tu experiencia nuestro motor! BRANCH";
-                          sms.sendSMStoInfoBip(
-                            cita.vehiculo.usuario.celular,
-                            textoSms
-                          );
                         } else {
                           textoSms =
                             "Hola " +
@@ -142,13 +129,42 @@ const updateCitaByIdCita = (IdCita, cita, cb) => {
                             ", " +
                             cita.mecanico.firstName +
                             " de BRANCH tendra el gusto de recibirte. Tu experiencia nuestro motor! BRANCH";
-                          sms.sendSMStoInfoBip(
-                            cita.vehiculo.usuario.celular,
-                            textoSms
-                          );
                         }
                       }
                     }
+                    if (cita.vehiculo.usuario.celular) {
+                      sms.sendSMStoInfoBip(
+                        cita.vehiculo.usuario.celular,
+                        textoSms
+                      );
+                    }
+                    if (cita.vehiculo.usuario.tokenCM) {
+                      sms.sendNotificacionToUser(
+                        cita.vehiculo.usuario.tokenCM,
+                        textoSms
+                      );
+                    }
+                    // Persistir notificacion
+                    const notificacion = {
+                      IdUsuario: cita.vehiculo.usuario.uid,
+                      text: textoSms,
+                      typenotificacion: "Cita",
+                      read: false,
+                      dataAdicional: { IdCita: cita.IdCita }
+                    };
+                    notificacionAdapter.crearNotificacion(
+                      notificacion,
+                      (error) => {
+                        if (error) {
+                          console.error("Notificacion error :::>", error);
+                        } else {
+                          console.log(
+                            "Se creo la notificacion correctamente :::>",
+                            error
+                          );
+                        }
+                      }
+                    );
                   }
                 }
               }

@@ -78,7 +78,7 @@ const createVehiculo = (req, res, next) => {
                   if (vehiculo) {
                     const { usuario } = vehiculoResult;
 
-                    const { tokenCM } = usuario;
+                    const { tokenCM, uid } = usuario;
                     console.log("Usuario a enviar notificacion :::>", tokenCM);
 
                     tallerDAO.getById(IdTaller, (error, taller) => {

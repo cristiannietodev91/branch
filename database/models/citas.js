@@ -42,6 +42,9 @@ module.exports = (sequelize, DataTypes) => {
       },
       calificacion: {
         type: Sequelize.INTEGER
+      },
+      calificacionUsuario: {
+        type: Sequelize.INTEGER
       }
     },
     {}

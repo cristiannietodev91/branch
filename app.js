@@ -16,6 +16,7 @@ const fileRouter = require("./routes/fileRoute");
 const messageRouter = require("./routes/messageRoute");
 const servicioRouter = require("./routes/serviciosRoute");
 const conversacionRouter = require("./routes/conversacionRoute");
+const notificacionRouter = require("./routes/notificacionRouter");
 
 var app = express();
 
@@ -39,6 +40,7 @@ app.use("/file", fileRouter);
 app.use("/message", messageRouter);
 app.use("/servicios", servicioRouter);
 app.use("/conversacion", conversacionRouter);
+app.use("/notificacion", notificacionRouter);
 
 app.use(logErrors);
 app.use(clientErrorHandler);
