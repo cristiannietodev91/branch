@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-row class="m-3">
-      <div class="d-flex align-items-center navbar-left">
+      <div class="search-container">
         <div
           :class="{ search: true, 'mobile-view': isMobileSearch }"
           ref="searchContainer"

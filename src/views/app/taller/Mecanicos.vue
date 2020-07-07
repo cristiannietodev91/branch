@@ -4,7 +4,7 @@
       <div class="top-right-button-container">
         <b-button
           variant="primary"
-          size="lg"
+          size="xs"
           class="top-right-button"
           @click="showModal"
         >{{ $t("pages.branch.add-new-mecanico") }}</b-button>

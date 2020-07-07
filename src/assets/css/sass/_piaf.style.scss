@@ -3492,7 +3492,7 @@ main {
         // font-family: inherit !important;
         // color: $foreground-color !important;
         // margin-top: 17px;
-        width: 140px;
+        width: 14%;
         background: $background-color !important;
         margin: 4em 0 0 .4em;
         padding: .6em;
@@ -9822,7 +9822,7 @@ footer.page-footer {
         padding: $padding 0 0 $padding*4;
         cursor: pointer;
         @include breakpoint(xs) {
-          display: block;
+          // display: block;
         }
         @include breakpoint(md) {
           &:before, &:after{
@@ -9890,7 +9890,29 @@ footer.page-footer {
             font-weight: 300 !important;
           }
           @include breakpoint(xs) {
-            display: none;
+            display: block !important;
+          }
+        }
+        @include respond-below(lg) {
+          span{
+            font-size: .8rem;
+          }
+        }
+        @include respond-below(md) {
+          span{
+            display: block !important;
+          }
+        }
+        @include respond-below(sm) {
+          padding: 0;
+          span{
+            font-size: .7rem;
+          }
+        }
+        @include respond-below(xxs) {
+          padding: 0;
+          span{
+            display: none !important;
           }
         }
       }
@@ -9931,10 +9953,15 @@ footer.page-footer {
     }
   }
 }
-
+.search-container{
+  @include respond-below(sm) {
+    width: 100%;
+  }
+}
 .search {
   position: relative;
-  width: $search-width;
+  // width: $search-width;
+  width: 100% !important;
   border-radius: 20px;
   background: $background-color;
   border: 1px solid $light-btn-background;
@@ -10080,5 +10107,25 @@ footer.page-footer {
     border-radius: 1em;
     margin: auto;
     overflow: hidden;
+  }
+}
+
+// RATING STYLES
+.rating-container{
+  position: absolute;
+  width: 98%;
+  height: 80%;
+  background-color: white;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  .b-rating{
+    width: 40%;
+    border: none;
+    b{
+      flex-flow: column;
+    }
   }
 }
