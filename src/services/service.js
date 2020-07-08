@@ -78,6 +78,12 @@ class ServiceCrm {
     return http.put("/cita/update/" + cita.IdCita, cita);
   }
 
+  calificaCita(IdCita, calificacion) {
+    return http.put("/cita/calificar/" + IdCita, {
+      calificacion: calificacion
+    });
+  }
+
   createOrden(orden) {
     return http.post("/orden/create", orden);
   }

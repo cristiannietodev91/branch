@@ -125,11 +125,8 @@ export default {
     qualifyClient(value) {
       console.log("Qualyfy client :::>", value, this.data);
       const { IdCita } = this.data;
-      const cita = {
-        IdCita: IdCita,
-        calificacion: value
-      };
-      ServicesCore.updateCita(cita)
+
+      ServicesCore.calificaCita(IdCita, value)
         .then(response => {
           if (response.status == 202) {
             this.readOnlyQualify = true;
