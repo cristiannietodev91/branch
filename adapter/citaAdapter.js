@@ -80,18 +80,31 @@ const updateCitaByIdCita = (IdCita, cita, cb) => {
                 cb(error, null);
               } else {
                 if (cita) {
-                  if (cita.vehiculo.usuario.celular) {
-                    let textoSms = "";
-                    //Texto de cita con mecanico
+                  let textoSms = "";
+                  //Texto de cita con mecanico
 
-                    if (cita.estado == "Confirmada") {
-                      textoSms = "Se confirmo su cita exitosamente";
+                  if (cita.estado == "Confirmada") {
+                    textoSms = "Se confirmo su cita exitosamente";
+                  } else {
+                    if (cita.estado == "Cancelada") {
+                      textoSms =
+                        "Hola " +
+                        cita.vehiculo.usuario.firstName +
+                        "! Se cancelo la cita que tenias el " +
+                        moment(cita.fechaCita).format("D [de] MMMM YYYY") +
+                        " a las " +
+                        cita.horaCita +
+                        " con tu " +
+                        cita.vehiculo.tipoVehiculo +
+                        "  " +
+                        cita.vehiculo.placa +
+                        ", BRANCH tendra el gusto de recibirte en una proxima oportunidad. Tu experiencia nuestro motor! BRANCH";
                     } else {
-                      if (cita.estado == "Cancelada") {
+                      if (cita.estado == "Incumplida") {
                         textoSms =
                           "Hola " +
                           cita.vehiculo.usuario.firstName +
-                          "! Se cancelo la cita que tenias el " +
+                          "! Incumpliste la cita que tenias el " +
                           moment(cita.fechaCita).format("D [de] MMMM YYYY") +
                           " a las " +
                           cita.horaCita +
@@ -99,73 +112,58 @@ const updateCitaByIdCita = (IdCita, cita, cb) => {
                           cita.vehiculo.tipoVehiculo +
                           "  " +
                           cita.vehiculo.placa +
-                          ", BRANCH tendra el gusto de recibirte en una proxima oportunidad. Tu experiencia nuestro motor! BRANCH";
+                          ", esto afectara tu puntuacion en nuestra plataforma. BRANCH tendra el gusto de recibirte en una proxima oportunidad. Tu experiencia nuestro motor! BRANCH";
                       } else {
-                        if (cita.estado == "Incumplida") {
-                          textoSms =
-                            "Hola " +
-                            cita.vehiculo.usuario.firstName +
-                            "! Incumpliste la cita que tenias el " +
-                            moment(cita.fechaCita).format("D [de] MMMM YYYY") +
-                            " a las " +
-                            cita.horaCita +
-                            " con tu " +
-                            cita.vehiculo.tipoVehiculo +
-                            "  " +
-                            cita.vehiculo.placa +
-                            ", esto afectara tu puntuacion en nuestra plataforma. BRANCH tendra el gusto de recibirte en una proxima oportunidad. Tu experiencia nuestro motor! BRANCH";
-                        } else {
-                          textoSms =
-                            "Hola " +
-                            cita.vehiculo.usuario.firstName +
-                            "! Su cita quedo asignada el " +
-                            moment(cita.fechaCita).format("D [de] MMMM YYYY") +
-                            " a las " +
-                            cita.horaCita +
-                            " con tu " +
-                            cita.vehiculo.tipoVehiculo +
-                            "  " +
-                            cita.vehiculo.placa +
-                            ", " +
-                            cita.mecanico.firstName +
-                            " de BRANCH tendra el gusto de recibirte. Tu experiencia nuestro motor! BRANCH";
-                        }
+                        textoSms =
+                          "Hola " +
+                          cita.vehiculo.usuario.firstName +
+                          "! Su cita quedo asignada el " +
+                          moment(cita.fechaCita).format("D [de] MMMM YYYY") +
+                          " a las " +
+                          cita.horaCita +
+                          " con tu " +
+                          cita.vehiculo.tipoVehiculo +
+                          "  " +
+                          cita.vehiculo.placa +
+                          ", " +
+                          cita.mecanico.firstName +
+                          " de BRANCH tendra el gusto de recibirte. Tu experiencia nuestro motor! BRANCH";
                       }
                     }
-                    if (cita.vehiculo.usuario.celular) {
-                      sms.sendSMStoInfoBip(
-                        cita.vehiculo.usuario.celular,
-                        textoSms
-                      );
-                    }
-                    if (cita.vehiculo.usuario.tokenCM) {
-                      sms.sendNotificacionToUser(
-                        cita.vehiculo.usuario.tokenCM,
-                        textoSms
-                      );
-                    }
-                    // Persistir notificacion
-                    const notificacion = {
-                      IdUsuario: cita.vehiculo.usuario.uid,
-                      text: textoSms,
-                      typenotificacion: "Cita",
-                      read: false,
-                      dataAdicional: { IdCita: cita.IdCita }
-                    };
-                    notificacionAdapter.crearNotificacion(
-                      notificacion,
-                      (error) => {
-                        if (error) {
-                          console.error("Notificacion error :::>", error);
-                        } else {
-                          console.log(
-                            "Se creo la notificacion correctamente :::>",
-                            error
-                          );
-                        }
-                      }
+                  }
+                  if (cita.vehiculo.usuario.celular) {
+                    sms.sendSMStoInfoBip(
+                      cita.vehiculo.usuario.celular,
+                      textoSms
                     );
                   }
+                  if (cita.vehiculo.usuario.tokenCM) {
+                    sms.sendNotificacionToUser(
+                      cita.vehiculo.usuario.tokenCM,
+                      textoSms
+                    );
+                  }
+                  // Persistir notificacion
+                  const notificacion = {
+                    IdUsuario: cita.vehiculo.usuario.uid,
+                    text: textoSms,
+                    typenotificacion: "Cita",
+                    read: false,
+                    dataAdicional: { IdCita: cita.IdCita }
+                  };
+                  notificacionAdapter.crearNotificacion(
+                    notificacion,
+                    (error) => {
+                      if (error) {
+                        console.error("Notificacion error :::>", error);
+                      } else {
+                        console.log(
+                          "Se creo la notificacion correctamente :::>",
+                          error
+                        );
+                      }
+                    }
+                  );
                 }
               }
             });
@@ -183,6 +181,47 @@ const updateCitaByIdCita = (IdCita, cita, cb) => {
         null
       );
     }
+  } else {
+    cb(
+      {
+        message: "El parametro IdCita es requerido"
+      },
+      null
+    );
+  }
+};
+
+const calificaCitaByIdCita = (
+  IdCita,
+  calificacion,
+  calificacionUsuario,
+  cb
+) => {
+  if (IdCita) {
+    let citaDb = {
+      calificacion: calificacion,
+      calificacionUsuario: calificacionUsuario
+    };
+
+    citaDAO.update(IdCita, citaDb, function (error, cita) {
+      if (error) {
+        cb(error, null);
+      } else {
+        if (cita) {
+          citaDAO.getById(IdCita, (error, cita) => {
+            if (error) {
+              cb(error, null);
+            } else {
+              if (cita) {
+                cb(null, cita);
+              }
+            }
+          });
+        } else {
+          cb(null, null);
+        }
+      }
+    });
   } else {
     cb(
       {
@@ -354,5 +393,6 @@ module.exports = {
   getAllCitasActivasByIdUsuario,
   countCitasByIdTaller,
   countCitasByEstadoIdTaller,
-  countCitasByDateAndIdTaller
+  countCitasByDateAndIdTaller,
+  calificaCitaByIdCita
 };

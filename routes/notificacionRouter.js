@@ -8,4 +8,9 @@ router.get(
   notificacionController.getNotificacionesByIdusuario
 );
 
+router.put(
+  "/updateReadNotificaciones",
+  notificacionController.updateNotificacionesByIdusuario
+);
+
 module.exports = router;

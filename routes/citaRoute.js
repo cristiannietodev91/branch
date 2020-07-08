@@ -36,6 +36,8 @@ router.post("/create", citaController.createCita);
 
 router.put("/update/:Id", citaController.updateCita);
 
+router.put("/calificar/:Id", citaController.calificaCita);
+
 router.delete("/deleteById/:Id", citaController.deleteCitaById);
 
 router.get("/getByIdTallerAndFilter/:Id", citaController.getAllCitasByfilter);

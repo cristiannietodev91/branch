@@ -1,4 +1,5 @@
 const notificacionDAO = require("../dao/NotificacionDAO");
+const { Op } = require("sequelize");
 
 const crearNotificacion = (notificacion, cb) => {
   const notificacionDb = {
@@ -20,7 +21,7 @@ const crearNotificacion = (notificacion, cb) => {
 
 const findNotificacionesByIdUsuario = (IdUsuario, cb) => {
   notificacionDAO.findAllByFilter(
-    { IdUsuario: IdUsuario },
+    { IdUsuario: IdUsuario, read: false },
     (error, notificaciones) => {
       if (error) {
         console.error("Error al registrar notificaciones", notificaciones);
@@ -32,7 +33,44 @@ const findNotificacionesByIdUsuario = (IdUsuario, cb) => {
   );
 };
 
+const updateNotificacionGeneralByIdUsuario = (IdUsuario, cb) => {
+  notificacionDAO.update(
+    {
+      IdUsuario: IdUsuario,
+      read: false,
+      typenotificacion: { [Op.ne]: "Calificación" }
+    },
+    { read: true },
+    (error, result) => {
+      if (error) {
+        cb(error, null);
+      } else {
+        cb(null, result);
+      }
+    }
+  );
+};
+
+const updateNotificacionByIdNotificacion = (IdNotificacion, cb) => {
+  notificacionDAO.update(
+    {
+      IdNotificacion: IdNotificacion,
+      read: false
+    },
+    { read: true },
+    (error, result) => {
+      if (error) {
+        cb(error, null);
+      } else {
+        cb(null, result);
+      }
+    }
+  );
+};
+
 module.exports = {
   crearNotificacion,
-  findNotificacionesByIdUsuario
+  findNotificacionesByIdUsuario,
+  updateNotificacionGeneralByIdUsuario,
+  updateNotificacionByIdNotificacion
 };

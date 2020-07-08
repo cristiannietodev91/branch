@@ -217,6 +217,40 @@ const updateCita = (req, res, next) => {
   }
 };
 
+const calificaCita = (req, res, next) => {
+  try {
+    const IdCita = req.params.Id;
+    const { calificacion, calificacionUsuario } = req.body;
+    citaAdapter.calificaCitaByIdCita(
+      IdCita,
+      calificacion,
+      calificacionUsuario,
+      (error, cita) => {
+        if (error) {
+          return res
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .json({ error: error.message });
+        } else {
+          if (cita) {
+            return res.status(HttpStatus.ACCEPTED).json({
+              message: "Se califico la cita " + IdCita + " correctamente"
+            });
+          } else {
+            return res
+              .status(HttpStatus.OK)
+              .json({ error: "No se actualizo la cita" });
+          }
+        }
+      }
+    );
+  } catch (error) {
+    console.error("Error al actualizar la cita ", error);
+    return res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ error: error.message });
+  }
+};
+
 const deleteCitaById = (req, res, next) => {
   try {
     var IdCita = req.params.Id;
@@ -633,5 +667,6 @@ module.exports = {
   getAllCitasByfilter,
   countCitasByIdTaller,
   countCitasByEstadoIdTaller,
-  countCitasByDateAndIdTaller
+  countCitasByDateAndIdTaller,
+  calificaCita
 };

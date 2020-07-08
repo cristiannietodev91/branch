@@ -27,13 +27,13 @@ module.exports = {
         cb(err, null);
       });
   },
-  update: function (IdOrdenTrabajo, orden, cb) {
+  update: function (filterNotificacion, notificacion, cb) {
     // Find all users
     return models.sequelize
       .transaction((t1) => {
         return models.notificacion
-          .update(orden, {
-            where: { IdOrdenTrabajo: IdOrdenTrabajo }
+          .update(notificacion, {
+            where: filterNotificacion
           })
           .then((orden) => {
             return orden;

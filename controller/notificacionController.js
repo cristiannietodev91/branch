@@ -28,6 +28,50 @@ const getNotificacionesByIdusuario = (req, res, next) => {
   }
 };
 
+const updateNotificacionesByIdusuario = (req, res, next) => {
+  try {
+    const { IdUsuario, type, IdNotificacion } = req.body;
+
+    if (type === "general") {
+      notificacionAdapter.updateNotificacionGeneralByIdUsuario(
+        IdUsuario,
+        (error, result) => {
+          if (error) {
+            console.error("Error al actualizar las notificaciones", error);
+            return res
+              .status(HttpStatus.INTERNAL_SERVER_ERROR)
+              .json({ error: error.message });
+          } else {
+            return res.status(HttpStatus.OK).json(result);
+          }
+        }
+      );
+    } else {
+      if (IdNotificacion) {
+        notificacionAdapter.updateNotificacionByIdNotificacion(
+          IdNotificacion,
+          (error, result) => {
+            if (error) {
+              console.error("Error al actualizar las notificaciones", error);
+              return res
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .json({ error: error.message });
+            } else {
+              return res.status(HttpStatus.OK).json(result);
+            }
+          }
+        );
+      }
+    }
+  } catch (error) {
+    console.error("Error al actualizar notificaciones ::::::>", error);
+    return res
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ error: error.message });
+  }
+};
+
 module.exports = {
-  getNotificacionesByIdusuario
+  getNotificacionesByIdusuario,
+  updateNotificacionesByIdusuario
 };
