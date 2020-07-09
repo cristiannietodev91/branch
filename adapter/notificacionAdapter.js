@@ -21,7 +21,22 @@ const crearNotificacion = (notificacion, cb) => {
 
 const findNotificacionesByIdUsuario = (IdUsuario, cb) => {
   notificacionDAO.findAllByFilter(
+    { IdUsuario: IdUsuario },
+    (error, notificaciones) => {
+      if (error) {
+        console.error("Error al registrar notificaciones", notificaciones);
+        cb(error, null);
+      } else {
+        cb(null, notificaciones);
+      }
+    }
+  );
+};
+
+const countNotificacionesByIdUsuario = (IdUsuario, cb) => {
+  notificacionDAO.count(
     { IdUsuario: IdUsuario, read: false },
+    null,
     (error, notificaciones) => {
       if (error) {
         console.error("Error al registrar notificaciones", notificaciones);
@@ -72,5 +87,6 @@ module.exports = {
   crearNotificacion,
   findNotificacionesByIdUsuario,
   updateNotificacionGeneralByIdUsuario,
-  updateNotificacionByIdNotificacion
+  updateNotificacionByIdNotificacion,
+  countNotificacionesByIdUsuario
 };

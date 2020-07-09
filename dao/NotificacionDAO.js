@@ -113,7 +113,9 @@ module.exports = {
       .transaction((t1) => {
         return models.notificacion
           .findAll({
-            where: filterNotificacion
+            where: filterNotificacion,
+            limit: 10,
+            order: [["createdAt", "DESC"]]
           })
           .then((notificaciones) => {
             return notificaciones;
@@ -141,8 +143,8 @@ module.exports = {
               attributes: groupBy,
               where: filter
             })
-            .then((ordenes) => {
-              return ordenes;
+            .then((notificaciones) => {
+              return notificaciones;
             });
         })
         .then((result) => {

@@ -8,6 +8,11 @@ router.get(
   notificacionController.getNotificacionesByIdusuario
 );
 
+router.get(
+  "/countByIdUsuario/:IdUsuario",
+  notificacionController.countNotificacionesByIdusuario
+);
+
 router.put(
   "/updateReadNotificaciones",
   notificacionController.updateNotificacionesByIdusuario
