@@ -85,27 +85,64 @@ const createUsuario = (usuario, cb) => {
                   disabled: false
                 })
                 .then(function (userRecord) {
-                  let usuarioDb = {
-                    firstName: userRecord.displayName,
-                    email: userRecord.email,
-                    uid: userRecord.uid,
-                    celular: userRecord.phoneNumber,
-                    identificacion: usuario.identificacion,
-                    tipoUsuario: usuario.tipoUsuario,
-                    estado: "Pendiente",
-                    typeDevice: usuario.typeDevice
-                  };
-                  usersDAO.create(usuarioDb, function (error, usuario) {
-                    if (error) {
-                      cb(error, null);
-                    } else {
-                      if (usuario) {
-                        cb(null, usuario);
+                  //Busca si existe ya el usuario en la BD de usuarios
+                  usersDAO.findOneByFilter(
+                    { email: usuario.email },
+                    (error, usuarioemail) => {
+                      if (error) {
+                        console.error(
+                          "Error al buscar un usuario para registrarlo"
+                        );
+                        cb(error, null);
                       } else {
-                        cb({ message: "No se creo el usuario" }, null);
+                        if (usuarioemail) {
+                          const usuarioToUdp = {
+                            firstName: userRecord.displayName,
+                            email: userRecord.email,
+                            uid: userRecord.uid,
+                            celular: userRecord.phoneNumber,
+                            identificacion: usuario.identificacion,
+                            tipoUsuario: usuario.tipoUsuario,
+                            typeDevice: usuario.typeDevice
+                          };
+
+                          updateUsuarioByIdUsuario(
+                            usuario.IdUsuario,
+                            usuarioToUdp,
+                            (error, usuario) => {
+                              if (error) {
+                                cb(error, null);
+                              } else {
+                                cb(null, usuario);
+                              }
+                            }
+                          );
+                        } else {
+                          let usuarioDb = {
+                            firstName: userRecord.displayName,
+                            email: userRecord.email,
+                            uid: userRecord.uid,
+                            celular: userRecord.phoneNumber,
+                            identificacion: usuario.identificacion,
+                            tipoUsuario: usuario.tipoUsuario,
+                            estado: "Pendiente",
+                            typeDevice: usuario.typeDevice
+                          };
+                          usersDAO.create(usuarioDb, function (error, usuario) {
+                            if (error) {
+                              cb(error, null);
+                            } else {
+                              if (usuario) {
+                                cb(null, usuario);
+                              } else {
+                                cb({ message: "No se creo el usuario" }, null);
+                              }
+                            }
+                          });
+                        }
                       }
                     }
-                  });
+                  );
                 })
                 .catch(function (error) {
                   cb(error, null);
