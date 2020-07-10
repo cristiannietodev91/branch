@@ -96,6 +96,8 @@ const createUsuario = (usuario, cb) => {
                         cb(error, null);
                       } else {
                         if (usuarioemail) {
+                          //Se obtiene el id usuario del usuario ya existente para actualizarle los datos
+                          const { IdUsuario } = usuarioemail;
                           const usuarioToUdp = {
                             firstName: userRecord.displayName,
                             email: userRecord.email,
@@ -107,7 +109,7 @@ const createUsuario = (usuario, cb) => {
                           };
 
                           updateUsuarioByIdUsuario(
-                            usuario.IdUsuario,
+                            IdUsuario,
                             usuarioToUdp,
                             (error, usuario) => {
                               if (error) {
