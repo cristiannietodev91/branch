@@ -53,7 +53,7 @@ const countNotificacionesByIdusuario = (req, res, next) => {
 
 const updateNotificacionesByIdusuario = (req, res, next) => {
   try {
-    const { IdUsuario, type, IdNotificacion } = req.body;
+    const { IdUsuario, type, IdNotificacion, IdCita, calificacion } = req.body;
 
     if (type === "general") {
       notificacionAdapter.updateNotificacionGeneralByIdUsuario(
@@ -73,6 +73,8 @@ const updateNotificacionesByIdusuario = (req, res, next) => {
       if (IdNotificacion) {
         notificacionAdapter.updateNotificacionByIdNotificacion(
           IdNotificacion,
+          IdCita,
+          calificacion,
           (error, result) => {
             if (error) {
               console.error("Error al actualizar las notificaciones", error);

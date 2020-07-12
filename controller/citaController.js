@@ -145,7 +145,7 @@ const createCita = (req, res, next) => {
                         text: textoSms,
                         typenotificacion: "Cita",
                         read: false,
-                        dataAdicional: { IdCita: cita.IdCita }
+                        dataAdicional: { IdCita: cita.IdCita, calificada: true }
                       };
                       notificacionAdapter.crearNotificacion(
                         notificacion,
@@ -153,6 +153,14 @@ const createCita = (req, res, next) => {
                           if (error) {
                             console.error("Notificacion error :::>", error);
                           } else {
+                            if (vehiculo.usuario.tokenCM) {
+                              sms.sendDataToUser(
+                                vehiculo.usuario.tokenCM,
+                                "notificacion",
+                                { IdCita: cita.IdCita }
+                              );
+                            }
+
                             console.log(
                               "Se creo la notificacion correctamente :::>",
                               error

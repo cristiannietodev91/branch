@@ -149,7 +149,7 @@ const updateCitaByIdCita = (IdCita, cita, cb) => {
                     text: textoSms,
                     typenotificacion: "Cita",
                     read: false,
-                    dataAdicional: { IdCita: cita.IdCita }
+                    dataAdicional: { IdCita: cita.IdCita, calificada: true }
                   };
                   notificacionAdapter.crearNotificacion(
                     notificacion,
@@ -157,6 +157,13 @@ const updateCitaByIdCita = (IdCita, cita, cb) => {
                       if (error) {
                         console.error("Notificacion error :::>", error);
                       } else {
+                        if (cita.vehiculo.usuario.tokenCM) {
+                          sms.sendDataToUser(
+                            cita.vehiculo.usuario.tokenCM,
+                            "notificacion",
+                            { IdCita: cita.IdCita }
+                          );
+                        }
                         console.log(
                           "Se creo la notificacion correctamente :::>",
                           error

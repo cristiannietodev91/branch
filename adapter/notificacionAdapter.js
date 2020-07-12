@@ -66,13 +66,24 @@ const updateNotificacionGeneralByIdUsuario = (IdUsuario, cb) => {
   );
 };
 
-const updateNotificacionByIdNotificacion = (IdNotificacion, cb) => {
+const updateNotificacionByIdNotificacion = (
+  IdNotificacion,
+  IdCita,
+  calificacion,
+  cb
+) => {
   notificacionDAO.update(
     {
-      IdNotificacion: IdNotificacion,
-      read: false
+      IdNotificacion: IdNotificacion
     },
-    { read: true },
+    {
+      read: true,
+      dataAdicional: {
+        IdCita: IdCita,
+        calificada: true,
+        calificacion: calificacion
+      }
+    },
     (error, result) => {
       if (error) {
         cb(error, null);

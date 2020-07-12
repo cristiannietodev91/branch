@@ -100,23 +100,35 @@ const createOrden = (req, res, next) => {
               );
             }
 
-            const notificacion = {
-              IdUsuario: cita.vehiculo.usuario.uid,
-              text: textoSms,
-              typenotificacion: orden.IdEtapa === 7 ? "Calificación" : "Orden",
-              read: false,
-              dataAdicional: { IdCita: cita.IdCita }
-            };
-            notificacionAdapter.crearNotificacion(notificacion, (error) => {
-              if (error) {
-                console.error("Notificacion error :::>", error);
-              } else {
-                console.log(
-                  "Se creo la notificacion correctamente :::>",
-                  error
-                );
-              }
-            });
+            const calificada = orden.IdEtapa !== 7;
+            if (textoSms != "") {
+              const notificacion = {
+                IdUsuario: cita.vehiculo.usuario.uid,
+                text: textoSms,
+                typenotificacion:
+                  orden.IdEtapa === 7 ? "Calificación" : "Orden",
+                read: false,
+                dataAdicional: { IdCita: cita.IdCita, calificada: calificada }
+              };
+              notificacionAdapter.crearNotificacion(notificacion, (error) => {
+                if (error) {
+                  console.error("Notificacion error :::>", error);
+                } else {
+                  if (cita.vehiculo.usuario.tokenCM) {
+                    sms.sendDataToUser(
+                      cita.vehiculo.usuario.tokenCM,
+                      "notificacion",
+                      { IdCita: cita.IdCita }
+                    );
+                  }
+
+                  console.log(
+                    "Se creo la notificacion correctamente :::>",
+                    error
+                  );
+                }
+              });
+            }
 
             ordenDAO.create(ordenDB, (error, orden) => {
               if (error) {

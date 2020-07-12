@@ -156,8 +156,6 @@ const sendNotificacionToUser = async (
   type = "Orden",
   params = {}
 ) => {
-  console.debug("Mensaje a enviar :::>", messageText, "Token :::>" + token);
-
   await admin
     .messaging()
     .sendToDevice(
@@ -188,24 +186,33 @@ const sendNotificacionToUser = async (
     .catch((error) => {
       console.log("Error sending message:", error);
     });
+};
 
-  // Send a message to the device corresponding to the provided
-  // registration token.
-  /*admin
+const sendDataToUser = async (token, type = "Orden", params = {}) => {
+  await admin
     .messaging()
-    .sendMulticast([token], message, {
-      // Required for background/quit data-only messages on iOS
-      contentAvailable: true,
-      // Required for background/quit data-only messages on Android
-      priority: "high",
-    })
+    .sendToDevice(
+      token,
+      {
+        data: {
+          type: type,
+          params: JSON.stringify(params)
+        }
+      },
+      {
+        // Required for background/quit data-only messages on iOS
+        contentAvailable: true,
+        // Required for background/quit data-only messages on Android
+        priority: "high"
+      }
+    )
     .then((response) => {
       // Response is a message ID string.
-      console.log("Successfully sent message:", response);
+      console.log("Successfully send data to device:", response);
     })
     .catch((error) => {
-      console.log("Error sending message:", error);
-    });*/
+      console.log("Error send data to device", error);
+    });
 };
 
 module.exports = {
@@ -213,5 +220,6 @@ module.exports = {
   sendSMSNexmo,
   sendSMSTwilio,
   sendSMStoInfoBip,
-  sendNotificacionToUser
+  sendNotificacionToUser,
+  sendDataToUser
 };
