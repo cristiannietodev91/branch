@@ -313,7 +313,7 @@ const getAllOrdenesByIdTaller = (req, res, next) => {
   try {
     const IdTaller = req.params.Id;
 
-    ordenDAO.findAllByFilter({ IdTaller: IdTaller }, {}, function (
+    ordenDAO.findAllByFilter({ IdTaller: IdTaller }, {}, {}, function (
       error,
       ordenes
     ) {
@@ -382,13 +382,38 @@ const getAllOrdenesByIdTallerAndFilter = (req, res, next) => {
     let IdTaller = req.params.Id;
     let filter = req.query.filter;
 
-    ordenAdapter.getOrdenesByIdTallerAndFilter(
-      IdTaller,
-      filter,
-      (error, ordenes) => {
+    if (filter) {
+      ordenAdapter.getOrdenesByIdTallerAndFilter(
+        IdTaller,
+        filter,
+        (error, ordenes) => {
+          if (error) {
+            console.error(
+              "Error al realizar la transaccion de buscar ordenes By Taller:::>",
+              "error ::>",
+              error.message
+            );
+            if (error.errors) {
+              return res
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .json({ error: error.errors[0] });
+            } else {
+              return res
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .json({ error: error.message });
+            }
+          } else {
+            if (ordenes) {
+              res.status(HttpStatus.OK).json(ordenes);
+            }
+          }
+        }
+      );
+    } else {
+      ordenAdapter.getOrdenesByIdTallerActivas(IdTaller, (error, ordenes) => {
         if (error) {
           console.error(
-            "Error al realizar la transaccion de buscar ordenes By Taller:::>",
+            "Error al realizar la transaccion de buscar ordenes activas By Taller:::>",
             "error ::>",
             error.message
           );
@@ -406,8 +431,8 @@ const getAllOrdenesByIdTallerAndFilter = (req, res, next) => {
             res.status(HttpStatus.OK).json(ordenes);
           }
         }
-      }
-    );
+      });
+    }
   } catch (error) {
     console.error("Error al listar ordenes ::::> ", error);
     return res

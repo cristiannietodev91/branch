@@ -33,6 +33,8 @@ const getMessagesByConversacion = (conversacion, order, cb) => {
             }
           }
         );
+      } else {
+        cb(null, []);
       }
     }
   });

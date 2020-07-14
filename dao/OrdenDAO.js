@@ -113,7 +113,7 @@ module.exports = {
         cb(err, null);
       });
   },
-  findAllByFilter: function (filterOrden, filterVehiculo, cb) {
+  findAllByFilter: function (filterOrden, filterVehiculo, filterCita, cb) {
     // Find all users
     return models.sequelize
       .transaction((t1) => {
@@ -143,6 +143,7 @@ module.exports = {
               },
               {
                 model: models.cita,
+                where: filterCita,
                 as: "cita"
               }
             ],
