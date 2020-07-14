@@ -14,8 +14,12 @@
         <p class="text-muted text-small mb-2">{{ $t("branch.orden.marca") }}</p>
       </b-colxx>
       <b-colxx md="6" sm="6" lg="2" xxs="4">
+        <h5 class="mb-1 card-subtitle truncate">{{ data.vehiculo.usuario.firstName }}</h5>
+        <p class="text-muted text-small mb-2">{{ $t("branch.vehiculo.dueno") }}</p>
+      </b-colxx>
+      <b-colxx md="6" sm="6" lg="2" xxs="4">
         <b-button
-          @click.once="openChat"
+          @click="openChat"
           variant="primary"
           class="top-right-button"
           size="xs"
@@ -123,7 +127,6 @@ export default {
       alert("end");
     },
     qualifyClient(value) {
-      console.log("Qualyfy client :::>", value, this.data);
       const { IdCita } = this.data;
 
       ServicesCore.calificaCita(IdCita, value)

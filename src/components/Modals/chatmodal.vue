@@ -205,11 +205,7 @@ export default {
     this.$socket.emit(
       "joinroom",
       { room: this.conversacion.IdConversacionUser },
-      resultado => {
-        console.log(
-          "Se unio correctmente al room del usuario ya pueden chatear"
-        );
-      }
+      resultado => {}
     );
   },
   mounted() {

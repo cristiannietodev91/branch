@@ -190,7 +190,6 @@ export default {
       this.filesEtapa = this.filesEtapa.filter(value => {
         value.key != file.s3Signature.key;
       });
-      console.log("Se removio el file ::::>", this.filesEtapa);
     },
     onValitadeAddOrden() {
       this.$v.$touch();

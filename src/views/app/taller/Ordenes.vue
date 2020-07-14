@@ -76,6 +76,20 @@ export default {
             permanent: false
           });
         });
+    } else {
+      //Carga ordenes activas del taller
+      ServicesCore.getOrdenesByIdTallerAndFilter(this.currentUser.IdTaller, "")
+        .then(async response => {
+          if (response.status == 200) {
+            this.formatOrdenes(response.data);
+          }
+        })
+        .catch(error => {
+          this.$notify("error filled", "ERROR", error.response.data.error, {
+            duration: 3000,
+            permanent: false
+          });
+        });
     }
   },
   methods: {

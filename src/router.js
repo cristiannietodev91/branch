@@ -15,7 +15,7 @@ const routes = [
         path: "app/dashboards",
         component: () =>
           import(/* webpackChunkName: "dashboards" */ "./views/app/dashboards"),
-        redirect: "/app/dashboards/default",
+        redirect: "/app/dashboards/taller",
         children: [
           {
             path: "default",
