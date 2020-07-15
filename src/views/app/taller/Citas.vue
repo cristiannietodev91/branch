@@ -51,7 +51,7 @@
                 variant="primary"
                 @click="eventProps.event.originalEvent.estado == 'Solicitada' || eventProps.event.originalEvent.estado == 'Confirmada' ? onCtrlClickEvent(eventProps.event.originalEvent.citaObject) : ''"
               >
-                Editar Cita
+                Editar
               </b-button>
               <b-button
                 class="mb-2 ingresar-moto"
@@ -59,7 +59,7 @@
                 variant="primary"
                 @click.exact="eventProps.event.originalEvent.estado == 'Confirmada' ? onClickEvent(eventProps.event) : ''"
               >
-                Ingresar Moto
+                Ingresar
               </b-button>
               
               <b-popover
