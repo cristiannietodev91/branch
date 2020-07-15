@@ -1,8 +1,9 @@
-var express = require("express");
-var cors = require("cors");
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
+let express = require("express");
+let cors = require("cors");
+let path = require("path");
+let cookieParser = require("cookie-parser");
+let logger = require("morgan");
+let helmet = require("helmet");
 
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/usersRoute");
@@ -27,6 +28,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(helmet());
+
+//Secure
+app.disable("x-powered-by");
 
 app.use("/", indexRouter);
 app.use("/usuario", usersRouter);

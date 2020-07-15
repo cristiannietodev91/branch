@@ -22,6 +22,7 @@
     "firebase-admin": "^8.9.1",
     "firebase-functions": "^3.3.0",
     "follow-redirects": "^1.12.1",
+    "helmet": "^3.23.3",
     "http-status-codes": "^1.4.0",
     "moment": "^2.24.0",
     "morgan": "~1.9.1",
