@@ -101,9 +101,7 @@ export default {
     // Executed when @completed-step event is triggered
     completeStep(payload) {
       if (payload.index) {
-        //console.debug("Valid complete step :::>", payload);
         this.demoSteps.forEach(step => {
-          //console.debug("Valid steps :::>", step);
           if (step.name === payload.name) {
             step.completed = true;
           }
@@ -112,7 +110,6 @@ export default {
     },
     // Executed when @active-step event is triggered
     isStepActive(payload) {
-      //console.debug('Valid if step is active :::>',payload);
       this.demoSteps.forEach(step => {
         //console.debug('Valid steps :::>',step);
         if (step.name === payload.name) {

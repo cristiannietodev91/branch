@@ -49,6 +49,7 @@
             :clickedNext="nextButton[currentStep.name]"
             @can-continue="proceed"
             @change-next="changeNextBtnValue"
+            @success-step="successStep"
             :current-step="currentStep"
           ></component>
         </keep-alive>
@@ -60,6 +61,7 @@
           :clickedNext="nextButton[currentStep.name]"
           @can-continue="proceed"
           @change-next="changeNextBtnValue"
+          @success-step="successStep"
           :current-step="currentStep"
         ></component>
       </transition>
@@ -178,10 +180,7 @@ export default {
       this.$emit("active-step", this.currentStep);
     },
     nextStepAction(index) {
-      console.log("Cant continue::>", this.canContinue);
-      //this.nextButton[this.currentStep.name] = true;
-
-      if (index >= this.currentStep.index) {
+      if (index > this.currentStep.index) {
         if (this.canContinue) {
           if (this.finalStep) {
             this.$emit("stepper-finished", this.currentStep);
@@ -201,23 +200,12 @@ export default {
       }
     },
     nextStep(index) {
+      const { completed } = this.steps[index === 0 ? 0 : index - 1];
       if (!this.$listeners || !this.$listeners["before-next-step"]) {
-        this.nextStepAction(index);
-      }
-      this.canContinue = false;
-
-      this.$emit(
-        "before-next-step",
-        { currentStep: this.currentStep },
-        (next = true) => {
-          this.canContinue = true;
-          console.log("Before next", next);
-          if (next) {
-            console.log("If next");
-            this.nextStepAction();
-          }
+        if (completed) {
+          this.nextStepAction(index);
         }
-      );
+      }
     },
     backStep() {
       this.$emit("clicking-back");
@@ -232,6 +220,9 @@ export default {
     changeNextBtnValue(payload) {
       this.nextButton[this.currentStep.name] = payload.nextBtnValue;
       this.$forceUpdate();
+    },
+    successStep(payload) {
+      this.$emit("completed-step", this.currentStep);
     },
     init() {
       // Initiate stepper

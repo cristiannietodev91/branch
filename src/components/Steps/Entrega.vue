@@ -180,7 +180,6 @@ export default {
       this.filesEtapa = this.filesEtapa.filter(value => {
         value.key != file.s3Signature.key;
       });
-      console.log("Se removio el file ::::>", this.filesEtapa);
     },
     onValitadeAddOrden() {
       this.$v.$touch();
@@ -226,7 +225,7 @@ export default {
                     console.log("Data geto orden By Id :::>", response.data);
                     this.data.etapa = response.data;
                     this.$emit("can-continue", { value: true });
-                    this.$forceUpdate();
+                    this.$emit("success-step");
                   }
                 })
                 .catch(error => {

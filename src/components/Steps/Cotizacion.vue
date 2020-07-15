@@ -1,9 +1,6 @@
 <template>
   <b-card>
-    <b-form
-      @submit.prevent="uploadFiles"
-      v-if="!data.etapa || data.etapa.estado=='Rechazado'"
-    >
+    <b-form @submit.prevent="uploadFiles" v-if="!data.etapa || data.etapa.estado=='Rechazado'">
       <info-cotizacion :data="data" v-if="data.etapa && data.etapa.estado=='Rechazado'" />
       <b-form-group :label="$t('branch.orden.mecanico')">
         <v-select
@@ -112,7 +109,6 @@ export default {
   },
   watch: {
     clickedNext(val) {
-      //console.log("Clicked second step next :::>", val);
       if (val === true) {
         //console.log("Orden a crearDB ::::>", this.orden);
         //this.$v.newOrden.$touch();
@@ -141,7 +137,6 @@ export default {
       this.filesEtapa = this.filesEtapa.filter(value => {
         value.key != file.s3Signature.key;
       });
-      console.log("Se removio el file ::::>", this.filesEtapa);
     },
     uploadFiles() {
       if (this.filesEtapa.length > 0) {
@@ -156,7 +151,6 @@ export default {
           documentos: this.filesEtapa,
           estado: "Pendiente"
         };
-        console.log("Se va a agregar la siguiente orden ::>", orden);
 
         ServicesCore.createOrden(orden)
           .then(response => {
@@ -182,7 +176,7 @@ export default {
                     console.log("Data geto orden By Id :::>", response.data);
                     this.data.etapa = response.data;
                     this.$emit("can-continue", { value: true });
-                    this.$forceUpdate();
+                    this.$emit("success-step");
                   }
                 })
                 .catch(error => {
