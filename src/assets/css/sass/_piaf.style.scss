@@ -3499,7 +3499,7 @@ main {
         border: 2px solid;
         p{
           white-space: normal;
-          margin: 0;
+          margin: 0 0 .5em;
         }
 
         &.toBeContinued {
@@ -3546,8 +3546,19 @@ main {
         &.danger {
           background-color: $error-color !important;
         }
+        .editar-cita, .ingresar-moto{
+          width: 100%;
+          display: block;
+        }
+        .editar-cita{
+          background-color: white;
+          color: $branch-blue-4;
+        }
         &.event-solicitado{
           background: #0eb0e2 !important;
+          .ingresar-moto{
+            display: none;
+          }
         }
 
         &.event-confirmada{
@@ -3560,6 +3571,9 @@ main {
           border-color: #F9CB7A !important;
           h4{
             color: #F9CB7A !important;
+          }
+          .ingresar-moto, .editar-cita{
+            display: none;
           }
         }
         &.event-cancelada{
@@ -10129,3 +10143,4 @@ footer.page-footer {
     }
   }
 }
+

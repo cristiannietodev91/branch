@@ -27,19 +27,41 @@
           />
 
           <template slot="event" slot-scope="eventProps">
-            <div
+            <!-- <div
               :id="`event-${eventProps.event.originalEvent.citaObject.IdCita}`"
               :title="eventProps.event.title"
               :class="`cv-event ${eventProps.event.classes[0]} ${eventProps.event.classes[1]} ${eventProps.event.classes[2]}`"
               :style="`top: calc(1.4em + ${eventProps.event.eventRow}*10em + ${eventProps.event.eventRow}*2px);`"
               @click.alt="eventProps.event.originalEvent.estado == 'Solicitada' || eventProps.event.originalEvent.estado == 'Confirmada' ? onCtrlClickEvent(eventProps.event.originalEvent.citaObject) : ''"
               @click.exact="eventProps.event.originalEvent.estado == 'Confirmada' ? onClickEvent(eventProps.event) : ''"
+            > -->
+            <div
+              :id="`event-${eventProps.event.originalEvent.citaObject.IdCita}`"
+              :title="eventProps.event.title"
+              :class="`cv-event ${eventProps.event.classes[0]} ${eventProps.event.classes[1]} ${eventProps.event.classes[2]}`"
+              :style="`top: calc(1.4em + ${eventProps.event.eventRow}*10em + ${eventProps.event.eventRow}*2px);`"
             >
-              <h4
-                class="startTime"
-              >{{new Date(eventProps.event.originalEvent.startDate) | moment("hh:mm A")}}</h4>
+              <h4 class="startTime">
+                {{new Date(eventProps.event.originalEvent.startDate) | moment("hh:mm A")}}
+              </h4>
               <p>{{eventProps.event.originalEvent.estado}}</p>
-
+              <b-button
+                class="mb-2 editar-cita"
+                size="xs"
+                variant="primary"
+                @click="eventProps.event.originalEvent.estado == 'Solicitada' || eventProps.event.originalEvent.estado == 'Confirmada' ? onCtrlClickEvent(eventProps.event.originalEvent.citaObject) : ''"
+              >
+                Editar Cita
+              </b-button>
+              <b-button
+                class="mb-2 ingresar-moto"
+                size="xs"
+                variant="primary"
+                @click.exact="eventProps.event.originalEvent.estado == 'Confirmada' ? onClickEvent(eventProps.event) : ''"
+              >
+                Ingresar Moto
+              </b-button>
+              
               <b-popover
                 :target="`event-${eventProps.event.originalEvent.citaObject.IdCita}`"
                 triggers="hover"
