@@ -199,7 +199,6 @@ const updateUsuario = (usuario, cb) => {
           .then(() => {
             // The new custom claims will propagate to the user's ID token the
             // next time a new one is issued.
-            console.log("Successfully updated user", userRecord.toJSON());
             usersDAO.update({ uid: usuario.uid }, usuario, function (
               error,
               usuario

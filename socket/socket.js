@@ -123,11 +123,6 @@ class socket {
                       if (error) {
                         console.log("Error al persistir el mensaje", error);
                         //TODO: Handle de mensaje
-                      } else {
-                        console.log(
-                          "Se persistio el mensaje exitosamente",
-                          message
-                        );
                       }
                     });
 
