@@ -4,10 +4,10 @@
  * Module dependencies.
  */
 
-const app = require("../app");
+const app = require("../dist/src/app");
 const debug = require("debug")("branch:server");
 const http = require("http");
-const socket = require("../socket/socket");
+//const socket = require("../dist/socket/socket");
 
 /**
  * Get port from environment and store in Express.
@@ -22,7 +22,7 @@ app.set("port", port);
 
 const server = http.createServer(app);
 
-const io = new socket(server);
+// const io = new socket(server);
 
 /**
  * Listen on provided port, on all network interfaces.
