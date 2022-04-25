@@ -1,16 +1,22 @@
 import { WhereOptions } from "sequelize";
 import { ServicioVehiculoModel } from "../database/models";
-import { ServicioVehiculoAttributes, ServicioVehiculoInstance } from "../types";
+import {
+  ServicioVehiculoAttributes,
+  ServicioVehiculoCreationAttributes,
+} from "../types";
 
 const findAll = () => ServicioVehiculoModel.findAll();
 
-const create = (servicio: ServicioVehiculoAttributes) => {
+const create = (servicio: ServicioVehiculoCreationAttributes) => {
   return ServicioVehiculoModel.sequelize?.transaction((t1) => {
     return ServicioVehiculoModel.create(servicio);
   });
 };
 
-const update = (IdServicio: number, servicio: Partial<ServicioVehiculoAttributes>) => {
+const update = (
+  IdServicio: number,
+  servicio: Partial<ServicioVehiculoAttributes>
+) => {
   return ServicioVehiculoModel.sequelize?.transaction((t1) => {
     return ServicioVehiculoModel.update(servicio, {
       where: { IdServicio: IdServicio },

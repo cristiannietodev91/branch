@@ -96,7 +96,7 @@ const getConversacionesUnread = (req: Request, res: Response) => {
     const { IdTaller } = req.params;
 
     messageAdapter
-      .getAllConversacionsUnread(IdTaller)
+      .getAllConversationsUnread(IdTaller)
       .then((conversations) => {
         if (conversations) {
           res.status(HttpStatus.OK).json(conversations);

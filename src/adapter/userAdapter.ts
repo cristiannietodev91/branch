@@ -13,6 +13,7 @@ const debug = Debug("branch:server");
 import serviceAccountDev from "../../serviceAccountKey.json";
 import serviceAccountProd from "../../serviceAccountKeyProd.json";
 import { WhereOptions } from "sequelize";
+import { rejects } from "assert";
 
 const devServiceConf = {
   credential: admin.credential.cert(serviceAccountDev),
@@ -28,8 +29,9 @@ admin.initializeApp(
   process.env.NODE_ENV === "production" ? prodServiceConf : devServiceConf
 );
 
-const getById = (IdUsuario: string): Promise<UserInstance | null> | undefined =>
-  usersDAO.getById(IdUsuario);
+const getById = (
+  IdUsuario: string | number
+): Promise<UserInstance | null> | undefined => usersDAO.getById(IdUsuario);
 
 const findAllUsers = (): Promise<UserInstance[]> => usersDAO.findAll();
 
@@ -48,105 +50,128 @@ const createUsuario = (
   usuario: UserCreationAttributes
 ): Promise<UserInstance> | undefined => {
   // Busca si ya existe el usuario en firebase
-  if (usuario.uid) {
-    const usuarioDb = {
-      firstName: usuario.firstName,
-      email: usuario.email,
-      uid: usuario.uid,
-      celular: usuario.celular,
-      identificacion: usuario.identificacion ? usuario.identificacion : null,
-      tipoUsuario: usuario.tipoUsuario,
-      estado: "Pendiente",
-      typeDevice: usuario.typeDevice,
-    };
-    debug("Usuario a registrar en la DB", usuarioDb);
-    return usersDAO.create(usuarioDb);
-  } else {
-    if (usuario.identificacion) {
-      usersDAO
-        .findOneByFilter({ identificacion: usuario.identificacion })
-        ?.then((userFound) => {
-          if (userFound) {
-            return Promise.reject(
-              "Usuario con ese número de identificacion ya esta registrado"
-            );
-          } else {
-            // Si no existe el usuario en firebase lo crea
-            admin
-              .auth()
-              .createUser({
-                email: userFound!.email,
-                emailVerified: false,
-                phoneNumber: userFound!.celular,
-                password: usuario.password,
-                displayName: userFound!.firstName,
-                disabled: false,
-              })
-              .then((userRecord) => {
-                // Busca si existe ya el usuario en la BD de usuarios
-                return usersDAO
-                  .findOneByFilter({ email: userFound!.email })
-                  ?.then(
-                    (
-                      usuarioemail
-                    ):
-                      | Promise<[affectedCount: number] | UserInstance>
-                      | undefined => {
-                      if (usuarioemail) {
-                        // Se obtiene el id usuario del usuario ya existente para actualizarle los datos
-                        const { IdUsuario } = usuarioemail;
-                        const usuarioToUdp = {
-                          firstName: userRecord.displayName,
-                          email: userRecord.email,
-                          uid: userRecord.uid,
-                          celular: userRecord.phoneNumber,
-                          identificacion: usuario.identificacion,
-                          tipoUsuario: usuario.tipoUsuario,
-                          typeDevice: usuario.typeDevice,
-                        };
-
-                        return updateUsuarioByIdUsuario(
-                          IdUsuario,
-                          usuarioToUdp
-                        );
-                      } else {
-                        const usuarioDb = {
-                          firstName: userRecord.displayName,
-                          email: userRecord.email,
-                          uid: userRecord.uid,
-                          celular: userRecord.phoneNumber,
-                          identificacion: usuario.identificacion,
-                          tipoUsuario: usuario.tipoUsuario,
-                          estado: "Pendiente",
-                          typeDevice: usuario.typeDevice,
-                        };
-                        return usersDAO.create(usuarioDb);
-                      }
-                    }
-                  )
-                  .catch((error) => {
-                    return Promise.reject(error);
-                  });
-              })
-              .catch((error) => {
-                return Promise.reject(error);
-              });
-          }
-        });
-    } else {
+  return new Promise<UserInstance>((resolve, reject) => {
+    if (usuario.uid) {
       const usuarioDb = {
         firstName: usuario.firstName,
         email: usuario.email,
-        uid: usuario.email, // Se deja el email de UID mientras el usuario no este registrado en la APP
+        uid: usuario.uid,
         celular: usuario.celular,
+        identificacion: usuario.identificacion ? usuario.identificacion : null,
         tipoUsuario: usuario.tipoUsuario,
         estado: "Pendiente",
         typeDevice: usuario.typeDevice,
       };
       debug("Usuario a registrar en la DB", usuarioDb);
-      return usersDAO.create(usuarioDb);
+      usersDAO
+        .create(usuarioDb)
+        ?.then((user) => {
+          resolve(user);
+        })
+        .catch((error) => {
+          rejects(error);
+        });
+    } else {
+      if (usuario.identificacion) {
+        usersDAO
+          .findOneByFilter({ identificacion: usuario.identificacion })
+          ?.then((userFound) => {
+            if (userFound) {
+              reject(
+                new Error(
+                  "Usuario con ese número de identificacion ya esta registrado"
+                )
+              );
+            } else {
+              // Si no existe el usuario en firebase lo crea
+              try {
+                admin
+                  .auth()
+                  .createUser({
+                    email: usuario.email,
+                    emailVerified: false,
+                    phoneNumber: usuario.celular,
+                    password: usuario.password,
+                    displayName: usuario.firstName,
+                    disabled: false,
+                  })
+                  .then((userRecord) => {
+                    // Busca si existe ya el usuario en la BD de usuarios
+                    usersDAO
+                      .findOneByFilter({ email: usuario.email })
+                      ?.then((usuarioemail) => {
+                        if (usuarioemail) {
+                          // Se obtiene el id usuario del usuario ya existente para actualizarle los datos
+                          const { IdUsuario } = usuarioemail;
+                          const usuarioToUdp = {
+                            firstName: userRecord.displayName,
+                            email: userRecord.email,
+                            uid: userRecord.uid,
+                            celular: userRecord.phoneNumber,
+                            identificacion: usuario.identificacion,
+                            tipoUsuario: usuario.tipoUsuario,
+                            typeDevice: usuario.typeDevice,
+                          };
+
+                          updateUsuarioByIdUsuario(IdUsuario, usuarioToUdp);
+
+                          resolve(usuarioemail);
+                        } else {
+                          const usuarioDb = {
+                            firstName: userRecord.displayName || "Not defined",
+                            email: userRecord.email || "Not defined",
+                            uid: userRecord.uid,
+                            celular: userRecord.phoneNumber,
+                            identificacion: usuario.identificacion,
+                            tipoUsuario: usuario.tipoUsuario,
+                            estado: "Pendiente",
+                            typeDevice: usuario.typeDevice,
+                          };
+
+                          usersDAO
+                            .create(usuarioDb)
+                            ?.then((user) => {
+                              resolve(user);
+                            })
+                            .catch((error) => {
+                              reject(error);
+                            });
+                        }
+                      })
+                      .catch((error) => {
+                        reject(error);
+                      });
+                  })
+                  .catch((error) => {
+                    reject(error);
+                  });
+              } catch (error) {
+                reject(error);
+              }
+            }
+          });
+      } else {
+        const usuarioDb = {
+          firstName: usuario.firstName,
+          email: usuario.email,
+          uid: usuario.email, // Se deja el email de UID mientras el usuario no este registrado en la APP
+          celular: usuario.celular,
+          tipoUsuario: usuario.tipoUsuario,
+          estado: "Pendiente",
+          typeDevice: usuario.typeDevice,
+        };
+        debug("Usuario a registrar en la DB", usuarioDb);
+        usersDAO
+          .create(usuarioDb)
+          ?.then((user) => {
+            resolve(user);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      }
     }
-  }
+  });
 };
 
 const updateUsuarioByIdUsuario = (
@@ -184,7 +209,7 @@ const updateUsuarioByIdUsuario = (
 };
 
 const updateUsuario = (
-  usuario: UserCreationAttributes
+  usuario: Partial<UserCreationAttributes>
 ): Promise<UserInstance> | undefined => {
   if (usuario.uid) {
     admin

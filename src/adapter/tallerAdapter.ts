@@ -6,7 +6,7 @@ import {
 } from "../types";
 
 const getById = (
-  IdTaller: string
+  IdTaller: string | number
 ): Promise<TallerAttributes | null> | undefined => tallerDAO.getById(IdTaller);
 
 const getAll = (): Promise<TallerInstance[]> => tallerDAO.findAll();

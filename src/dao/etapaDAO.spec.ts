@@ -11,7 +11,7 @@ import {
 } from "sequelize";
 import { EtapaAttributes, EtapaCreationAttributes } from "../types";
 
-describe("etapa DAO unit testing", () => {
+describe.skip("etapa DAO unit testing", () => {
   describe("list etapas functionality", () => {
     let findAllStub: sinon.SinonStub<
       [options?: FindOptions<any> | undefined],

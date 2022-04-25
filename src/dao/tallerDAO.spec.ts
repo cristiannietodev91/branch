@@ -12,7 +12,7 @@ import {
 } from "sequelize";
 import { TallerAttributes, TallerCreationAttributes } from "../types";
 
-describe("taller DAO unit testing", () => {
+describe.skip("taller DAO unit testing", () => {
   describe("list tallers functionality", () => {
     let findAllStub: sinon.SinonStub<
       [options?: FindOptions<any> | undefined],

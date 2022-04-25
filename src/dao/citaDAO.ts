@@ -44,7 +44,7 @@ const update = (
   });
 };
 
-const getById = (IdCita: string): Promise<CitaInstance | null> | undefined => {
+const getById = (IdCita: string | number): Promise<CitaInstance | null> | undefined => {
   // Find all users
   return CitaModel.sequelize?.transaction((t1) => {
     return CitaModel.findByPk(IdCita, {

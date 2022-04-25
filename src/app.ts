@@ -77,4 +77,4 @@ app.use(logErrors);
 // app.use(clientErrorHandler);
 app.use(errorHandler);
 
-module.exports = app;
+export default app;

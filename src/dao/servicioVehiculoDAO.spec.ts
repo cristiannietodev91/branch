@@ -13,7 +13,7 @@ import {
   ServicioVehiculoAttributes,
 } from "../types";
 
-describe("servicioVehiculo DAO unit testing", () => {
+describe.skip("servicioVehiculo DAO unit testing", () => {
   describe("list servicioVehiculo functionality", () => {
     let findAllStub: sinon.SinonStub<
       [options?: FindOptions<any> | undefined],

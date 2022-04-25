@@ -15,7 +15,7 @@ import {
   MessageCreationAttributes,
 } from "../types";
 
-describe("message DAO unit testing", () => {
+describe.skip("message DAO unit testing", () => {
   describe("list messages functionality", () => {
     let findAllStub: sinon.SinonStub<
       [options?: FindOptions<any> | undefined],

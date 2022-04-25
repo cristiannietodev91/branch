@@ -2,15 +2,22 @@ import citaDAO from "../dao/citaDAO";
 import vehiculoDAO from "../dao/vehiculoDAO";
 import mecanicoDAO from "../dao/mecanicoDAO";
 import {
+  CalificaCitaRequest,
   CitaAttributes,
   CitaInstance,
   CitaRequestAttributes,
+  CitaUpdateAttributes,
   OrdenAttributes,
   VehiculoAttributes,
 } from "../types";
-import sms from "../utils/sendSms";
+import {
+  parseTextByEstadoCita,
+  parseTextoSms,
+  sendDataToUser,
+  sendNotificacionToUser,
+  sendSMStoInfoBip,
+} from "../utils/sendSms";
 import { Op, Sequelize, WhereOptions } from "sequelize";
-//import sms from "../src/utils/sendSms";
 import moment from "moment";
 import Debug from "debug";
 import notificacionDAO from "../dao/notificacionDAO";
@@ -19,7 +26,7 @@ const debug = Debug("branch:server");
 /**
  *
  */
- const findAll = () => citaDAO.findAll();
+const findAll = () => citaDAO.findAll();
 
 /**
  *
@@ -56,12 +63,11 @@ const createCita = (cita: CitaRequestAttributes) => {
             servicio: cita.servicio,
             estado: cita.estado,
           };
-          console.log("Cita a persistir en la BD", citaDb);
+          debug("Cita a persistir en la BD", citaDb);
           citaDAO
             .create(citaDb)
             ?.then((cita) => {
               if (cita) {
-                let textoSms = "";
                 debug(
                   " Mecanico a buscar para envio de SMS con Mecancio ::>",
                   cita.IdMecanico
@@ -69,45 +75,12 @@ const createCita = (cita: CitaRequestAttributes) => {
                 mecanicoDAO
                   .getById(cita.IdMecanico)
                   ?.then((mecanico) => {
-                    if (mecanico) {
-                      //Texto de cita con mecanico
-                      textoSms =
-                        "Hola " +
-                        vehiculo.usuarios?.firstName +
-                        "! Te esperamos el " +
-                        moment(cita.fechaCita).format("D [de] MMMM YYYY") +
-                        " a las " +
-                        cita.horaCita +
-                        " con tu " +
-                        vehiculo.tipoVehiculo +
-                        "  " +
-                        vehiculo.placa +
-                        ", " +
-                        mecanico.firstName +
-                        " de BRANCH tendra el gusto de recibirte. Tu experiencia nuestro motor! BRANCH";
-                    } else {
-                      //Texto de cita sin mecanico
-                      textoSms =
-                        "Hola " +
-                        vehiculo.usuarios?.firstName +
-                        "! Te esperamos el " +
-                        moment(cita.fechaCita).format("D [de] MMMM YYYY") +
-                        " a las " +
-                        cita.horaCita +
-                        " con tu " +
-                        vehiculo.tipoVehiculo +
-                        "  " +
-                        vehiculo.placa +
-                        ", BRANCH tendra el gusto de recibirte. Tu experiencia nuestro motor! BRANCH";
-                    }
+                    const textoSms = parseTextoSms(mecanico, vehiculo, cita);
                     if (vehiculo.usuarios?.celular) {
-                      sms.sendSMStoInfoBip(
-                        vehiculo.usuarios?.celular,
-                        textoSms
-                      );
+                      sendSMStoInfoBip(vehiculo.usuarios?.celular, textoSms);
                     }
                     if (vehiculo.usuarios?.tokenCM) {
-                      sms.sendNotificacionToUser(
+                      sendNotificacionToUser(
                         vehiculo.usuarios?.tokenCM,
                         textoSms
                       );
@@ -125,7 +98,7 @@ const createCita = (cita: CitaRequestAttributes) => {
                       };
                       notificacionDAO.create(notificacion)?.then(() => {
                         if (vehiculo.usuarios?.tokenCM) {
-                          sms.sendDataToUser(
+                          sendDataToUser(
                             vehiculo.usuarios?.tokenCM,
                             "notificacion",
                             { IdCita: cita.IdCita }
@@ -133,22 +106,22 @@ const createCita = (cita: CitaRequestAttributes) => {
                         }
                       });
                     }
-                    resolve(cita);
                   })
                   .catch((error) => {
-                    reject(error);
+                    debug(error);
                   });
+                resolve(cita);
               } else {
-                reject({ error: "No se creo la cita" });
+                reject(new Error("Appointment was not created"));
               }
             })
             .catch((error) => {
               reject(error);
             });
         } else {
-          reject({
-            error: "No se encontro un vehiculo con la placa " + cita.placa,
-          });
+          reject(
+            new Error("No se encontro un vehiculo con la placa " + cita.placa)
+          );
         }
       })
       .catch((error) => {
@@ -157,83 +130,30 @@ const createCita = (cita: CitaRequestAttributes) => {
   });
 };
 
-const updateCitaByIdCita = (IdCita: string, cita: CitaAttributes) => {
-  return new Promise<CitaInstance>((resolve, reject) => {
-    if (IdCita) {
-      let momentHour = moment(cita.horaCita, "hh:mm:ss");
-      let fechaCita = moment(cita.fechaCita, "DD/MM/YYYY")
-        .hour(momentHour.hour())
-        .minute(momentHour.minute());
+const updateCitaByIdCita = (
+  IdCita: string | number,
+  cita: CitaUpdateAttributes
+) => {
+  return new Promise<CitaInstance | null>((resolve, reject) => {
+    let momentHour = moment(cita.horaCita, "hh:mm:ss");
+    let fechaCita = moment(cita.fechaCita, "DD/MM/YYYY")
+      .hour(momentHour.hour())
+      .minute(momentHour.minute());
 
-      let citaDb = {
-        IdTaller: cita.IdTaller,
-        IdMecanico: cita.IdMecanico,
-        fechaCita: cita.fechaCita,
-        horaCita: cita.horaCita,
-        servicio: cita.servicio,
-        estado: cita.estado,
-        calificacion: cita.calificacion,
-        calificacionUsuario: cita.calificacionUsuario,
-      };
+    if (cita.estado.trim() === "") {
+      return reject(new Error("State value is not valid"));
+    }
 
-      if (
-        cita.estado != "Cancelada" ||
-        (cita.estado == "Cancelada" && fechaCita >= moment().add(1, "day"))
-      ) {
-        citaDAO.update(IdCita, citaDb)?.then((value) => {
-          citaDAO.getById(IdCita)?.then((cita) => {
-            let textoSms = "";
-            //Texto de cita con mecanico
-            if (cita) {
-              if (cita.estado == "Confirmada") {
-                textoSms = "Se confirmo su cita exitosamente";
-              } else {
-                if (cita.estado == "Cancelada") {
-                  textoSms =
-                    "Hola " +
-                    cita.vehiculo?.usuarios?.firstName +
-                    "! Se cancelo la cita que tenias el " +
-                    moment(cita.fechaCita).format("D [de] MMMM YYYY") +
-                    " a las " +
-                    cita.horaCita +
-                    " con tu " +
-                    cita.vehiculo?.tipoVehiculo +
-                    "  " +
-                    cita.vehiculo?.placa +
-                    ", BRANCH tendra el gusto de recibirte en una proxima oportunidad. Tu experiencia nuestro motor! BRANCH";
-                } else {
-                  if (cita.estado == "Incumplida") {
-                    textoSms =
-                      "Hola " +
-                      cita.vehiculo?.usuarios?.firstName +
-                      "! Incumpliste la cita que tenias el " +
-                      moment(cita.fechaCita).format("D [de] MMMM YYYY") +
-                      " a las " +
-                      cita.horaCita +
-                      " con tu " +
-                      cita.vehiculo?.tipoVehiculo +
-                      "  " +
-                      cita.vehiculo?.placa +
-                      ", esto afectara tu puntuacion en nuestra plataforma. BRANCH tendra el gusto de recibirte en una proxima oportunidad. Tu experiencia nuestro motor! BRANCH";
-                  } else {
-                    textoSms =
-                      "Hola " +
-                      cita.vehiculo?.usuarios?.firstName +
-                      "! Su cita quedo asignada el " +
-                      moment(cita.fechaCita).format("D [de] MMMM YYYY") +
-                      " a las " +
-                      cita.horaCita +
-                      " con tu " +
-                      cita.vehiculo?.tipoVehiculo +
-                      "  " +
-                      cita.vehiculo?.placa +
-                      ", " +
-                      cita.mecanico?.firstName +
-                      " de BRANCH tendra el gusto de recibirte. Tu experiencia nuestro motor! BRANCH";
-                  }
-                }
-              }
-              /*if (cita.vehiculo?.usuarios?.celular) {
+    if (
+      cita.estado !== "Cancelada" ||
+      (cita.estado === "Cancelada" && fechaCita >= moment().add(1, "day"))
+    ) {
+      citaDAO.update(IdCita, cita)?.then(() => {
+        citaDAO.getById(IdCita)?.then((cita) => {
+          //Texto de cita con mecanico
+          if (cita) {
+            const textoSms = parseTextByEstadoCita(cita.estado, cita);
+            /*if (cita.vehiculo?.usuarios?.celular) {
                 sms.sendSMStoInfoBip(cita.vehiculo.usuarios?.celular, textoSms);
               }
               if (cita.vehiculo?.usuarios?.tokenCM) {
@@ -242,59 +162,54 @@ const updateCitaByIdCita = (IdCita: string, cita: CitaAttributes) => {
                   textoSms
                 );
               }*/
-              // Persistir notificacion
+            // Persistir notificacion
+
+            if (
+              cita.vehiculo &&
+              cita.vehiculo.usuarios &&
+              cita.vehiculo.usuarios.uid &&
+              textoSms
+            ) {
               const notificacion = {
                 IdUsuario: cita.vehiculo?.usuarios?.uid,
                 text: textoSms,
                 typenotificacion: "Cita",
                 read: false,
-                dataAdicional: { IdCita: cita.IdCita, calificada: true },
+                dataAdicional: {
+                  IdCita: cita.IdCita,
+                  calificada: true,
+                },
               };
-
-              if (cita.vehiculo && cita.vehiculo.usuarios && cita.vehiculo.usuarios.uid) {
-                const notificacion = {
-                  IdUsuario: cita.vehiculo?.usuarios?.uid,
-                  text: textoSms,
-                  typenotificacion: "Cita",
-                  read: false,
-                  dataAdicional: {
-                    IdCita: cita.IdCita,
-                    calificada: true,
-                  },
-                };
-                notificacionDAO.create(notificacion)?.then(() => {
-                  if (cita.vehiculo?.usuarios?.tokenCM) {
-                    sms.sendDataToUser(
-                      cita.vehiculo.usuarios?.tokenCM,
-                      "notificacion",
-                      { IdCita: cita.IdCita }
-                    );
-                  }
-                });
-              }
-
-              resolve(cita);
+              notificacionDAO.create(notificacion)?.then(() => {
+                if (cita.vehiculo?.usuarios?.tokenCM) {
+                  sendDataToUser(
+                    cita.vehiculo.usuarios?.tokenCM,
+                    "notificacion",
+                    { IdCita: cita.IdCita }
+                  );
+                }
+              });
             }
-          });
+
+            resolve(cita);
+          } else {
+            resolve(cita);
+          }
         });
-      } else {
-        reject(
-          new Error("Solo se puede cancelar una cita hasta 24 horas antes.")
-        );
-      }
+      });
     } else {
-      reject(new Error("El parametro IdCita es requerido"));
+      reject(new Error("Appoinments must be cancelled 24h before"));
     }
   });
 };
 
-const calificaCitaByIdCita = (
-  IdCita: string,
-  calificacion: number,
-  calificacionUsuario: number
-) => {
-  return new Promise((resolve, reject) => {
-    if (IdCita) {
+const calificaCitaByIdCita = ({
+  calificacion,
+  calificacionUsuario,
+  IdCita,
+}: CalificaCitaRequest) => {
+  return new Promise<CitaInstance | null>((resolve, reject) => {
+    if (calificacion || calificacionUsuario) {
       let citaDb = {
         calificacion: calificacion,
         calificacionUsuario: calificacionUsuario,
@@ -302,16 +217,21 @@ const calificaCitaByIdCita = (
 
       citaDAO
         .update(IdCita, citaDb)
-        ?.then((value) => {
-          citaDAO.getById(IdCita)?.then((cita) => {
-            resolve(cita);
-          });
+        ?.then(() => {
+          citaDAO
+            .getById(IdCita)
+            ?.then((cita) => {
+              resolve(cita);
+            })
+            .catch((error) => {
+              reject(error);
+            });
         })
         .catch((reason) => {
           reject(reason);
         });
     } else {
-      reject("El parametro IdCita es requerido");
+      reject(new Error("At least one calification is required"));
     }
   });
 };
@@ -320,7 +240,7 @@ const calificaCitaByIdCita = (
  *
  * @param {*} IdTaller
  */
-const getAllCitasByIdTaller = (IdTaller: string) => {
+const getAllCitasByIdTaller = (IdTaller: string | number) => {
   return citaDAO.findAllByFilter(
     { IdTaller: IdTaller, estado: { [Op.ne]: "Cancelada" } },
     {},
@@ -416,5 +336,5 @@ export default {
   countCitasByEstadoIdTaller,
   countCitasByDateAndIdTaller,
   calificaCitaByIdCita,
-  deleteById
+  deleteById,
 };

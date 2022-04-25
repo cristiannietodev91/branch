@@ -1,5 +1,7 @@
 # branch
 
+[![Coverage Status](https://coveralls.io/repos/bitbucket/branchmotor/branch/badge.svg?branch=feature/add-unit-testing)](https://coveralls.io/bitbucket/branchmotor/branch?branch=feature/add-unit-testing)
+
 ## Dev environment
 
 ### firsts step to set the project

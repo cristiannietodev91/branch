@@ -1,23 +1,24 @@
 import messageDAO from "../dao/messageDAO";
 import conversacionDAO from "../dao/conversacionDAO";
-import { Order, Sequelize, WhereOptions } from "sequelize";
+import { Order, WhereOptions } from "sequelize";
 import {
   ConversationAttributes,
   ConversationInstance,
+  MessageCreationAttributes,
   MessageInstance,
 } from "../types";
 
-const createMessage = (message: MessageInstance) => {
+const createMessage = (message: MessageCreationAttributes) => {
   return messageDAO.create(message);
 };
 
 const getMessagesByConversacion = (
-  conversacion: Partial<ConversationAttributes>,
+  conversacion: WhereOptions<ConversationAttributes>,
   order: Order = ["IdConversacion", "DESC"]
 ) => {
-  return new Promise((resolve, rejected) => {
+  return new Promise<MessageInstance[]>((resolve, rejected) => {
     conversacionDAO
-      .findOneByFilter({ IdConversacion: 1 })
+      .findOneByFilter(conversacion)
       ?.then((conversacion) => {
         if (conversacion && conversacion.IdConversacion) {
           messageDAO
@@ -40,8 +41,8 @@ const getMessagesByConversacion = (
   });
 };
 
-const getAllConversacionsUnread = (IdTaller: string | number) => {
-  return new Promise((resolve, reject) => {
+const getAllConversationsUnread = (IdTaller: string | number) => {
+  return new Promise<ConversationInstance[]>((resolve, reject) => {
     messageDAO
       .findDistinctAllByFilter({ read: false, typeusuario: "cliente" })
       ?.then((messages) => {
@@ -95,6 +96,8 @@ const markallMessagesRead = (
             .catch((error) => {
               rejected(error);
             });
+        } else {
+          rejected(new Error("Messages were not updated"));
         }
       })
       .catch((error) => {
@@ -118,6 +121,6 @@ export default {
   createMessage,
   getMessagesByConversacion,
   markallMessagesRead,
-  getAllConversacionsUnread,
+  getAllConversationsUnread,
   countMessagesUnReadByIdConversacion,
 };

@@ -8,7 +8,7 @@ import {
 } from "../types";
 
 const getById = (
-  IdUsuario: string
+  IdUsuario: string | number
 ): Promise<UserInstance | null> | undefined => {
   return UserModel.sequelize?.transaction(() => UserModel.findByPk(IdUsuario));
 };

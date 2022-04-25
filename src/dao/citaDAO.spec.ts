@@ -17,8 +17,7 @@ import {
   CitaCreationAttributes,
 } from "../types";
 
-describe("cita DAO unit testing", () => {
-  34;
+describe.skip("cita DAO unit testing", () => {
   describe("list cita functionality", () => {
     let findAllStub: sinon.SinonStub<
       [options?: FindOptions<any> | undefined],

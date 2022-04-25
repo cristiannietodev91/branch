@@ -15,7 +15,7 @@ import {
   NotificationCreationAttributes,
 } from "../types";
 
-describe("notificacion DAO unit testing", () => {
+describe.skip("notificacion DAO unit testing", () => {
   describe("list notificaciones functionality", () => {
     let findAllStub: sinon.SinonStub<
       [options?: FindOptions<any> | undefined],

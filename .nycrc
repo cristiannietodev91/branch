@@ -1,0 +1,27 @@
+{
+  "extends": "@istanbuljs/nyc-config-typescript",
+  "all": true,
+  "check-coverage": true,
+  "extension": [
+    ".ts",
+    ".tsx"
+  ],
+  "exclude": [
+    "**/*.d.ts",
+    "**/*.test.ts",
+    "**/*.test.js",
+    "**/*.spec.ts",
+    "**/src/database/migrations",
+    "**/src/database/seeders",
+    "**/src/dao"
+  ],
+  "reporter": [
+    "text",
+    "clover"
+  ],
+  "branches": 5,
+  "lines": 10,
+  "functions": 5,
+  "statements": 5,
+  "report-dir" : "./test-reports"
+}

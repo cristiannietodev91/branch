@@ -9,20 +9,6 @@ import { Op } from "sequelize";
 
 moment.locale("es");
 
-/* const marcaDAO = require("../src/dao/marcaDAO");
-const tallerDAO = require("../src/dao/tallerDAO");
-let sms = require("../src/utils/sendSms");
-
-
-
-const { Op } = require("sequelize");
-let userAdapter = require("../adapter/userAdapter");
-
-let moment = require("moment");
-
-
-*/
-
 const getAllVehiculos = (req: Request, res: Response): void => {
   try {
     vehiculoAdapter
@@ -391,6 +377,5 @@ export default {
   getVehiculoByPlaca,
   getAllVehiculosByIdUsuario,
   countVehiculosByIdTaller,
-  getAllPaginateFilterVehiculosByIdTaller
+  getAllPaginateFilterVehiculosByIdTaller,
 };
-

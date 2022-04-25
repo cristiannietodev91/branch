@@ -62,14 +62,14 @@ export interface UserFilter {
 
 export interface UserAttributes {
   IdUsuario: number;
-  firstName?: string;
+  firstName: string;
   lastName?: string;
   identificacion?: string | null;
-  email?: string;
+  email: string;
   uid?: string;
   celular?: string;
   tipoUsuario: string;
-  estado?: string;
+  estado: string;
   IdTaller?: number;
   tokenCM?: string;
   typeDevice?: string;
@@ -93,7 +93,7 @@ export interface CitaAttributes {
   IdVehiculo: number;
   fechaCita: Date;
   horaCita: number;
-  servicio: string;
+  servicio?: string;
   estado: string;
   calificacion?: number;
   calificacionUsuario?: number;
@@ -105,8 +105,32 @@ export interface CitaAttributes {
 export interface CitaCreationAttributes
   extends Optional<CitaAttributes, "IdCita"> {}
 
-export interface CitaRequestAttributes extends CitaCreationAttributes {
-  placa: number;
+export interface CitaRequestAttributes {
+  IdTaller: number;
+  IdMecanico: number;
+  placa: string;
+  fechaCita: Date;
+  horaCita: number;
+  servicio?: string;
+  estado: string;
+}
+
+export interface CalificaCitaRequest {
+  IdCita: string | number; //TODO: change function for one param with type
+  calificacion?: number;
+  calificacionUsuario?: number;
+}
+
+export interface CitaUpdateAttributes {
+  IdTaller?: number;
+  IdMecanico?: number;
+  placa?: string;
+  fechaCita: Date;
+  horaCita: number;
+  servicio?: string;
+  estado: string;
+  calificacion?: number;
+  calificacionUsuario?: number;
 }
 
 export interface CitaInstance
@@ -130,10 +154,10 @@ export interface VehiculoUpdate {
 export interface VehiculoAttributes {
   IdVehiculo: number;
   IdMarca: number;
-  IdUsuario?: string;
-  IdTaller?: number | string;
-  tipoVehiculo?: string;
-  placa?: string;
+  IdUsuario: string;
+  IdTaller: number | string;
+  tipoVehiculo: string;
+  placa: string;
   kilometraje?: number;
   modelo?: number;
   color?: string;
@@ -145,14 +169,26 @@ export interface VehiculoAttributes {
   soat?: JSON;
   fvtecnomecanica?: Date;
   fvsoat?: Date;
-  estado?: string;
+  estado: string;
   marca?: MarcaAttributes;
   taller?: TallerAttributes;
   usuarios?: UserAttributes;
 }
 
+export interface VehiculoPreCreationAttributes {
+  alias?: string;
+  color?: string;
+  fechaCompra?: Date;
+  fotos?: JSON;
+  kilometraje?: number;
+  modelo?: number;
+  placa: string;
+  tipoVehiculo: string;
+  IdTaller: string | number;
+}
+
 export interface VehiculoCreationAttributes
-  extends Optional<VehiculoAttributes, "IdVehiculo" | "IdMarca" | "IdTaller"> {}
+  extends Optional<VehiculoAttributes, "IdVehiculo"> {}
 
 export interface VehiculoInstance
   extends Model<VehiculoAttributes, VehiculoCreationAttributes>,
@@ -338,8 +374,11 @@ export interface ServicioVehiculoAttributes {
   valor: number;
 }
 
+export interface ServicioVehiculoCreationAttributes
+  extends Optional<ServicioVehiculoAttributes, "IdServicio"> {}
+
 export interface ServicioVehiculoInstance
-  extends Model<ServicioVehiculoAttributes>,
+  extends Model<ServicioVehiculoAttributes, ServicioVehiculoCreationAttributes>,
     ServicioVehiculoAttributes {}
 
 export interface Events {

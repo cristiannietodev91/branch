@@ -3,14 +3,7 @@ import { Op } from "sequelize";
 import { NotificationCreationAttributes } from "../types";
 
 const crearNotificacion = (notificacion: NotificationCreationAttributes) => {
-  const notificacionDb: NotificationCreationAttributes = {
-    IdUsuario: notificacion.IdUsuario,
-    text: notificacion.text,
-    typenotificacion: notificacion.typenotificacion,
-    read: notificacion.read,
-    dataAdicional: notificacion.dataAdicional,
-  };
-  return notificacionDAO.create(notificacionDb);
+  return notificacionDAO.create(notificacion);
 };
 
 const findNotificacionesByIdUsuario = (IdUsuario: string | number) => {
@@ -28,7 +21,8 @@ const updateNotificacionGeneralByIdUsuario = (IdUsuario: string | number) => {
       read: false,
       typenotificacion: { [Op.ne]: "Calificación" },
     },
-    { read: true });
+    { read: true }
+  );
 };
 
 const updateNotificacionByIdNotificacion = (

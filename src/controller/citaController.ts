@@ -1,11 +1,12 @@
 import citaAdapter from "../adapter/citaAdapter";
 import HttpStatus from "http-status-codes";
 import moment from "moment";
-
+import Debug from "debug";
 import { Request, Response } from "express";
 import { CitaInstance, CitaRequestAttributes, Events } from "../types";
 
 const { Op } = require("sequelize");
+const debug = Debug("branch:server");
 
 moment.locale("es");
 
@@ -87,7 +88,7 @@ const getAllCitas = (req: Request, res: Response) => {
 const createCita = (req: Request, res: Response) => {
   try {
     const cita = req.body;
-    console.debug("Parametro de cita recibido :::::>", cita);
+    debug("Parametro de cita recibido :::::>", cita);
 
     const citaToCreate: CitaRequestAttributes = {
       placa: cita.placa,
@@ -97,7 +98,6 @@ const createCita = (req: Request, res: Response) => {
       fechaCita: cita.fechaCita,
       horaCita: cita.horaCita,
       servicio: cita.servicio,
-      IdVehiculo: cita.idVehiculo
     };
 
     citaAdapter
@@ -161,7 +161,7 @@ const calificaCita = (req: Request, res: Response) => {
     const IdCita = req.params.Id;
     const { calificacion, calificacionUsuario } = req.body;
     citaAdapter
-      .calificaCitaByIdCita(IdCita, calificacion, calificacionUsuario)
+      .calificaCitaByIdCita({ IdCita, calificacion, calificacionUsuario })
       .then((result) => {
         if (result) {
           return res.status(HttpStatus.ACCEPTED).json({

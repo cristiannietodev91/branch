@@ -199,6 +199,7 @@ const CitaModel = sequelize.define<CitaInstance>("cita", {
   },
   IdMecanico: {
     type: DataTypes.INTEGER,
+    allowNull: false,
   },
   IdVehiculo: {
     type: DataTypes.INTEGER,
@@ -206,9 +207,11 @@ const CitaModel = sequelize.define<CitaInstance>("cita", {
   },
   fechaCita: {
     type: DataTypes.DATEONLY,
+    allowNull: false,
   },
   horaCita: {
     type: DataTypes.TIME,
+    allowNull: false,
   },
   servicio: {
     type: DataTypes.STRING,
@@ -222,6 +225,7 @@ const CitaModel = sequelize.define<CitaInstance>("cita", {
       "Cumplida",
       "Finalizada"
     ),
+    allowNull: false,
   },
   calificacion: {
     type: DataTypes.INTEGER,
