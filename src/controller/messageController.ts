@@ -60,7 +60,7 @@ const getMessagesByConversacion = (req: Request, res: Response) => {
   }
 };
 
-const updateAllMessagesByConversacion = (req: Request, res: Response) => {
+const updateAllMessagesByConversacion = (req: Request, res: Response): void => {
   try {
     const { IdConversacionUser, IdTaller, typeusuario } = req.body;
 
@@ -77,21 +77,21 @@ const updateAllMessagesByConversacion = (req: Request, res: Response) => {
         }
       })
       .catch((error) => {
-        return res
+        res
           .status(HttpStatus.INTERNAL_SERVER_ERROR)
           .json({ error: error.message });
       });
   } catch (error) {
     console.error("Error al actualizar mensajes ::::::>", error);
     if (error instanceof Error) {
-      return res
+      res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ error: error.message });
     }
   }
 };
 
-const getConversacionesUnread = (req: Request, res: Response) => {
+const getConversacionesUnread = (req: Request, res: Response): void => {
   try {
     const { IdTaller } = req.params;
 
@@ -103,14 +103,14 @@ const getConversacionesUnread = (req: Request, res: Response) => {
         }
       })
       .catch((error) => {
-        return res
+        res
           .status(HttpStatus.INTERNAL_SERVER_ERROR)
           .json({ error: error.message });
       });
   } catch (error) {
     console.error("Error get conversaciones unread::::::>", error);
     if (error instanceof Error) {
-      return res
+      res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ error: error.message });
     }

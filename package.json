@@ -1,15 +1,26 @@
 {
   "name": "branch",
   "version": "1.0.0",
-  "description": "Backend Services Proyecto Branch",
+  "description": "Backend Services Branch project",
   "author": "Cristian Nieto (cristianandresnieto@gmail.com)",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
-    "dev": "nodemon ./bin/www",
-    "build": "tsc --project ./",
+    "prestart": "npm run build",
+    "start": "node ./dist/src",
+    "dev": "npm run build && nodemon",
+    "build": "tsc",
     "test": "npm run build && cross-env NODE_ENV=test nyc mocha",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
+  },
+  "nodemonConfig": {
+    "watch": [
+      "src"
+    ],
+    "ext": "ts, html",
+    "ignore": [
+      "src/public"
+    ],
+    "exec": "npm run start"
   },
   "engines": {
     "node": ">10.16.0"
@@ -30,11 +41,10 @@
     "moment": "^2.24.0",
     "morgan": "~1.9.1",
     "mysql2": "^2.1.0",
-    "nexmo": "^2.6.0",
     "nodemon": "^2.0.2",
     "sequelize": "^6.6.5",
     "sequelize-paginate": "^1.1.6",
-    "socket.io": "^2.3.0",
+    "socket.io": "4.4.1",
     "twilio": "^3.39.3"
   },
   "devDependencies": {
@@ -53,8 +63,8 @@
     "@types/sinon": "^10.0.11",
     "@types/supertest": "^2.0.12",
     "@types/validator": "^13.6.2",
-    "@typescript-eslint/eslint-plugin": "^4.28.1",
-    "@typescript-eslint/parser": "^4.28.1",
+    "@typescript-eslint/eslint-plugin": "^5.21.0",
+    "@typescript-eslint/parser": "^5.21.0",
     "chai": "^4.3.6",
     "coveralls": "^3.1.1",
     "cross-env": "^7.0.3",

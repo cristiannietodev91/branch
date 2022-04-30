@@ -1,10 +1,17 @@
 import { WhereOptions } from "sequelize";
 import { MecanicoModel, TallerModel } from "../database/models";
-import { MecanicoAttributes, MecanicoCreationAttributes, MecanicoInstance, TallerAttributes } from "../types";
+import {
+  MecanicoAttributes,
+  MecanicoCreationAttributes,
+  MecanicoInstance,
+  TallerAttributes,
+} from "../types";
 
 const findAll = (): Promise<MecanicoInstance[]> => MecanicoModel.findAll();
 
-const create = (mecanico: MecanicoCreationAttributes) => {
+const create = (
+  mecanico: MecanicoCreationAttributes
+): Promise<MecanicoInstance> | undefined => {
   // Find all users
   return MecanicoModel.sequelize?.transaction((t1) => {
     return MecanicoModel.create(mecanico);
@@ -21,17 +28,20 @@ const update = (
       where: { IdMecanico: IdMecanico },
     });
   });
-  123456;
 };
 
-const getById = (IdMecanico: number | string) => {
+const getById = (
+  IdMecanico: number | string
+): Promise<MecanicoInstance | null> | undefined => {
   // Find all users
   return MecanicoModel.sequelize?.transaction((t1) => {
     return MecanicoModel.findByPk(IdMecanico);
   });
 };
 
-const deleteById = (IdMecanico: number | string) => {
+const deleteById = (
+  IdMecanico: number | string
+): Promise<number> | undefined => {
   // Find all users
   return MecanicoModel.sequelize?.transaction((t1) => {
     return MecanicoModel.destroy({
@@ -43,7 +53,7 @@ const deleteById = (IdMecanico: number | string) => {
 const findAllByFilter = (
   filterTaller: WhereOptions<TallerAttributes>,
   filterMecancio: WhereOptions<MecanicoInstance>
-) => {
+): Promise<MecanicoInstance[]> | undefined => {
   // Find all users
   return MecanicoModel.sequelize?.transaction((t1) => {
     return MecanicoModel.findAll({

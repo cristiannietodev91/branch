@@ -2,7 +2,7 @@ import serviciosAdapter from "../adapter/serviciosAdapter";
 import HttpStatus from "http-status-codes";
 import { Request, Response } from "express";
 
-const getListaServicios = (req: Request, res: Response) => {
+const getListaServicios = (req: Request, res: Response): void => {
   try {
     serviciosAdapter
       .listarServicios()
@@ -12,21 +12,21 @@ const getListaServicios = (req: Request, res: Response) => {
         }
       })
       .catch((error) => {
-        return res
+        res
           .status(HttpStatus.INTERNAL_SERVER_ERROR)
           .json({ error: error.message });
       });
   } catch (error) {
     console.error("Error al crear vehiculo ::::::>", error);
     if (error instanceof Error) {
-      return res
+      res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ error: error.message });
     }
   }
 };
 
-const crearServicio = (req: Request, res: Response) => {
+const crearServicio = (req: Request, res: Response): void => {
   try {
     const { body: servicio } = req;
 
@@ -45,14 +45,14 @@ const crearServicio = (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error al crear servicio a un vehiculo ::::::>", error);
     if (error instanceof Error) {
-      return res
+      res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ error: error.message });
     }
   }
 };
 
-const getListaServiciosByVehiculo = (req: Request, res: Response) => {
+const getListaServiciosByVehiculo = (req: Request, res: Response): void => {
   try {
     const IdVehiculo = req.params.Id;
     serviciosAdapter
@@ -70,7 +70,7 @@ const getListaServiciosByVehiculo = (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error al crear vehiculo ::::::>", error);
     if (error instanceof Error) {
-      return res
+      res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ error: error.message });
     }

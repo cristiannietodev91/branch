@@ -13,7 +13,6 @@ const debug = Debug("branch:server");
 import serviceAccountDev from "../../serviceAccountKey.json";
 import serviceAccountProd from "../../serviceAccountKeyProd.json";
 import { WhereOptions } from "sequelize";
-import { rejects } from "assert";
 
 const devServiceConf = {
   credential: admin.credential.cert(serviceAccountDev),
@@ -69,7 +68,7 @@ const createUsuario = (
           resolve(user);
         })
         .catch((error) => {
-          rejects(error);
+          reject(error);
         });
     } else {
       if (usuario.identificacion) {
@@ -254,31 +253,3 @@ export default {
   createUsuario,
   updateUsuario,
 };
-
-/*
-
-
-
-
-
-
-const findUsuarioByUid = (uid, cb) => {
-  usersDAO.findOneByFilter({ uid: uid }, (error, usuario) => {
-    if (error) {
-      cb(error, null);
-    } else {
-      cb(null, usuario);
-    }
-  });
-};
-
-
-
-module.exports = {
-  findUserByEmail,
-  createUsuario,
-  updateUsuario,
-  updateUsuarioByIdUsuario,
-  findUsuarioByUid,
-  countUsuariosByIdTaller
-};*/

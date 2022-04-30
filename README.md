@@ -4,6 +4,12 @@
 
 ## Dev environment
 
+
+### Prerequisistes run locally branch project
+
+- Mysql client must be running
+- a database called ``branch`` must exist to execute migrations
+
 ### firsts step to set the project
 
 - Set SSH Key in bitbucket for your user
@@ -13,10 +19,22 @@
     DBHOST=localhost
     DBPASSWORD=root
     DBUSER=root``
-- run npm install command to install all project neccesary dependencies
-- run the project with ``DEBUG=branch:* npm run dev``
+- run ``npm install`` command to install all project neccesary dependencies
+- create an database called ``branch``
 
-to run dev environment we should the next command, this will run the server and enable all the logs using DEBUG library
+### Run migrations
+- run ``npx sequelize-cli db:migrate`` to run migrations
+
+## Undo migrations
+- run ``npx sequelize-cli db:migrate:undo``
+
+## Runing project locally
+
+you should execute the next command to run the server and enable all the logs using DEBUG library
 
 ``DEBUG=branch:* npm run dev``
+
+
+### Test
+
 

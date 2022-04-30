@@ -12,8 +12,8 @@ import {
 import moment from "moment";
 const debug = Debug("branch:server");
 
-const accountSid = "AC1099fb5ef48363809ae9de3ae535cbec";
-const authToken = "bd7e992979a930c85f612822f4ee4b44";
+const accountSid = process.env.TWILIO_ACCOUNT_ID || "AC1111";
+const authToken = process.env.TWILIO_AUTH_TOKEN || "111";
 const client = twilio(accountSid, authToken);
 
 /**
@@ -21,7 +21,7 @@ const client = twilio(accountSid, authToken);
  * @param {*} to
  * @param {*} text
  */
-export const sendSMStoInfoBip = (to: string, text: string) => {
+export const sendSMStoInfoBip = (to: string, text: string): void => {
   debug("Mensaje a enviar :::>", text, "Token :::>" + to);
   try {
     const options = {
@@ -37,15 +37,15 @@ export const sendSMStoInfoBip = (to: string, text: string) => {
       maxRedirects: 20,
     };
 
-    let req = https.request(options, (res) => {
-      let chunks: Uint8Array[] = [];
+    const req = https.request(options, (res) => {
+      const chunks: Uint8Array[] = [];
 
       res.on("data", (chunk) => {
         chunks.push(chunk);
       });
 
       res.on("end", () => {
-        var body = Buffer.concat(chunks);
+        const body = Buffer.concat(chunks);
         console.log(body.toString());
       });
 
@@ -205,7 +205,10 @@ export const parseTextoSms = (
   }
 };
 
-export const parseTextByEstadoCita = (estado: string, cita: CitaAttributes) => {
+export const parseTextByEstadoCita = (
+  estado: string,
+  cita: CitaAttributes
+): string | undefined => {
   switch (estado) {
     case "Confirmada":
       return "Se confirmo su cita exitosamente";

@@ -236,23 +236,27 @@ const createFireBaseUsuario = (req: Request, res: Response): void => {
           if (errorInfo) {
             const { code } = errorInfo;
             switch (code) {
-              case "auth/invalid-phone-number":
-                res
-                  .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                  .json({ error: "Error en el formato del telefono" });
+            case "auth/invalid-phone-number":
+              res
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .json({ error: "Error en el formato del telefono" });
+              break;
 
-              case "auth/email-already-exists":
-                res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                  error: "Ya existe usuario registrado con ese email",
-                });
-              case "auth/phone-number-already-exists":
-                res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                  error: "Ya exite un usuario registrado con ese celular",
-                });
-              default:
-                res
-                  .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                  .json({ error: "Error al actualizar el usuario" });
+            case "auth/email-already-exists":
+              res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                error: "Ya existe usuario registrado con ese email",
+              });
+              break;
+            case "auth/phone-number-already-exists":
+              res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                error: "Ya exite un usuario registrado con ese celular",
+              });
+              break;
+            default:
+              res
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .json({ error: "Error al actualizar el usuario" });
+              break;
             }
           } else {
             res

@@ -22,6 +22,8 @@ export const register = (app: express.Application): void => {
 
   app.put("/usuario/update/:uid", userController.updateUsuarioByUid);
 
-  app.put("/usuario/updateByIdUsuario/:id", userController.updateUsuarioByIdUsuario);
-
+  app.put(
+    "/usuario/updateByIdUsuario/:id",
+    userController.updateUsuarioByIdUsuario
+  );
 };

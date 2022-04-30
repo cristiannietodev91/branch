@@ -3,7 +3,7 @@ import mecanicoDAO from "../dao/mecanicoDAO";
 import HttpStatus from "http-status-codes";
 import { Request, Response } from "express";
 
-const getAllMecanicos = (req: Request, res: Response) => {
+const getAllMecanicos = (req: Request, res: Response): void => {
   try {
     mecanicoDAO
       .findAll()
@@ -13,14 +13,14 @@ const getAllMecanicos = (req: Request, res: Response) => {
         }
       })
       .catch((error) => {
-        return res
+        res
           .status(HttpStatus.INTERNAL_SERVER_ERROR)
           .json({ error: error.message });
       });
   } catch (error) {
     console.error("Error al listar mecanicos ::::::>", error);
     if (error instanceof Error) {
-      return res
+      res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ error: error.message });
     }

@@ -1,7 +1,6 @@
 const path = require("path");
 
 module.exports = {
-  env: "test",
   config: path.resolve("./src/database/config", "config.js"),
   "models-path": path.resolve("./dist/src/database/models"),
   "seeders-path": path.resolve("./src/database/seeders"),

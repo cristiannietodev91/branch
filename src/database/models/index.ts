@@ -5,7 +5,7 @@ import { Sequelize, Options, DataTypes } from "sequelize";
 
 // const basename = path.basename(__filename);
 const namespace = cls.createNamespace("my-very-own-namespace");
-const env: string = process.env.NODE_ENV || 'development';
+const env: string = process.env.NODE_ENV || "development";
 import dbConfig from "../config/config";
 import {
   UserInstance,
@@ -31,42 +31,59 @@ const myConfig: Options = (dbConfig as any)[env];
 
 Sequelize.useCLS(namespace);
 
-debug(myConfig.dialect);
+debug("Connecting to dialect ::> ", myConfig.dialect);
 const sequelize = new Sequelize(myConfig);
 
-const MarcaModel = sequelize.define<MarcaInstance>("marca", {
-  IdMarca: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
+const testConnection = async () => {
+  try {
+    await sequelize.authenticate();
+    console.log("Connection has been established successfully.");
+  } catch (error) {
+    console.error("Unable to connect to the database:", error);
+  }
+};
+
+testConnection();
+
+const MarcaModel = sequelize.define<MarcaInstance>(
+  "marca",
+  {
+    IdMarca: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    marca: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    referencia: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    categoria: {
+      type: DataTypes.STRING(5),
+    },
+    tipo: {
+      type: DataTypes.STRING,
+    },
+    descripcion: {
+      type: DataTypes.STRING,
+      // allowNull defaults to true
+    },
+    tipoVehiculo: {
+      type: DataTypes.ENUM("Moto", "Carro"),
+      // allowNull defaults to true
+    },
+    urllogo: {
+      type: DataTypes.ENUM("Moto", "Carro"),
+      // allowNull defaults to true
+    },
   },
-  marca: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  referencia: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  categoria: {
-    type: DataTypes.STRING(5),
-  },
-  tipo: {
-    type: DataTypes.STRING,
-  },
-  descripcion: {
-    type: DataTypes.STRING,
-    // allowNull defaults to true
-  },
-  tipoVehiculo: {
-    type: DataTypes.ENUM("Moto", "Carro"),
-    // allowNull defaults to true
-  },
-  urllogo: {
-    type: DataTypes.ENUM("Moto", "Carro"),
-    // allowNull defaults to true
-  },
-});
+  {
+    timestamps: false,
+  }
+);
 
 const TallerModel = sequelize.define<TallerInstance>("taller", {
   IdTaller: {
@@ -342,7 +359,8 @@ const MecanicoTallerModel = sequelize.define<MecanicoTallerInstance>(
         model: "mecanico",
       },
     },
-  }
+  },
+  { timestamps: false }
 );
 
 const OrdenModel = sequelize.define<OrdenInstance>("ordentrabajo", {
@@ -684,8 +702,6 @@ OrdenModel.belongsTo(EtapaModel, {
   targetKey: "IdEtapa",
 });
 
-
-
 ConversacionModel.belongsTo(UserModel, {
   foreignKey: "uid",
   targetKey: "uid",
@@ -724,5 +740,5 @@ export {
   NotificacionModel,
   ServicioModel,
   ServicioVehiculoModel,
-  EtapaModel
+  EtapaModel,
 };

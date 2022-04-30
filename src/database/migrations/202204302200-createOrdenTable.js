@@ -1,8 +1,8 @@
 "use strict";
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable("cita", {
-      IdCita: {
+    return queryInterface.createTable("ordentrabajo", {
+      IdOrdenTrabajo: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
@@ -17,8 +17,32 @@ module.exports = {
           key: "IdTaller"
         }
       },
+      CodigoOrden: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      IdEtapa: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: {
+            tableName: "etapa"
+          },
+          key: "IdEtapa"
+        }
+      },
+      IdCita: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: "cita"
+          },
+          key: "IdCita"
+        }
+      },
       IdMecanico: {
         type: Sequelize.INTEGER,
+        allowNull: false,
         references: {
           model: {
             tableName: "mecanico"
@@ -36,27 +60,21 @@ module.exports = {
           key: "IdVehiculo"
         }
       },
-      fechaCita: {
-        type: Sequelize.DATEONLY,
+      kilometraje: {
+        type: Sequelize.INTEGER,
       },
-      horaCita: {
-        type: Sequelize.TIME,
+      DocumentosDeja: {
+        type: Sequelize.JSON,
       },
-      servicio: {
+      Observaciones: {
         type: Sequelize.STRING,
       },
-      estado: {
-        type: Sequelize.ENUM(
-          "Solicitada",
-          "Confirmada",
-          "Cancelada",
-          "Incumplida",
-          "Cumplida",
-          "Finalizada"
-        ),
+      documentos: {
+        type: Sequelize.JSON,
       },
-      calificacion: {
-        type: Sequelize.INTEGER,
+      estado: {
+        type: Sequelize.ENUM("Aceptado", "Pendiente", "Rechazado", "Inactivo"),
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
@@ -69,6 +87,6 @@ module.exports = {
     });
   },
   down: (queryInterface) => {
-    return queryInterface.dropTable("cita");
+    return queryInterface.dropTable("ordentrabajo");
   },
 };

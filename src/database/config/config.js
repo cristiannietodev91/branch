@@ -13,7 +13,10 @@ module.exports = {
       underscored: false,
       freezeTableName: true,
     },
-    timezone: "-05:00", // for writing to database
+    timezone: "-05:00", // for writing to database,
+    dialectOptions: {
+      socketPath: "/tmp/mysql.sock"
+    }
   },
   test: {
     username: "root",

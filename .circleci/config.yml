@@ -3,15 +3,16 @@ orbs:
   node: circleci/node@5.0.2
 jobs:
   test:
-    executor: node/default
+    executor: 
+      name: node/default
+      tag: '13.14'
     steps:
       - checkout
-      - node/install-packages:
-          cache-path: ~/project/node_modules
-          override-ci-command: npm install
-      - run: sudo npm install -g npm@latest
-      - run: npm run test
-      - run: npm run coverage
+      - node/install-packages
+      - run: 
+          command: npm run test
+      - run: 
+          command: npm run coverage
       - store_artifacts:
           path: test-reports
       - store_test_results:

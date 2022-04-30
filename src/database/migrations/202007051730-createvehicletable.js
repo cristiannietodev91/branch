@@ -12,9 +12,9 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: 'marca'
+            tableName: "marca"
           },
-          key: 'IdMarca'
+          key: "IdMarca"
         }
       },
       IdUsuario: {
@@ -25,9 +25,9 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: {
-            tableName: 'taller'
+            tableName: "taller"
           },
-          key: 'IdTaller'
+          key: "IdTaller"
         }
       },
       tipoVehiculo: {
@@ -86,7 +86,7 @@ module.exports = {
       }
     });
   },
-  down: (queryInterface, Sequelize) => {
+  down: (queryInterface) => {
     return queryInterface.dropTable("vehiculo");
   },
 };
