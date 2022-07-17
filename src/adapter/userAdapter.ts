@@ -58,7 +58,7 @@ const createUsuario = (
         celular: usuario.celular,
         identificacion: usuario.identificacion ? usuario.identificacion : null,
         tipoUsuario: usuario.tipoUsuario,
-        estado: "Pendiente",
+        estado: "Pendiente" as const,
         typeDevice: usuario.typeDevice,
       };
       debug("Usuario a registrar en la DB", usuarioDb);
@@ -123,7 +123,7 @@ const createUsuario = (
                             celular: userRecord.phoneNumber,
                             identificacion: usuario.identificacion,
                             tipoUsuario: usuario.tipoUsuario,
-                            estado: "Pendiente",
+                            estado: "Pendiente" as const,
                             typeDevice: usuario.typeDevice,
                           };
 
@@ -156,7 +156,7 @@ const createUsuario = (
           uid: usuario.email, // Se deja el email de UID mientras el usuario no este registrado en la APP
           celular: usuario.celular,
           tipoUsuario: usuario.tipoUsuario,
-          estado: "Pendiente",
+          estado: "Pendiente" as const,
           typeDevice: usuario.typeDevice,
         };
         debug("Usuario a registrar en la DB", usuarioDb);
@@ -179,7 +179,7 @@ const updateUsuarioByIdUsuario = (
 ): Promise<[affectedCount: number]> | undefined => {
   if (IdUsuario) {
     vehiculoDAO
-      .update({ IdUsuario: usuario.email }, { IdUsuario: usuario.uid })
+      .update({ IdUsuario: usuario.email }, { IdUsuario: usuario.IdUsuario })
       ?.then(() => {
         debug("Se actualizaron los vehiculos");
       })

@@ -28,6 +28,11 @@
 ## Undo migrations
 - run ``npx sequelize-cli db:migrate:undo``
 
+### Run Seeders
+- run ``npx sequelize-cli db:seed:all`` 
+
+Run specific sedd ``npx sequelize-cli db:seed --seed fileName``
+
 ## Runing project locally
 
 you should execute the next command to run the server and enable all the logs using DEBUG library

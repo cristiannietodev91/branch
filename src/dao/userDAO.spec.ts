@@ -65,10 +65,10 @@ describe.skip("user DAO unit testing", () => {
     >;
 
     const userMock: UserCreationAttributes = {
-      tipoUsuario: "client",
+      tipoUsuario: "Cliente" as const,
       firstName: "Test",
       email: "xxxx@xxxx.com",
-      estado: "activo",
+      estado: "Pendiente" as const,
     };
 
     const userResult = {

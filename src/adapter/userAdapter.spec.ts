@@ -124,10 +124,10 @@ describe("user adapter testing", () => {
     >;
 
     const mockUser: UserCreationAttributes = {
-      tipoUsuario: "cliente",
+      tipoUsuario: "Cliente" as const,
       email: "xxx@xxxx.com",
       firstName: "Test",
-      estado: "Activo",
+      estado: "Pendiente" as const,
     };
 
     const mockUserResult = {
@@ -148,9 +148,11 @@ describe("user adapter testing", () => {
       metadata: {
         lastSignInTime: "",
         creationTime: new Date().toDateString(),
+        // eslint-disable-next-line @typescript-eslint/ban-types
         toJSON: (): Object => ({}),
       },
       providerData: [],
+      // eslint-disable-next-line @typescript-eslint/ban-types
       toJSON: (): Object => ({}),
     };
 

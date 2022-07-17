@@ -68,16 +68,15 @@ export interface UserAttributes {
   email: string;
   uid?: string;
   celular?: string;
-  tipoUsuario: string;
-  estado: string;
+  tipoUsuario: "Cliente" | "AdminTaller";
+  estado: "Registrado" | "Pendiente";
   IdTaller?: number;
   tokenCM?: string;
   typeDevice?: string;
   password?: string;
 }
 
-export interface UserCreationAttributes
-  extends Optional<UserAttributes, "IdUsuario"> {}
+export type UserCreationAttributes = Optional<UserAttributes, "IdUsuario">
 
 export interface UserInstance
   extends Model<UserAttributes, UserCreationAttributes>,
@@ -154,7 +153,7 @@ export interface VehiculoUpdate {
 export interface VehiculoAttributes {
   IdVehiculo: number;
   IdMarca: number;
-  IdUsuario: string;
+  IdUsuario: number;
   IdTaller: number | string;
   tipoVehiculo: string;
   placa: string;
@@ -187,8 +186,23 @@ export interface VehiculoPreCreationAttributes {
   IdTaller: string | number;
 }
 
-export interface VehiculoCreationAttributes
-  extends Optional<VehiculoAttributes, "IdVehiculo"> {}
+export type VehiculoCreationAttributes = Optional<VehiculoAttributes, "IdVehiculo">
+
+export interface VehiculoCreationRequest {
+  celular: string;
+  IdTaller: string | number;
+  placa: string;
+  usuario: {
+    email: string;
+  },
+  fechaCompra?: Date;
+  alias?: string;
+  color?: string;
+  fotos?: JSON;
+  kilometraje?: number;
+  modelo?: number;
+  tipoVehiculo: string;
+}
 
 export interface VehiculoInstance
   extends Model<VehiculoAttributes, VehiculoCreationAttributes>,

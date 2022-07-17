@@ -641,7 +641,7 @@ VehiculoModel.hasMany(CitaModel, {
 
 VehiculoModel.belongsTo(UserModel, {
   foreignKey: "IdUsuario",
-  targetKey: "uid",
+  targetKey: "IdUsuario",
 });
 
 CitaModel.belongsTo(TallerModel, {

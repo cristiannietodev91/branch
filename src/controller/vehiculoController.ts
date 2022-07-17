@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import vehiculoAdapter from "../adapter/vehiculoAdapter";
 import HttpStatus from "http-status-codes";
 import Debug from "debug";
-import { VehiculoAttributes } from "../types";
+import { VehiculoCreationRequest } from "../types";
 const debug = Debug("branch:server");
 import moment from "moment";
 import { Op } from "sequelize";
@@ -33,7 +33,7 @@ const getAllVehiculos = (req: Request, res: Response): void => {
 
 const createVehiculo = (req: Request, res: Response): void => {
   try {
-    const vehiculo = req.body as VehiculoAttributes;
+    const vehiculo = req.body as VehiculoCreationRequest;
     debug("Parametro de vehiculo recibido :::::>", vehiculo);
 
     vehiculoAdapter
@@ -44,12 +44,13 @@ const createVehiculo = (req: Request, res: Response): void => {
         }
       })
       .catch((error) => {
+        debug("Error al crear vehiculo ", error);
         res
           .status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .send({ error: error.errors[0] });
+          .send({ error: error.message });
       });
   } catch (error) {
-    debug("Error al crear vehiculo ", error);
+    debug("Error unhandle creating vehicle", error);
     if (error instanceof Error) {
       res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -350,7 +351,7 @@ const getAllPaginateFilterVehiculosByIdTaller = (
     vehiculoAdapter
       .findPaginateByFilter(page, perpage, filterVehiculo, filterUsuario)
       ?.then((result) => {
-        res.status(HttpStatus.OK).json(result.rows);
+        res.status(HttpStatus.OK).json(result);
       })
       .catch((error) => {
         return res

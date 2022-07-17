@@ -219,7 +219,7 @@ const createFireBaseUsuario = (req: Request, res: Response): void => {
       tipoUsuario: usuario.tipoUsuario,
       uid: usuario.uid,
       typeDevice: usuario.typeDevice,
-      estado: "Activo",
+      estado: "Registrado" as const,
     };
 
     userAdapater

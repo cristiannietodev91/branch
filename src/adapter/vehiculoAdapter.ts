@@ -10,6 +10,7 @@ import {
   VehiculoCreationAttributes,
   UserCreationAttributes,
   VehiculoPreCreationAttributes,
+  VehiculoCreationRequest,
 } from "../types";
 import {
   ERROR_CREATEVEHICULOTALLERASIGNADO,
@@ -34,7 +35,7 @@ const getById = (
   vehiculoDAO.getById(IdVehiculo);
 
 const crearVehiculo = (
-  vehiculo: VehiculoCreationAttributes
+  vehiculo: VehiculoCreationRequest
 ): Promise<VehiculoInstance | undefined> | undefined => {
   return new Promise((resolve, reject) => {
     vehiculoDAO
@@ -65,7 +66,7 @@ const crearVehiculo = (
         } else {
           const idMarca = await (async () => {
             try {
-              if (vehiculo.marca) {
+              /*if (vehiculo.marca) {
                 const marca = await marcaDAO.findOneByFilter({
                   marca: vehiculo.marca.marca,
                   referencia: vehiculo.marca.referencia,
@@ -77,7 +78,8 @@ const crearVehiculo = (
                 }
               } else {
                 return 1;
-              }
+              }*/
+              return 1;
             } catch (error) {
               return 1;
             }
@@ -94,9 +96,9 @@ const crearVehiculo = (
             fechaCompraBD
           );
 
-          if (vehiculo.usuarios && vehiculo.usuarios.email) {
+          if (vehiculo.usuario && vehiculo.usuario.email) {
             usersDAO
-              .findOneByFilter({ email: vehiculo.usuarios.email })
+              .findOneByFilter({ email: vehiculo.usuario.email })
               ?.then((usuario) => {
                 if (usuario) {
                   const vehiculoDB = {
@@ -110,8 +112,8 @@ const crearVehiculo = (
                     tipoVehiculo: vehiculo.tipoVehiculo,
                     IdTaller: vehiculo.IdTaller,
                   };
-                  if (usuario.uid) {
-                    crearVehiculoDB(vehiculoDB, usuario.uid, idMarca)
+                  if (usuario.IdUsuario) {
+                    crearVehiculoDB(vehiculoDB, usuario.IdUsuario, idMarca)
                       .then((vehiculoCreated) => {
                         if (vehiculoCreated) {
                           const { usuarios } = vehiculoCreated;
@@ -133,14 +135,14 @@ const crearVehiculo = (
                   }
                 } else {
                   // No Encontro usuario lo va a crear
-                  if (vehiculo.usuarios && vehiculo.usuarios.email) {
+                  if (vehiculo.usuario && vehiculo.usuario.email) {
                     const usuarioDB = {
-                      email: vehiculo.usuarios?.email,
-                      celular: "+57", // TODO Add celular en el cuerpo de la peticion:
+                      email: vehiculo.usuario?.email,
+                      celular: `+57${vehiculo.celular}`, // TODO Add celular en el cuerpo de la peticion:
                       password: "123456",
                       firstName: "Sin nombre",
-                      tipoUsuario: "Cliente",
-                      estado: "Activo",
+                      tipoUsuario: "Cliente" as const,
+                      estado: "Pendiente" as const,
                     };
 
                     userDAO
@@ -153,7 +155,6 @@ const crearVehiculo = (
                             fechaCompra: fechaCompraBD,
                             fotos: vehiculo.fotos,
                             kilometraje: vehiculo.kilometraje,
-                            marca: vehiculo.marca,
                             modelo: vehiculo.modelo,
                             placa: vehiculo.placa,
                             tipoVehiculo: vehiculo.tipoVehiculo,
@@ -162,7 +163,7 @@ const crearVehiculo = (
                           // Se coloca Id de la tabla usuarios como UID mientras el usuario no este registrado en la BD
                           crearVehiculoDB(
                             vehiculoDB,
-                            userCreate.IdUsuario.toString(),
+                            userCreate.IdUsuario,
                             idMarca
                           )
                             .then((vehiculoCreated) => {
@@ -183,9 +184,14 @@ const crearVehiculo = (
                             .catch((error) => {
                               reject(error);
                             });
+                        } else {
+                          reject(
+                            new Error("User created but it returned undefined")
+                          );
                         }
                       })
                       .catch((error) => {
+                        debug("Error creating user", error);
                         reject(error);
                       });
                   }
@@ -207,7 +213,7 @@ const crearVehiculo = (
 
 const crearVehiculoDB = (
   vehiculo: VehiculoPreCreationAttributes,
-  userId: string,
+  userId: number,
   idmarca?: number
 ): Promise<VehiculoInstance> => {
   return new Promise((resolve, reject) => {
@@ -225,13 +231,18 @@ const crearVehiculoDB = (
       modelo: vehiculo.modelo,
       fotos: vehiculo.fotos,
     };
-    vehiculoDAO.create(vehiculoRegister)?.then((vehiculoCreated) => {
-      if (vehiculoCreated) {
-        resolve(vehiculoCreated);
-      } else {
-        reject(ERROR_CREATING_VEHICULE);
-      }
-    });
+    vehiculoDAO
+      .create(vehiculoRegister)
+      ?.then((vehiculoCreated) => {
+        if (vehiculoCreated) {
+          resolve(vehiculoCreated);
+        } else {
+          reject(ERROR_CREATING_VEHICULE);
+        }
+      })
+      .catch((error) => {
+        reject(error);
+      });
   });
 };
 
@@ -288,7 +299,7 @@ const updateVehiculo = (
           if (marca && vehiculo.usuarios) {
             const vehiculoUpdate = {
               IdMarca: marca.IdMarca,
-              IdUsuario: vehiculo.usuarios.uid,
+              IdUsuario: vehiculo.usuarios.IdUsuario,
               IdTaller: vehiculo.IdTaller,
               tipoVehiculo: "Moto",
               placa: vehiculo.placa,

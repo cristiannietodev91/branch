@@ -66,7 +66,7 @@ describe.skip("vehiculo DAO unit testing", () => {
     const creationMock: VehiculoCreationAttributes = {
       placa: "UUU222",
       IdMarca: 1,
-      IdUsuario: "DSADAS5456",
+      IdUsuario: 1,
       IdTaller: 1,
       tipoVehiculo: "carro",
       estado: "activo",

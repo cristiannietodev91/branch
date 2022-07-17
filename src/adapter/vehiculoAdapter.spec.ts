@@ -8,6 +8,7 @@ import {
   UserInstance,
   VehiculoAttributes,
   VehiculoCreationAttributes,
+  VehiculoCreationRequest,
   VehiculoInstance,
 } from "../types";
 import vehiculoAdapter from "./vehiculoAdapter";
@@ -95,7 +96,7 @@ describe("vehicle Adapter", () => {
 
     const vehicleMock: VehiculoCreationAttributes = {
       IdMarca: 1,
-      IdUsuario: "223DSDASSD",
+      IdUsuario: 1,
       IdTaller: 1,
       tipoVehiculo: "carro",
       placa: "XXX111",
@@ -139,13 +140,14 @@ describe("vehicle Adapter", () => {
         Promise<[affectedCount: number]> | undefined
       >;
 
-      const vehicleMock: VehiculoCreationAttributes = {
-        IdMarca: 1,
-        IdUsuario: "223DSDASSD",
+      const vehicleMock: VehiculoCreationRequest = {
         IdTaller: 1,
         tipoVehiculo: "carro",
         placa: "XXX111",
-        estado: "Activo",
+        celular: "3100000000",
+        usuario: {
+          email: "xxx@xxx.com",
+        },
       };
 
       const mockVehicleResult = {
@@ -197,17 +199,14 @@ describe("vehicle Adapter", () => {
       >;
 
       const userMockResult = {
-        uid: "DSFDSFDS44545",
+        IdUsuario: 1,
       };
 
-      const notExistingVehicleMock: VehiculoCreationAttributes = {
+      const notExistingVehicleMock: VehiculoCreationRequest = {
         ...vehicleMock,
-        usuarios: {
-          IdUsuario: 1,
-          tipoUsuario: "cliente",
+        celular: "3001000000",
+        usuario: {
           email: "xxxx@xxxx.com",
-          firstName: "Test",
-          estado: "Activo",
         },
       };
 
@@ -265,14 +264,11 @@ describe("vehicle Adapter", () => {
         Promise<UserInstance> | undefined
       >;
 
-      const notExistingVehicleMock: VehiculoCreationAttributes = {
+      const notExistingVehicleMock: VehiculoCreationRequest = {
         ...vehicleMock,
-        usuarios: {
-          IdUsuario: 1,
-          tipoUsuario: "cliente",
+        celular: "3001000000",
+        usuario: {
           email: "xxxx@xxxx.com",
-          firstName: "Test",
-          estado: "Activo",
         },
       };
 
