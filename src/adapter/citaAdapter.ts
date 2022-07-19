@@ -135,8 +135,8 @@ const updateCitaByIdCita = (
   cita: CitaUpdateAttributes
 ) => {
   return new Promise<CitaInstance | null>((resolve, reject) => {
-    let momentHour = moment(cita.horaCita, "hh:mm:ss");
-    let fechaCita = moment(cita.fechaCita, "DD/MM/YYYY")
+    const momentHour = moment(cita.horaCita, "hh:mm:ss");
+    const fechaCita = moment(cita.fechaCita, "DD/MM/YYYY")
       .hour(momentHour.hour())
       .minute(momentHour.minute());
 
@@ -210,7 +210,7 @@ const calificaCitaByIdCita = ({
 }: CalificaCitaRequest) => {
   return new Promise<CitaInstance | null>((resolve, reject) => {
     if (calificacion || calificacionUsuario) {
-      let citaDb = {
+      const citaDb = {
         calificacion: calificacion,
         calificacionUsuario: calificacionUsuario,
       };
@@ -285,7 +285,7 @@ const getAllCitasFuturasByIdUsuario = (IdUsuario: string | number) => {
       fechaCita: { [Op.gte]: new Date() },
     },
     { IdUsuario: IdUsuario },
-    { IdOrdenTrabajo: { [Op.is]: null } }
+    { IdOrdenTrabajo: { [Op.is]: undefined } }
   );
 };
 
@@ -314,7 +314,7 @@ const countCitasByDateAndIdTaller = (IdTaller: string | number) => {
   return citaDAO.count(
     { IdTaller: IdTaller },
     ["date"],
-    [[Sequelize.literal(`DATE(createdAt)`), "date"]]
+    [[Sequelize.literal("DATE(createdAt)"), "date"]]
   );
 };
 

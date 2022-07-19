@@ -46,10 +46,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: {
-            tableName: 'taller'
+            tableName: "taller",
           },
-          key: 'IdTaller'
-        }
+          key: "IdTaller",
+        },
       },
       tokenCM: {
         type: Sequelize.STRING,
@@ -59,12 +59,12 @@ module.exports = {
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   down: (queryInterface, Sequelize) => {

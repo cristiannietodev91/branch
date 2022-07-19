@@ -1,6 +1,6 @@
 # branch
 
-[![Coverage Status](https://coveralls.io/repos/bitbucket/branchmotor/branch/badge.svg?branch=feature/add-unit-testing)](https://coveralls.io/bitbucket/branchmotor/branch?branch=feature/add-unit-testing)
+[![Coverage Status](https://coveralls.io/repos/github/cristiannietodev91/branch-be/badge.svg?branch=master)](https://coveralls.io/github/cristiannietodev91/branch-be?branch=master)
 
 ## Dev environment
 
@@ -12,14 +12,14 @@
 
 ### firsts step to set the project
 
-- Set SSH Key in bitbucket for your user
-- Download the repo from bitbucket
+- Set SSH Key in git for your user
+- Download the project from the repo
 - Set .env file with the next values to local environment
     ``DBNAME=branch
     DBHOST=localhost
     DBPASSWORD=root
     DBUSER=root``
-- run ``npm install`` command to install all project neccesary dependencies
+- run ``yarn install`` command to install all project neccesary dependencies
 - create an database called ``branch``
 
 ### Run migrations

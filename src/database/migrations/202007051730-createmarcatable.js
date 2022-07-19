@@ -30,7 +30,7 @@ module.exports = {
         // allowNull defaults to true
       },
       urllogo: {
-        type: Sequelize.ENUM("Moto", "Carro"),
+        type: Sequelize.STRING,
         // allowNull defaults to true
       },
     });

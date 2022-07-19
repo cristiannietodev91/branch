@@ -112,8 +112,8 @@ const crearVehiculo = (
                     tipoVehiculo: vehiculo.tipoVehiculo,
                     IdTaller: vehiculo.IdTaller,
                   };
-                  if (usuario.IdUsuario) {
-                    crearVehiculoDB(vehiculoDB, usuario.IdUsuario, idMarca)
+                  if (usuario.uid) {
+                    crearVehiculoDB(vehiculoDB, usuario.uid, idMarca)
                       .then((vehiculoCreated) => {
                         if (vehiculoCreated) {
                           const { usuarios } = vehiculoCreated;
@@ -143,6 +143,7 @@ const crearVehiculo = (
                       firstName: "Sin nombre",
                       tipoUsuario: "Cliente" as const,
                       estado: "Pendiente" as const,
+                      uid: vehiculo.usuario.uid,
                     };
 
                     userDAO
@@ -163,7 +164,7 @@ const crearVehiculo = (
                           // Se coloca Id de la tabla usuarios como UID mientras el usuario no este registrado en la BD
                           crearVehiculoDB(
                             vehiculoDB,
-                            userCreate.IdUsuario,
+                            userCreate.uid || userCreate.IdUsuario.toString(),
                             idMarca
                           )
                             .then((vehiculoCreated) => {
@@ -213,7 +214,7 @@ const crearVehiculo = (
 
 const crearVehiculoDB = (
   vehiculo: VehiculoPreCreationAttributes,
-  userId: number,
+  userId: string,
   idmarca?: number
 ): Promise<VehiculoInstance> => {
   return new Promise((resolve, reject) => {
@@ -323,7 +324,7 @@ const updateVehiculo = (
                 reject(error);
               });
           } else {
-            reject(ERROR_CREATING_VEHICULE);
+            reject(new Error(ERROR_CREATING_VEHICULE.message));
           }
         })
         .catch((error) => {

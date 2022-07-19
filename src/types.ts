@@ -19,8 +19,7 @@ export interface MarcaAttributes {
   urllogo?: string;
 }
 
-export interface MarcaCreationAttributes
-  extends Optional<MarcaAttributes, "IdMarca"> {}
+export type MarcaCreationAttributes = Optional<MarcaAttributes, "IdMarca">
 
 export interface MarcaInstance
   extends Model<MarcaAttributes, MarcaCreationAttributes>,
@@ -43,8 +42,7 @@ export interface TallerAttributes {
   estado: string;
 }
 
-export interface TallerCreationAttributes
-  extends Optional<TallerAttributes, "IdTaller"> {}
+export type TallerCreationAttributes = Optional<TallerAttributes, "IdTaller">
 
 export interface TallerInstance
   extends Model<TallerAttributes, TallerCreationAttributes>,
@@ -101,8 +99,7 @@ export interface CitaAttributes {
   mecanico?: MecanicoAttributes;
 }
 
-export interface CitaCreationAttributes
-  extends Optional<CitaAttributes, "IdCita"> {}
+export type CitaCreationAttributes = Optional<CitaAttributes, "IdCita">
 
 export interface CitaRequestAttributes {
   IdTaller: number;
@@ -153,7 +150,7 @@ export interface VehiculoUpdate {
 export interface VehiculoAttributes {
   IdVehiculo: number;
   IdMarca: number;
-  IdUsuario: number;
+  IdUsuario: string | number;
   IdTaller: number | string;
   tipoVehiculo: string;
   placa: string;
@@ -194,6 +191,7 @@ export interface VehiculoCreationRequest {
   placa: string;
   usuario: {
     email: string;
+    uid: string;
   },
   fechaCompra?: Date;
   alias?: string;
@@ -222,8 +220,7 @@ export interface MecanicoAttributes {
   fullName: string;
 }
 
-export interface MecanicoCreationAttributes
-  extends Optional<MecanicoAttributes, "IdMecanico"> {}
+export type MecanicoCreationAttributes = Optional<MecanicoAttributes, "IdMecanico">
 
 export interface MecanicoInstance
   extends Model<MecanicoAttributes, MecanicoCreationAttributes>,
@@ -237,8 +234,7 @@ export interface MecanicoTallerAttributes {
   IdMecanico: number;
 }
 
-interface MecanicoTallerCreationAttributes
-  extends Optional<MecanicoTallerAttributes, "IdTaller" | "IdMecanico"> {}
+type MecanicoTallerCreationAttributes = Optional<MecanicoTallerAttributes, "IdTaller" | "IdMecanico">
 
 export interface MecanicoTallerInstance
   extends Model<MecanicoTallerAttributes, MecanicoTallerCreationAttributes>,
@@ -262,8 +258,7 @@ export interface OrdenAttributes {
   estado: string;
 }
 
-export interface OrdenCreationAttributes
-  extends Optional<OrdenAttributes, "IdOrdenTrabajo"> {}
+export type OrdenCreationAttributes = Optional<OrdenAttributes, "IdOrdenTrabajo">
 
 export interface OrdenInstance
   extends Model<OrdenAttributes, OrdenCreationAttributes>,
@@ -279,8 +274,7 @@ export interface EtapaAttributes {
   requiereAprobacion: boolean;
 }
 
-export interface EtapaCreationAttributes
-  extends Optional<EtapaAttributes, "IdEtapa"> {}
+export type EtapaCreationAttributes = Optional<EtapaAttributes, "IdEtapa">
 
 export interface EtapaInstance
   extends Model<EtapaAttributes, EtapaCreationAttributes>,
@@ -296,8 +290,7 @@ export interface ConversationAttributes {
   IdTaller: number;
 }
 
-export interface ConversationCreationAttributes
-  extends Optional<ConversationAttributes, "IdConversacion"> {}
+export type ConversationCreationAttributes = Optional<ConversationAttributes, "IdConversacion">
 
 export interface ConversationInstance
   extends Model<ConversationAttributes, ConversationCreationAttributes>,
@@ -321,8 +314,7 @@ export interface MessageAttributes {
   IdOrdenTrabajo?: number;
 }
 
-export interface MessageCreationAttributes
-  extends Optional<MessageAttributes, "IdMessage"> {}
+export type MessageCreationAttributes = Optional<MessageAttributes, "IdMessage">
 
 export interface MessageInstance
   extends Model<MessageAttributes, MessageCreationAttributes>,
@@ -345,8 +337,7 @@ export interface NotificationAttributes {
   dataAdicional: dataNotification;
 }
 
-export interface NotificationCreationAttributes
-  extends Optional<NotificationAttributes, "IdNotificacion"> {}
+export type NotificationCreationAttributes = Optional<NotificationAttributes, "IdNotificacion">
 
 export interface NotificationInstance
   extends Model<NotificationAttributes, NotificationCreationAttributes>,
@@ -364,8 +355,7 @@ export interface ServicioAttributes {
   color: string;
 }
 
-export interface ServicioCreationAttributes
-  extends Optional<ServicioAttributes, "IdServicio"> {}
+export type ServicioCreationAttributes = Optional<ServicioAttributes, "IdServicio">
 
 export interface ServicioInstance
   extends Model<ServicioAttributes, ServicioCreationAttributes>,
@@ -388,8 +378,7 @@ export interface ServicioVehiculoAttributes {
   valor: number;
 }
 
-export interface ServicioVehiculoCreationAttributes
-  extends Optional<ServicioVehiculoAttributes, "IdServicio"> {}
+export type ServicioVehiculoCreationAttributes = Optional<ServicioVehiculoAttributes, "IdServicio">
 
 export interface ServicioVehiculoInstance
   extends Model<ServicioVehiculoAttributes, ServicioVehiculoCreationAttributes>,

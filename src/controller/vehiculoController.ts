@@ -19,14 +19,13 @@ const getAllVehiculos = (req: Request, res: Response): void => {
       .catch((error) => {
         res
           .status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .send({ error: error.errors[0] });
+          .send({ message: error.message });
       });
   } catch (error) {
-    debug("Error al crear vehiculo ::::::>", error);
     if (error instanceof Error) {
       res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .json({ error: error.message });
+        .json({ message: error.message });
     }
   }
 };
@@ -47,14 +46,14 @@ const createVehiculo = (req: Request, res: Response): void => {
         debug("Error al crear vehiculo ", error);
         res
           .status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .send({ error: error.message });
+          .json({ message: error.message });
       });
   } catch (error) {
     debug("Error unhandle creating vehicle", error);
     if (error instanceof Error) {
       res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .json({ error: error.message });
+        .json({ message: error.message });
     }
   }
 };
@@ -75,14 +74,14 @@ const updateVehiculo = (req: Request, res: Response): void => {
           } else {
             return res
               .status(HttpStatus.OK)
-              .json({ error: "No se actualizo el vehiculo" });
+              .json({ message: "No se actualizo el vehiculo" });
           }
         })
         .catch((error) => {
           if (error instanceof Error) {
             res
               .status(HttpStatus.INTERNAL_SERVER_ERROR)
-              .json({ error: error.message });
+              .json({ message: error.message });
           }
         });
     } else {
@@ -95,7 +94,7 @@ const updateVehiculo = (req: Request, res: Response): void => {
     if (error instanceof Error) {
       res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .json({ error: error.message });
+        .json({ message: error.message });
     }
   }
 };

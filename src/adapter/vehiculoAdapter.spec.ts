@@ -147,6 +147,7 @@ describe("vehicle Adapter", () => {
         celular: "3100000000",
         usuario: {
           email: "xxx@xxx.com",
+          uid: "SASAS123213FFDS",
         },
       };
 
@@ -200,6 +201,7 @@ describe("vehicle Adapter", () => {
 
       const userMockResult = {
         IdUsuario: 1,
+        uid: "ERADL8789798",
       };
 
       const notExistingVehicleMock: VehiculoCreationRequest = {
@@ -207,6 +209,7 @@ describe("vehicle Adapter", () => {
         celular: "3001000000",
         usuario: {
           email: "xxxx@xxxx.com",
+          uid: "ERADL8789798",
         },
       };
 
@@ -269,6 +272,7 @@ describe("vehicle Adapter", () => {
         celular: "3001000000",
         usuario: {
           email: "xxxx@xxxx.com",
+          uid: "2434DSFSDF",
         },
       };
 
