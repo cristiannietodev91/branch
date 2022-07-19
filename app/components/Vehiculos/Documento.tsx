@@ -7,9 +7,18 @@ import { URL_SERVICES } from "@env";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import styles from "../../styles/App.scss";
 import ButtonBranch from "../../components/branch/button";
+import { VehiclesStackScreenProps } from "../../../types/types";
 
-export default function Documento(props: any) {
-  const { titleDocumento, tipoDocumento, documento, setIsReloadData } = props;
+interface DocumentProps
+  extends Pick<VehiclesStackScreenProps<"Documents">, "navigation"> {
+  vehiculo: any;
+  titleDocumento: string;
+  tipoDocumento: string;
+  documento: any;
+}
+
+export default function Documento(props: DocumentProps) {
+  const { titleDocumento, tipoDocumento, documento } = props;
   let { vehiculo } = props;
 
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
@@ -117,10 +126,11 @@ export default function Documento(props: any) {
                   body: JSON.stringify(vehiculo),
                 })
                   .then((response) => {
-                    return response.json();
-                  })
-                  .then(() => {
-                    setIsReloadData(true);
+                    if (response.ok) {
+                      return response.json();
+                    } else {
+                      return response.json().then((err) => Promise.reject(err));
+                    }
                   })
                   .catch((error) => console.error(error));
               })
@@ -166,7 +176,6 @@ export default function Documento(props: any) {
       })
       .then(() => {
         setFechaVencimiento(fechaVence);
-        setIsReloadData(true);
       })
       .catch((error) => console.error(error));
   };

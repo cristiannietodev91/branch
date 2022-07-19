@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Text, View, ScrollView } from "react-native";
-import { Image, Button, Input, Icon } from "@rneui/themed";
+import { Image, Button, Input, Icon } from "@rneui/base";
 import Moment from "moment";
 import ReactSteps, { Step } from "../../components/steeper/steeper";
 import GalleryList from "../../components/GalleryList";

@@ -2,10 +2,13 @@ import React from "react";
 import Documento from "../../components/Vehiculos/Documento";
 import { View, ScrollView } from "react-native";
 import styles from "../../styles/App.scss";
+import { VehiclesStackScreenProps } from "../../../types/types";
 
-export default function Documentos(props: any) {
-  const { navigation } = props;
-  const { vehiculo, setIsReloadData } = navigation.state.params;
+export default function Documentos(
+  props: VehiclesStackScreenProps<"Documents">
+) {
+  const { navigation, route } = props;
+  const { vehiculo } = route.params;
 
   return (
     <ScrollView>
@@ -16,7 +19,6 @@ export default function Documentos(props: any) {
           titleDocumento="SOAT"
           tipoDocumento="soat"
           documento={vehiculo.soat}
-          setIsReloadData={setIsReloadData}
         />
         <Documento
           vehiculo={vehiculo}
@@ -24,7 +26,6 @@ export default function Documentos(props: any) {
           titleDocumento="TECNO MECANICA"
           tipoDocumento="tecnomecanica"
           documento={vehiculo.tecnomecanica}
-          setIsReloadData={setIsReloadData}
         />
         <Documento
           vehiculo={vehiculo}
@@ -32,7 +33,6 @@ export default function Documentos(props: any) {
           titleDocumento="TARJETA PROPIEDAD"
           tipoDocumento="tarjetapropiedad"
           documento={vehiculo.tarjetapropiedad}
-          setIsReloadData={setIsReloadData}
         />
       </View>
     </ScrollView>

@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Icon } from "@rneui/themed";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import VehiculosScreenStacks from "./VehiculosStacks";
 import TalleresStacks from "./TalleresStacks";
@@ -10,8 +9,9 @@ import UsuariosStacks from "./UsuariosStacks";
 import SplasScreen from "../screens/SplashScreen";
 import auth from "@react-native-firebase/auth";
 import LoginScreenStacks from "./LoginStacks";
+import { HomeBottomTabParamList } from "../../types/types";
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator<HomeBottomTabParamList>();
 
 const NavigationStacks = () => {
   return (
@@ -31,10 +31,11 @@ const NavigationStacks = () => {
         },
         tabBarActiveTintColor: "#041c24",
         tabBarInactiveTintColor: "#5be5e5",
+        headerShown: false,
       }}
     >
       <Tab.Screen
-        name="Home"
+        name="Motos"
         component={VehiculosScreenStacks}
         options={{
           tabBarLabel: "Motos",

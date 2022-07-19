@@ -16,8 +16,34 @@ import { EmptyDate } from "./../../../assets/svg/EmptyDate";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { NotificationContext } from "../ContextNotifications";
 import ActionButton from "react-native-action-button";
+import { ActiveAppoinmentStackScreenProps } from "../../../types/types";
 
-export default function ListCitas(props: any) {
+interface ListCitasProps
+  extends Pick<
+    ActiveAppoinmentStackScreenProps<"NavigateAppoinment">,
+    "navigation"
+  > {
+  citas: any[];
+  etapa?: string;
+  taller?: any;
+}
+
+interface AddCitaButtonProps
+  extends Pick<
+    ActiveAppoinmentStackScreenProps<"NavigateAppoinment">,
+    "navigation"
+  > {}
+
+interface CitaProps
+  extends Pick<
+    ActiveAppoinmentStackScreenProps<"NavigateAppoinment">,
+    "navigation"
+  > {
+  cita: any;
+  taller: any;
+}
+
+export default function ListCitas(props: ListCitasProps) {
   const useHandleScroll = () => {
     const [showButton, setShowButton] = useState(true);
 
@@ -63,8 +89,7 @@ export default function ListCitas(props: any) {
 
   const { handleScroll, showButton } = useHandleScroll();
 
-  //console.log("Propiedades ::::>", props);
-  const { citas, taller, navigation, setIsReloadData } = props;
+  const { citas, taller, navigation } = props;
   return (
     <View style={[styles.container, { padding: 1 }]}>
       <View style={styles.headerDates}>
@@ -82,12 +107,7 @@ export default function ListCitas(props: any) {
         onScroll={handleScroll}
         data={citas}
         renderItem={(cita) => (
-          <Cita
-            cita={cita.item}
-            navigation={navigation}
-            setIsReloadData={setIsReloadData}
-            taller={taller}
-          />
+          <Cita cita={cita.item} navigation={navigation} taller={taller} />
         )}
         renderHiddenItem={() => (
           <View style={styles.motoDeleteContainer}>
@@ -106,24 +126,19 @@ export default function ListCitas(props: any) {
         keyExtractor={(item, index) => index.toString()}
         ListEmptyComponent={EmptyList}
       />
-      {showButton && (
-        <AddCitaButton
-          navigation={navigation}
-          setIsReloadData={setIsReloadData}
-        />
-      )}
+      {showButton && <AddCitaButton navigation={navigation} />}
     </View>
   );
 }
 
-function Cita(props: any) {
-  const { cita, navigation, setIsReloadData } = props;
+function Cita(props: CitaProps) {
+  const { cita, navigation } = props;
   let fechaCita = Moment(cita.fechaCita.toString()).format("YYYY-MM-DD");
   let dateFecha = Moment(fechaCita + "T" + cita.horaCita);
   let fechaHora = Moment(dateFecha).format("hh:mm A");
-  const { value: NumberNotificacions } = useContext(NotificationContext);
+  const { resetNotificaciones } = useContext(NotificationContext);
 
-  return cita.estado != "Solicitada" && cita.estado != "Cancelada" ? (
+  return cita.estado !== "Solicitada" && cita.estado !== "Cancelada" ? (
     <View style={styles.cardMoto}>
       <View style={styles.cardMotoImageContainer}>
         <Image
@@ -154,22 +169,19 @@ function Cita(props: any) {
         <ButtonBranch
           iconName="chevron-right"
           onPress={() => {
-            console.log("Click cita");
-            navigation.navigate("DetailCita", {
+            navigation.navigate("Detail", {
               cita,
-              setIsReloadData,
             });
           }}
         />
         <ButtonBranch
           iconName="chat-processing"
           onPress={() => {
-            // resetNotificaciones();
-            // navigation.navigate("chat", {
-            //   IdTaller: cita.IdTaller,
-            // });
+            resetNotificaciones();
+            navigation.navigate("Chat", {
+              IdTaller: cita.IdTaller,
+            });
           }}
-          numberNotificaciones={NumberNotificacions}
         />
       </View>
     </View>
@@ -212,8 +224,8 @@ function EmptyList() {
   );
 }
 
-function AddCitaButton(props: any) {
-  const { navigation, setIsReloadData } = props;
+function AddCitaButton(props: AddCitaButtonProps) {
+  const { navigation } = props;
   return (
     <ActionButton
       buttonTextStyle={styles.actionButton}
@@ -221,9 +233,7 @@ function AddCitaButton(props: any) {
       degrees={0}
       offsetY={Platform.OS === "ios" ? 100 : 70}
       onPress={() => {
-        navigation.navigate("AgregarCita", {
-          setIsReloadData,
-        });
+        navigation.navigate("Addappoinment");
       }}
       renderIcon={() => <Icon name="add-box" />}
     >

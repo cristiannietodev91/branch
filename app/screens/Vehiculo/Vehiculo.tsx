@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from "react";
-import styles from "../../styles/App.scss";
-import auth from "@react-native-firebase/auth";
+import React, { useState, useEffect, useCallback } from "react";
 import { SafeAreaView } from "react-native";
+import Snackbar from "react-native-snackbar";
+import messaging from "@react-native-firebase/messaging";
+import auth from "@react-native-firebase/auth";
+import { useFocusEffect } from "@react-navigation/native";
+import styles from "../../styles/App.scss";
+
 import ListVehiculos from "../../components/Vehiculos/ListVehiculo";
 import Loading from "../../components/Loading";
 import { URL_SERVICES } from "@env";
 
-import messaging from "@react-native-firebase/messaging";
-import Snackbar from "react-native-snackbar";
+import { VehiclesStackScreenProps } from "../../../types/types";
 
-export default function Vehiculo(props: any) {
-  //console.log("Params: route ::>", navigation);
-  const { navigation } = props;
+export default function Vehiculo({
+  navigation,
+}: VehiclesStackScreenProps<"Main">) {
   const [isLoading, setLoading] = useState(true);
   const [vehiculos, setListVehiculos] = useState([]);
-  const [isReloadData, setReloadData] = useState(false);
 
   const user = auth().currentUser;
-
-  console.log("Url services :::>", URL_SERVICES);
 
   useEffect(() => {
     messaging()
@@ -55,24 +55,36 @@ export default function Vehiculo(props: any) {
     });
   }, [user]);
 
-  useEffect(() => {
-    fetch(URL_SERVICES + "vehiculo/getByIdUsuario/" + user?.uid, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        return response.json();
+  useFocusEffect(
+    useCallback(() => {
+      fetch(URL_SERVICES + "vehiculo/getByIdUsuario/" + user?.uid, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
       })
-      .then((json) => {
-        setListVehiculos(json);
-        setLoading(false);
-      })
-      .catch((error) => console.error(error));
-    setReloadData(false);
-  }, [isReloadData, user]);
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            return response.json().then((err) => Promise.reject(err));
+          }
+        })
+        .then((json) => {
+          setListVehiculos(json);
+          setLoading(false);
+        })
+        .catch((error) => {
+          if (error.message) {
+            Snackbar.show({
+              text: error.message,
+              duration: Snackbar.LENGTH_SHORT,
+            });
+          }
+        });
+    }, [user])
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -82,27 +94,9 @@ export default function Vehiculo(props: any) {
         <ListVehiculos
           vehiculos={vehiculos}
           navigation={navigation}
-          setIsReloadData={setReloadData}
           user={user}
         />
       )}
     </SafeAreaView>
   );
 }
-
-// function AddVehiculoButton(props: any) {
-//   const { navigation, setIsReloadData } = props;
-//   return (
-//     <ActionButton
-//       buttonTextStyle={styles.actionButton}
-//       buttonColor="#0396c8"
-//       onPress={() => {
-//         navigation.navigate("AgregarVehiculo", {
-//           setIsReloadData,
-//         });
-//       }}
-//       offsetY={Platform.OS === 'ios' ? 100 : 70}
-//       renderIcon={active => (<Icon name="add" />)}>
-//     ></ActionButton>
-//   );
-// }

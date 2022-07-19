@@ -16,14 +16,14 @@ const TalleresStacks = () => {
       }}
     >
       <Stack.Screen
-        name="main"
+        name="Main"
         component={TalleresScreen}
         options={{ title: " Talleres" }}
       />
       <Stack.Screen
-        name="chat"
+        name="Chat"
         component={ChatScreen}
-        options={{ title: " Chat" }}
+        options={{ title: "Chat" }}
       />
     </Stack.Navigator>
   );

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "../../styles/App.scss";
 import { View, Text, SafeAreaView } from "react-native";
 import { useForm } from "react-hook-form";
-import { Input, Button, Image, Icon } from "@rneui/themed";
+import { Input, Button, Image, Icon } from "@rneui/base";
 import auth from "@react-native-firebase/auth";
 import { URL_SERVICES } from "@env";
 import Snackbar from "react-native-snackbar";

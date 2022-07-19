@@ -1,33 +1,20 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import auth from "@react-native-firebase/auth";
 import ListCitas from "../../components/citas/ListCitas";
 import Loading from "../../components/Loading";
 import { URL_SERVICES } from "@env";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  useNavigation,
-  useRoute,
-  useIsFocused,
-} from "@react-navigation/native";
-import type { RouteProp } from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
 import styles from "./../../styles/App.scss";
+import { ActiveAppoinmentStackScreenProps } from "../../../types/types";
 
-type RootStackParamList = {
-  Cita: {
-    etapa: string;
-  };
-};
-
-type CitaScreenRouteProp = RouteProp<RootStackParamList, "Cita">;
-
-const CitasScreen = () => {
-  const navigation = useNavigation();
-  const route = useRoute<CitaScreenRouteProp>();
-  const isFocused = useIsFocused();
+const CitasScreen = ({
+  navigation,
+  route,
+}: ActiveAppoinmentStackScreenProps<"NavigateAppoinment">) => {
   const { etapa } = route.params;
   const [isLoading, setLoading] = useState(true);
   const [citas, setListCitas] = useState([]);
-  const [, setReloadData] = useState(false);
 
   console.log("Navigation ", route.params);
 
@@ -48,21 +35,21 @@ const CitasScreen = () => {
     }
   }, [etapa, user]);
 
-  useEffect(() => {
-    fetch(urlws())
-      .then((response) => response.json())
-      .then((json) => {
-        //console.log("Respuesta motos ::>", json);
-        setListCitas(json);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error(error);
-        setLoading(false);
-      });
-
-    setReloadData(false);
-  }, [isFocused, urlws]);
+  useFocusEffect(
+    useCallback(() => {
+      fetch(urlws())
+        .then((response) => response.json())
+        .then((json) => {
+          //console.log("Respuesta motos ::>", json);
+          setListCitas(json);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error(error);
+          setLoading(false);
+        });
+    }, [urlws])
+  );
 
   return (
     <SafeAreaView
@@ -71,13 +58,7 @@ const CitasScreen = () => {
       {isLoading ? (
         <Loading isVisible={true} text="Cargando" />
       ) : (
-        <ListCitas
-          style={[styles.container, styles.content]}
-          citas={citas}
-          navigation={navigation}
-          setIsReloadData={setReloadData}
-          etapa={etapa}
-        />
+        <ListCitas citas={citas} navigation={navigation} etapa={etapa} />
       )}
     </SafeAreaView>
   );

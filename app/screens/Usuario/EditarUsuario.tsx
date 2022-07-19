@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { View, Image, SafeAreaView } from "react-native";
-import { Input, Button, Text } from "@rneui/themed";
+import { Input, Button, Text } from "@rneui/base";
 import { useForm } from "react-hook-form";
 import Snackbar from "react-native-snackbar";
 import { URL_SERVICES } from "@env";

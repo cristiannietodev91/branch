@@ -7,7 +7,7 @@ import { LogoBranch } from "./../../../assets/svg/BranchLogo";
 import { URL_SERVICES } from "@env";
 import { LoginManager, AccessToken } from "react-native-fbsdk-next";
 import { View, ImageBackground, SafeAreaView } from "react-native";
-import { Button, Text } from "@rneui/themed";
+import { Button, Text } from "@rneui/base";
 import { useNavigation } from "@react-navigation/native";
 
 export default function MainLogin() {

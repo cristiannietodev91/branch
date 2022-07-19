@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
 import styles from "../../styles/App.scss";
 import { View, SafeAreaView, Text, Platform } from "react-native";
-import { Input, Button, Image } from "@rneui/themed";
+import { Input, Button, Image } from "@rneui/base";
 import auth from "@react-native-firebase/auth";
-import { Dropdown } from "react-native-material-dropdown";
+import { Dropdown } from "react-native-material-dropdown-v2";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { URL_SERVICES } from "@env";
 import { useForm } from "react-hook-form";
 import Moment from "moment";
 import { services } from "../../../data/data";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { AppoinmentScreenNavigationProp } from "../../../types/types";
 
 type FormData = {
   placa: string;
@@ -25,9 +26,9 @@ type Vehiculo = {
   };
 };
 
-export default function AgregarCita(props: any) {
-  const { navigation } = props;
-  const { setIsReloadData } = navigation.state.params;
+export default function AgregarCita({
+  navigation,
+}: AppoinmentScreenNavigationProp) {
   const [vehiculos, setVehiculos] = useState<Vehiculo[]>([]);
   const [, setLoading] = useState(true);
   const {
@@ -103,7 +104,6 @@ export default function AgregarCita(props: any) {
       })
       .then((json) => {
         console.log("Respuesta de crear la cita ::>", json);
-        setIsReloadData(true);
         navigation.navigate("Citas");
       })
       .catch((error) => console.error(error));
@@ -153,7 +153,7 @@ export default function AgregarCita(props: any) {
           valueExtractor={(value: any) => {
             return value.placa;
           }}
-          data={[]} //TODO: Send an array value
+          data={vehiculos || []} //TODO: Send an array value
           onChangeText={(text: any) => {
             selectVehiculo(text);
             setValue("placa", text);
@@ -255,8 +255,7 @@ export default function AgregarCita(props: any) {
         <Button
           title="Cancelar"
           onPress={() => {
-            navigation.navigate("Citas");
-            console.log(navigation.navigate("Citas"));
+            navigation.goBack();
           }}
           buttonStyle={styles.buttonSecondary}
           titleStyle={styles.buttonText}

@@ -2,29 +2,28 @@ import React, { useState, useEffect, useCallback } from "react";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import styles from "../../styles/App.scss";
 import { ImageBackground, View, Text, TouchableOpacity } from "react-native";
-import { Button, Icon, Rating, Image } from "@rneui/themed";
+import { Button, Icon, Rating, Image } from "@rneui/base";
 import { URL_SERVICES } from "@env";
 import Loading from "../../components/Loading";
 import { LoginManager, AccessToken } from "react-native-fbsdk-next";
 import { launchImageLibrary } from "react-native-image-picker";
 import ButtonBranch from "../../components/branch/button";
+import { UserStackScreenProps } from "../../../types/types";
+import { useFocusEffect } from "@react-navigation/native";
 
-export default function Usuario(props: any) {
+export default function Usuario(props: UserStackScreenProps<"User">) {
   const { navigation } = props;
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
   const [isLoading, setLoading] = useState(true);
-  const [isReloadData, setReloadData] = useState(false);
   const [facebookUser, setFacebookUser] =
     useState<FirebaseAuthTypes.UserInfo>();
   const [urlFoto] = useState();
   const starImage = require("./../../../assets/drawable-xxxhdpi/ionic-ios-star.png");
 
-  console.log("Url services :::>", URL_SERVICES);
-
   let userLogged = auth().currentUser;
 
   // Handle user state changes
-  async function onAuthStateChanged(user: any) {
+  async function onAuthStateChanged(user: FirebaseAuthTypes.User | null) {
     setUser(user);
   }
 
@@ -44,24 +43,25 @@ export default function Usuario(props: any) {
     return subscriber; // unsubscribe on unmount
   }, [LoadfacebookUser]);
 
-  useEffect(() => {
-    fetch(URL_SERVICES + "usuario/getByEmail/" + userLogged?.email, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        return response.json();
+  useFocusEffect(
+    useCallback(() => {
+      fetch(URL_SERVICES + "usuario/getByEmail/" + userLogged?.email, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
       })
-      .then((json) => {
-        setUser(json);
-        setLoading(false);
-      })
-      .catch((error) => console.error(error));
-    setReloadData(false);
-  }, [isReloadData, userLogged]);
+        .then((response) => {
+          return response.json();
+        })
+        .then((json) => {
+          setUser(json);
+          setLoading(false);
+        })
+        .catch((error) => console.error(error));
+    }, [userLogged])
+  );
 
   const joinFacebookAccount = async () => {
     const result = await LoginManager.logInWithPermissions([
@@ -179,7 +179,9 @@ export default function Usuario(props: any) {
               style={styles.bgUserCardImage}
             />
             <Text style={[styles.headingPrimary, styles.headingUserCard]}>
-              {facebookUser ? facebookUser.displayName : "user?.firstNauserme"}
+              {facebookUser
+                ? facebookUser.displayName
+                : userLogged?.displayName}
             </Text>
             <View style={styles.rating}>
               <Rating
@@ -205,7 +207,7 @@ export default function Usuario(props: any) {
                     size={25}
                   />
                   <Text style={[styles.bodyText, styles.userInfo]}>
-                    {"user?.celular"}
+                    {userLogged?.phoneNumber}
                   </Text>
                 </View>
                 <View style={styles.userInfoItem}>
@@ -216,7 +218,7 @@ export default function Usuario(props: any) {
                     size={25}
                   />
                   <Text style={[styles.bodyText, styles.userInfo]}>
-                    {"user?.email"}
+                    {userLogged?.email}
                   </Text>
                 </View>
               </View>
@@ -224,10 +226,9 @@ export default function Usuario(props: any) {
                 <ButtonBranch
                   iconName="pencil-outline"
                   onPress={() => {
-                    navigation.navigate("EditarUsuario", {
+                    navigation.navigate("Edit", {
                       usuario: user,
                       usuarioFacebook: facebookUser,
-                      setReloadData,
                     });
                   }}
                 />
@@ -248,7 +249,7 @@ export default function Usuario(props: any) {
                   auth()
                     .signOut()
                     .then(() => {
-                      navigation.navigate("Auth");
+                      navigation.navigate("User");
                     });
                 }}
                 buttonStyle={styles.buttonSecondary}

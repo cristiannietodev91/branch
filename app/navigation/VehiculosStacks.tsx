@@ -6,8 +6,9 @@ import AgregarVehiculoScreen from "../screens/Vehiculo/AgregarVehiculo";
 import DocumentosScreen from "../screens/Vehiculo/Documentos";
 import ServiciosScreen from "../screens/Vehiculo/Servicios";
 import AgregarServicioScreen from "../screens/Vehiculo/AgregarServicio";
+import { VehicleStackParamList } from "../../types/types";
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<VehicleStackParamList>();
 
 const MotosScreenStacks = () => {
   return (
@@ -20,32 +21,32 @@ const MotosScreenStacks = () => {
       }}
     >
       <Stack.Screen
-        name="main"
+        name="Main"
         component={VehiculosScreen}
         options={{ title: "Motos" }}
       />
       <Stack.Screen
-        name="edit"
+        name="Edit"
         component={EditarVehiculoScreen}
         options={{ title: "Editar Vehiculo" }}
       />
       <Stack.Screen
-        name="add"
+        name="Add"
         component={AgregarVehiculoScreen}
         options={{ title: "Agregar Vehiculo" }}
       />
       <Stack.Screen
-        name="documents"
+        name="Documents"
         component={DocumentosScreen}
         options={{ title: "Documentos de mi moto" }}
       />
       <Stack.Screen
-        name="services"
+        name="Services"
         component={ServiciosScreen}
         options={{ title: "Servicios" }}
       />
       <Stack.Screen
-        name="addservices"
+        name="AddServices"
         component={AgregarServicioScreen}
         options={{ title: "Agregar servicio" }}
       />

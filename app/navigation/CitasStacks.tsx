@@ -4,14 +4,18 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import CitasPasadasStacks from "./CitasPasadasStacks";
 import CitasActivasStacks from "./CitasActivasStacks";
 import CitasFuturasStacks from "./CitasFuturasStacks";
+import {
+  AppoinmentMainStackParamList,
+  AppointmentStackParamList,
+} from "../../types/types";
 
-const Stack = createStackNavigator();
-const Tab = createMaterialTopTabNavigator();
+const Stack = createStackNavigator<AppoinmentMainStackParamList>();
+const Tab = createMaterialTopTabNavigator<AppointmentStackParamList>();
 
-const citasStacks = () => {
+const CitasStacks = () => {
   return (
     <Tab.Navigator
-      initialRouteName="past"
+      initialRouteName="Past"
       screenOptions={{
         lazy: true,
         swipeEnabled: false,
@@ -26,9 +30,9 @@ const citasStacks = () => {
         },
       }}
     >
-      <Tab.Screen name="active" component={CitasActivasStacks} />
-      <Tab.Screen name="past" component={CitasPasadasStacks} />
-      <Tab.Screen name="future" component={CitasFuturasStacks} />
+      <Tab.Screen name="Active" component={CitasActivasStacks} />
+      <Tab.Screen name="Past" component={CitasPasadasStacks} />
+      <Tab.Screen name="Future" component={CitasFuturasStacks} />
     </Tab.Navigator>
   );
 };
@@ -36,14 +40,15 @@ const citasStacks = () => {
 const CitasScreenStacks = () => {
   return (
     <Stack.Navigator
-      defaultScreenOptions={{
+      screenOptions={{
+        headerShown: true,
         headerStyle: { backgroundColor: "#041c24" },
         headerTintColor: "#0396c8",
         headerTitleAlign: "center",
         cardStyle: { backgroundColor: "#d7f8f8" },
       }}
     >
-      <Stack.Screen component={citasStacks} name="citas" />
+      <Stack.Screen component={CitasStacks} name="Citas" />
     </Stack.Navigator>
   );
 };

@@ -5,7 +5,12 @@ import { NotificationContext } from "./app/components/ContextNotifications";
 
 export default function App() {
   const resetNotificaciones = () => {
-    setContextNotificaciones({ value: 0, resetNotificaciones });
+    setContextNotificaciones((prevState) => {
+      return {
+        ...prevState,
+        value: 0,
+      };
+    });
   };
 
   const [contextNotificaciones, setContextNotificaciones] = useState({

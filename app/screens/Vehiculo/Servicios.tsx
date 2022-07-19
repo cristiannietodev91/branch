@@ -4,10 +4,11 @@ import { Card, Icon } from "@rneui/themed";
 import { URL_SERVICES } from "@env";
 import ListServicios from "../../components/servicios/ListServicios";
 import Loading from "../../components/Loading";
+import { VehiclesStackScreenProps } from "../../../types/types";
 
-export default function Servicios(props: any) {
-  const { navigation } = props;
-  const { vehiculo } = navigation.state.params;
+export default function Servicios(props: VehiclesStackScreenProps<"Services">) {
+  const { navigation, route } = props;
+  const { vehiculo } = route.params;
   const [isLoading, setLoading] = useState(true);
   const [servicios, setListServicios] = useState([]);
   const [, setListServiciosVehiculo] = useState([]);
@@ -92,7 +93,7 @@ export default function Servicios(props: any) {
                     alignContent: "flex-end",
                   }}
                 >
-                  $ {currencyFormat(gastosTotal)}
+                  {currencyFormat(gastosTotal)}
                 </Text>
               </View>
             </View>

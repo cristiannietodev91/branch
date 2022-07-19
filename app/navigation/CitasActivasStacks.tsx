@@ -5,25 +5,26 @@ import DetailCitaScreen from "../screens/Citas/DetailCita";
 import VerPDFScreen from "../screens/pdf/viewPdf";
 import ChatScreen from "../screens/Citas/Chat";
 import AgregarCitaScreen from "../screens/Citas/AgregarCita";
+import { AppoimentStackParamList } from "../../types/types";
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<AppoimentStackParamList>();
 
 const CitasActivasStacks = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen
-        name="active"
+        name="NavigateAppoinment"
         component={CitaScreen}
         initialParams={{ etapa: "Activas" }}
       />
-      <Stack.Screen name="detail" component={DetailCitaScreen} />
+      <Stack.Screen name="Detail" component={DetailCitaScreen} />
       <Stack.Screen
-        name="pdfdetail"
+        name="Pdfdetail"
         component={VerPDFScreen}
         options={{ title: "Cotizacion" }}
       />
-      <Stack.Screen name="chat" component={ChatScreen} />
-      <Stack.Screen name="addappoinment" component={AgregarCitaScreen} />
+      <Stack.Screen name="Chat" component={ChatScreen} />
+      <Stack.Screen name="Addappoinment" component={AgregarCitaScreen} />
     </Stack.Navigator>
   );
 };

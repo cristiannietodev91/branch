@@ -8,18 +8,22 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Input, Button, Image } from "@rneui/themed";
+import { Input, Button, Image } from "@rneui/base";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Dropdown } from "react-native-material-dropdown";
+import { Dropdown } from "react-native-material-dropdown-v2";
 import { URL_SERVICES } from "@env";
 import { useForm } from "react-hook-form";
 import { years } from "../../../data/data";
 import { launchImageLibrary } from "react-native-image-picker";
+import Snackbar from "react-native-snackbar";
 import Moment from "moment";
+import { VehiclesStackScreenProps } from "../../../types/types";
 
-export default function EditarVehiculo(props: any) {
-  const { navigation } = props;
-  const { vehiculo, setIsReloadData } = navigation.state.params;
+export default function EditarVehiculo(
+  props: VehiclesStackScreenProps<"Edit">
+) {
+  const { navigation, route } = props;
+  const { vehiculo } = route.params;
   const [isLoading, setLoading] = useState(true);
   const [marcas, setMarcas] = useState([]);
   const [showCalendar, setShowCalendar] = useState(false);
@@ -103,7 +107,7 @@ export default function EditarVehiculo(props: any) {
         marca: data.marca,
         referencia: data.referencia,
       },
-      usuario: vehiculo.usuario,
+      usuarios: vehiculo.usuario,
       tipoVehiculo: vehiculo.tipoVehiculo,
       fotos: urlFoto ? [urlFoto] : [],
       color: data.color,
@@ -120,14 +124,24 @@ export default function EditarVehiculo(props: any) {
       body: JSON.stringify(vehiculoToUdp),
     })
       .then((response) => {
-        response.json();
+        if (response.ok) {
+          return response.json();
+        } else {
+          return response.json().then((err) => Promise.reject(err));
+        }
       })
       .then((json) => {
         console.log("Respuesta de actualizar la moto ::>", json);
-        setIsReloadData(true);
-        navigation.navigate("Vehiculo");
+        navigation.navigate("Main");
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        if (error.message) {
+          Snackbar.show({
+            text: error.message,
+            duration: Snackbar.LENGTH_SHORT,
+          });
+        }
+      });
   };
 
   const loadReferencias = (marca: string) => {

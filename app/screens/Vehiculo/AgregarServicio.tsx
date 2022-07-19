@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import styles from "../../styles/App.scss";
 import { Text, ScrollView, SafeAreaView, View } from "react-native";
-import { Input, Button } from "@rneui/themed";
+import { Input, Button } from "@rneui/base";
 import Snackbar from "react-native-snackbar";
 import { URL_SERVICES } from "@env";
 import { useForm } from "react-hook-form";

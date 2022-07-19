@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import styles from "../../styles/App.scss";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
   Text,
@@ -8,15 +7,18 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Input, Button, Image } from "@rneui/themed";
+import { Input, Button, Image } from "@rneui/base";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { launchImageLibrary } from "react-native-image-picker";
 import Moment from "moment";
 import auth from "@react-native-firebase/auth";
-import { Dropdown } from "react-native-material-dropdown";
+import { Dropdown } from "react-native-material-dropdown-v2";
 import { URL_SERVICES } from "@env";
 import { useForm } from "react-hook-form";
+import Snackbar from "react-native-snackbar";
 import { years } from "../../../data/data";
+import { VehiclesStackScreenProps } from "../../../types/types";
+import styles from "../../styles/App.scss";
 
 type FormData = {
   marca: string;
@@ -29,9 +31,10 @@ type FormData = {
   alias: string;
 };
 
-export default function AgregarVehiculo(props: any) {
+export default function AgregarVehiculo(
+  props: VehiclesStackScreenProps<"Add">
+) {
   const { navigation } = props;
-  const { setIsReloadData } = navigation.state.params;
   const [isLoading, setLoading] = useState(true);
   const [marcas, setMarcas] = useState([]);
   const [referencias, setReferencias] = useState([]);
@@ -46,6 +49,8 @@ export default function AgregarVehiculo(props: any) {
   const [referencia, setReferencia] = useState("");
   const [marca, setMarca] = useState("");
   const [urlFoto] = useState();
+
+  const user = auth().currentUser;
 
   useEffect(() => {
     fetch(URL_SERVICES + "marca/getAllUnique")
@@ -179,16 +184,16 @@ export default function AgregarVehiculo(props: any) {
       placa: data.placa.toUpperCase(),
       alias: data.alias,
       color: data.color,
-      fechacompra: data.fechacompra,
-      fechaCompraText: Moment(data.fechacompra).format("d/MM/YYYY"),
+      fechaCompra: Moment(data.fechacompra).format("DD/MM/YYYY"),
       kilometraje: data.kilometraje,
       marca: {
         marca: data.marca,
         referencia: data.referencia,
       },
       modelo: data.modelo,
-      usuario: {
-        email: auth().currentUser?.email,
+      usuarios: {
+        email: user?.email,
+        uid: user?.uid,
       },
       tipoVehiculo: "Moto",
       fotos: urlFoto ? [urlFoto] : [],
@@ -205,14 +210,24 @@ export default function AgregarVehiculo(props: any) {
       body: JSON.stringify(vehiculoCreate),
     })
       .then((response) => {
-        response.json();
+        if (response.ok) {
+          return response.json();
+        } else {
+          return response.json().then((err) => Promise.reject(err));
+        }
       })
       .then((json) => {
         console.log("Respuesta de crear el vehiculo ::>", json);
-        setIsReloadData(true);
-        navigation.navigate("Vehiculo");
+        navigation.navigate("Main");
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        if (error.message) {
+          Snackbar.show({
+            text: error.message,
+            duration: Snackbar.LENGTH_SHORT,
+          });
+        }
+      });
   };
 
   return (
@@ -271,7 +286,7 @@ export default function AgregarVehiculo(props: any) {
           valueExtractor={(value: any) => {
             return value.marca;
           }}
-          data={marcas}
+          data={marcas || []}
           onChangeText={(text: any) => {
             if (marca !== text) {
               setValue("marca", text);
@@ -295,7 +310,7 @@ export default function AgregarVehiculo(props: any) {
             //console.log("Indexx :::>", index, "Value ::>", value);
             return value.referencia;
           }}
-          data={referencias}
+          data={referencias || []}
           onChangeText={(text: any) => {
             setValue("referencia", text);
             setReferencia(text);
@@ -309,7 +324,7 @@ export default function AgregarVehiculo(props: any) {
           textColor="#0396c8"
           containerStyle={[styles.input, styles.dropdown]}
           label="Modelo"
-          data={years}
+          data={years || []}
           onChangeText={(text: any) => {
             setValue("modelo", text);
           }}
@@ -403,7 +418,7 @@ export default function AgregarVehiculo(props: any) {
         <Button
           title="Cancelar"
           onPress={() => {
-            navigation.navigate("Vehiculo");
+            navigation.navigate("Main");
             // console.log(navigation.navigate("Vehiculo"))
           }}
           buttonStyle={styles.buttonSecondary}

@@ -14,10 +14,27 @@ import { EmptyMoto } from "./../../../assets/svg/EmptyMoto";
 import { SwipeListView } from "react-native-swipe-list-view";
 import ButtonBranch from "../../components/branch/button";
 import ActionButton from "react-native-action-button";
+import { VehiclesStackScreenProps } from "../../../types/types";
 
-export default function ListVehiculos(props: any) {
-  const { vehiculos, navigation, setIsReloadData, user } = props;
+interface ListVehiculosProps
+  extends Pick<VehiclesStackScreenProps<"Main">, "navigation"> {
+  user: any;
+  vehiculos: any;
+}
 
+interface VehicleComponentProps
+  extends Pick<VehiclesStackScreenProps<"Main">, "navigation"> {
+  vehiculo: any;
+}
+
+interface AddVehicleButtonProps
+  extends Pick<VehiclesStackScreenProps<"Main">, "navigation"> {}
+
+export default function ListVehiculos({
+  vehiculos,
+  navigation,
+  user,
+}: ListVehiculosProps) {
   const useHandleScroll = () => {
     const [showButton, setShowButton] = useState(true);
 
@@ -84,11 +101,7 @@ export default function ListVehiculos(props: any) {
         onScroll={handleScroll}
         data={vehiculos}
         renderItem={(vehiculo) => (
-          <Vehiculo
-            vehiculo={vehiculo.item}
-            navigation={navigation}
-            setIsReloadData={setIsReloadData}
-          />
+          <Vehiculo vehiculo={vehiculo.item} navigation={navigation} />
         )}
         renderHiddenItem={() => (
           <View style={styles.motoDeleteContainer}>
@@ -106,18 +119,13 @@ export default function ListVehiculos(props: any) {
         keyExtractor={(item, index) => index.toString()}
         ListEmptyComponent={EmptyList}
       />
-      {showButton && (
-        <AddVehiculoButton
-          navigation={navigation}
-          setIsReloadData={setIsReloadData}
-        ></AddVehiculoButton>
-      )}
+      {showButton && <AddVehiculoButton navigation={navigation} />}
     </View>
   );
 }
 
-function Vehiculo(props: any) {
-  const { vehiculo, navigation, setIsReloadData } = props;
+function Vehiculo(props: VehicleComponentProps) {
+  const { vehiculo, navigation } = props;
 
   return (
     <View style={styles.cardMoto}>
@@ -148,27 +156,24 @@ function Vehiculo(props: any) {
         <ButtonBranch
           iconName="file-document-outline"
           onPress={() => {
-            navigation.navigate("Documentos", {
+            navigation.navigate("Documents", {
               vehiculo,
-              setIsReloadData,
             });
           }}
         />
         <ButtonBranch
           iconName="pencil-outline"
           onPress={() => {
-            navigation.navigate("EditarVehiculo", {
+            navigation.navigate("Edit", {
               vehiculo,
-              setIsReloadData,
             });
           }}
         />
         <ButtonBranch
           iconName="currency-usd"
           onPress={() => {
-            navigation.navigate("Servicios", {
+            navigation.navigate("Services", {
               vehiculo,
-              setIsReloadData,
             });
           }}
         />
@@ -185,17 +190,15 @@ function EmptyList() {
   );
 }
 
-function AddVehiculoButton(props: any) {
-  const { navigation, setIsReloadData } = props;
+function AddVehiculoButton(props: AddVehicleButtonProps) {
+  const { navigation } = props;
   return (
     <ActionButton
       buttonTextStyle={styles.actionButton}
       buttonColor="#0396c8"
       degrees={0}
       onPress={() => {
-        navigation.navigate("AgregarVehiculo", {
-          setIsReloadData,
-        });
+        navigation.navigate("Add");
       }}
       offsetY={Platform.OS === "ios" ? 100 : 70}
       renderIcon={() => <Icon name="add" />}

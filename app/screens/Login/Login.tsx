@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../styles/App.scss";
 import { View, Image, Text, SafeAreaView } from "react-native";
-import { Button, Icon, Input } from "@rneui/themed";
+import { Button, Icon, Input } from "@rneui/base";
 import auth from "@react-native-firebase/auth";
 import Snackbar from "react-native-snackbar";
 import { useForm } from "react-hook-form";
@@ -46,7 +46,6 @@ export default function Login() {
       .signInWithEmailAndPassword(email, password)
       .then((result) => {
         console.log("Resultado de autenticacion exitoso", result);
-        navigation.navigate("Main");
       })
       .catch((error) => {
         var errorCode = error.code;

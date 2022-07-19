@@ -1,9 +1,19 @@
 import React from "react";
-import { View, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  Image,
+  GestureResponderEvent,
+} from "react-native";
 import { Icon } from "@rneui/themed";
 import styles from "../../styles/App.scss";
 
-export default function buttonBranch(props: any) {
+type ButtonBranch = {
+  iconName: string;
+  onPress: (event: GestureResponderEvent) => void;
+};
+
+export default function buttonBranch(props: ButtonBranch) {
   const { iconName, onPress } = props;
   return (
     <View style={styles.iconButton}>
