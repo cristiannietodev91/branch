@@ -5,13 +5,13 @@ import Debug from "debug";
 import { Request, Response } from "express";
 import { CitaInstance, CitaRequestAttributes, Events } from "../types";
 
-const { Op } = require("sequelize");
+import { Op } from "sequelize";
 const debug = Debug("branch:server");
 
 moment.locale("es");
 
 const castCitasToEvents = (citas: CitaInstance[]) => {
-  let events: Events[] = [];
+  const events: Events[] = [];
   citas.forEach((cita) => {
     const dataCita = cita;
 
@@ -22,7 +22,7 @@ const castCitasToEvents = (citas: CitaInstance[]) => {
       hour = moment("00:00:00", "HH:mm:ss").toDate();
     }
 
-    let myDate = new Date(
+    const myDate = new Date(
       Date.UTC(
         dataCita.fechaCita.getFullYear(),
         dataCita.fechaCita.getMonth(),
@@ -33,24 +33,24 @@ const castCitasToEvents = (citas: CitaInstance[]) => {
       )
     );
 
-    let classEstado = (estado: string) => {
+    const classEstado = (estado: string) => {
       switch (estado) {
-        case "Solicitada":
-          return "event-solicitado";
-        case "Confirmada":
-          return "event-confirmada";
-        case "Cumplida":
-          return "event-cumplida";
-        case "Cancelada":
-          return "event-cancelada";
-        case "Incumplida":
-          return "event-incumplida";
-        default:
-          "event-default";
+      case "Solicitada":
+        return "event-solicitado";
+      case "Confirmada":
+        return "event-confirmada";
+      case "Cumplida":
+        return "event-cumplida";
+      case "Cancelada":
+        return "event-cancelada";
+      case "Incumplida":
+        return "event-incumplida";
+      default:
+        "event-default";
       }
     };
 
-    let event = {
+    const event = {
       id: dataCita.IdCita,
       startDate: myDate,
       title: "Cita vehiculo =>" + dataCita.vehiculo?.placa,
@@ -126,6 +126,9 @@ const updateCita = (req: Request, res: Response) => {
   try {
     const IdCita = req.params.Id;
     const cita = req.body;
+
+    delete cita.IdCita;
+
     citaAdapter
       .updateCitaByIdCita(IdCita, cita)
       .then((cita) => {
@@ -467,8 +470,8 @@ const countCitasByDateAndIdTaller = (req: Request, res: Response) => {
 
 const getAllCitasByfilter = (req: Request, res: Response) => {
   try {
-    let IdTaller = req.params.Id;
-    let filter = req.body.value;
+    const IdTaller = req.params.Id;
+    const filter = req.body.value;
 
     citaAdapter
       .findCitaByFilter(

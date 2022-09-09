@@ -1,20 +1,23 @@
-FROM node:10
-# Create app directory
-WORKDIR /usr/src/app
+FROM node:12-alpine as base
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-COPY package*.json ./
-
-RUN npm install
-# If you are building your code for production
-# RUN npm ci --only=production
-
-# Bundle app source
-COPY . .
-
+WORKDIR /app/branch
+COPY package.json yarn.lock /app/branch/
+COPY . /app/branch
 EXPOSE 3000
 
-CMD [ "node", "./bin/www" ]
+FROM base as production
 
+ENV NODE_ENV=production
+RUN yarn install --production
+
+CMD [ "node", "index.js" ]
+
+FROM base as develop-stage
+
+ENV NODE_ENV=development
+RUN chmod +x entrypoint.sh      # if required
+ENTRYPOINT ["./entrypoint.sh"]
+RUN yarn config set unsafe-perm true && yarn global add nodemon
+RUN yarn install
+ENV DEBUG=branch:*
+CMD ["yarn", "run dev"]

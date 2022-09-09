@@ -72,44 +72,47 @@ const createCita = (cita: CitaRequestAttributes) => {
                   " Mecanico a buscar para envio de SMS con Mecancio ::>",
                   cita.IdMecanico
                 );
-                mecanicoDAO
-                  .getById(cita.IdMecanico)
-                  ?.then((mecanico) => {
-                    const textoSms = parseTextoSms(mecanico, vehiculo, cita);
-                    if (vehiculo.usuarios?.celular) {
-                      sendSMStoInfoBip(vehiculo.usuarios?.celular, textoSms);
-                    }
-                    if (vehiculo.usuarios?.tokenCM) {
-                      sendNotificacionToUser(
-                        vehiculo.usuarios?.tokenCM,
-                        textoSms
-                      );
-                    }
-                    if (vehiculo.usuarios && vehiculo.usuarios.uid) {
-                      const notificacion = {
-                        IdUsuario: vehiculo.usuarios.uid,
-                        text: textoSms,
-                        typenotificacion: "Cita",
-                        read: false,
-                        dataAdicional: {
-                          IdCita: cita.IdCita,
-                          calificada: true,
-                        },
-                      };
-                      notificacionDAO.create(notificacion)?.then(() => {
-                        if (vehiculo.usuarios?.tokenCM) {
-                          sendDataToUser(
-                            vehiculo.usuarios?.tokenCM,
-                            "notificacion",
-                            { IdCita: cita.IdCita }
-                          );
-                        }
-                      });
-                    }
-                  })
-                  .catch((error) => {
-                    debug(error);
-                  });
+                if (cita.IdMecanico) {
+                  mecanicoDAO
+                    .getById(cita.IdMecanico)
+                    ?.then((mecanico) => {
+                      const textoSms = parseTextoSms(mecanico, vehiculo, cita);
+                      if (vehiculo.usuarios?.celular) {
+                        sendSMStoInfoBip(vehiculo.usuarios?.celular, textoSms);
+                      }
+                      if (vehiculo.usuarios?.tokenCM) {
+                        sendNotificacionToUser(
+                          vehiculo.usuarios?.tokenCM,
+                          textoSms
+                        );
+                      }
+                      if (vehiculo.usuarios && vehiculo.usuarios.uid) {
+                        const notificacion = {
+                          IdUsuario: vehiculo.usuarios.uid,
+                          text: textoSms,
+                          typenotificacion: "Cita",
+                          read: false,
+                          dataAdicional: {
+                            IdCita: cita.IdCita,
+                            calificada: true,
+                          },
+                        };
+                        notificacionDAO.create(notificacion)?.then(() => {
+                          if (vehiculo.usuarios?.tokenCM) {
+                            sendDataToUser(
+                              vehiculo.usuarios?.tokenCM,
+                              "notificacion",
+                              { IdCita: cita.IdCita }
+                            );
+                          }
+                        });
+                      }
+                    })
+                    .catch((error) => {
+                      debug(error);
+                    });
+                }
+
                 resolve(cita);
               } else {
                 reject(new Error("Appointment was not created"));
@@ -135,70 +138,80 @@ const updateCitaByIdCita = (
   cita: CitaUpdateAttributes
 ) => {
   return new Promise<CitaInstance | null>((resolve, reject) => {
-    const momentHour = moment(cita.horaCita, "hh:mm:ss");
-    const fechaCita = moment(cita.fechaCita, "DD/MM/YYYY")
-      .hour(momentHour.hour())
-      .minute(momentHour.minute());
+    try {
+      const momentHour = moment(cita.horaCita, "hh:mm:ss");
+      const fechaCita = moment(cita.fechaCita, "DD/MM/YYYY")
+        .hour(momentHour.hour())
+        .minute(momentHour.minute());
 
-    if (cita.estado.trim() === "") {
-      return reject(new Error("State value is not valid"));
-    }
+      if (cita.estado.trim() === "") {
+        return reject(new Error("State value is not valid"));
+      }
 
-    if (
-      cita.estado !== "Cancelada" ||
-      (cita.estado === "Cancelada" && fechaCita >= moment().add(1, "day"))
-    ) {
-      citaDAO.update(IdCita, cita)?.then(() => {
-        citaDAO.getById(IdCita)?.then((cita) => {
-          //Texto de cita con mecanico
-          if (cita) {
-            const textoSms = parseTextByEstadoCita(cita.estado, cita);
-            /*if (cita.vehiculo?.usuarios?.celular) {
-                sms.sendSMStoInfoBip(cita.vehiculo.usuarios?.celular, textoSms);
-              }
-              if (cita.vehiculo?.usuarios?.tokenCM) {
-                sms.sendNotificacionToUser(
-                  cita.vehiculo.usuarios?.tokenCM,
-                  textoSms
-                );
-              }*/
-            // Persistir notificacion
-
-            if (
-              cita.vehiculo &&
-              cita.vehiculo.usuarios &&
-              cita.vehiculo.usuarios.uid &&
-              textoSms
-            ) {
-              const notificacion = {
-                IdUsuario: cita.vehiculo?.usuarios?.uid,
-                text: textoSms,
-                typenotificacion: "Cita",
-                read: false,
-                dataAdicional: {
-                  IdCita: cita.IdCita,
-                  calificada: true,
-                },
-              };
-              notificacionDAO.create(notificacion)?.then(() => {
-                if (cita.vehiculo?.usuarios?.tokenCM) {
-                  sendDataToUser(
-                    cita.vehiculo.usuarios?.tokenCM,
-                    "notificacion",
-                    { IdCita: cita.IdCita }
-                  );
+      if (
+        cita.estado !== "Cancelada" ||
+        (cita.estado === "Cancelada" && fechaCita >= moment().add(1, "day"))
+      ) {
+        citaDAO
+          .update(IdCita, cita)
+          ?.then(() => {
+            citaDAO.getById(IdCita)?.then((cita) => {
+              //Texto de cita con mecanico
+              if (cita) {
+                const textoSms = parseTextByEstadoCita(cita.estado, cita);
+                /*if (cita.vehiculo?.usuarios?.celular) {
+                  sms.sendSMStoInfoBip(cita.vehiculo.usuarios?.celular, textoSms);
                 }
-              });
-            }
+                if (cita.vehiculo?.usuarios?.tokenCM) {
+                  sms.sendNotificacionToUser(
+                    cita.vehiculo.usuarios?.tokenCM,
+                    textoSms
+                  );
+                }*/
+                // Persistir notificacion
 
-            resolve(cita);
-          } else {
-            resolve(cita);
-          }
-        });
-      });
-    } else {
-      reject(new Error("Appoinments must be cancelled 24h before"));
+                if (
+                  cita.vehiculo &&
+                  cita.vehiculo.usuarios &&
+                  cita.vehiculo.usuarios.uid &&
+                  textoSms
+                ) {
+                  const notificacion = {
+                    IdUsuario: cita.vehiculo?.usuarios?.uid,
+                    text: textoSms,
+                    typenotificacion: "Cita",
+                    read: false,
+                    dataAdicional: {
+                      IdCita: cita.IdCita,
+                      calificada: true,
+                    },
+                  };
+                  notificacionDAO.create(notificacion)?.then(() => {
+                    if (cita.vehiculo?.usuarios?.tokenCM) {
+                      sendDataToUser(
+                        cita.vehiculo.usuarios?.tokenCM,
+                        "notificacion",
+                        { IdCita: cita.IdCita }
+                      );
+                    }
+                  });
+                }
+
+                resolve(cita);
+              } else {
+                resolve(cita);
+              }
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+            reject(error);
+          });
+      } else {
+        reject(new Error("Appoinments must be cancelled 24h before"));
+      }
+    } catch (error) {
+      reject(error);
     }
   });
 };

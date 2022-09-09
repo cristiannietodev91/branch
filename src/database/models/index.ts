@@ -25,6 +25,7 @@ import {
 } from "../../types";
 // import { String } from "aws-sdk/clients/batch";
 import Debug from "debug";
+import moment from "moment";
 const debug = Debug("branch:server");
 
 const myConfig: Options = (dbConfig as any)[env];
@@ -216,7 +217,7 @@ const CitaModel = sequelize.define<CitaInstance>("cita", {
   },
   IdMecanico: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: true,
   },
   IdVehiculo: {
     type: DataTypes.INTEGER,
@@ -225,6 +226,9 @@ const CitaModel = sequelize.define<CitaInstance>("cita", {
   fechaCita: {
     type: DataTypes.DATEONLY,
     allowNull: false,
+    get: function () {
+      return moment(this.getDataValue("fechaCita"), "YYYY-MM-DD").toDate();
+    },
   },
   horaCita: {
     type: DataTypes.TIME,
@@ -641,7 +645,7 @@ VehiculoModel.hasMany(CitaModel, {
 
 VehiculoModel.belongsTo(UserModel, {
   foreignKey: "IdUsuario",
-  targetKey: "IdUsuario",
+  targetKey: "uid",
 });
 
 CitaModel.belongsTo(TallerModel, {

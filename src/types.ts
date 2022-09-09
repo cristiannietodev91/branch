@@ -86,7 +86,7 @@ export interface UserInstance
 export interface CitaAttributes {
   IdCita: number;
   IdTaller: number;
-  IdMecanico: number;
+  IdMecanico?: number;
   IdVehiculo: number;
   fechaCita: Date;
   horaCita: number;

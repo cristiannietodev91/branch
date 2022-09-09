@@ -12,9 +12,8 @@ import moment from "moment";
 import Debug from "debug";
 import { Request, Response } from "express";
 import citaAdapter from "../adapter/citaAdapter";
-import { OrdenAttributes, OrdenCreationAttributes } from "../types";
+import { CitaCreationAttributes, OrdenCreationAttributes } from "../types";
 const debug = Debug("branch:server");
-const { Op } = require("sequelize");
 
 const createOrden = (req: Request, res: Response) => {
   try {
@@ -26,12 +25,11 @@ const createOrden = (req: Request, res: Response) => {
         .findCitaByIdCita(orden.IdCita)
         ?.then((cita) => {
           if (cita) {
-            let CodigoOrden = orden.CodigoOrden
+            const CodigoOrden = orden.CodigoOrden
               ? orden.CodigoOrden
               : moment(new Date()).format("MMDDYYYYHHMMSS") +
                 cita.vehiculo?.placa;
-            let ordenDB: OrdenCreationAttributes = {
-              //IdVehiculo: vehiculo.IdVehiculo,
+            const ordenDB: OrdenCreationAttributes = {
               IdTaller: orden.IdTaller,
               IdEtapa: orden.IdEtapa,
               IdCita: orden.IdCita,
@@ -98,7 +96,7 @@ const createOrden = (req: Request, res: Response) => {
             if (textoSms != "") {
               if (cita.vehiculo && cita.vehiculo.usuarios) {
                 const notificacion = {
-                  IdUsuario: cita.vehiculo.usuarios.uid!!,
+                  IdUsuario: cita.vehiculo.usuarios.uid ?? "",
                   text: textoSms,
                   typenotificacion:
                     orden.IdEtapa === 7 ? "Calificación" : "Orden",
@@ -110,7 +108,7 @@ const createOrden = (req: Request, res: Response) => {
                 };
                 notificacionAdapter
                   .crearNotificacion(notificacion)
-                  ?.then((notification) => {
+                  ?.then(() => {
                     if (cita.vehiculo?.usuarios?.tokenCM) {
                       sendDataToUser(
                         cita.vehiculo.usuarios?.tokenCM,
@@ -133,14 +131,16 @@ const createOrden = (req: Request, res: Response) => {
                 ?.then((orden) => {
                   if (orden) {
                     if (orden.IdEtapa) {
+                      const citaToUpdate: Partial<CitaCreationAttributes> = {
+                        estado: "Cumplida",
+                      };
+
                       if (orden.IdEtapa == 7) {
-                        cita.estado = "Finalizada";
-                      } else {
-                        cita.estado = "Cumplida";
+                        citaToUpdate.estado = "Finalizada";
                       }
 
                       citaDAO
-                        .update(cita.IdCita, cita)
+                        .update(cita.IdCita, citaToUpdate)
                         ?.then((cita) => {
                           if (cita) {
                             return res.status(HttpStatus.OK).json({ orden });

@@ -306,7 +306,7 @@ const getAllPaginateFilterVehiculosByIdTaller = (
   res: Response
 ): void => {
   try {
-    const page = Number(req.query.page);
+    const page = Number(req.query.page) - 1;
     const perpage = Number(req.query.perPage);
     const columnFilter = req.query.columnFilter;
     const valueSearch = req.query.filter;

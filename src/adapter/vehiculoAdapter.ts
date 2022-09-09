@@ -46,11 +46,14 @@ const crearVehiculo = (
             reject(new Error(ERROR_CREATEVEHICULOTALLERASIGNADO.message));
           } else {
             const { IdTaller } = vehiculo;
-            vehiculoResult.IdTaller = IdTaller;
+
             vehiculoDAO
-              .update({ IdVehiculo: vehiculoResult.IdVehiculo }, vehiculoResult)
-              ?.then((resultUpdatevehiculo) => {
-                if (resultUpdatevehiculo) {
+              .update(
+                { IdVehiculo: vehiculoResult.IdVehiculo },
+                { IdTaller: IdTaller }
+              )
+              ?.then(([resultUpdatevehiculo]) => {
+                if (resultUpdatevehiculo > 0) {
                   const { usuarios } = vehiculoResult;
                   if (usuarios) {
                     sendNotification(usuarios, IdTaller, vehiculoResult);
@@ -58,6 +61,7 @@ const crearVehiculo = (
 
                   resolve(vehiculoResult);
                 }
+                reject(new Error("Any user was updated"));
               })
               .catch((error) => {
                 reject(error);

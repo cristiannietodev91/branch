@@ -8,7 +8,7 @@ const awsConfig = {
   region: process.env.AWS_DEFAULT_REGION_MEDIA
 };
 
-const bucketName = process.env.BUCKET_MEDIA_NAME || "branchmedia";
+const bucketName = process.env.BUCKET_MEDIA_NAME || "branchmedia2";
 
 const s3 = new AWS.S3(awsConfig);
 
@@ -17,7 +17,7 @@ const signedS3 = (req: Request, res: Response) => {
   //let paramsss = req.params;
   console.log("Peticion recibida ::::>", req.query);
   //console.log('Peticion recibida 2::::>', paramsss);
-  let unicocode = moment().format("MMDDYYYYHHMMSS");
+  const unicocode = moment().format("MMDDYYYYHHMMSS");
   const key = unicocode + req.query.filename;
   const bucket = bucketName;
   const params = {
@@ -34,7 +34,7 @@ const signedS3 = (req: Request, res: Response) => {
 
   const resSign = s3.createPresignedPost(params);
 
-  let result = {
+  const result = {
     signature: {
       "Content-Type": "",
       acl: "public-read-write",

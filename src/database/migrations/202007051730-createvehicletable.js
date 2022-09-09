@@ -18,7 +18,7 @@ module.exports = {
         }
       },
       IdUsuario: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
         references: {
           model: {
