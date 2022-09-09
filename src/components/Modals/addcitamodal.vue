@@ -142,15 +142,14 @@ export default {
         mecanico: null,
         fechaCita: null,
         horaCita: null,
-        servicio: null
+        servicio: null,
+        estado: null
       };
     },
     onValitadeAddCita() {
       this.$v.$touch();
       // if its still pending or an error is returned do not submit
       if (this.$v.newCita.$pending || this.$v.newCita.$error) return;
-
-      //console.log(JSON.stringify(this.newCita));
 
       var citaCreate = {
         IdCita: this.newCita.IdCita,
@@ -160,7 +159,7 @@ export default {
         taller: this.taller.IdTaller,
         horaCita: this.newCita.horaCita,
         servicio: this.newCita.servicio.label,
-        estado: this.newCita.estado ? this.newCita.estado.label : "Confirmada"
+        estado: this.newCita.estado ? this.newCita.estado : "Confirmada"
       };
 
       if (!this.newCita.IdCita) {
