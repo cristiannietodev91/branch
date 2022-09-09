@@ -1,0 +1,522 @@
+// ====== COLORS ====== //
+$primary: #5be5e5;
+$primary_light: #d7f8f8;
+$secondary: #8bd2e8;
+$contrast: #0396c8;
+$dark: #041c24;
+$disable: #a5e1ef;
+$alert: #c73a46;
+$white: #ffffff;
+
+// ====== REUSABLE ====== //
+$standardSpace: 10px;
+
+%fullBackground{
+  background-size: cover;
+  width: 100%;
+}
+%leftMarginHeading{
+  margin-left: 37%;
+}
+%absoluteCenter{
+  align-items: center;
+  justify-content: center;
+}
+
+// ====== COMMON STYLES ====== //
+.container, .bgSelectLogin, .logoLogin, .HeaderMoto, .registerContainer{
+  flex: 1;
+  flex-grow: 1;
+}
+.darkContainer{
+  background-color: $dark;
+}
+.headerBranch{
+  background-color: $dark;
+}
+.emptySection{
+  width: 100%;
+  height: 340px;
+  // background-color: $alert;
+}
+.bgLogin{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.scrollviewImage{
+  background-color: transparent;
+  padding: 2%;
+}
+.containerImageBackgroud{
+  flex: 1;
+  flex-direction: column;
+}
+.centerText{
+  width: 83%;
+  text-align: center;
+  margin: auto;
+}
+.regularMargin{
+  margin-top: $standardSpace;
+  // margin-bottom: 10px;
+}
+.actionButton{
+  color: $dark;
+  z-index: 10;
+  position: absolute;
+}
+.headerImg{
+  @extend %fullBackground;
+  flex: 1;
+  justify-content: center;
+}
+.HeaderH2{
+  @extend %leftMarginHeading;
+}
+.HeaderSubH2{
+  @extend %leftMarginHeading;
+}
+.content{
+  background-color: $alert;
+  flex: 1;
+  width: 100%;
+  height: 20%;
+}
+.scrollContainer{
+  flex-grow: 1;
+  justify-content: flex-start;
+  padding-top: $standardSpace;
+  padding-bottom: $standardSpace*7;
+  background-color: $primary_light;
+}
+// ADD PHOTO //
+.containerAddPhoto{
+  flex: 1;
+  @extend %absoluteCenter;
+}
+.addPhoto{
+  width: 123px;
+  height: 127px;
+}
+.photo{
+  border-radius: 64px;
+  overflow: hidden;
+}
+
+// ====== TEXT STYLES ====== //
+%bold{
+  font-family: "IBMPlexSans-Bold";
+}
+%light{
+  font-family: "IBMPlexSans-Light";
+}
+.headingPrimary {
+  @extend %bold;
+  font-size: 20px;
+  line-height: 23px;
+  color: $primary;
+}
+.headingSecondary {
+  @extend %bold;
+  font-size: 16px;
+  color: $contrast;
+}
+.subheadingSecondary {
+  @extend %light;
+  font-size: 16px;
+  color: $contrast;
+}
+.subheadingPrimary {
+  @extend %light;
+  font-size: 15px;
+  color: $primary;
+}
+.bodyTextBold {
+  @extend %bold;
+  font-size: 14px;
+  color: $contrast;
+}
+.bodyText {
+  @extend %light;
+  font-size: 14px;
+  color: $contrast;
+}
+.navInactive {
+  @extend %light;
+  font-size: 12px;
+  color: $primary;
+}
+.navActive {
+  @extend %light;
+  font-size: 12px;
+  color: $dark;
+}
+.txtWhite{
+  @extend %light;
+  color: $white;
+  font-size: 14px;
+}
+
+// ====== SIGN UP ====== //
+.registerContainer{
+  background-color: $primary_light;
+  padding-top: $standardSpace*4;
+}
+
+// ====== FORMS & BUTTONS ====== //
+.bgSelectLogin {
+  @extend %fullBackground;
+  justify-content: flex-end;
+}
+.bgLogin {
+  @extend %fullBackground;
+  justify-content: flex-start;
+  padding-top: $standardSpace*5;
+}
+.logoLogin{
+  @extend %absoluteCenter;
+}
+.iconButton{
+  // background-color: $alert;
+}
+.iconButtonIcon {
+  width: 30px;
+  height: 30px;
+  margin-top: 27px;
+  margin-left: 25px;
+}
+.iconButtonImage {
+  width: 80px;
+  height: 80px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.buttonText{
+  @extend %bold;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+.buttonPrimary {
+  background-color: $contrast;
+  margin: $standardSpace;
+}
+.buttonSecondary {
+  background-color: $secondary;
+  margin: $standardSpace;
+}
+.buttonClear{
+  @extend %bold;
+  color: $contrast;
+  font-size: 14px;
+}
+.dropdown{
+  width: 95%;
+  margin: auto;
+}
+.input {
+  @extend %light;
+  width: 100%;
+  color: $contrast;
+}
+.inputRegister{
+  color: $white;
+}
+.label{
+  @extend %bold;
+  color: $contrast;
+  margin-top: $standardSpace*3;
+}
+.inputError {
+  color: $alert;
+  margin-left: $standardSpace;
+  padding: calc($standardSpace/2);
+}
+.scroll{
+  flex: 1;
+}
+
+// ====== MOTORCYCLES ====== //
+.emptyMoto{
+  padding: $standardSpace 30%;
+}
+.headerMotos{
+  width: 100%;
+  height: 155px;
+}
+%cardMotoCommon{
+  width: 100%;
+  background-color: $primary_light;
+  justify-content: flex-start;
+  align-items: center;
+  border-bottom-width: 1px;
+  border-bottom-color: #bde1e1;
+  padding: 0 $standardSpace $standardSpace;
+}
+.cardMoto{
+  @extend %cardMotoCommon;
+  flex-direction: row;
+}
+.cardMotoInfo{
+  width: 215px;
+}
+.cardMotoImageContainer{
+  background-color: $disable;
+  align-items: center;
+  margin-right: $standardSpace;
+  margin-top: $standardSpace*2;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.cardMotoImage{
+  width: 100px;
+  height: 170px;
+}
+.motoDeleteContainer{
+  width: 100%;
+  height: 91%;
+  background-color: $alert;
+  justify-content: center;
+  align-items: flex-end;
+  padding-right: 35px;
+}
+.cardDoc{
+  @extend %cardMotoCommon;
+  flex-direction: column;
+  margin-bottom: $standardSpace*3;
+  padding-bottom: $standardSpace*2;
+}
+.cardDocImageContainer{
+  width: 100%;
+  height: 142px;
+  margin: auto;
+  background-color: $disable;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.cardDocImage{
+  width: 100%;
+  height: 100%;
+}
+.cardDocInfoContainer{
+  width: 100%;
+  flex-direction: row;
+  align-items: flex-start;
+  // justify-content: space-between;
+}
+.cardDocInfo{
+  width: 220px;
+  padding-top: $standardSpace*2;
+}
+
+// ====== GARAGES ====== //
+.emptyGarage{
+  padding: $standardSpace 20%;
+}
+.garageCard{
+  width: 100%;
+  margin: $standardSpace*6 0 $standardSpace; 
+  // border-radius: $standardSpace;
+  padding-bottom: $standardSpace;
+  border-bottom-width: 1px;
+  border-bottom-color: #bde1e1;
+}
+.garageCardImage{
+  width: 100%;
+  position: absolute;
+  align-items: center;
+  z-index: 1;
+  top: -50px;
+}
+.garageCardMapContainer{
+  width: 95%;
+  height: 130px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin: auto;
+}
+.garageCardMap{
+  width: 100%;
+  height: 100%;
+}
+.garageCardInfo{
+  padding: $standardSpace;
+  flex-direction: row;
+  // background-color: $alert;
+}
+.garageCardText{
+  width: 325px;
+  padding-top: $standardSpace;
+  // background-color: $contrast;
+}
+.headingGarageCard{
+  color: $contrast;
+}
+.garageCardButtons{
+  // background-color: $primary_light;
+}
+
+// ====== PROFILE ====== //
+.bgProfile{
+  @extend %absoluteCenter;
+}
+.userCard{
+  width: 90%;
+  height: 535px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: -$standardSpace*8;
+}
+.bgUserCard{
+  width: 100%;
+  position: absolute;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: $primary_light;
+  top: 60px;
+}
+.bgUserCardImage{
+  width: 100%;
+  height: 200px;
+  position: absolute;
+}
+.containerAddPhotoUser{
+  margin-top: -50px;
+  margin-left: -67px;
+  width: 123px;
+  left: 50%;
+}
+.iconAddPhotoUser{
+  color: $contrast;
+  background-color: $white;
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  position: absolute;
+  top: 110px;
+  left: 50px;
+}
+.headingUserCard{
+  text-align: center;
+  color: $white;
+  margin: $standardSpace*10 0 $standardSpace 0;
+}
+.rating{
+  margin-bottom: 45px;
+}
+.userButtons{
+  flex-direction: row;
+  justify-content: center;
+}
+.userInfoContainer{
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: $standardSpace*2 $standardSpace*2 $standardSpace $standardSpace;
+}
+.userInfoItem{
+  flex-direction: row;
+  align-items: center;
+  margin: calc($standardSpace/2) 0;
+}
+.userInfo{
+  margin-left: $standardSpace;
+}
+.userEditContainer{
+  background-color: $primary_light;
+  padding-top: $standardSpace*5;
+  padding-bottom: $standardSpace*5;
+}
+.userEditImage{
+  width: 140px;
+  height: 130px;
+}
+
+// ====== DATES ====== //
+.headerDates{
+  width: 100%;
+  height: 122px;
+}
+.datesContainer{
+  background-color: $primary_light;
+  flex: 1;
+}
+.emptyDate{
+  padding: $standardSpace 20%;
+}
+.headingDates{
+  margin-left: 45% ;
+}
+.containerAddDatePhoto{
+  height: 150px;
+  // background-color: $alert;
+  @extend %absoluteCenter;
+}
+.addDatePhoto{
+  width: 140px;
+  height: 150px;
+}
+// ====== STEPPER ====== //
+.stepperContainer {
+  flex: 1;
+  margin: $standardSpace;
+}
+.stepperLine {
+  width: 3px;
+  height: 75%;
+  background-color: $disable;
+  z-index: -1;
+  position: absolute;
+  left: 10%;
+  top: $standardSpace*4;
+}
+.stepperContent {
+  position: relative;
+  border-style: dashed;
+}
+.stepperButton{
+  width: 100%;
+  // background-color: $alert;
+  flex-direction: row;
+}
+.stepperHeading{
+  margin: 30px 10px 10px 35px;
+}
+.stepperStep{
+  width: 90%;
+  background-color: $primary_light;
+  border-radius: $standardSpace;
+  margin: $standardSpace $standardSpace*4;
+  padding: $standardSpace*2;
+}
+
+// ====== CHAT ====== //
+.chatSendContainer{
+  padding: 0 $standardSpace*2 0 0;
+}
+.chatToolbarContainer{
+  background-color: $primary_light;  
+  // padding-top: $standardSpace;
+}
+.chatUploadContainer{
+  width: 75px;
+}
+.chatInput{
+  @extend %light;
+  width: 100px;
+  background-color: $disable;
+  border-radius: 25px;
+  padding: $standardSpace;
+  margin-bottom: calc($standardSpace/2);
+  
+}
+.chatScrollTo{
+  background-color: $contrast;
+  color: $white;
+  @extend %bold;
+}
+
+// ====== TEMPORALES ====== //
