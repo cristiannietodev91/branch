@@ -1,0 +1,75 @@
+@import "../_mixins.scss";
+
+$separator-color-light: $branch-blue-1;
+$separator-color: $branch-blue-1;
+$background-color: $branch-blue-8;
+$foreground-color: $branch-blue-7;
+$input-background: $branch-blue-6;
+
+$dark-btn-background: $branch-blue-8;
+$light-btn-background: $branch-blue-4;
+$button-text-color: $branch-blue-7;
+
+$theme-color-1: $branch-blue-3;
+$theme-color-2: $branch-blue-1;
+$theme-color-3: $branch-blue-4;
+$theme-color-4: $branch-blue-8;
+$theme-color-5: $branch-blue-7;
+$theme-color-6: $branch-blue-2;
+
+$primary-color: $branch-blue-1;
+$secondary-color: $branch-blue-5;
+$muted-color: $branch-blue-2;
+
+$gradient-color-1 : $branch-blue-4;
+$gradient-color-2 : $branch-blue-3;
+$gradient-color-3 : $branch-blue-1;
+
+$shadowOffsetsTop : 1 3 10 14 19;
+$shadowBlursTop: 2 6 10 14 19;
+$shadowOpacitiesTop: 0.3 0.3 0.6 0.7 0.8;
+
+$shadowOffsetsBottom : 1 3 6 10 15;
+$shadowBlursBottom: 3 6 6 5 6;
+$shadowOpacitiesBottom: 0.3 0.3 0.6 0.7 0.8;
+
+$logoPath: "/assets/img/logo-branch-neg.svg";
+$logoPathMobile: "/assets/img/logo-branch-ico.svg";
+$bgPath: "/assets/img/branch-bg-dark.jpg";
+
+@import "../_mixins.scss";
+@import "../_piaf.style.scss";
+
+// BACKEDUP COLORS
+// $separator-color-light: #313131;
+// $separator-color: #424242;
+// $background-color: #1b191b;
+// $foreground-color: #232223;
+// $input-background: #232223;
+
+// $dark-btn-background: #8d8d8d;
+// $light-btn-background: #e4e4e4;
+// $button-text-color: #d0d0d0;
+
+// $theme-color-1: #145388;
+// $theme-color-2: #3582b3;
+// $theme-color-3: #6c90a1;
+// $theme-color-4: #365573;
+// $theme-color-5: #47799a;
+// $theme-color-6: #8e9599;
+
+// $primary-color: #969696;
+// $secondary-color: #757575;
+// $muted-color: #5a5a5a;
+
+// $gradient-color-1 : #225986;
+// $gradient-color-2 : #1a3a53;
+// $gradient-color-3 : #145388;
+
+// $shadowOffsetsTop : 1 3 10 14 19;
+// $shadowBlursTop: 2 6 10 14 19;
+// $shadowOpacitiesTop: 0.1 0.3 0.6 0.7 0.8;
+
+// $shadowOffsetsBottom : 1 3 6 10 15;
+// $shadowBlursBottom: 3 6 6 5 6;
+// $shadowOpacitiesBottom: 0.1 0.3 0.6 0.7 0.8;
