@@ -118,7 +118,9 @@ export default {
               commit("clearError");
             }, 3000);
           }
-        );
+        ).catch(error=> {
+          commit("setError", error.message);
+        });
     },
     forgotPassword({ commit }, payload) {
       commit("clearError");

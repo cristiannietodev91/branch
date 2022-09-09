@@ -5,7 +5,7 @@
   "author": "Cristian Nieto (cristianandresnieto@gmail.com)",
   "private": true,
   "engines": {
-    "node": "10.16.0"
+    "node": ">=14.19.3"
   },
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -14,13 +14,12 @@
   },
   "dependencies": {
     "@glidejs/glide": "^3.4.1",
-    "axios": "^0.18.1",
+    "axios": "0.21.1",
     "bootstrap-vue": "^2.14.0",
     "chart.js": "2.7.2",
     "connect-history-api-fallback": "^1.6.0",
     "core-js": "^3.3.2",
     "cors": "^2.8.5",
-    "dns": "^0.2.2",
     "express": "^4.17.1",
     "fibers": "^4.0.2",
     "firebase": "^7.14.1",

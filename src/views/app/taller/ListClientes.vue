@@ -3,14 +3,15 @@
     <b-colxx class="disable-text-selection">
       <b-row>
         <b-colxx xxs="12">
-          <h1>{{ $t('branch.clientes.listaClientes') }}</h1>
+          <h1>{{ $t("branch.clientes.listaClientes") }}</h1>
           <div class="top-right-button-container">
             <b-button
               v-b-modal.modaladdvehiculo
               variant="primary"
               size="lg"
               class="top-right-button"
-            >{{ $t('pages.add-new') }}</b-button>
+              >{{ $t("pages.add-new") }}</b-button
+            >
             <b-button-group>
               <b-dropdown
                 split
@@ -20,25 +21,33 @@
                 variant="primary"
               >
                 <label
-                  class="custom-control custom-checkbox pl-4 mb-0 d-inline-block"
+                  class="
+                    custom-control custom-checkbox
+                    pl-4
+                    mb-0
+                    d-inline-block
+                  "
                   slot="button-content"
                 >
                   <input
                     class="custom-control-input"
                     type="checkbox"
                     :checked="isSelectedAll"
-                    v-shortkey="{select: ['ctrl','a'], undo: ['ctrl','d']}"
+                    v-shortkey="{ select: ['ctrl', 'a'], undo: ['ctrl', 'd'] }"
                     @shortkey="keymap"
                   />
                   <span
                     :class="{
-                'custom-control-label' :true,
-                'indeterminate' : isAnyItemSelected
-                }"
-                  >&nbsp;</span>
+                      'custom-control-label': true,
+                      indeterminate: isAnyItemSelected,
+                    }"
+                    >&nbsp;</span
+                  >
                 </label>
-                <b-dropdown-item>{{$t('pages.delete')}}</b-dropdown-item>
-                <b-dropdown-item>{{$t('pages.another-action')}}</b-dropdown-item>
+                <b-dropdown-item>{{ $t("pages.delete") }}</b-dropdown-item>
+                <b-dropdown-item>{{
+                  $t("pages.another-action")
+                }}</b-dropdown-item>
               </b-dropdown>
             </b-button-group>
             <b-modal
@@ -54,12 +63,15 @@
                     v-model="$v.newItem.placa.$model"
                     :state="!$v.newItem.placa.$error"
                   />
-                  <b-form-invalid-feedback
-                    v-if="!$v.newItem.placa.required"
-                  >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
+                  <b-form-invalid-feedback v-if="!$v.newItem.placa.required">{{
+                    $t("branch.forms.validations.required")
+                  }}</b-form-invalid-feedback>
                   <b-form-invalid-feedback
                     v-if="!$v.newItem.placa.placaValidate"
-                  >{{$t('branch.forms.validations.formatPlaca')}}</b-form-invalid-feedback>
+                    >{{
+                      $t("branch.forms.validations.formatPlaca")
+                    }}</b-form-invalid-feedback
+                  >
                 </b-form-group>
 
                 <b-form-group :label="$t('branch.vehiculo.celular')">
@@ -70,30 +82,45 @@
                   />
                   <b-form-invalid-feedback
                     v-if="!$v.newItem.celular.required"
-                  >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
+                    >{{
+                      $t("branch.forms.validations.required")
+                    }}</b-form-invalid-feedback
+                  >
+                  <b-form-invalid-feedback v-if="!$v.newItem.celular.numeric">{{
+                    $t("branch.forms.validations.numeric")
+                  }}</b-form-invalid-feedback>
                   <b-form-invalid-feedback
-                    v-if="!$v.newItem.celular.numeric"
-                  >{{$t('branch.forms.validations.numeric')}}</b-form-invalid-feedback>
-                  <b-form-invalid-feedback
-                    v-else-if="!$v.newItem.celular.minLength || !$v.newItem.celular.maxLength"
-                  >{{$t('branch.forms.validations.longitud')}}</b-form-invalid-feedback>
+                    v-else-if="
+                      !$v.newItem.celular.minLength ||
+                      !$v.newItem.celular.maxLength
+                    "
+                    >{{
+                      $t("branch.forms.validations.longitud")
+                    }}</b-form-invalid-feedback
+                  >
                 </b-form-group>
 
-                <b-form-group :label="$t('branch.vehiculo.email')" class="tooltip-left-bottom">
+                <b-form-group
+                  :label="$t('branch.vehiculo.email')"
+                  class="tooltip-left-bottom"
+                >
                   <b-form-input
                     type="text"
                     v-model="$v.newItem.email.$model"
                     :state="!$v.newItem.email.$error"
                   />
-                  <b-form-invalid-feedback
-                    v-if="!$v.newItem.email.email"
-                  >{{$t('branch.forms.validations.email')}}</b-form-invalid-feedback>
+                  <b-form-invalid-feedback v-if="!$v.newItem.email.email">{{
+                    $t("branch.forms.validations.email")
+                  }}</b-form-invalid-feedback>
                 </b-form-group>
                 <b-button
                   variant="outline-secondary"
                   @click="hideModal('modaladdvehiculo')"
-                >{{ $t('pages.cancel') }}</b-button>
-                <b-button type="submit" variant="primary">{{ $t('forms.submit') }}</b-button>
+                  >{{ $t("pages.cancel") }}</b-button
+                >
+                <b-button type="submit" variant="primary">{{
+                  $t("forms.submit")
+                }}</b-button>
               </b-form>
             </b-modal>
           </div>
@@ -104,7 +131,7 @@
               class="pt-0 pl-0 d-inline-block d-md-none"
               v-b-toggle.displayOptions
             >
-              {{ $t('pages.display-options') }}
+              {{ $t("pages.display-options") }}
               <i class="simple-icon-arrow-down align-middle" />
             </b-button>
             <b-collapse id="displayOptions" class="d-md-block">
@@ -117,18 +144,23 @@
                   size="xs"
                 >
                   <b-dropdown-item
-                    v-for="(filter,index) in filterOptions"
+                    v-for="(filter, index) in filterOptions"
                     :key="index"
                     @click="changeFilterBy(filter)"
-                  >{{ filter.label }}</b-dropdown-item>
+                    >{{ filter.label }}</b-dropdown-item
+                  >
                 </b-dropdown>
 
-                <div class="search-sm d-inline-block float-md-left mr-1 align-top">
+                <div
+                  class="search-sm d-inline-block float-md-left mr-1 align-top"
+                >
                   <b-input :placeholder="$t('menu.search')" v-model="search" />
                 </div>
               </div>
               <div class="float-md-right pt-1">
-                <span class="text-muted text-small mr-1 mb-2">{{from}}-{{to}} of {{ total }}</span>
+                <span class="text-muted text-small mr-1 mb-2"
+                  >{{ from }}-{{ to }} of {{ total }}</span
+                >
                 <b-dropdown
                   id="ddown2"
                   right
@@ -138,10 +170,11 @@
                   size="xs"
                 >
                   <b-dropdown-item
-                    v-for="(size,index) in pageSizes"
+                    v-for="(size, index) in pageSizes"
                     :key="index"
                     @click="changePageSize(size)"
-                  >{{ size }}</b-dropdown-item>
+                    >{{ size }}</b-dropdown-item
+                  >
                 </b-dropdown>
               </div>
             </b-collapse>
@@ -150,7 +183,13 @@
         </b-colxx>
       </b-row>
       <template v-if="isLoad">
-        <b-colxx xxs="12" class="mb-3" v-for="(item,index) in items" :key="index" :id="item.id">
+        <b-colxx
+          xxs="12"
+          class="mb-3"
+          v-for="(item, index) in items"
+          :key="index"
+          :id="item.id"
+        >
           <vehiculo-list-item
             :key="item.id"
             :data="item"
@@ -159,7 +198,7 @@
             v-contextmenu:contextmenu
           />
         </b-colxx>
-        <b-row v-if="lastPage>1">
+        <b-row v-if="lastPage > 1">
           <b-colxx xxs="12">
             <b-pagination-nav
               :number-of-pages="lastPage"
@@ -214,7 +253,7 @@ import {
   maxLength,
   email,
   helpers,
-  numeric
+  numeric,
 } from "vuelidate/lib/validators";
 
 const placaValidate = helpers.regex(
@@ -225,7 +264,7 @@ const placaValidate = helpers.regex(
 import {
   DataListIcon,
   ThumbListIcon,
-  ImageListIcon
+  ImageListIcon,
 } from "../../../components/Svg";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
@@ -239,28 +278,28 @@ export default {
     "thumb-list-icon": ThumbListIcon,
     "image-list-icon": ImageListIcon,
     "v-select": vSelect,
-    "vehiculo-list-item": VehiculoListItem
+    "vehiculo-list-item": VehiculoListItem,
   },
   data() {
     return {
       isLoad: false,
       filter: {
         column: "placa",
-        label: "Placa"
+        label: "Placa",
       },
       filterOptions: [
         {
           column: "placa",
-          label: "Placa"
+          label: "Placa",
         },
         {
           column: "firstName",
-          label: "Nombre cliente"
+          label: "Nombre cliente",
         },
         {
           column: "identificacion",
-          label: "Identificación"
-        }
+          label: "Identificación",
+        },
       ],
       page: 1,
       perPage: 4,
@@ -275,31 +314,31 @@ export default {
       newItem: {
         placa: "",
         celular: "",
-        email: ""
-      }
+        email: "",
+      },
     };
   },
   validations: {
     newItem: {
       placa: {
         required,
-        placaValidate
+        placaValidate,
       },
       celular: {
-        required: requiredIf(function(celular) {
+        required: requiredIf(function (celular) {
           return !this.newItem.email;
         }),
         numeric,
         maxLength: maxLength(10),
-        minLength: minLength(10)
+        minLength: minLength(10),
       },
       email: {
-        required: requiredIf(function(email) {
+        required: requiredIf(function (email) {
           return !this.newItem.celular;
         }),
-        email
-      }
-    }
+        email,
+      },
+    },
   },
   methods: {
     loadItems(page, perPage, columnFilter, filter) {
@@ -310,11 +349,11 @@ export default {
         perPage,
         columnFilter,
         filter
-      ).then(response => {
+      ).then((response) => {
         if (response.status == 200) {
-          this.items = response.data.docs;
-          this.total = response.data.total;
-          this.lastPage = response.data.pages;
+          this.items = response.data.rows;
+          this.total = response.data.count;
+          this.lastPage = response.data.count;
           this.to = page * perPage;
           if (this.to > this.total) {
             this.to = this.total;
@@ -338,7 +377,7 @@ export default {
       if (this.selectedItems.length >= this.items.length) {
         if (isToggle) this.selectedItems = [];
       } else {
-        this.selectedItems = this.items.map(x => x.IdVehiculo);
+        this.selectedItems = this.items.map((x) => x.IdVehiculo);
       }
     },
     keymap(event) {
@@ -373,13 +412,13 @@ export default {
           Math.max(start, end) + 1
         );
         this.selectedItems.push(
-          ...itemsForToggle.map(item => {
+          ...itemsForToggle.map((item) => {
             return item.id;
           })
         );
       } else {
         if (this.selectedItems.includes(itemId)) {
-          this.selectedItems = this.selectedItems.filter(x => x !== itemId);
+          this.selectedItems = this.selectedItems.filter((x) => x !== itemId);
         } else this.selectedItems.push(itemId);
       }
     },
@@ -416,18 +455,18 @@ export default {
         placa: this.newItem.placa,
         celular: this.newItem.celular,
         usuario: { email: this.newItem.email },
-        IdTaller: this.currentUser.IdTaller
+        IdTaller: this.currentUser.IdTaller,
       };
       // if its still pending or an error is returned do not submit
       if (this.$v.newItem.$pending || this.$v.newItem.$error) return;
 
       ServicesCore.createVehiculo(vehiculo)
-        .then(response => {
+        .then((response) => {
           if (response.status == 200) {
             this.newItem = {
               placa: "",
               celular: "",
-              email: ""
+              email: "",
             };
             this.$notify(
               "success",
@@ -435,7 +474,7 @@ export default {
               "Se creo el vehiculo correctamente",
               {
                 duration: 3000,
-                permanent: false
+                permanent: false,
               }
             );
             this.hideModal("modaladdvehiculo");
@@ -447,14 +486,14 @@ export default {
             );
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.log("Error al registrar cliente :::>", error);
           this.$notify("error filled", "ERROR", "Error al registrar cliente", {
             duration: 3000,
-            permanent: false
+            permanent: false,
           });
         });
-    }
+    },
   },
   computed: {
     ...mapGetters(["currentUser"]),
@@ -466,7 +505,7 @@ export default {
         this.selectedItems.length > 0 &&
         this.selectedItems.length < this.items.length
       );
-    }
+    },
   },
   watch: {
     search() {
@@ -475,10 +514,10 @@ export default {
     },
     page() {
       this.loadItems(this.page, this.perPage, this.filter.column, this.search);
-    }
+    },
   },
   mounted() {
     this.loadItems(this.page, this.perPage, this.filter.column, this.search);
-  }
+  },
 };
 </script>
