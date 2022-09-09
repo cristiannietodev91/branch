@@ -1,0 +1,49 @@
+# for local development
+version: '3.7'
+services:
+  db: 
+    image: mysql:8.0
+    cap_add:
+      - SYS_NICE
+    restart: always
+    environment:
+      - MYSQL_DATABASE=branch
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - '3307:3306'
+    volumes:
+      - db:/var/lib/mysql
+  be:
+    build:
+      context: ./branch-be
+      target: develop-stage
+    container_name: branch-be  
+    command: yarn run dev
+    depends_on:
+      - db
+    ports:
+      - "3005:3005"
+    environment:
+      NODE_ENV: development
+      DBNAME: branch
+      DBHOST: db
+      DBPASSWORD: root
+      DBUSER: root
+      AWS_ACCESS_KEY_ID_MEDIA: AKIAYPPXH555IZXDCPD5
+      AWS_SECRET_ACCESS_KEY_MEDIA: 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
+      AWS_DEFAULT_REGION_MEDIA: us-east-1
+    links:
+      - db  
+  frontend:
+    build:
+      context: ./branch-web-app
+      target: develop-stage
+    container_name: branch-web-app
+    ports:
+    - '8080:8080'
+    command: /bin/sh -c "yarn serve"
+    links:
+      - be 
+volumes:
+  db:
+    driver: local    
