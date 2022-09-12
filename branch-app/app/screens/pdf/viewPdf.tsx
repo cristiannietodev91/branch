@@ -1,10 +1,13 @@
 import React from "react";
 import { View, StyleSheet, Dimensions } from "react-native";
 import Pdf from "react-native-pdf";
+import { ActiveAppoinmentStackScreenProps } from "../../../types/types";
 
-export default function EditarVehiculo(props: any) {
-  const { navigation } = props;
-  const { pdf } = navigation.state.params;
+export default function ViewPdf(
+  props: ActiveAppoinmentStackScreenProps<"Pdfdetail">
+) {
+  const { route } = props;
+  const { pdf } = route.params;
 
   return (
     <View style={styles.container}>

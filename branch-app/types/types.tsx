@@ -9,7 +9,7 @@ import { FirebaseAuthTypes } from "@react-native-firebase/auth";
 export type AppoimentStackParamList = {
   NavigateAppoinment: { etapa: string };
   Detail: { cita: any };
-  Pdfdetail: undefined;
+  Pdfdetail: { pdf: any; orden?: any; cita?: any };
   Chat: { IdTaller: number };
   Addappoinment: undefined;
 };

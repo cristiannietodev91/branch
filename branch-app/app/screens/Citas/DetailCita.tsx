@@ -9,14 +9,17 @@ import ActionButton from "react-native-action-button";
 import { URL_SERVICES } from "@env";
 import { useForm } from "react-hook-form";
 import styles from "../../styles/App.scss";
+import { ActiveAppoinmentStackScreenProps } from "../../../types/types";
 
 type FormData = {
   comentario: string;
 };
 
-export default function DetailCita(props: any) {
-  const { navigation } = props;
-  const { cita, setIsReloadData } = navigation.state.params;
+export default function DetailCita({
+  navigation,
+  route,
+}: ActiveAppoinmentStackScreenProps<"Detail">) {
+  const { cita } = route.params;
   const [currentPosition, setCurrentPosition] = useState(0);
   const {
     register,
@@ -115,7 +118,6 @@ export default function DetailCita(props: any) {
       .then((json) => {
         console.log("Respuesta actualizar estado orden::>", json);
         setReload(true);
-        setIsReloadData(true);
       })
       .catch((error) => console.error(error));
   };
@@ -168,11 +170,7 @@ export default function DetailCita(props: any) {
   return (
     <ScrollView style={{ flex: 1, backgroundColor: "#d7f8f8" }}>
       <View style={styles.scrollContainer}>
-        <Cita
-          cita={cita}
-          navigation={navigation}
-          setIsReloadData={setIsReloadData}
-        />
+        <Cita cita={cita} />
 
         <ReactSteps
           currentPosition={currentPosition}
@@ -262,8 +260,7 @@ export default function DetailCita(props: any) {
                 titleStyle={styles.buttonText}
                 title="Ver cotización"
                 onPress={() => {
-                  console.log("Click ::>");
-                  navigation.navigate("VerPDF", {
+                  navigation.navigate("Pdfdetail", {
                     pdf: pdfCotizacion,
                     orden: cita.ordentrabajos[2],
                     cita: cita,
@@ -277,7 +274,7 @@ export default function DetailCita(props: any) {
                     inputStyle={styles.input}
                     placeholder="Comentario de aprobación o rechazo"
                     multiline={true}
-                    onChangeText={(text) => setValue("comentario", text, true)}
+                    onChangeText={(text) => setValue("comentario", text)}
                   />
                   {errors.comentario && (
                     <Text style={styles.inputError}>
@@ -360,8 +357,7 @@ export default function DetailCita(props: any) {
                 titleStyle={styles.buttonText}
                 title="Ver factura"
                 onPress={() => {
-                  console.log("Click ::>");
-                  navigation.navigate("VerPDF", {
+                  navigation.navigate("Pdfdetail", {
                     pdf: pdfFactura,
                   });
                 }}
@@ -377,7 +373,7 @@ export default function DetailCita(props: any) {
   );
 }
 
-function Cita(props: any) {
+const Cita = (props: { cita: any }) => {
   const { cita } = props;
   //console.log("Navigation :::>", navigation);
   let fechaCita = Moment(cita.fechaCita.toString()).format("YYYY-MM-DD");
@@ -411,9 +407,14 @@ function Cita(props: any) {
       </View>
     </View>
   );
+};
+
+interface OpenChatProps
+  extends Pick<ActiveAppoinmentStackScreenProps<"Detail">, "navigation"> {
+  cita: any;
 }
 
-function OpenChatButton(props: any) {
+function OpenChatButton(props: OpenChatProps) {
   const { cita, navigation } = props;
   const { IdTaller } = cita;
   return (
@@ -421,7 +422,7 @@ function OpenChatButton(props: any) {
       buttonTextStyle={styles.actionButton}
       buttonColor="#0396c8"
       degrees={0}
-      onPress={() => navigation.navigate("chat", { IdTaller: IdTaller })}
+      onPress={() => navigation.navigate("Chat", { IdTaller: IdTaller })}
       offsetY={70}
       offsetX={10}
       renderIcon={() => (

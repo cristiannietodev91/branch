@@ -13,16 +13,19 @@ import CustomActions from "./CustomActions";
 import auth from "@react-native-firebase/auth";
 import { URL_SERVICES } from "@env";
 import SocketIOClient from "socket.io-client";
-import { v4 as uuidv4 } from "uuid";
 import styles from "../../styles/App.scss";
 
 const socket = SocketIOClient(URL_SERVICES, {
   transports: ["websocket"],
 });
 
-export default function Chat(props: any) {
-  const { navigation } = props;
-  const { IdTaller } = navigation.state.params;
+interface ChatComponentProps {
+  IdTaller: number;
+}
+
+export default function Chat(props: ChatComponentProps) {
+  const { IdTaller } = props;
+
   const [messages, setMessages] = useState<never[]>([]);
 
   const user = () => {
@@ -44,7 +47,9 @@ export default function Chat(props: any) {
         console.log("Resultado de unirse al room de firebase", resultado);
       }
     );
+  }, [IdTaller]);
 
+  useEffect(() => {
     fetch(
       URL_SERVICES +
         `message/getMessagesByConversacion?IdConversacionUser=${
@@ -62,17 +67,13 @@ export default function Chat(props: any) {
         setMessages(GiftedChat.append(messages, json));
       })
       .catch((error) => console.error(error));
+  }, [IdTaller]);
 
-    return () => {
-      console.log("Disconnect ::>");
-    };
-  }, [IdTaller, messages]);
-
-  useEffect(() => {
+  /*useEffect(() => {
     socket.on("sendmessage", (message: any) => {
       setMessages(GiftedChat.append(messages, message));
     });
-  }, [messages]);
+  }, [messages]);*/
 
   const onSend = (newmessage: never[]) => {
     setMessages(GiftedChat.append(messages, newmessage));
@@ -97,6 +98,7 @@ export default function Chat(props: any) {
       image: newmessage.image,
       IdConversacionUser: newmessage.user._id,
       IdTaller: IdTaller,
+      typeusuario: "client",
     };
     return message;
   };
