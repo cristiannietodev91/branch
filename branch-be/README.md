@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# branch
-=======
 # branch
 
 [![Coverage Status](https://coveralls.io/repos/github/cristiannietodev91/branch-be/badge.svg?branch=master)](https://coveralls.io/github/cristiannietodev91/branch-be?branch=master)
