@@ -21,13 +21,13 @@ jobs:
           app-dir: "~/project/branch-be"
           pkg-manager: yarn
       - run: 
-          command: yarn run test
+          command: cd branch-be && yarn run test
       - run: 
-          command: yarn run coverage
+          command: cd branch-be && yarn run coverage
       - store_artifacts:
-          path: /branch-app/test-reports
+          path: ~/project/branch-app/test-reports
       - store_test_results:
-          path: /branch-app/test-results      
+          path: ~/project/branch-app/test-results      
 
 # here we specify our workflows, most of which are conditionally
 # executed based upon pipeline parameter values. Each workflow calls a
