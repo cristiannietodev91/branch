@@ -12,6 +12,7 @@ parameters:
 
 jobs:
   test-be:
+    working_directory: ./branch-app
     executor: 
       name: node/default
       tag: '14.17'
@@ -20,9 +21,9 @@ jobs:
       - node/install-packages:
           pkg-manager: yarn
       - run: 
-          command: cd branch-app && yarn run test
+          command: yarn run test
       - run: 
-          command: cd branch-app && yarn run coverage
+          command: yarn run coverage
       - store_artifacts:
           path: /branch-app/test-reports
       - store_test_results:
