@@ -1,6 +1,6 @@
 # branch
 
-[![Coverage Status](https://coveralls.io/repos/github/cristiannietodev91/branch-be/badge.svg?branch=master)](https://coveralls.io/github/cristiannietodev91/branch-be?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/cristiannietodev91/branch/badge.svg?branch=main)](https://coveralls.io/github/cristiannietodev91/branch?branch=main)
 
 ## Dev environment
 
