@@ -1,0 +1,24 @@
+version: 2.1
+
+orbs:
+  continuation: circleci/continuation@0.1
+
+# the default pipeline parameters, which will be updated according to
+# the results of the path-filtering orb
+parameters:
+  build-be:
+    type: boolean
+    default: false
+
+# here we specify our workflows, most of which are conditionally
+# executed based upon pipeline parameter values. Each workflow calls a
+# specific job defined above, in the jobs section.
+workflows:
+  # when pipeline parameter, run-build-service-1-job is true, the
+  # build-service-1 job is triggered.
+  service-1:
+    when: << pipeline.parameters.build-be >>
+    jobs:
+      - continuation/continue:
+          configuration_path: ./branch-be/.circleci/config.yml
+  
