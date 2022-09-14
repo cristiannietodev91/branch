@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  continuation: circleci/continuation@0.1
+  node: circleci/node@5.0.2
 
 # the default pipeline parameters, which will be updated according to
 # the results of the path-filtering orb
@@ -9,6 +9,24 @@ parameters:
   build-be:
     type: boolean
     default: false
+
+jobs:
+  test-be:
+    executor: 
+      name: node/default
+      tag: '14.17'
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: yarn
+      - run: 
+          command: cd branch-app && yarn run test
+      - run: 
+          command: cd branch-app && yarn run coverage
+      - store_artifacts:
+          path: /branch-app/test-reports
+      - store_test_results:
+          path: /branch-app/test-results      
 
 # here we specify our workflows, most of which are conditionally
 # executed based upon pipeline parameter values. Each workflow calls a
@@ -19,6 +37,5 @@ workflows:
   service-1:
     when: << pipeline.parameters.build-be >>
     jobs:
-      - continuation/continue:
-          configuration_path: ./branch-be/.circleci/config.yml
+      - test-be
   
