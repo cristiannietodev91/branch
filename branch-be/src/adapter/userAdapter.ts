@@ -10,8 +10,8 @@ import admin from "firebase-admin";
 import Debug from "debug";
 const debug = Debug("branch:server");
 
-import serviceAccountDev from "../../serviceAccountKey.json";
-import serviceAccountProd from "../../serviceAccountKeyProd.json";
+import serviceAccountDev from "../config/serviceAccountKey.json";
+import serviceAccountProd from "../config/serviceAccountKeyProd.json";
 import { WhereOptions } from "sequelize";
 
 const devServiceConf = {
