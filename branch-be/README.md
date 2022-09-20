@@ -37,7 +37,7 @@ Run specific sedd ``npx sequelize-cli db:seed --seed fileName``
 
 you should execute the next command to run the server and enable all the logs using DEBUG library
 
-``DEBUG=branch:* npm run dev``
+``DEBUG=branch:* yarn dev``
 
 
 ### Test

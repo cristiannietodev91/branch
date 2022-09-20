@@ -16,17 +16,8 @@ module.exports = {
     timezone: "-05:00", // for writing to database,
   },
   test: {
-    username: "root",
-    password: "root",
-    database: "test",
-    host: "localhost",
-    dialect: "mysql",
-    port: 3306,
-    define: {
-      underscored: false,
-      freezeTableName: true,
-    },
-    timezone: "-05:00", // for writing to database
+    dialect: "sqlite",
+    storage: ":memory:",
   },
   production: {
     username: process.env.DBUSER,

@@ -25,9 +25,9 @@ jobs:
       - run: 
           command: cd branch-be && yarn run coverage
       - store_artifacts:
-          path: ~/project/branch-app/test-reports
+          path: ~/project/branch-be/test-reports
       - store_test_results:
-          path: ~/project/branch-app/test-results      
+          path: ~/project/branch-be/test-results      
 
 # here we specify our workflows, most of which are conditionally
 # executed based upon pipeline parameter values. Each workflow calls a

@@ -6,7 +6,7 @@ import usuarioAdapter from "../adapter/userAdapter";
 import http from "http";
 import { sendNotificacionToUser } from "../utils/sendSms";
 import Debug from "debug";
-const moment = require("moment");
+import moment from "moment";
 const debug = Debug("branch:server");
 
 interface InitialMessage {
@@ -74,7 +74,7 @@ export default class socket {
       InterServerEvents
     >(http, {
       transports: ["websocket"],
-      allowEIO3: true
+      allowEIO3: true,
     });
     this.connect();
   }
