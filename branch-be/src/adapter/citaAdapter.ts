@@ -37,7 +37,7 @@ const findCitaByIdCita = (IdCita: string) => citaDAO.getById(IdCita);
 
 /**
  *
- * @param {*} filterCita
+ * @param {*} filterCita - Object to filter
  * @param {*} filtervehiculo
  * @param {*} filterOrden
  * @param {*} cb

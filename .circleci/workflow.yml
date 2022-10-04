@@ -42,6 +42,8 @@ workflows:
     jobs:
       - test-be
       - aws-ecr/build-and-push-image:
+          dockerfile: Dockerfile
+          path: branch-be/
           requires:
             - test-be
           repo: ${MY_APP_PREFIX}
@@ -52,9 +54,10 @@ workflows:
       - aws-ecs/deploy-service-update:
           requires:
             - aws-ecr/build-and-push-image # only run the deployment job once the build and push image job has completed
-          family: '${MY_APP_PREFIX}-service'
-          cluster: '${MY_APP_PREFIX}-cluster'
-          container-image-name-updates: 'container=${MY_APP_PREFIX}-service,tag=${CIRCLE_SHA1}'
+          family: '${TASK_NAME}'
+          cluster: '${CLUSTER_NAME}'
+          service-name: '${SERVICE_NAME}'
+          container-image-name-updates: 'container=${TASK_NAME}_container,tag=${CIRCLE_SHA1}'
           filters:
             branches:
               only: main
