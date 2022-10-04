@@ -16,6 +16,7 @@ jobs:
   deploy-be:
     working_directory: "~/project/branch-be"
     steps:
+      - checkout
       - aws-ecr/build-and-push-image:
           repo: ${MY_APP_PREFIX}
           registry-id: ${AWS_ECR_REGISTRY_ID}
