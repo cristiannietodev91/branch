@@ -44,11 +44,5 @@ workflows:
     when: << pipeline.parameters.build-be >>
     jobs:
       - test-be
-      - deploy-be:
-          requires:
-            - test-be
-          filters:
-            branches:
-              only: main
         
   
