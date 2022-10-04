@@ -38,7 +38,6 @@ jobs:
       - checkout
       - aws-ecr/build-and-push-image:
           repo: ${MY_APP_PREFIX}
-          registry-id: ${AWS_ECR_REGISTRY_ID}
           tag: '${CIRCLE_SHA1}'
       - aws-ecs/deploy-service-update:
           requires:
