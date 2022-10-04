@@ -68,6 +68,3 @@ typings/
 
 # ts files
 /dist
-
-#DockerFile
-DockerFile
