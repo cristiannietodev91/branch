@@ -55,10 +55,10 @@ workflows:
     jobs:
       - test-be
       - deploy-be:
-        requires:
-          - test-be
-        filters:
-          branches:
-            only: main
+          requires:
+            - test-be
+          filters:
+            branches:
+              only: main
         
   
