@@ -29,22 +29,7 @@ jobs:
       - store_artifacts:
           path: ~/project/branch-be/test-reports
       - store_test_results:
-          path: ~/project/branch-be/test-results
-  deploy-be:
-    executor: 
-      name: node/default
-      tag: '14.17'
-    steps:
-      - checkout
-      - aws-ecr/build-and-push-image:
-          repo: ${MY_APP_PREFIX}
-          tag: '${CIRCLE_SHA1}'
-      - aws-ecs/deploy-service-update:
-          requires:
-            - aws-ecr/build-and-push-image # only run the deployment job once the build and push image job has completed
-          family: '${MY_APP_PREFIX}-service'
-          cluster: '${MY_APP_PREFIX}-cluster'
-          container-image-name-updates: 'container=${MY_APP_PREFIX}-service,tag=${CIRCLE_SHA1}'        
+          path: ~/project/branch-be/test-results           
 
 # here we specify our workflows, most of which are conditionally
 # executed based upon pipeline parameter values. Each workflow calls a
@@ -56,11 +41,24 @@ workflows:
     when: << pipeline.parameters.build-be >>
     jobs:
       - test-be
-      - deploy-be:
+      - aws-ecr/build-and-push-image:
           requires:
             - test-be
+          repo: ${MY_APP_PREFIX}
+          tag: '${CIRCLE_SHA1}'
           filters:
             branches:
               only: main
+      - aws-ecs/deploy-service-update:
+          requires:
+            - aws-ecr/build-and-push-image # only run the deployment job once the build and push image job has completed
+          family: '${MY_APP_PREFIX}-service'
+          cluster: '${MY_APP_PREFIX}-cluster'
+          container-image-name-updates: 'container=${MY_APP_PREFIX}-service,tag=${CIRCLE_SHA1}'
+          filters:
+            branches:
+              only: main
+          
+          
         
   
