@@ -2,6 +2,8 @@ version: 2.1
 
 orbs:
   node: circleci/node@5.0.2
+  aws-ecr: circleci/aws-ecr@8.1.2
+  aws-ecs: circleci/aws-ecs@3.2.0
 
 # the default pipeline parameters, which will be updated according to
 # the results of the path-filtering orb
@@ -11,6 +13,19 @@ parameters:
     default: false
 
 jobs:
+  deploy-be:
+    working_directory: ~/project/branch-be
+    steps:
+      - aws-ecr/build-and-push-image:
+          repo: ${MY_APP_PREFIX}
+          registry-id: ${AWS_ECR_REGISTRY_ID}
+          tag: '${CIRCLE_SHA1}'
+      - aws-ecs/deploy-service-update:
+          requires:
+            - aws-ecr/build-and-push-image # only run the deployment job once the build and push image job has completed
+          family: '${MY_APP_PREFIX}-service'
+          cluster: '${MY_APP_PREFIX}-cluster'
+          container-image-name-updates: 'container=${MY_APP_PREFIX}-service,tag=${CIRCLE_SHA1}'    
   test-be:
     executor: 
       name: node/default
@@ -39,4 +54,11 @@ workflows:
     when: << pipeline.parameters.build-be >>
     jobs:
       - test-be
+      - deploy-be:
+        requires:
+          - test-be
+        filters:
+          branches:
+            only: main
+        
   
