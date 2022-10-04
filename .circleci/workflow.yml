@@ -14,7 +14,7 @@ parameters:
 
 jobs:
   deploy-be:
-    working_directory: ~/project/branch-be
+    working_directory: "~/project/branch-be"
     steps:
       - aws-ecr/build-and-push-image:
           repo: ${MY_APP_PREFIX}
