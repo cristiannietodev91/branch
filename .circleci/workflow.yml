@@ -44,7 +44,7 @@ workflows:
       - aws-ecr/build-and-push-image:
           dockerfile: Dockerfile
           path: branch-be/
-          extra-build-args: '--target production -build-arg DBHOST=${DBHOST} --build-arg DBUSER=${DBUSER} --build-arg DBPASSWORD=${DBPASSWORD}'
+          extra-build-args: '--target production --build-arg DBHOST=${DBHOST} --build-arg DBUSER=${DBUSER} --build-arg DBPASSWORD=${DBPASSWORD}'
           requires:
             - test-be
           repo: ${MY_APP_PREFIX}
