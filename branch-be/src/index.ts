@@ -36,6 +36,7 @@ const normalizePort = (val: string) => {
   return false;
 };
 
+
 const port = normalizePort(process.env.PORT || "3005");
 app.set("port", port);
 
