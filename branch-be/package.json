@@ -5,8 +5,7 @@
   "author": "Cristian Nieto (cristianandresnieto@gmail.com)",
   "private": true,
   "scripts": {
-    "prestart": "npm run build",
-    "start": "node ./dist/src",
+    "start": "node ./dist/index",
     "dev": "nodemon",
     "build": "tsc",
     "test": "npm run build && cross-env NODE_ENV=test nyc mocha",

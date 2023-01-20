@@ -32,8 +32,8 @@ services:
       AWS_ACCESS_KEY_ID_MEDIA: $AWS_ACCESS_KEY_ID_MEDIA
       AWS_SECRET_ACCESS_KEY_MEDIA: $AWS_SECRET_ACCESS_KEY_MEDIA
       AWS_DEFAULT_REGION_MEDIA: $AWS_DEFAULT_REGION_MEDIA
-    links:
-      - db  
+    networks:
+      - mynetwork
   frontend:
     build:
       context: ./branch-web-app
@@ -47,3 +47,7 @@ services:
 volumes:
   db:
     driver: local    
+networks:
+  mynetwork:
+    # Use a custom driver
+    driver: bridge

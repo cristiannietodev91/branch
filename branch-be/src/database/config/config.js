@@ -22,7 +22,7 @@ module.exports = {
   production: {
     username: process.env.DBUSER,
     password: process.env.DBPASSWORD,
-    database: process.env.DBNAME,
+    database: process.env.DBNAME || "branch",
     host: process.env.DBHOST,
     dialect: "mysql",
     port: 3306,
