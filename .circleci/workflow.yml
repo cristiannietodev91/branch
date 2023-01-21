@@ -11,6 +11,9 @@ parameters:
   build-be:
     type: boolean
     default: false
+  build-fe:
+    type: boolean
+    default: false  
 
 jobs:
   test-be:
@@ -37,7 +40,7 @@ jobs:
 workflows:
   # when pipeline parameter, run-build-service-1-job is true, the
   # build-service-1 job is triggered.
-  service-1:
+  deploy-be:
     when: << pipeline.parameters.build-be >>
     jobs:
       - test-be
@@ -48,7 +51,7 @@ workflows:
           requires:
             - test-be
           repo: ${MY_APP_PREFIX}
-          tag: '${CIRCLE_SHA1}'
+          tag: '${CIRCLE_SHA1}_BE'
           filters:
             branches:
               only: main
@@ -59,6 +62,18 @@ workflows:
           cluster: '${CLUSTER_NAME}'
           service-name: '${SERVICE_NAME}'
           container-image-name-updates: 'container=${CONTAINER_NAME},tag=${CIRCLE_SHA1}'
+          filters:
+            branches:
+              only: main
+  deploy-fe:
+    when: << pipeline.parameters.build-fe >>
+    jobs:
+      - aws-ecr/build-and-push-image:
+          dockerfile: Dockerfile
+          path: branch-web-app/
+          extra-build-args: '--target production-stage'
+          repo: ${MY_APP_PREFIX}
+          tag: '${CIRCLE_SHA1}_FE'
           filters:
             branches:
               only: main
