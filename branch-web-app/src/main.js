@@ -88,7 +88,7 @@ Vue.use(VueScrollTo);
 console.log("Process env :::>", process.env.NODE_ENV);
 
 firebase.initializeApp(
-  process.env.NODE_ENV == "production" ? firebaseConfigDev : firebaseConfigDev
+  process.env.NODE_ENV == "production" ? firebaseConfigProd : firebaseConfigDev
 );
 
 const options = { transports: ["websocket"], secure: true };
