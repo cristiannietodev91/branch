@@ -58,7 +58,7 @@ workflows:
           family: '${TASK_NAME}'
           cluster: '${CLUSTER_NAME}'
           service-name: '${SERVICE_NAME}'
-          container-image-name-updates: 'container=${TASK_NAME}_container,tag=${CIRCLE_SHA1}'
+          container-image-name-updates: 'container=${CONTAINER_NAME},tag=${CIRCLE_SHA1}'
           filters:
             branches:
               only: main

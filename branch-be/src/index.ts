@@ -11,10 +11,6 @@ import socket from "./socket/socket";
 
 const debug = Debug("branch:server");
 
-//
-/**
- * Get port from environment and store in Express.
- */
 
 /**
  * Normalize a port into a number, string, or false.
