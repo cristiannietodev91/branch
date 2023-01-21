@@ -167,7 +167,7 @@ export default {
 
       ServicesCore.registrarUsuario(payload).then(
         user => {
-          console.debug("Resultado usuario firebase :::> ", user.data);
+          console.debug("Resultado usuario firebase :: ", user.data);
           const item = { uid: user.data.uid, ...user.data };
           //const item = { uid: user.user.uid, ...currentUser }
           localStorage.setItem("user", JSON.stringify(item));
