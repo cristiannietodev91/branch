@@ -10,22 +10,15 @@ import admin from "firebase-admin";
 import Debug from "debug";
 const debug = Debug("branch:server");
 
-import serviceAccountDev from "../config/serviceAccountKey.json";
-import serviceAccountProd from "../config/serviceAccountKeyProd.json";
 import { WhereOptions } from "sequelize";
 
-const devServiceConf = {
-  credential: admin.credential.cert(serviceAccountDev),
-  databaseURL: "https://branch-263701.firebaseio.com",
-};
-
-const prodServiceConf = {
-  credential: admin.credential.cert(serviceAccountProd),
-  databaseURL: "https://branchprod-a9bec.firebaseio.com",
-};
-
 admin.initializeApp(
-  process.env.NODE_ENV === "production" ? prodServiceConf : devServiceConf
+  {
+    credential: process.env.FIREBASE_ACCOUNT_KEY ? 
+      admin.credential.cert(JSON.parse(process.env.FIREBASE_ACCOUNT_KEY || "")) :
+      admin.credential.applicationDefault(),
+    projectId: process.env.FIREBASE_PROJECT_NAME,
+  }
 );
 
 const getById = (

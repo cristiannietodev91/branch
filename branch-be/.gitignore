@@ -62,9 +62,13 @@ typings/
 
 # dotenv environment variables file
 .env
+.env.development
+.env.production
+.env.docker
 
 # next.js build output
 .next
 
 # ts files
 /dist
+

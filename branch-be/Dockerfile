@@ -1,4 +1,4 @@
-FROM node:12-alpine as base
+FROM node:14-alpine as base
 WORKDIR /app/branch
 COPY package.json yarn.lock /app/branch/
 
@@ -32,4 +32,4 @@ RUN yarn install
 ENV NODE_ENV=development
 ENV DEBUG=branch:*
 
-CMD ["yarn", "run dev"]
+CMD ["yarn", "dev"]

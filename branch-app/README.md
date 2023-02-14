@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# branch
-=======
 # branch-app
 
 react-native app which connect to `branch-be` node app
@@ -43,4 +40,3 @@ then run
 ### Test
 
 
->>>>>>> branch-app/master

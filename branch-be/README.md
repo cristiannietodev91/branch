@@ -10,15 +10,33 @@
 - Mysql client must be running
 - a database called ``branch`` must exist to execute migrations
 
-### firsts step to set the project
+### Generate the service key to access Firebase services
+
+To generate a private key file for your service account:
+- In the Firebase console, open Settings > Service Accounts.
+- Click Generate New Private Key, then confirm by clicking Generate Key.
+- Securely store the JSON file containing the key.
+- Set the environment variable GOOGLE_APPLICATION_CREDENTIALS to the file path of the JSON
+
+#### **ex (macOS)**
+```
+export GOOGLE_APPLICATION_CREDENTIALS="/home/user/Downloads/service-account-file.json"
+```
+#### **ex (windows)**
+```
+$env:GOOGLE_APPLICATION_CREDENTIALS="C:\Users\username\Downloads\service-account-file.json"
+```
+### first steps to set the project up
 
 - Set SSH Key in git for your user
 - Download the project from the repo
-- Set .env file with the next values to local environment
+- Set .env file with the next properties to local development
     ``DBNAME=branch
     DBHOST=localhost
     DBPASSWORD=root
-    DBUSER=root``
+    DBUSER=root
+    FIREBASE_PROJECT_NAME=firebaseproject
+    ``
 - run ``yarn install`` command to install all project neccesary dependencies
 - create an database called ``branch``
 
@@ -42,5 +60,3 @@ you should execute the next command to run the server and enable all the logs us
 
 ### Test
 
-
->>>>>>> branch-be/master
