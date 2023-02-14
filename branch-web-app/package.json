@@ -1,7 +1,7 @@
 {
   "name": "branch",
   "version": "1.0.0",
-  "description": "Administrador de Tallers Branch",
+  "description": "Admin workshop branch",
   "author": "Cristian Nieto (cristianandresnieto@gmail.com)",
   "private": true,
   "engines": {

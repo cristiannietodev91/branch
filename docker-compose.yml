@@ -13,6 +13,8 @@ services:
       - '3307:3306'
     volumes:
       - db:/var/lib/mysql
+    networks:
+      - mynetwork
   be:
     build:
       context: ./branch-be
@@ -32,8 +34,11 @@ services:
       AWS_ACCESS_KEY_ID_MEDIA: $AWS_ACCESS_KEY_ID_MEDIA
       AWS_SECRET_ACCESS_KEY_MEDIA: $AWS_SECRET_ACCESS_KEY_MEDIA
       AWS_DEFAULT_REGION_MEDIA: $AWS_DEFAULT_REGION_MEDIA
+      GOOGLE_APPLICATION_CREDENTIALS: /tmp/keys/serviceBranchGoogleAccount.json
     networks:
       - mynetwork
+    volumes:
+      - ${GOOGLE_APPLICATION_CREDENTIALS}:/tmp/keys/serviceBranchGoogleAccount.json:ro
   frontend:
     build:
       context: ./branch-web-app
@@ -42,8 +47,10 @@ services:
     ports:
     - '8080:8080'
     command: /bin/sh -c "yarn serve"
-    links:
-      - be 
+    depends_on:
+      - be
+    networks:
+      - mynetwork
 volumes:
   db:
     driver: local    

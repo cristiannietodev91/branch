@@ -14,27 +14,6 @@ export const defaultDirection = "ltr";
 //   { id: 'enrtl', name: 'English RTL', direction: 'rtl' }
 // ]
 
-export const firebaseConfigDev = {
-  apiKey: "AIzaSyBpPrdTl4df4E1eeGX9mcstM0MEWKjNM0o",
-  authDomain: "branch-263701.firebaseapp.com",
-  databaseURL: "https://branch-263701.firebaseio.com",
-  projectId: "branch-263701",
-  storageBucket: "branch-263701.appspot.com",
-  messagingSenderId: "74838816843",
-  appId: "1:74838816843:web:5ca46e82f1587bc252b5ce"
-};
-
-export const firebaseConfigProd = {
-  apiKey: "AIzaSyAuqJJsV6Mr6SpJDkLxjiGUhitcinxT9wA",
-  authDomain: "branchprod-a9bec.firebaseapp.com",
-  databaseURL: "https://branchprod-a9bec.firebaseio.com",
-  projectId: "branchprod-a9bec",
-  storageBucket: "branchprod-a9bec.appspot.com",
-  messagingSenderId: "1073637691247",
-  appId: "1:1073637691247:web:1c427055d87f943383629a",
-  measurementId: "G-H3BZ2XW5J5"
-};
-
 export const apiUrl = "https://api.coloredstrategies.com";
 
 export const apiBranchUrl = process.env.VUE_APP_URLBACKSERVICES;

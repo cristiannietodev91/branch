@@ -12,8 +12,6 @@ import es from "./locales/es.json";
 import VueI18n from "vue-i18n";
 import {
   defaultLocale,
-  firebaseConfigDev,
-  firebaseConfigProd
 } from "./constants/config";
 // Notification Component Add
 import Notifications from "./components/Common/Notification";
@@ -40,8 +38,7 @@ moment.tz.setDefault("UTC");
 
 import VueMoment from "vue-moment";
 import firebase from "firebase/app";
-//import * as admin from 'firebase-admin';
-import "firebase/auth";
+// import "firebase/auth";
 
 import Vuelidate from "vuelidate";
 
@@ -85,10 +82,17 @@ Vue.use(VCalendar, {
 });
 Vue.use(VueScrollTo);
 
-console.log("Process env :::>", process.env.NODE_ENV);
 
 firebase.initializeApp(
-  process.env.NODE_ENV == "production" ? firebaseConfigProd : firebaseConfigDev
+  {
+    apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
+    authDomain: `${process.env.VUE_APP_FIREBASE_PROJECT_NAME}.firebaseapp.com`,
+    databaseURL: `https://${process.env.VUE_APP_FIREBASE_PROJECT_NAME}.firebaseio.com`,
+    projectId: process.env.VUE_APP_FIREBASE_PROJECT_NAME,
+    storageBucket: `${process.env.VUE_APP_FIREBASE_PROJECT_NAME}.appspot.com`,
+    messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGE_SENDER_ID,
+    appId: process.env.VUE_APP_FIREBASE_APP_ID
+  }
 );
 
 const options = { transports: ["websocket"], secure: true };

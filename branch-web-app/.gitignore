@@ -18,3 +18,8 @@ package-lock.json*
 *.sln
 *.sw*
 .history
+
+# Environment files
+.env
+.env.development
+.env.production
