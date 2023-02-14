@@ -20,6 +20,3 @@ package-lock.json*
 .history
 
 # Environment files
-.env
-.env.development
-.env.production
