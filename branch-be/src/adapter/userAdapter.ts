@@ -35,8 +35,8 @@ const countUsuariosByIdTaller = (
   filter: VehiculoFilter
 ): Promise<number> | undefined => usersDAO.count({}, filter);
 
-const deleteById = (IdUsuario: string | number): Promise<number> | undefined =>
-  usersDAO.deleteById(IdUsuario);
+const deleteById = (userId: string | number): Promise<number> | undefined =>
+  usersDAO.deleteById(userId);
 
 const createUsuario = (
   usuario: UserCreationAttributes
