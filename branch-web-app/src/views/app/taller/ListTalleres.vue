@@ -203,7 +203,6 @@
               :data="item"
               :selected-items="selectedItems"
               @toggle-item="toggleItem"
-              v-contextmenu:contextmenu
             />
           </b-colxx>
         </b-row>
@@ -235,20 +234,6 @@
       <template v-else>
         <div class="loading"></div>
       </template>
-      <v-contextmenu ref="contextmenu" @contextmenu="handleContextmenu">
-        <v-contextmenu-item @click="onContextCopy()">
-          <i class="simple-icon-docs" />
-          <span>Copy</span>
-        </v-contextmenu-item>
-        <v-contextmenu-item @click="onContextArchive()">
-          <i class="simple-icon-drawer" />
-          <span>Move to archive</span>
-        </v-contextmenu-item>
-        <v-contextmenu-item @click="onContextDelete()">
-          <i class="simple-icon-trash" />
-          <span>Delete</span>
-        </v-contextmenu-item>
-      </v-contextmenu>
     </b-colxx>
   </b-row>
 </template>
