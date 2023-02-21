@@ -82,7 +82,7 @@
 </template>
 
 <script>
-import translations from "./../../../node_modules/vue-stepper/src/Translations";
+import translations from "../../constants/Translations";
 export default {
   filters: {
     translate: function(value, locale) {
@@ -252,8 +252,6 @@ export default {
 };
 </script>
 
-<style src="./../../../node_modules/vue-stepper/src/HorizontalStepper.scss" scoped lang="scss">
-</style>
 <style scoped>
 /* fallback */
 @font-face {

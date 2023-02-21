@@ -45,7 +45,6 @@
 </template>
 
 <script>
-import Switches from 'vue-switches'
 import {
     mapGetters,
     mapMutations,
@@ -69,7 +68,6 @@ export default {
     components: {
         'menu-icon': MenuIcon,
         'mobile-menu-icon': MobileMenuIcon,
-        'switches': Switches
     },
     data() {
         return {
