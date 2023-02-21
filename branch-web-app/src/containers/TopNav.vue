@@ -7,23 +7,6 @@
         <a href="#" class="menu-button-mobile d-xs-block d-sm-block d-md-none" @click.prevent="changeSideMenuForMobile(menuType)">
             <mobile-menu-icon />
         </a>
-        <!-- <div :class="{'search':true, 'mobile-view':isMobileSearch}" ref="searchContainer" @mouseenter="isSearchOver=true" @mouseleave="isSearchOver=false">
-            <b-input :placeholder="$t('menu.search')" @keypress.native.enter="search" v-model="searchKeyword" />
-            <span class="search-icon" @click="searchClick">
-                <i class="simple-icon-magnifier"></i>
-            </span>
-        </div> -->
-        <!-- <div class="d-inline-block">
-            <b-dropdown id="langddm" class="ml-2" variant="light" size="sm" toggle-class="language-button">
-                <template slot="button-content">
-                    <span class="name">{{$i18n.locale.toUpperCase()}}</span>
-                </template>
-                <b-dropdown-item v-for="(l,index) in localeOptions" :key="index" @click="changeLocale(l.id, l.direction)">{{l.name}}</b-dropdown-item>
-            </b-dropdown>
-        </div>
-        <div class="position-relative d-none d-none d-lg-inline-block">
-            <a class="btn btn-outline-primary btn-sm ml-2" target="_top" :href="buyUrl">{{$t('user.buy')}}</a>
-        </div> -->
     </div>
     <router-link class="navbar-logo" tag="a" to="/app">
         <span class="logo d-none d-xs-block"></span>
@@ -31,66 +14,7 @@
     </router-link>
 
     <div class="navbar-right">
-        <!-- <div class="d-none d-md-inline-block align-middle mr-3">
-            <switches id="tool-mode-switch" v-model="isDarkActive" theme="custom" class="vue-switcher-small switch_branch" color="primary" />
-            <b-tooltip target="tool-mode-switch" placement="top-left" title="Modo oscuro"></b-tooltip>
-        </div> -->
         <div class="header-icons d-inline-block align-middle">
-            <!-- <div class="position-relative d-none d-sm-inline-block">
-                <b-dropdown variant="empty" size="sm" right toggle-class="header-icon" menu-class="position-absolute mt-3 iconMenuDropdown" no-caret>
-                    <template slot="button-content">
-                        <i class="simple-icon-grid" />
-                    </template>
-                    <div>
-                        <router-link tag="a" to="/app/dashboards/default" class="icon-menu-item">
-                            <i class="iconsminds-shop-4 d-block" />
-                            {{$t('menu.dashboards')}}
-                        </router-link>
-                        <router-link tag="a" to="/app/ui" class="icon-menu-item">
-                            <i class="iconsminds-pantone d-block" />
-                            {{$t('menu.ui')}}
-                        </router-link>
-                        <router-link tag="a" to="/app/ui/components/charts" class="icon-menu-item">
-                            <i class="iconsminds-bar-chart-4 d-block" />
-                            {{$t('menu.charts')}}
-                        </router-link>
-                        <router-link tag="a" to="/app/applications/chat" class="icon-menu-item">
-                            <i class="iconsminds-speach-bubble d-block" />
-                            {{$t('menu.chat')}}
-                        </router-link>
-                        <router-link tag="a" to="/app/applications/survey" class="icon-menu-item">
-                            <i class="iconsminds-formula d-block" />
-                            {{$t('menu.survey')}}
-                        </router-link>
-                        <router-link tag="a" to="/app/applications/todo" class="icon-menu-item">
-                            <i class="iconsminds-check d-block" />
-                            {{$t('menu.todo')}}
-                        </router-link>
-                    </div>
-                </b-dropdown>
-            </div> -->
-
-            <div class="position-relative d-inline-block">
-                <b-dropdown variant="empty" size="sm" right toggle-class="header-icon notificationButton" menu-class="position-absolute mt-3 notificationDropdown" no-caret>
-                    <!-- <template slot="button-content">
-                        <i class="simple-icon-bell" />
-                        <span class="count">3</span>
-                    </template> -->
-                    <vue-perfect-scrollbar :settings="{ suppressScrollX: true, wheelPropagation: false }">
-                        <div class="d-flex flex-row mb-3 pb-3 border-bottom" v-for="(n,index) in notifications" :key="index">
-                            <router-link tag="a" to="/app/pages/product/details">
-                                <img :src="n.img" :alt="n.title" class="img-thumbnail list-thumbnail xsmall border-0 rounded-circle" />
-                            </router-link>
-                            <div class="pl-3 pr-2">
-                                <router-link tag="a" to="/app/pages/product/details">
-                                    <p class="font-weight-medium mb-1">{{n.title}}</p>
-                                    <p class="text-muted mb-0 text-small">{{n.date}}</p>
-                                </router-link>
-                            </div>
-                        </div>
-                    </vue-perfect-scrollbar>
-                </b-dropdown>
-            </div>
             <div class="position-relative d-none d-sm-inline-block ">
                 <div class="btn-group">
                     <b-button variant="empty" class="header-icon btn-sm" @click="toggleFullScreen">
@@ -122,8 +46,6 @@
 
 <script>
 import Switches from 'vue-switches'
-import notifications from '../data/notifications'
-import ServicesCore from "../services/service";
 import {
     mapGetters,
     mapMutations,
@@ -159,7 +81,6 @@ export default {
             menuHiddenBreakpoint,
             searchPath,
             buyUrl,
-            notifications,
             isDarkActive: false
         }
     },
