@@ -3,28 +3,28 @@
     <b-row class="m-3">
       <div class="search-container">
         <div
-          :class="{ search: true, 'mobile-view': isMobileSearch }"
           ref="searchContainer"
+          :class="{ search: true, 'mobile-view': isMobileSearch }"
           @mouseenter="isSearchOver = true"
           @mouseleave="isSearchOver = false"
         >
           <b-input
+            v-model="searchKeyword"
             :placeholder="$t('menu.search')"
             @keypress.native.enter="search"
-            v-model="searchKeyword"
           />
           <span class="search-icon" @click="searchClick">
-            <i class="simple-icon-magnifier"></i>
+            <i class="simple-icon-magnifier" />
           </span>
         </div>
       </div>
     </b-row>
     <b-row>
       <b-colxx
-        xxs="12"
-        class="ordenes-branch"
         v-for="(orden, ordenIndex) in ordenes"
         :key="`orden_${ordenIndex}`"
+        xxs="12"
+        class="ordenes-branch"
       >
         <orden-card :data="orden" :mecanicos="taller.mecanicos" />
       </b-colxx>
@@ -38,6 +38,7 @@ import OrdenCard from "../../../components/Cards/OrdenCard";
 import ServicesCore from "../../../services/service";
 
 export default {
+  name: "OrdenesWorkshop",
   components: {
     "orden-card": OrdenCard
   },

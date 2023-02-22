@@ -1,11 +1,11 @@
 <template>
   <b-card>
-    <b-form @submit.prevent="uploadFiles" v-if="!data.etapa || data.etapa.estado=='Rechazado'">
-      <info-cotizacion :data="data" v-if="data.etapa && data.etapa.estado=='Rechazado'" />
+    <b-form v-if="!data.etapa || data.etapa.estado=='Rechazado'" @submit.prevent="uploadFiles">
+      <info-cotizacion v-if="data.etapa && data.etapa.estado=='Rechazado'" :data="data" />
       <b-form-group :label="$t('branch.orden.mecanico')">
         <v-select
-          :options="data.mecanicos"
           v-model="newOrden.mecanico"
+          :options="data.mecanicos"
           label="firstName"
           :reduce="mecanico => mecanico.IdMecanico"
         >
@@ -15,54 +15,53 @@
               :required="!newOrden.mecanico"
               v-bind="attributes"
               v-on="events"
-            />
+            >
           </template>
           <template
-            v-slot:option="option"
-          >{{ option.firstName }} {{ option.lastName }} - {{option.identificacion}}</template>
+            #option="option"
+          >
+            {{ option.firstName }} {{ option.lastName }} - {{ option.identificacion }}
+          </template>
         </v-select>
       </b-form-group>
       <vue-dropzone
-        ref="myVueDropzone"
         id="dropzone"
+        ref="myVueDropzone"
         :awss3="awss3"
         :options="dropzoneOptions"
-        v-on:vdropzone-complete="complete"
-        v-on:vdropzone-removed-file="removeFile"
-      ></vue-dropzone>
+        @vdropzone-complete="complete"
+        @vdropzone-removed-file="removeFile"
+      />
       <div class="btn-icon">
         <b-button type="submit" variant="primary" class="mt-4" size="lg">
-          <i class="iconsminds-upload-1"></i>
+          <i class="iconsminds-upload-1" />
           Cargar Cotización
           <!-- {{ $t('forms.submit') }} -->
         </b-button>
       </div>
     </b-form>
-    <info-cotizacion :data="data" v-else />
+    <info-cotizacion v-else :data="data" />
   </b-card>
 </template>
 <script>
-import GlideComponent from "../Carousel/GlideComponent";
-import IconCard from "../Cards/IconCard";
 import vSelect from "vue-select";
 import moment from "moment-timezone";
 import "vue-select/dist/vue-select.css";
 import vue2Dropzone from "vue2-dropzone";
 import { validationMixin } from "vuelidate";
-import { required, email } from "vuelidate/lib/validators";
+import { required } from "vuelidate/lib/validators";
 import ServicesCore from "./../../services/service";
 import InfoCotizacion from "./InfoCotizacion";
 
 export default {
-  props: ["clickedNext", "currentStep", "data"],
+  name: "cotizacion-step",
   components: {
     "vue-dropzone": vue2Dropzone,
     "v-select": vSelect,
-    "glide-component": GlideComponent,
-    "icon-card": IconCard,
     "info-cotizacion": InfoCotizacion
   },
   mixins: [validationMixin],
+  props: ["clickedNext", "currentStep", "data"],
   data() {
     return {
       newOrden: {
@@ -115,6 +114,14 @@ export default {
       }
     }
   },
+  mounted() {
+    console.log("Data :::>", this.data);
+    if (this.data.etapa) {
+      this.$emit("can-continue", { value: true });
+    } else {
+      this.$emit("can-continue", { value: false });
+    }
+  },
   methods: {
     complete(response) {
       if (response.status == "success") {
@@ -133,7 +140,7 @@ export default {
         this.filesEtapa.push(documento);
       }
     },
-    removeFile(file, error, xhr) {
+    removeFile(file) {
       this.filesEtapa = this.filesEtapa.filter(value => {
         value.key != file.s3Signature.key;
       });
@@ -173,8 +180,9 @@ export default {
                         permanent: false
                       }
                     );
-                    console.log("Data geto orden By Id :::>", response.data);
-                    this.data.etapa = response.data;
+                    console.log("Data get orden By Id :::>", response.data);
+                    // TODO: Fix issue to mutate received data
+                    //this.data.etapa = response.data;
                     this.$emit("can-continue", { value: true });
                     this.$emit("success-step");
                   }
@@ -245,14 +253,6 @@ export default {
                   <a href="#" class="remove" data-dz-remove> <i class="glyph-icon simple-icon-trash"></i> </a>
                 </div>
         `;
-    }
-  },
-  mounted() {
-    console.log("Data :::>", this.data);
-    if (this.data.etapa) {
-      this.$emit("can-continue", { value: true });
-    } else {
-      this.$emit("can-continue", { value: false });
     }
   }
 };

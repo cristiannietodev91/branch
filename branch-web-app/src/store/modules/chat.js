@@ -59,7 +59,7 @@ const mutations = {
       state.newMessages = state.newMessages + 1;
     }
   },
-  resetNewMessages(state, payload) {
+  resetNewMessages(state) {
     state.newMessages = 0;
   }
 };
@@ -91,10 +91,10 @@ const actions = {
       }
     );
   },
-  SOCKET_connect({ commit }) {
+  SOCKET_connect() {
     console.log("From vuexxx:::> coonect");
   },
-  SOCKET_newcliente({ commit, state }, data) {
+  SOCKET_newcliente({ state }, data) {
     console.log("New cliente data ", data);
     this._vm.$socket.emit("joinroom", { room: data.room }, result => {
       const conversations = [...state.conversations];
@@ -108,7 +108,7 @@ const actions = {
       console.log("Result unir a room del cliente", result);
     });
   },
-  SOCKET_sendmessage({ commit, state }, data) {
+  SOCKET_sendmessage({ commit }, data) {
     commit("addMessageItem", data);
   }
 };

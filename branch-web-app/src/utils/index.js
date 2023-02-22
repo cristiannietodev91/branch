@@ -79,7 +79,7 @@ export const chartTooltip = {
 }
 
 export const centerTextPlugin = {
-  afterDatasetsUpdate: function (chart) {},
+  afterDatasetsUpdate: function () {},
   beforeDraw: function (chart) {
     var width = chart.chartArea.right
     var height = chart.chartArea.bottom
@@ -130,7 +130,7 @@ export const centerTextPlugin = {
 
     ctx.save()
   },
-  beforeEvent: function (chart, event, options) {
+  beforeEvent: function (chart, event) {
     var firstPoint = chart.getElementAtEvent(event)[0]
 
     if (firstPoint) {

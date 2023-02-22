@@ -7,14 +7,18 @@
           size="xs"
           class="top-right-button"
           @click="showModal"
-        >{{ $t("pages.branch.add-new-mecanico") }}</b-button>
+        >
+          {{ $t("pages.branch.add-new-mecanico") }}
+        </b-button>
         <modal-add-mecanico
           :IdTaller="currentUser.IdTaller"
           :mecanicoSelected="mecanicoSelected"
           @loadInfoTaller="loadInfoTaller"
-        ></modal-add-mecanico>
+        />
         <b-modal id="modalDeleteMecanico" title="Eliminar Mecanico" @ok="deleteMecanicoConfirm">
-          <p class="my-4">¿Esta seguro de eliminar este mecanico?</p>
+          <p class="my-4">
+            ¿Esta seguro de eliminar este mecanico?
+          </p>
         </b-modal>
       </div>
       <mecanicos-items
@@ -35,6 +39,7 @@ import MecanicosItem from "../../../components/Listing/MecanicosListItem";
 import ServicesCore from "../../../services/service";
 
 export default {
+  name: "MecanicosWorkshop",
   components: {
     "mecanicos-items": MecanicosItem,
     "modal-add-mecanico": ModalAddMecanico

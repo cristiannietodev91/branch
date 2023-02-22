@@ -79,7 +79,7 @@ export default {
         })
     },
     watch: {
-        menuType: function (val) {
+        menuType: function () {
             this.onResize();
         },
     },

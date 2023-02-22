@@ -101,7 +101,6 @@
 </template>
 
 <script>
-import InputTag from "../../components/Form/InputTag";
 import {
   required,
   numeric,
@@ -115,9 +114,6 @@ import ServicesCore from "../../services/service";
 
 export default {
   props: ["taller"],
-  components: {
-    "input-tag": InputTag
-  },
   data() {
     return {
       editTaller: {

@@ -15,16 +15,18 @@
         />
         <b-form-invalid-feedback
           v-if="!$v.newCita.placa.required"
-        >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
+        >
+          {{ $t('branch.forms.validations.required') }}
+        </b-form-invalid-feedback>
       </b-form-group>
       <b-form-group :label="$t('branch.cita.fechaCita')" class="has-float-label">
         <v-date-picker
+          v-model="newCita.fechaCita"
           :is-required="true"
           :min-date="new Date()"
           mode="single"
-          v-model="newCita.fechaCita"
           :input-props="{ class:'form-control', placeholder: $t('form-components.date') }"
-        ></v-date-picker>
+        />
       </b-form-group>
       <b-form-group :label="$t('branch.cita.horacita')" class="has-float-label">
         <b-form-input
@@ -35,34 +37,38 @@
         />
         <b-form-invalid-feedback
           v-if="!$v.newCita.horaCita.required"
-        >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
+        >
+          {{ $t('branch.forms.validations.required') }}
+        </b-form-invalid-feedback>
       </b-form-group>
       <b-form-group :label="$t('branch.cita.mecanico')" class="has-float-label">
         <v-select
-          :options="taller.mecanicos"
           v-model="newCita.mecanico"
+          :options="taller.mecanicos"
           label="fullName"
           :reduce="mecanico => mecanico.IdMecanico"
         >
-          <template v-slot:option="option">{{ option.fullName }} - {{option.identificacion}}</template>
+          <template #option="option">
+            {{ option.fullName }} - {{ option.identificacion }}
+          </template>
         </v-select>
       </b-form-group>
       <b-form-group :label="$t('branch.cita.servicio')" class="has-float-label">
-        <v-select :options="servicios" v-model="newCita.servicio">
+        <v-select v-model="newCita.servicio" :options="servicios">
           <template #search="{attributes, events}">
             <input
               class="vs__search"
               :required="!newCita.servicio"
               v-bind="attributes"
               v-on="events"
-            />
+            >
           </template>
         </v-select>
       </b-form-group>
-      <b-form-group :label="$t('branch.cita.estado')" v-if="newCita.IdCita" class="has-float-label">
-        <v-select :options="estados" v-model="newCita.estado">
+      <b-form-group v-if="newCita.IdCita" :label="$t('branch.cita.estado')" class="has-float-label">
+        <v-select v-model="newCita.estado" :options="estados">
           <template #search="{attributes, events}">
-            <input class="vs__search" :required="!newCita.estado" v-bind="attributes" v-on="events" />
+            <input class="vs__search" :required="!newCita.estado" v-bind="attributes" v-on="events">
           </template>
         </v-select>
       </b-form-group>
@@ -70,8 +76,12 @@
       <b-button
         variant="outline-secondary"
         @click="hideModal('modalAddCita')"
-      >{{ $t('pages.cancel') }}</b-button>
-      <b-button type="submit" variant="primary">{{ $t('forms.submit') }}</b-button>
+      >
+        {{ $t('pages.cancel') }}
+      </b-button>
+      <b-button type="submit" variant="primary">
+        {{ $t('forms.submit') }}
+      </b-button>
     </b-form>
   </b-modal>
 </template>
@@ -83,10 +93,11 @@ import { required } from "vuelidate/lib/validators";
 import ServicesCore from "../../services/service";
 
 export default {
-  props: ["taller", "cita"],
+  name: 'add-cita-modal',
   components: {
     "v-select": vSelect
   },
+  props: ["taller", "cita"],
   data() {
     return {
       newCita: {
@@ -132,6 +143,24 @@ export default {
         required
       }
     }
+  },
+  mounted() {
+    this.$watch(
+      "cita",
+      () => {
+        if (this.cita.vehiculo) {
+          this.newCita.placa = this.cita.vehiculo.placa;
+          this.newCita.IdCita = this.cita.IdCita;
+          this.newCita.mecanico = this.cita.IdMecanico;
+          this.newCita.fechaCita = new Date(this.cita.fechaCita);
+          this.newCita.horaCita = this.cita.horaCita;
+          this.newCita.servicio = this.cita.servicio;
+          this.newCita.estado = this.cita.estado;
+        }
+        this.$forceUpdate();
+      },
+      { immediate: true }
+    );
   },
   methods: {
     hideModal(refname) {
@@ -253,24 +282,6 @@ export default {
           });
       }
     }
-  },
-  mounted() {
-    this.$watch(
-      "cita",
-      () => {
-        if (this.cita.vehiculo) {
-          this.newCita.placa = this.cita.vehiculo.placa;
-          this.newCita.IdCita = this.cita.IdCita;
-          this.newCita.mecanico = this.cita.IdMecanico;
-          this.newCita.fechaCita = new Date(this.cita.fechaCita);
-          this.newCita.horaCita = this.cita.horaCita;
-          this.newCita.servicio = this.cita.servicio;
-          this.newCita.estado = this.cita.estado;
-        }
-        this.$forceUpdate();
-      },
-      { immediate: true }
-    );
   }
 };
 </script>

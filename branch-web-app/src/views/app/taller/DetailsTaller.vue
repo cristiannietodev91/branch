@@ -11,27 +11,35 @@
                 to="/app/taller/detailTaller"
                 exact
                 exact-active-class="active"
-              >{{ $t("branch.cita.cita") }}</b-nav-item>
+              >
+                {{ $t("branch.cita.cita") }}
+              </b-nav-item>
               <b-nav-item
                 to="/app/taller/detailTaller/mecanicos"
                 exact
                 exact-active-class="active"
-              >{{ $t("pages.branch.mecanicos") }}</b-nav-item>
+              >
+                {{ $t("pages.branch.mecanicos") }}
+              </b-nav-item>
               <b-nav-item
                 to="/app/taller/detailTaller/ordenes"
                 exact
                 exact-active-class="active"
-              >{{ $t("pages.branch.ordentrabajo") }}</b-nav-item>
+              >
+                {{ $t("pages.branch.ordentrabajo") }}
+              </b-nav-item>
               <b-nav-item
                 to="/app/taller/detailTaller/info"
                 exact
                 exact-active-class="active"
-              >{{ $t("pages.details") }}</b-nav-item>
+              >
+                {{ $t("pages.details") }}
+              </b-nav-item>
             </b-nav>
           </b-card-header>
         </b-card>
         <b-card-body>
-          <router-view></router-view>
+          <router-view />
         </b-card-body>
       </b-colxx>
     </b-row>
@@ -52,15 +60,15 @@ export default {
       currentUser: "currentUser"
     })
   },
-  methods: {
-    hideModal(refname) {
-      this.$refs[refname].hide();
-    }
-  },
   created() {
     setTimeout(() => {
       this.isLoad = true;
     }, 50);
+  },
+  methods: {
+    hideModal(refname) {
+      this.$refs[refname].hide();
+    }
   }
 };
 </script>

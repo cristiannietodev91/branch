@@ -129,7 +129,7 @@ export default {
         .auth()
         .sendPasswordResetEmail(payload.email)
         .then(
-          user => {
+          () => {
             commit("clearError");
             commit("setForgotMailSuccess");
           },
@@ -148,7 +148,7 @@ export default {
         .auth()
         .confirmPasswordReset(payload.resetPasswordCode, payload.newPassword)
         .then(
-          user => {
+          () => {
             commit("clearError");
             commit("setResetPasswordSuccess");
           },
@@ -191,17 +191,8 @@ export default {
             localStorage.removeItem("user");
             commit("setLogout");
           },
-          _error => {}
+          () => {}
         );
     }
-    /*,
-    fetchUser({ commit }, user) {
-      if (user) {
-        commit('setUser', { uid: user.uid, ...user.data })
-      } else {
-        localStorage.removeItem('user')
-        commit('setLogout')
-      }
-    }*/
   }
 };

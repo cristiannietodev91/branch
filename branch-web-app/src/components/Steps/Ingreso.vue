@@ -37,9 +37,9 @@
 </template>
 <script>
 import { validationMixin } from "vuelidate";
-import { required, email } from "vuelidate/lib/validators";
 
 export default {
+  name: "IngresoStep",
   props: ["clickedNext", "currentStep", "data"],
   mixins: [validationMixin],
   data() {

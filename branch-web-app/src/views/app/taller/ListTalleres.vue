@@ -10,35 +10,37 @@
               variant="primary"
               size="lg"
               class="top-right-button"
-            >{{ $t('pages.add-new') }}</b-button>
+            >
+              {{ $t('pages.add-new') }}
+            </b-button>
             <b-button-group>
               <b-dropdown
                 split
                 right
-                @click="selectAll(true)"
                 class="check-button"
                 variant="primary"
+                @click="selectAll(true)"
               >
                 <label
-                  class="custom-control custom-checkbox pl-4 mb-0 d-inline-block"
                   slot="button-content"
+                  class="custom-control custom-checkbox pl-4 mb-0 d-inline-block"
                 >
                   <input
+                    v-shortkey="{select: ['ctrl','a'], undo: ['ctrl','d']}"
                     class="custom-control-input"
                     type="checkbox"
                     :checked="isSelectedAll"
-                    v-shortkey="{select: ['ctrl','a'], undo: ['ctrl','d']}"
                     @shortkey="keymap"
-                  />
+                  >
                   <span
                     :class="{
-                'custom-control-label' :true,
-                'indeterminate' : isAnyItemSelected
-                }"
+                      'custom-control-label' :true,
+                      'indeterminate' : isAnyItemSelected
+                    }"
                   >&nbsp;</span>
                 </label>
-                <b-dropdown-item>{{$t('pages.delete')}}</b-dropdown-item>
-                <b-dropdown-item>{{$t('pages.another-action')}}</b-dropdown-item>
+                <b-dropdown-item>{{ $t('pages.delete') }}</b-dropdown-item>
+                <b-dropdown-item>{{ $t('pages.another-action') }}</b-dropdown-item>
               </b-dropdown>
             </b-button-group>
             <b-modal
@@ -47,108 +49,140 @@
               :title="$t('branch.taller.add-new-taller-title')"
               hide-footer
             >
-              <b-form @submit.prevent="onValitadeFormSubmit" class="av-tooltip tooltip-label-right">
+              <b-form class="av-tooltip tooltip-label-right" @submit.prevent="onValitadeFormSubmit">
                 <b-form-group label-cols="2" horizontal :label="$t('branch.taller.nombreTaller')">
                   <b-form-input
-                    type="text"
                     v-model="$v.newItem.nombre.$model"
+                    type="text"
                     :state="!$v.newItem.nombre.$error"
                   />
                   <b-form-invalid-feedback
                     v-if="!$v.newItem.nombre.required"
-                  >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
+                  >
+                    {{ $t('branch.forms.validations.required') }}
+                  </b-form-invalid-feedback>
                   <b-form-invalid-feedback
                     v-else-if="!$v.newItem.nombre.minLength || !$v.newItem.nombre.maxLength"
-                  >{{$t('branch.forms.validations.longitud')}}</b-form-invalid-feedback>
+                  >
+                    {{ $t('branch.forms.validations.longitud') }}
+                  </b-form-invalid-feedback>
                 </b-form-group>
                 <b-form-group label-cols="2" horizontal :label="$t('branch.taller.identificacion')">
                   <b-form-input
-                    type="text"
                     v-model="$v.newItem.identificacion.$model"
+                    type="text"
                     :state="!$v.newItem.identificacion.$error"
                   />
                   <b-form-invalid-feedback
                     v-if="!$v.newItem.identificacion.required"
-                  >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
+                  >
+                    {{ $t('branch.forms.validations.required') }}
+                  </b-form-invalid-feedback>
                   <b-form-invalid-feedback
                     v-if="!$v.newItem.identificacion.alpha"
-                  >{{$t('branch.forms.validations.nit')}}</b-form-invalid-feedback>
+                  >
+                    {{ $t('branch.forms.validations.nit') }}
+                  </b-form-invalid-feedback>
                   <b-form-invalid-feedback
                     v-else-if="!$v.newItem.nombre.minLength || !$v.newItem.nombre.maxLength"
-                  >{{$t('branch.forms.validations.longitud')}}</b-form-invalid-feedback>
+                  >
+                    {{ $t('branch.forms.validations.longitud') }}
+                  </b-form-invalid-feedback>
                 </b-form-group>
 
                 <b-form-group label-cols="2" horizontal :label="$t('branch.taller.direccion')">
                   <b-form-input
-                    type="text"
                     v-model="$v.newItem.direccion.$model"
+                    type="text"
                     :state="!$v.newItem.direccion.$error"
                   />
                   <b-form-invalid-feedback
                     v-if="!$v.newItem.direccion.required"
-                  >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
+                  >
+                    {{ $t('branch.forms.validations.required') }}
+                  </b-form-invalid-feedback>
                   <b-form-invalid-feedback
                     v-else-if="!$v.newItem.direccion.minLength || !$v.newItem.direccion.maxLength"
-                  >{{$t('branch.forms.validations.longitud')}}</b-form-invalid-feedback>
+                  >
+                    {{ $t('branch.forms.validations.longitud') }}
+                  </b-form-invalid-feedback>
                 </b-form-group>
 
                 <b-form-group label-cols="2" horizontal :label="$t('branch.taller.celular')">
                   <b-form-input
-                    type="text"
                     v-model="$v.newItem.celular.$model"
+                    type="text"
                     :state="!$v.newItem.celular.$error"
                   />
                   <b-form-invalid-feedback
                     v-if="!$v.newItem.celular.required"
-                  >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
+                  >
+                    {{ $t('branch.forms.validations.required') }}
+                  </b-form-invalid-feedback>
                   <b-form-invalid-feedback
                     v-else-if="!$v.newItem.celular.minLength || !$v.newItem.direccion.maxLength"
-                  >{{$t('branch.forms.validations.longitud')}}</b-form-invalid-feedback>
+                  >
+                    {{ $t('branch.forms.validations.longitud') }}
+                  </b-form-invalid-feedback>
                 </b-form-group>
 
                 <b-form-group label-cols="2" horizontal :label="$t('branch.taller.email')">
                   <b-form-input
-                    type="text"
                     v-model="$v.newItem.email.$model"
+                    type="text"
                     :state="!$v.newItem.email.$error"
                   />
                   <b-form-invalid-feedback
                     v-if="!$v.newItem.email.required"
-                  >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
+                  >
+                    {{ $t('branch.forms.validations.required') }}
+                  </b-form-invalid-feedback>
                   <b-form-invalid-feedback
                     v-else-if="!$v.newItem.email.email"
-                  >{{$t('branch.forms.validations.email')}}</b-form-invalid-feedback>
+                  >
+                    {{ $t('branch.forms.validations.email') }}
+                  </b-form-invalid-feedback>
                   <b-form-invalid-feedback
                     v-else-if="!$v.newItem.email.minLength || !$v.newItem.email.maxLength"
-                  >{{$t('branch.forms.validations.longitud')}}</b-form-invalid-feedback>
+                  >
+                    {{ $t('branch.forms.validations.longitud') }}
+                  </b-form-invalid-feedback>
                 </b-form-group>
                 <b-form-group label-cols="2" horizontal :label="$t('branch.taller.logo')">
                   <b-form-input
-                    type="text"
                     v-model="$v.newItem.urlLogo.$model"
+                    type="text"
                     :state="!$v.newItem.urlLogo.$error"
                   />
                   <b-form-invalid-feedback
                     v-if="!$v.newItem.urlLogo.required"
-                  >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
+                  >
+                    {{ $t('branch.forms.validations.required') }}
+                  </b-form-invalid-feedback>
                   <b-form-invalid-feedback
                     v-else-if="!$v.newItem.urlLogo.url"
-                  >{{$t('branch.forms.validations.url')}}</b-form-invalid-feedback>
+                  >
+                    {{ $t('branch.forms.validations.url') }}
+                  </b-form-invalid-feedback>
                 </b-form-group>
                 <b-button
                   variant="outline-secondary"
                   @click="hideModal('modalAddTaller')"
-                >{{ $t('pages.cancel') }}</b-button>
-                <b-button type="submit" variant="primary">{{ $t('forms.submit') }}</b-button>
+                >
+                  {{ $t('pages.cancel') }}
+                </b-button>
+                <b-button type="submit" variant="primary">
+                  {{ $t('forms.submit') }}
+                </b-button>
               </b-form>
             </b-modal>
           </div>
           <piaf-breadcrumb />
           <div class="mb-2 mt-2">
             <b-button
+              v-b-toggle.displayOptions
               variant="empty"
               class="pt-0 pl-0 d-inline-block d-md-none"
-              v-b-toggle.displayOptions
             >
               {{ $t('pages.display-options') }}
               <i class="simple-icon-arrow-down align-middle" />
@@ -166,15 +200,17 @@
                     v-for="(order,index) in sortOptions"
                     :key="index"
                     @click="changeOrderBy(order)"
-                  >{{ order.label }}</b-dropdown-item>
+                  >
+                    {{ order.label }}
+                  </b-dropdown-item>
                 </b-dropdown>
 
                 <div class="search-sm d-inline-block float-md-left mr-1 align-top">
-                  <b-input :placeholder="$t('menu.search')" v-model="search" />
+                  <b-input v-model="search" :placeholder="$t('menu.search')" />
                 </div>
               </div>
               <div class="float-md-right pt-1">
-                <span class="text-muted text-small mr-1 mb-2">{{from}}-{{to}} of {{ total }}</span>
+                <span class="text-muted text-small mr-1 mb-2">{{ from }}-{{ to }} of {{ total }}</span>
                 <b-dropdown
                   id="ddown2"
                   right
@@ -187,7 +223,9 @@
                     v-for="(size,index) in pageSizes"
                     :key="index"
                     @click="changePageSize(size)"
-                  >{{ size }}</b-dropdown-item>
+                  >
+                    {{ size }}
+                  </b-dropdown-item>
                 </b-dropdown>
               </div>
             </b-collapse>
@@ -197,7 +235,10 @@
       </b-row>
       <template v-if="isLoad">
         <b-row>
-          <b-colxx xxs="12" class="mb-3" v-for="(item,index) in items" :key="index" :id="item.id">
+          <b-colxx
+            v-for="(item,index) in items" :id="item.id" :key="index" xxs="12"
+            class="mb-3"
+          >
             <taller-list-item
               :key="item.id"
               :data="item"
@@ -209,22 +250,22 @@
         <b-row v-if="lastPage>1">
           <b-colxx xxs="12">
             <b-pagination-nav
+              v-model="page"
               :number-of-pages="lastPage"
               :link-gen="linkGen"
-              v-model="page"
               :per-page="perPage"
               align="center"
             >
-              <template v-slot:next-text>
+              <template #next-text>
                 <i class="simple-icon-arrow-right" />
               </template>
-              <template v-slot:prev-text>
+              <template #prev-text>
                 <i class="simple-icon-arrow-left" />
               </template>
-              <template v-slot:first-text>
+              <template #first-text>
                 <i class="simple-icon-control-start" />
               </template>
-              <template v-slot:last-text>
+              <template #last-text>
                 <i class="simple-icon-control-end" />
               </template>
             </b-pagination-nav>
@@ -232,7 +273,7 @@
         </b-row>
       </template>
       <template v-else>
-        <div class="loading"></div>
+        <div class="loading" />
       </template>
     </b-colxx>
   </b-row>
@@ -248,29 +289,15 @@ import {
   url
 } from "vuelidate/lib/validators";
 
-import {
-  DataListIcon,
-  ThumbListIcon,
-  ImageListIcon
-} from "../../../components/Svg";
-import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 import ServicesCore from "../../../services/service";
 
-import ImageListItem from "../../../components/Listing/ImageListItem";
-import ThumbListItem from "../../../components/Listing/ThumbListItem";
 import TallerListItem from "../../../components/Listing/TallerListItem";
 
 const alpha = helpers.regex("alpha", /(^[0-9]+-{1}[0-9]{1})/);
 
 export default {
   components: {
-    "data-list-icon": DataListIcon,
-    "thumb-list-icon": ThumbListIcon,
-    "image-list-icon": ImageListIcon,
-    "v-select": vSelect,
-    "image-list-item": ImageListItem,
-    "thumb-list-item": ThumbListItem,
     "taller-list-item": TallerListItem
   },
   data() {
@@ -362,6 +389,25 @@ export default {
         url
       }
     }
+  },
+  computed: {
+    isSelectedAll() {
+      return this.selectedItems.length >= this.items.length;
+    },
+    isAnyItemSelected() {
+      return (
+        this.selectedItems.length > 0 &&
+        this.selectedItems.length < this.items.length
+      );
+    }
+  },
+  watch: {
+    search() {
+      this.page = 1;
+    }
+  },
+  mounted() {
+    this.loadItems();
   },
   methods: {
     loadItems() {
@@ -480,29 +526,9 @@ export default {
         if (response.status == 200) {
           this.loadItems();
           this.hideModal("modalAddTaller");
-        } else {
-        }
+        } 
       });
     }
-  },
-  computed: {
-    isSelectedAll() {
-      return this.selectedItems.length >= this.items.length;
-    },
-    isAnyItemSelected() {
-      return (
-        this.selectedItems.length > 0 &&
-        this.selectedItems.length < this.items.length
-      );
-    }
-  },
-  watch: {
-    search() {
-      this.page = 1;
-    }
-  },
-  mounted() {
-    this.loadItems();
   }
 };
 </script>

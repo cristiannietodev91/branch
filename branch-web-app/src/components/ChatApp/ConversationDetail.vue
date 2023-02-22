@@ -73,7 +73,6 @@
   </div>
 </template>
 <script>
-import SingleLightbox from "../Pages/SingleLightbox";
 import SingleLightboxLazy from "../Pages/SingleLightboxLazy";
 
 export default {

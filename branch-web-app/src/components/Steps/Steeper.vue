@@ -15,15 +15,10 @@
             :style="{width: `${100 / steps.length}%`}"
             @click="nextStep(index)"
           >
-            <!-- <div class="circle"> -->
-            <!-- </div> -->
-            <!-- <div class="step-title"> -->
             <h4>
               <i class="material-icons md-18">{{ (step.completed) ? 'done' : step.icon }}</i>
               <span>{{step.title}}</span>
             </h4>
-            <!-- <h5 class="step-subtitle">{{step.subtitle}}</h5> -->
-            <!-- </div> -->
           </div>
         </template>
         <div
@@ -84,6 +79,7 @@
 <script>
 import translations from "../../constants/Translations";
 export default {
+  name: "SteeperComponent",
   filters: {
     translate: function(value, locale) {
       return translations[locale][value];
@@ -153,7 +149,7 @@ export default {
     }
   },
   methods: {
-    isStepActive(index, step) {
+    isStepActive(index) {
       if (this.currentStep.index === index) {
         return "activated";
       } else {
@@ -186,7 +182,6 @@ export default {
             this.$emit("stepper-finished", this.currentStep);
           }
 
-          let currentIndex = index + 1;
           this.activateStep(index);
         }
         this.canContinue = false;
@@ -221,7 +216,7 @@ export default {
       this.nextButton[this.currentStep.name] = payload.nextBtnValue;
       this.$forceUpdate();
     },
-    successStep(payload) {
+    successStep() {
       this.$emit("completed-step", this.currentStep);
     },
     init() {

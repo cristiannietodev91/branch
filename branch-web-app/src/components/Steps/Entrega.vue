@@ -91,17 +91,16 @@ import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 import vue2Dropzone from "vue2-dropzone";
 import moment from "moment-timezone";
-import GlideComponent from "../Carousel/GlideComponent";
 import { validationMixin } from "vuelidate";
-import { required, email } from "vuelidate/lib/validators";
+import { required } from "vuelidate/lib/validators";
 import ServicesCore from "./../../services/service";
 
 export default {
+  name: "entrega-step",
   props: ["clickedNext", "currentStep", "data"],
   components: {
     "vue-dropzone": vue2Dropzone,
     "v-select": vSelect,
-    "glide-component": GlideComponent,
     "single-lightbox": SingleLightbox
   },
   mixins: [validationMixin],
@@ -176,7 +175,7 @@ export default {
         this.filesEtapa.push(documento);
       }
     },
-    removeFile(file, error, xhr) {
+    removeFile(file) {
       this.filesEtapa = this.filesEtapa.filter(value => {
         value.key != file.s3Signature.key;
       });
@@ -222,8 +221,9 @@ export default {
                         permanent: false
                       }
                     );
-                    console.log("Data geto orden By Id :::>", response.data);
-                    this.data.etapa = response.data;
+                    console.log("Data get orden By Id :::>", response.data);
+                    // TODO: Fix issue to mutate received data
+                    // this.data.etapa = response.data;
                     this.$emit("can-continue", { value: true });
                     this.$emit("success-step");
                   }

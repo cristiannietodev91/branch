@@ -53,17 +53,14 @@
 <script>
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import vue2Dropzone from "vue2-dropzone";
-// import ApplicationMenu from '../Common/ApplicationMenu'
-// import ContactList from '../ChatApp/ContactList'
-import ConversationList from "../ChatApp/ConversationList";
 import ConversationDetail from "../ChatApp/ConversationDetail";
 import { v4 as uuidv4 } from "uuid";
 
 export default {
+  name: "chat-modal",
   props: ["conversacion"],
   components: {
     "vue-dropzone": vue2Dropzone,
-    "conversation-list": ConversationList,
     "conversation-detail": ConversationDetail
   },
   data() {
@@ -205,7 +202,7 @@ export default {
     this.$socket.emit(
       "joinroom",
       { room: this.conversacion.IdConversacionUser },
-      resultado => {}
+      () => {}
     );
   },
   mounted() {

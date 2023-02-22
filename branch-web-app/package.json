@@ -1,19 +1,18 @@
 {
   "name": "branch",
   "version": "1.0.0",
+  "private": true,
   "description": "Admin workshop branch",
   "author": "Cristian Nieto (cristianandresnieto@gmail.com)",
-  "private": true,
-  "engines": {
-    "node": ">=14.19.3"
-  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
     "start": "node server.js"
   },
   "dependencies": {
     "@glidejs/glide": "^3.4.1",
+    "@vue/babel-preset-app": "^5.0.8",
     "axios": "0.21.1",
     "bootstrap-vue": "^2.14.0",
     "chart.js": "2.7.2",
@@ -52,11 +51,16 @@
     "vuex": "^3.0.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.12.16",
+    "@babel/eslint-parser": "^7.12.16",
     "@vue/cli-plugin-babel": "^4.0.0",
+    "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-plugin-router": "^4.0.0",
     "@vue/cli-plugin-vuex": "^4.0.0",
     "@vue/cli-service": "^4.0.0",
     "copy-webpack-plugin": "^5.0.2",
+    "eslint": "^8.34.0",
+    "eslint-plugin-vue": "^9.9.0",
     "node-sass": "^4.13.1",
     "sass-loader": "^8.0.0",
     "vue-loader": "^15.7.0",
@@ -71,5 +75,8 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "engines": {
+    "node": ">=14.19.3"
+  }
 }

@@ -61,14 +61,13 @@
 <script>
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
-import InputTag from "../../components/Form/InputTag";
 import { required } from "vuelidate/lib/validators";
 import ServicesCore from "../../services/service";
 
 export default {
+  name: 'add-orde-modal',
   props: ["taller", "cita"],
   components: {
-    "input-tag": InputTag,
     "v-select": vSelect
   },
   data() {

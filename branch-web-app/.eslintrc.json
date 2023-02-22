@@ -1,0 +1,24 @@
+{
+  "extends": [
+    "plugin:vue/recommended",
+    "eslint:recommended"
+  ],
+  "root": true,
+  "env": {
+    "node": true
+  },
+  "parser": "vue-eslint-parser",
+  "rules": {
+    "vue/html-indent": ["warn", 2],
+    "vue/max-attributes-per-line": ["warn", {
+      "singleline": {
+        "max": 4
+      },      
+      "multiline": {
+        "max": 4
+      }
+    }],
+    "vue/attribute-hyphenation": ["off"],
+    "vue/component-definition-name-casing": ["error", "kebab-case"]
+  }
+}
