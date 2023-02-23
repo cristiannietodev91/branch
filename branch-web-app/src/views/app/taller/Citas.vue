@@ -103,7 +103,7 @@ import {
 } from "vue-simple-calendar";
 
 export default {
-  name: "CitasWorkshop",
+  name: "citas-workshop",
   components: {
     "modal-add-cita": ModalAddCita,
     "modal-add-orden": ModalAddOrden,

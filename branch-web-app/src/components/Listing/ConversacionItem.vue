@@ -1,24 +1,32 @@
 <template>
-  <div class="d-flex flex-row m-2 border-bottom border-top cardChats" v-on:click="openChat">
-    <b-badge variant="light" v-if="newmessages > 0" class="align-self-center">{{newmessages}}</b-badge>
+  <div class="d-flex flex-row m-2 border-bottom border-top cardChats" @click="openChat">
+    <b-badge v-if="newmessages > 0" variant="light" class="align-self-center">
+      {{ newmessages }}
+    </b-badge>
     <div class="pl-3 pt-2 pr-2 pb-2">
-      <p class="list-item-heading">{{ conversacion.usuario.firstName }}</p>
+      <p class="list-item-heading">
+        {{ conversacion.usuario.firstName }}
+      </p>
       <div class="pr-4">
-        <p class="text-muted mb-1 text-small">{{ conversacion.usuario.email}}</p>
+        <p class="text-muted mb-1 text-small">
+          {{ conversacion.usuario.email }}
+        </p>
       </div>
       <div
         class="text-primary text-small font-weight-medium d-none d-sm-block"
-      >{{ conversacion.createdAt }}</div>
+      >
+        {{ conversacion.createdAt }}
+      </div>
     </div>
     <b-modal
+      v-if="renderModal"
       :id="`sidebar${uidChat}`"
+      v-model="showModal"
       right
       shadow
-      v-model="showModal"
       no-header
-      v-if="renderModal"
     >
-      <modal-open-chat :conversacion="infoconversacion" @hide="openChat"></modal-open-chat>
+      <modal-open-chat :conversacion="infoconversacion" @hide="openChat" />
     </b-modal>
   </div>
 </template>
@@ -29,10 +37,10 @@ import ModalOpenChat from "../Modals/chatmodal";
 import ServicesCore from "../../services/service";
 
 export default {
-  props: ["conversacion", "detailPath"],
   components: {
     "modal-open-chat": ModalOpenChat
   },
+  props: ["conversacion", "detailPath"],
   data() {
     return {
       newmessages: 0,

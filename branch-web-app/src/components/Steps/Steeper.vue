@@ -10,14 +10,14 @@
         </template>-->
         <template v-for="(step, index) in steps">
           <div
-            :class="['step', isStepActive(index, step)]"
             :key="index"
+            :class="['step', isStepActive(index, step)]"
             :style="{width: `${100 / steps.length}%`}"
             @click="nextStep(index)"
           >
             <h4>
               <i class="material-icons md-18">{{ (step.completed) ? 'done' : step.icon }}</i>
-              <span>{{step.title}}</span>
+              <span>{{ step.title }}</span>
             </h4>
           </div>
         </template>
@@ -42,23 +42,23 @@
             :is="steps[currentStep.index].component"
             :data="steps[currentStep.index].data"
             :clickedNext="nextButton[currentStep.name]"
+            :current-step="currentStep"
             @can-continue="proceed"
             @change-next="changeNextBtnValue"
             @success-step="successStep"
-            :current-step="currentStep"
-          ></component>
+          />
         </keep-alive>
         <!--If not show component and destroy it in each step change-->
         <component
-          v-else
           :is="steps[currentStep.index].component"
+          v-else
           :data="steps[currentStep.index].data"
           :clickedNext="nextButton[currentStep.name]"
+          :current-step="currentStep"
           @can-continue="proceed"
           @change-next="changeNextBtnValue"
           @success-step="successStep"
-          :current-step="currentStep"
-        ></component>
+        />
       </transition>
     </div>
     <!--
@@ -79,7 +79,7 @@
 <script>
 import translations from "../../constants/Translations";
 export default {
-  name: "SteeperComponent",
+  name: "steeper-component",
   filters: {
     translate: function(value, locale) {
       return translations[locale][value];
@@ -147,6 +147,23 @@ export default {
         return "animated quick fadeOutRight";
       }
     }
+  },
+  watch: {
+    reset(val) {
+      if (!val) {
+        return;
+      }
+      this.keepAliveData = false;
+      this.init();
+      this.previousStep = {};
+      this.$nextTick(() => {
+        this.keepAliveData = this.keepAlive;
+        this.$emit("reset", true);
+      });
+    }
+  },
+  created() {
+    this.init();
   },
   methods: {
     isStepActive(index) {
@@ -226,23 +243,6 @@ export default {
         this.nextButton[step.name] = false;
       });
     }
-  },
-  watch: {
-    reset(val) {
-      if (!val) {
-        return;
-      }
-      this.keepAliveData = false;
-      this.init();
-      this.previousStep = {};
-      this.$nextTick(() => {
-        this.keepAliveData = this.keepAlive;
-        this.$emit("reset", true);
-      });
-    }
-  },
-  created() {
-    this.init();
   }
 };
 </script>

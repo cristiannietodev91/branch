@@ -11,16 +11,22 @@
         <b-form-input v-model="$v.editTaller.nombre.$model" :state="!$v.editTaller.nombre.$error" />
         <b-form-invalid-feedback
           v-if="!$v.editTaller.nombre.required"
-        >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
+        >
+          {{ $t('branch.forms.validations.required') }}
+        </b-form-invalid-feedback>
       </b-form-group>
       <b-form-group :label="$t('branch.taller.logo')">
         <b-form-input v-model="$v.editTaller.logo.$model" :state="!$v.editTaller.logo.$error" />
         <b-form-invalid-feedback
           v-if="!$v.editTaller.logo.required"
-        >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
+        >
+          {{ $t('branch.forms.validations.required') }}
+        </b-form-invalid-feedback>
         <b-form-invalid-feedback
           v-if="!$v.editTaller.logo.url"
-        >{{$t('branch.forms.validations.url')}}</b-form-invalid-feedback>
+        >
+          {{ $t('branch.forms.validations.url') }}
+        </b-form-invalid-feedback>
       </b-form-group>
       <b-form-group :label="$t('branch.taller.identificacion')">
         <b-form-input
@@ -29,19 +35,27 @@
         />
         <b-form-invalid-feedback
           v-if="!$v.editTaller.identificacion.required"
-        >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
+        >
+          {{ $t('branch.forms.validations.required') }}
+        </b-form-invalid-feedback>
         <b-form-invalid-feedback
           v-if="!$v.editTaller.identificacion.numeric"
-        >{{$t('branch.forms.validations.numeric')}}</b-form-invalid-feedback>
+        >
+          {{ $t('branch.forms.validations.numeric') }}
+        </b-form-invalid-feedback>
       </b-form-group>
       <b-form-group :label="$t('branch.taller.email')">
         <b-form-input v-model="$v.editTaller.email.$model" :state="!$v.editTaller.email.$error" />
         <b-form-invalid-feedback
           v-if="!$v.editTaller.email.required"
-        >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
+        >
+          {{ $t('branch.forms.validations.required') }}
+        </b-form-invalid-feedback>
         <b-form-invalid-feedback
           v-if="!$v.editTaller.email.email"
-        >{{$t('branch.forms.validations.email')}}</b-form-invalid-feedback>
+        >
+          {{ $t('branch.forms.validations.email') }}
+        </b-form-invalid-feedback>
       </b-form-group>
       <b-form-group :label="$t('branch.taller.celular')">
         <b-form-input
@@ -50,13 +64,19 @@
         />
         <b-form-invalid-feedback
           v-if="!$v.editTaller.celular.required"
-        >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
+        >
+          {{ $t('branch.forms.validations.required') }}
+        </b-form-invalid-feedback>
         <b-form-invalid-feedback
           v-if="!$v.editTaller.celular.numeric"
-        >{{$t('branch.forms.validations.numeric')}}</b-form-invalid-feedback>
+        >
+          {{ $t('branch.forms.validations.numeric') }}
+        </b-form-invalid-feedback>
         <b-form-invalid-feedback
           v-else-if="!$v.editTaller.celular.minLength || !$v.editTaller.celular.maxLength"
-        >{{$t('branch.forms.validations.longitud')}}</b-form-invalid-feedback>
+        >
+          {{ $t('branch.forms.validations.longitud') }}
+        </b-form-invalid-feedback>
       </b-form-group>
       <b-form-group :label="$t('branch.taller.direccion')">
         <b-form-input
@@ -65,7 +85,9 @@
         />
         <b-form-invalid-feedback
           v-if="!$v.editTaller.direccion.required"
-        >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
+        >
+          {{ $t('branch.forms.validations.required') }}
+        </b-form-invalid-feedback>
       </b-form-group>
       <b-form-group :label="$t('branch.taller.latitude')">
         <b-form-input
@@ -74,10 +96,14 @@
         />
         <b-form-invalid-feedback
           v-if="!$v.editTaller.latitude.required"
-        >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
+        >
+          {{ $t('branch.forms.validations.required') }}
+        </b-form-invalid-feedback>
         <b-form-invalid-feedback
           v-if="!$v.editTaller.latitude.decimal"
-        >{{$t('branch.forms.validations.decimal')}}</b-form-invalid-feedback>
+        >
+          {{ $t('branch.forms.validations.decimal') }}
+        </b-form-invalid-feedback>
       </b-form-group>
       <b-form-group :label="$t('branch.taller.longitud')">
         <b-form-input
@@ -86,16 +112,24 @@
         />
         <b-form-invalid-feedback
           v-if="!$v.editTaller.longitud.required"
-        >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
+        >
+          {{ $t('branch.forms.validations.required') }}
+        </b-form-invalid-feedback>
         <b-form-invalid-feedback
           v-if="!$v.editTaller.longitud.decimal"
-        >{{$t('branch.forms.validations.decimal')}}</b-form-invalid-feedback>
+        >
+          {{ $t('branch.forms.validations.decimal') }}
+        </b-form-invalid-feedback>
       </b-form-group>
       <b-button
         variant="outline-secondary"
         @click.once="hideModal('modalEditTaller')"
-      >{{ $t('pages.cancel') }}</b-button>
-      <b-button type="submit" variant="primary">{{ $t('forms.submit') }}</b-button>
+      >
+        {{ $t('pages.cancel') }}
+      </b-button>
+      <b-button type="submit" variant="primary">
+        {{ $t('forms.submit') }}
+      </b-button>
     </b-form>
   </b-modal>
 </template>
@@ -164,6 +198,19 @@ export default {
       }
     }
   },
+  mounted() {
+    console.log("Mouned");
+    this.editTaller = {
+      logo: this.taller.logo,
+      nombre: this.taller.nombre,
+      identificacion: this.taller.identificacion,
+      email: this.taller.email,
+      celular: this.taller.celular,
+      direccion: this.taller.direccion,
+      latitude: this.taller.latitude,
+      longitud: this.taller.longitud
+    };
+  },
   methods: {
     hideModal(refname) {
       this.$refs[refname].hide();
@@ -219,19 +266,6 @@ export default {
           }
         });
     }
-  },
-  mounted() {
-    console.log("Mouned");
-    this.editTaller = {
-      logo: this.taller.logo,
-      nombre: this.taller.nombre,
-      identificacion: this.taller.identificacion,
-      email: this.taller.email,
-      celular: this.taller.celular,
-      direccion: this.taller.direccion,
-      latitude: this.taller.latitude,
-      longitud: this.taller.longitud
-    };
   }
 };
 </script>

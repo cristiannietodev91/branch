@@ -39,7 +39,7 @@ import MecanicosItem from "../../../components/Listing/MecanicosListItem";
 import ServicesCore from "../../../services/service";
 
 export default {
-  name: "MecanicosWorkshop",
+  name: "mecanicos-workshop",
   components: {
     "mecanicos-items": MecanicosItem,
     "modal-add-mecanico": ModalAddMecanico

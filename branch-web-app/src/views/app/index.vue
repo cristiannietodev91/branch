@@ -18,7 +18,7 @@ import Footer from "../../containers/Footer";
 import { mapGetters } from "vuex";
 
 export default {
-  name: "AppMainPage",
+  name: "app-mai-page",
   components: {
     "top-nav": TopNav,
     sidebar: Sidebar,

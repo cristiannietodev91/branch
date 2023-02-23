@@ -63,7 +63,7 @@
               <i :class="sub.icon" />
               <span>{{ $t(sub.label) }}</span>
             </a>
-            <template v-else-if="sub.subs &&  sub.subs.length > 0">
+            <template v-else-if="sub.subs && sub.subs.length > 0">
               <b-link
                 v-b-toggle="`menu_${itemIndex}_${subIndex}`"
                 variant="link"
@@ -128,6 +128,35 @@ export default {
       newmessages: 0
     };
   },
+  computed: {
+    ...mapGetters({
+      menuType: "getMenuType",
+      menuClickCount: "getMenuClickCount",
+      selectedMenuHasSubItems: "getSelectedMenuHasSubItems",
+      newMessages: "newMessages"
+    })
+  },
+  watch: {
+    $route(to, from) {
+      if (to.path !== from.path) {
+        const toParentUrl = to.path.split("/").filter(x => x !== "")[1];
+        if (toParentUrl !== undefined || toParentUrl !== null) {
+          this.selectedParentMenu = toParentUrl.toLowerCase();
+        } else {
+          this.selectedParentMenu = "dashboards";
+        }
+        this.selectMenu();
+        this.toggle();
+        this.changeSideMenuStatus({
+          step: 0,
+          classNames: this.menuType,
+          selectedMenuHasSubItems: this.selectedMenuHasSubItems
+        });
+
+        window.scrollTo(0, top);
+      }
+    }
+  },
   mounted() {
     this.selectMenu();
     window.addEventListener("resize", this.handleWindowResize);
@@ -138,7 +167,6 @@ export default {
     document.removeEventListener("click", this.handleDocumentClick);
     window.removeEventListener("resize", this.handleWindowResize);
   },
-
   methods: {
     ...mapMutations([
       "changeSideMenuStatus",
@@ -326,35 +354,6 @@ export default {
     resetUnreadMessages() {
       // this.newmessages = 0;
       this.resetNewMessages();
-    }
-  },
-  computed: {
-    ...mapGetters({
-      menuType: "getMenuType",
-      menuClickCount: "getMenuClickCount",
-      selectedMenuHasSubItems: "getSelectedMenuHasSubItems",
-      newMessages: "newMessages"
-    })
-  },
-  watch: {
-    $route(to, from) {
-      if (to.path !== from.path) {
-        const toParentUrl = to.path.split("/").filter(x => x !== "")[1];
-        if (toParentUrl !== undefined || toParentUrl !== null) {
-          this.selectedParentMenu = toParentUrl.toLowerCase();
-        } else {
-          this.selectedParentMenu = "dashboards";
-        }
-        this.selectMenu();
-        this.toggle();
-        this.changeSideMenuStatus({
-          step: 0,
-          classNames: this.menuType,
-          selectedMenuHasSubItems: this.selectedMenuHasSubItems
-        });
-
-        window.scrollTo(0, top);
-      }
     }
   }
 };

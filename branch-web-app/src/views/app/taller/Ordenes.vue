@@ -38,7 +38,7 @@ import OrdenCard from "../../../components/Cards/OrdenCard";
 import ServicesCore from "../../../services/service";
 
 export default {
-  name: "OrdenesWorkshop",
+  name: "ordenes-workshop",
   components: {
     "orden-card": OrdenCard
   },

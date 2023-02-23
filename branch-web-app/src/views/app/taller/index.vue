@@ -4,6 +4,6 @@
 
 <script>
 export default {
-    name: "MainWorkshop"
+    name: "main-workshop"
 }
 </script>

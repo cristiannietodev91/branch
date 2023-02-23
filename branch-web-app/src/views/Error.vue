@@ -44,7 +44,7 @@
 </template>
 <script>
 export default {
-  name: "ErrorComponent",
+  name: "error-component",
   mounted: function() {
     document.body.classList.add("background");
   },

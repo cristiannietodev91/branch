@@ -9,8 +9,8 @@
     <b-form @submit.prevent="onValitadeAddOrden">
       <b-form-group :label="$t('branch.orden.mecanico')">
         <v-select
-          :options="taller.mecanicos"
           v-model="newOrden.mecanico"
+          :options="taller.mecanicos"
           label="fullName"
           :reduce="mecanico => mecanico.IdMecanico"
         >
@@ -20,9 +20,11 @@
               :required="!newOrden.mecanico"
               v-bind="attributes"
               v-on="events"
-            />
+            >
           </template>
-          <template v-slot:option="option">{{ option.fullName }} - {{option.identificacion}}</template>
+          <template #option="option">
+            {{ option.fullName }} - {{ option.identificacion }}
+          </template>
         </v-select>
       </b-form-group>
       <b-form-group :label="$t('branch.orden.kilometraje')">
@@ -32,7 +34,9 @@
         />
         <b-form-invalid-feedback
           v-if="!$v.newOrden.kilometraje.required"
-        >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
+        >
+          {{ $t('branch.forms.validations.required') }}
+        </b-form-invalid-feedback>
       </b-form-group>
       <b-form-group :label="$t('branch.orden.documentos')">
         <b-form-checkbox-group
@@ -41,19 +45,29 @@
           :state="state"
           name="docuementos"
         >
-          <b-form-checkbox value="soat">SOAT</b-form-checkbox>
-          <b-form-checkbox value="tecnomecanica">Tecnico Mecanica</b-form-checkbox>
+          <b-form-checkbox value="soat">
+            SOAT
+          </b-form-checkbox>
+          <b-form-checkbox value="tecnomecanica">
+            Tecnico Mecanica
+          </b-form-checkbox>
         </b-form-checkbox-group>
-        <b-form-invalid-feedback :state="state">{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
+        <b-form-invalid-feedback :state="state">
+          {{ $t('branch.forms.validations.required') }}
+        </b-form-invalid-feedback>
       </b-form-group>
       <b-form-group :label="$t('branch.orden.observaciones')">
-        <b-textarea v-model.trim="newOrden.observacion"></b-textarea>
+        <b-textarea v-model.trim="newOrden.observacion" />
       </b-form-group>
       <b-button
         variant="outline-secondary"
         @click.once="hideModal('modalAddOrden')"
-      >{{ $t('pages.cancel') }}</b-button>
-      <b-button type="submit" variant="primary">{{ $t('forms.submit') }}</b-button>
+      >
+        {{ $t('pages.cancel') }}
+      </b-button>
+      <b-button type="submit" variant="primary">
+        {{ $t('forms.submit') }}
+      </b-button>
     </b-form>
   </b-modal>
 </template>
@@ -66,10 +80,10 @@ import ServicesCore from "../../services/service";
 
 export default {
   name: 'add-orde-modal',
-  props: ["taller", "cita"],
   components: {
     "v-select": vSelect
   },
+  props: ["taller", "cita"],
   data() {
     return {
       newOrden: {
@@ -87,6 +101,21 @@ export default {
         required
       }
     }
+  },
+  computed: {
+    state() {
+      return this.newOrden.documentos.length >= 1;
+    }
+  },
+  mounted() {
+    this.$watch(
+      "cita",
+      () => {
+        //console.log(`Cita recibida:::>`, this.cita);
+        this.$forceUpdate();
+      },
+      { immediate: true }
+    );
   },
   methods: {
     hideModal(refname) {
@@ -151,21 +180,6 @@ export default {
           });
       }
     }
-  },
-  computed: {
-    state() {
-      return this.newOrden.documentos.length >= 1;
-    }
-  },
-  mounted() {
-    this.$watch(
-      "cita",
-      () => {
-        //console.log(`Cita recibida:::>`, this.cita);
-        this.$forceUpdate();
-      },
-      { immediate: true }
-    );
   }
 };
 </script>

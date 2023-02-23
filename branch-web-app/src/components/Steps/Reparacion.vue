@@ -1,10 +1,10 @@
 <template>
   <b-card>
-    <b-form @submit.prevent="onValitadeAddOrden" v-if="!data.etapa">
+    <b-form v-if="!data.etapa" @submit.prevent="onValitadeAddOrden">
       <b-form-group :label="$t('branch.orden.mecanico')">
         <v-select
-          :options="data.mecanicos"
           v-model="newOrden.mecanico"
+          :options="data.mecanicos"
           label="fullName"
           :reduce="mecanico => mecanico.IdMecanico"
         >
@@ -14,47 +14,65 @@
               :required="!newOrden.mecanico"
               v-bind="attributes"
               v-on="events"
-            />
+            >
           </template>
-          <template v-slot:option="option">{{ option.fullName }} - {{option.identificacion}}</template>
+          <template #option="option">
+            {{ option.fullName }} - {{ option.identificacion }}
+          </template>
         </v-select>
       </b-form-group>
       <b-form-group :label="$t('branch.orden.observaciones')">
         <b-textarea
           v-model.trim="$v.newOrden.observacion.$model"
           :state="!$v.newOrden.observacion.$error"
-        ></b-textarea>
+        />
         <b-form-invalid-feedback
           v-if="!$v.newOrden.observacion.required"
-        >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
+        >
+          {{ $t('branch.forms.validations.required') }}
+        </b-form-invalid-feedback>
       </b-form-group>
       <vue-dropzone
-        ref="myVueDropzone"
         id="dropzone"
+        ref="myVueDropzone"
         :awss3="awss3"
         :options="dropzoneOptions"
-        v-on:vdropzone-complete="complete"
-        v-on:vdropzone-removed-file="removeFile"
-      ></vue-dropzone>
-      <b-button type="submit" variant="primary" class="mt-4" size="lg">{{ $t('forms.submit') }}</b-button>
+        @vdropzone-complete="complete"
+        @vdropzone-removed-file="removeFile"
+      />
+      <b-button type="submit" variant="primary" class="mt-4" size="lg">
+        {{ $t('forms.submit') }}
+      </b-button>
     </b-form>
     <div v-else>
       <b-row>
         <b-colxx xxs="3">
-          <p class="text-muted text-small mb-2">{{$t('branch.orden.fechaIngreso')}}</p>
+          <p class="text-muted text-small mb-2">
+            {{ $t('branch.orden.fechaIngreso') }}
+          </p>
           <h5
             class="mb-1 card-subtitle truncate"
-          >{{ data.etapa.createdAt | moment("D MMMM YYYY hh:mm A") }}</h5>
+          >
+            {{ data.etapa.createdAt | moment("D MMMM YYYY hh:mm A") }}
+          </h5>
         </b-colxx>
-        <b-colxx xxs="3" v-if="data.etapa.mecanico">
-          <p class="text-muted text-small mb-2">{{$t('branch.orden.mecanico')}}</p>
+        <b-colxx v-if="data.etapa.mecanico" xxs="3">
+          <p class="text-muted text-small mb-2">
+            {{ $t('branch.orden.mecanico') }}
+          </p>
           <h5
             class="mb-1 card-subtitle truncate"
-          >{{data.etapa.mecanico.identificacion}} {{data.etapa.mecanico.fullName}}</h5>
+          >
+            {{ data.etapa.mecanico.identificacion }} {{ data.etapa.mecanico.fullName }}
+          </h5>
         </b-colxx>
         <b-colxx>
-          <p class="text-muted text-small mb-2">{{$t('branch.orden.observaciones')}}</p>
-          <h5 class="mb-1 card-subtitle truncate">{{data.etapa.Observaciones}}</h5>
+          <p class="text-muted text-small mb-2">
+            {{ $t('branch.orden.observaciones') }}
+          </p>
+          <h5 class="mb-1 card-subtitle truncate">
+            {{ data.etapa.Observaciones }}
+          </h5>
         </b-colxx>
       </b-row>
 
@@ -62,9 +80,9 @@
         <div v-if="data.etapa.documentos" class="branch-gallery">
           <b-collapse id="collapse-diagnostico">
             <div
-              class="branch-image"
               v-for="(documento,index) in data.etapa.documentos"
               :key="`contact${index}`"
+              class="branch-image"
             >
               <b-card no-body>
                 <single-lightbox
@@ -79,11 +97,15 @@
               </b-card>
             </div>
           </b-collapse>
-          <b-button v-b-toggle="'collapse-diagnostico'" class="m-1">Ver fotos de la reparación</b-button>
+          <b-button v-b-toggle="'collapse-diagnostico'" class="m-1">
+            Ver fotos de la reparación
+          </b-button>
         </div>
-        <div class="pl-2 d-flex flex-grow-1 min-width-zero" v-else>
+        <div v-else class="pl-2 d-flex flex-grow-1 min-width-zero">
           <b-card-body class="align-self-center d-flex min-width-zero">
-            <p class="text-muted text-small mb-0 font-weight-light">Sin documentos asociados</p>
+            <p class="text-muted text-small mb-0 font-weight-light">
+              Sin documentos asociados
+            </p>
           </b-card-body>
         </div>
       </div>
@@ -101,14 +123,14 @@ import { required } from "vuelidate/lib/validators";
 import ServicesCore from "./../../services/service";
 
 export default {
-  name: "ReparacionStep",
-  props: ["clickedNext", "currentStep", "data"],
+  name: "reparacion-step",
   components: {
     "single-lightbox": SingleLightbox,
     "vue-dropzone": vue2Dropzone,
     "v-select": vSelect,
   },
   mixins: [validationMixin],
+  props: ["clickedNext", "currentStep", "data"],
   data() {
     return {
       newOrden: {
@@ -159,6 +181,13 @@ export default {
         //console.log("Orden a crearDB ::::>", this.orden);
         //this.$v.newOrden.$touch();
       }
+    }
+  },
+  mounted() {
+    if (this.data.etapa) {
+      this.$emit("can-continue", { value: true });
+    } else {
+      this.$emit("can-continue", { value: false });
     }
   },
   methods: {
@@ -298,13 +327,6 @@ export default {
                   <a href="#" class="remove" data-dz-remove> <i class="glyph-icon simple-icon-trash"></i> </a>
                 </div>
         `;
-    }
-  },
-  mounted() {
-    if (this.data.etapa) {
-      this.$emit("can-continue", { value: true });
-    } else {
-      this.$emit("can-continue", { value: false });
     }
   }
 };

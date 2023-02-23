@@ -1,6 +1,5 @@
 <template>
   <b-card class="mb-4" no-body>
-
     <!-- <router-link to="?" class="d-flex">
       <div
         src="/assets/img/profile-pic-l.jpg"
@@ -11,25 +10,48 @@
     <div>
       <b-row>
         <b-colxx md="6" sm="6" lg="6" xxs="12">
-          <p class="text-muted text-small mb-2">{{$t('branch.orden.fechaIngreso')}}</p>
-          <h5 class="mb-1 card-subtitle truncate">{{ data.createdAt | moment("D MMMM YYYY hh:mm A") }}</h5>
-          <p class="text-muted text-small mb-2">{{$t('branch.orden.mecanico')}}</p>
-          <h5 class="mb-1 card-subtitle truncate">{{data.mecanico.firstName}} {{data.mecanico.lastName}}</h5>
+          <p class="text-muted text-small mb-2">
+            {{ $t('branch.orden.fechaIngreso') }}
+          </p>
+          <h5 class="mb-1 card-subtitle truncate">
+            {{ data.createdAt | moment("D MMMM YYYY hh:mm A") }}
+          </h5>
+          <p class="text-muted text-small mb-2">
+            {{ $t('branch.orden.mecanico') }}
+          </p>
+          <h5 class="mb-1 card-subtitle truncate">
+            {{ data.mecanico.firstName }} {{ data.mecanico.lastName }}
+          </h5>
           <!-- <h5 class="mb-1 card-subtitle truncate">{{data.mecanico.identificacion}} {{data.mecanico.firstName}}</h5> -->
         </b-colxx>
         <b-colxx md="6" sm="6" lg="6" xxs="12">
-          <p class="text-muted text-small mb-2">{{$t('branch.orden.kilometraje')}}</p>
-          <h5 class="mb-1 card-subtitle truncate">{{data.kilometraje}} KM</h5>
-          <p class="text-muted text-small mb-2">{{$t('branch.orden.documentos')}}</p>
+          <p class="text-muted text-small mb-2">
+            {{ $t('branch.orden.kilometraje') }}
+          </p>
           <h5 class="mb-1 card-subtitle truncate">
-            <b-badge pill variant="primary" v-for="(documento) in  JSON.parse(data.DocumentosDeja)" :key="`${documento}`" class="m-1">{{documento}}</b-badge>
+            {{ data.kilometraje }} KM
+          </h5>
+          <p class="text-muted text-small mb-2">
+            {{ $t('branch.orden.documentos') }}
+          </p>
+          <h5 class="mb-1 card-subtitle truncate">
+            <b-badge
+              v-for="(documento) in JSON.parse(data.DocumentosDeja)" :key="`${documento}`" pill variant="primary"
+              class="m-1"
+            >
+              {{ documento }}
+            </b-badge>
           </h5>
         </b-colxx>
       </b-row>
       <b-row>
         <b-colxx md="12" sm="12" lg="12" xxs="12">
-          <p class="text-muted text-small mb-2">{{$t('branch.orden.observaciones')}}</p>
-          <h5 class="mb-1 card-subtitle truncate">{{data.Observaciones}}</h5>
+          <p class="text-muted text-small mb-2">
+            {{ $t('branch.orden.observaciones') }}
+          </p>
+          <h5 class="mb-1 card-subtitle truncate">
+            {{ data.Observaciones }}
+          </h5>
         </b-colxx>
       </b-row>
     </div>
@@ -39,9 +61,9 @@
 import { validationMixin } from "vuelidate";
 
 export default {
-  name: "IngresoStep",
-  props: ["clickedNext", "currentStep", "data"],
+  name: "ingreso-step",
   mixins: [validationMixin],
+  props: ["clickedNext", "currentStep", "data"],
   data() {
     return {
       text: "Completed"

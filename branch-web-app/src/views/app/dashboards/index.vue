@@ -4,6 +4,6 @@
 
 <script>
 export default {
-    name: "DashboardMainPage",
+    name: "dashboard-main-page",
 }
 </script>

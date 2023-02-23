@@ -105,7 +105,7 @@ const {
 } = require("vuelidate/lib/validators");
 
 export default {
-  name: "RegisterPage",
+  name: "register-page",
   mixins: [validationMixin],
   data() {
     return {

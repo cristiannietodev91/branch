@@ -2,13 +2,13 @@
   <div>
     <router-link to="#" @click.native.prevent="onThumbClick(0)">
       <b-img-lazy
+        v-if="show"
         v-bind="mainProps"
         :src="linkThumb"
         :class="className"
         alt="Image Branch"
-        v-if="show"
       />
-      <div v-else class="loader-wheel"></div>
+      <div v-else class="loader-wheel" />
     </router-link>
     <LightGallery
       :images="[large]"
@@ -23,10 +23,10 @@
 import { LightGallery } from "vue-light-gallery";
 
 export default {
-  props: ["thumb", "large", "className"],
   components: {
     LightGallery
   },
+  props: ["thumb", "large", "className"],
   data() {
     return {
       photoIndex: null,

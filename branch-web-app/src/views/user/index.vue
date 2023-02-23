@@ -10,7 +10,7 @@
 </template>
 <script>
 export default {
-  name: "MainUserPage",
+  name: "main-user-page",
   mounted () {
     document.body.classList.add('background')
   },

@@ -7,23 +7,37 @@
           class="pl-0 align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero"
         >
           <div class="min-width-zero">
-            <h5 class="mb-1 card-subtitle truncate">{{data.firstName}} {{data.lastName}}</h5>
-            <p class="text-muted text-small mb-2">Identificación</p>
-            <h6>{{data.identificacion}}</h6>
-            <p class="text-muted text-small mb-2">Fecha de creación</p>
-            <h6>{{data.createdAt | moment("D MMMM YYYY hh mm A")}}</h6>
-            <p class="text-muted text-small mb-2">Habilidades</p>
+            <h5 class="mb-1 card-subtitle truncate">
+              {{ data.firstName }} {{ data.lastName }}
+            </h5>
+            <p class="text-muted text-small mb-2">
+              Identificación
+            </p>
+            <h6>{{ data.identificacion }}</h6>
+            <p class="text-muted text-small mb-2">
+              Fecha de creación
+            </p>
+            <h6>{{ data.createdAt | moment("D MMMM YYYY hh mm A") }}</h6>
+            <p class="text-muted text-small mb-2">
+              Habilidades
+            </p>
             <p>
               <b-badge
+                v-for="(skill) in JSON.parse(data.skills)"
+                :key="`${skill}`"
                 pill
                 variant="primary"
-                v-for="(skill) in  JSON.parse(data.skills)"
-                :key="`${skill}`"
-              >{{skill}}</b-badge>
+              >
+                {{ skill }}
+              </b-badge>
             </p>
             <p class="text-muted text-small mb-2">
-              <b-button size="xs" variant="outline-primary" @click="editMecanico(data)">Editar</b-button>
-              <b-button size="xs" variant="outline-danger" @click="eliminarMecanico(data)">Eliminar</b-button>
+              <b-button size="xs" variant="outline-primary" @click="editMecanico(data)">
+                Editar
+              </b-button>
+              <b-button size="xs" variant="outline-danger" @click="eliminarMecanico(data)">
+                Eliminar
+              </b-button>
             </p>
           </div>
         </div>
