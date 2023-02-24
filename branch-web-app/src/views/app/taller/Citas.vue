@@ -2,8 +2,8 @@
   <b-row>
     <b-colxx xl="12" lg="12" class="mb-4">
       <b-card :title="$t('dashboards.calendar')">
-        <modal-add-cita :taller="taller" :cita="cita" @loadcitastalleres="loadCitasTaller"></modal-add-cita>
-        <modal-add-orden :taller="taller" :cita="cita" @loadcitastalleres="loadCitasTaller"></modal-add-orden>
+        <modal-add-cita :taller="taller" :cita="cita" @loadcitastalleres="loadCitasTaller" />
+        <modal-add-orden :taller="taller" :cita="cita" @loadcitastalleres="loadCitasTaller" />
         <calendar-view
           :is-expanded="true"
           class="theme-default holiday-us-traditional holiday-us-official"
@@ -42,16 +42,16 @@
               :style="`top: calc(6.4em + ${eventProps.event.eventRow}*24em + ${eventProps.event.eventRow}*2px);`"
             >
               <h4 class="startTime">
-                {{new Date(eventProps.event.originalEvent.startDate) | moment("hh:mm A")}}
+                {{ new Date(eventProps.event.originalEvent.startDate) | moment("hh:mm A") }}
               </h4>
-              <p>{{eventProps.event.originalEvent.estado}}</p>
+              <p>{{ eventProps.event.originalEvent.estado }}</p>
               <b-button
                 class="mb-2 editar-cita"
                 size="xs"
                 variant="primary"
                 @click="eventProps.event.originalEvent.estado == 'Solicitada' || eventProps.event.originalEvent.estado == 'Confirmada' ? onCtrlClickEvent(eventProps.event.originalEvent.citaObject) : ''"
               >
-                <small :class="'glyph-icon simple-icon-pencil'"/>
+                <small :class="'glyph-icon simple-icon-pencil'" />
                 <span>Editar</span>
               </b-button>
               <b-button
@@ -60,25 +60,27 @@
                 variant="primary"
                 @click.exact="eventProps.event.originalEvent.estado == 'Confirmada' ? onClickEvent(eventProps.event) : ''"
               >
-                <small :class="'glyph-icon simple-icon-arrow-right'"/>
+                <small :class="'glyph-icon simple-icon-arrow-right'" />
                 <span>Ingresar</span>
               </b-button>
               
               <b-popover
+                id="calendar-tooltip"
                 :target="`event-${eventProps.event.originalEvent.citaObject.IdCita}`"
                 triggers="hover"
-                id="calendar-tooltip"
               >
                 <template
-                  v-slot:title
-                >{{eventProps.event.originalEvent.citaObject.vehiculo.marca.marca}} {{eventProps.event.originalEvent.citaObject.vehiculo.marca.referencia}}</template>
-                {{eventProps.event.originalEvent.citaObject.horaCita}}
-                <br />
+                  #title
+                >
+                  {{ eventProps.event.originalEvent.citaObject.vehiculo.marca.marca }} {{ eventProps.event.originalEvent.citaObject.vehiculo.marca.referencia }}
+                </template>
+                {{ eventProps.event.originalEvent.citaObject.horaCita }}
+                <br>
 
-                {{eventProps.event.originalEvent.citaObject.vehiculo.usuario?.firstName || ''}}
-                {{eventProps.event.originalEvent.citaObject.vehiculo.marca.marca}} {{eventProps.event.originalEvent.citaObject.vehiculo.placa}}
-                {{eventProps.event.originalEvent.citaObject.servicio}}
-                Recibe: {{eventProps.event.originalEvent.citaObject.mecanico ? eventProps.event.originalEvent.citaObject.mecanico.fullName : 'Sin mecanico asignado'}}
+                {{ eventProps.event.originalEvent.citaObject.vehiculo.usuario?.firstName || '' }}
+                {{ eventProps.event.originalEvent.citaObject.vehiculo.marca.marca }} {{ eventProps.event.originalEvent.citaObject.vehiculo.placa }}
+                {{ eventProps.event.originalEvent.citaObject.servicio }}
+                Recibe: {{ eventProps.event.originalEvent.citaObject.mecanico ? eventProps.event.originalEvent.citaObject.mecanico.fullName : 'Sin mecanico asignado' }}
               </b-popover>
             </div>
           </template>
@@ -101,12 +103,14 @@ import {
 } from "vue-simple-calendar";
 
 export default {
+  name: "citas-workshop",
   components: {
     "modal-add-cita": ModalAddCita,
     "modal-add-orden": ModalAddOrden,
     "calendar-view": CalendarView,
     "calendar-view-header": CalendarViewHeader
   },
+  mixins: [CalendarMathMixin],
   data() {
     return {
       calendar: {
@@ -117,9 +121,16 @@ export default {
       cita: {}
     };
   },
-  mixins: [CalendarMathMixin],
   computed: {
     ...mapGetters({ currentUser: "currentUser" })
+  },
+  created() {
+    ServicesCore.getTallerById(this.currentUser.IdTaller).then(response => {
+      if (response.status == 200) {
+        this.taller = response.data;
+      }
+    });
+    this.loadCitasTaller();
   },
   methods: {
     loadCitasTaller() {
@@ -137,7 +148,7 @@ export default {
           });
         });
     },
-    thisMonth(d, h, m) {
+    thisMonth(_, h, m) {
       const t = new Date();
       return new Date(
         t.getFullYear(),
@@ -147,7 +158,7 @@ export default {
         m || 0
       );
     },
-    onClickDay(d) {
+    onClickDay() {
       this.cita = {};
       this.$bvModal.show("modalAddCita");
     },
@@ -170,14 +181,6 @@ export default {
     setShowDate(d) {
       this.calendar.showDate = d;
     }
-  },
-  created() {
-    ServicesCore.getTallerById(this.currentUser.IdTaller).then(response => {
-      if (response.status == 200) {
-        this.taller = response.data;
-      }
-    });
-    this.loadCitasTaller();
   }
 };
 </script>

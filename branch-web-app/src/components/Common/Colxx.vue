@@ -1,10 +1,11 @@
 <template>
-    <b-col :class="classes" v-bind="options">
-        <slot></slot>
-    </b-col>
+  <b-col :class="classes" v-bind="options">
+    <slot />
+  </b-col>
 </template>
 <script>
 export default {
+  name: 'col-xx',
   props: ['xxs', 'xs', 'sm', 'md', 'lg', 'xl', 'xxl', 'offset-sm', 'offset-md', 'offset-lg', 'offset-xl', 'order-sm', 'order-md', 'order-lg', 'order-xl', 'tag', 'col', 'cols', 'offset', 'order', 'align-self', 'offset-xxs', 'offset-xxl', 'order-xxs', 'order-xxl'
   ],
   data () {

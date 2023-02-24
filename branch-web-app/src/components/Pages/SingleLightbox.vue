@@ -1,7 +1,7 @@
 <template>
   <div>
     <router-link to="#" @click.native.prevent="onThumbClick(0)">
-      <img :src="thumb" alt="thumbnail" :class="className"/>
+      <img :src="thumb" alt="thumbnail" :class="className">
     </router-link>
     <LightGallery
       :images="[large]"
@@ -16,10 +16,10 @@
     import {LightGallery} from "vue-light-gallery";
 
     export default {
-        props: ["thumb", "large", "className"],
         components: {
             LightGallery
         },
+        props: ["thumb", "large", "className"],
         data() {
             return {
                 photoIndex: null

@@ -3,7 +3,7 @@
     <b-row>
       <b-colxx xxs="12">
         <piaf-breadcrumb :heading="$t('menu.analytics')" />
-        <div class="separator mb-5"></div>
+        <div class="separator mb-5" />
       </b-colxx>
     </b-row>
     <b-row>
@@ -35,7 +35,7 @@
 
         <b-card :title="$t('dashboards.citasByMonth')">
           <div class="dashboard-line-chart">
-            <line-shadow-chart :data="lineChartCitas" :height="300" v-if="loadedLineChartCitas" />
+            <line-shadow-chart v-if="loadedLineChartCitas" :data="lineChartCitas" :height="300" />
           </div>
         </b-card>
       </b-colxx>
@@ -43,9 +43,9 @@
         <b-card :title="$t('dashboards.citasByState')">
           <div class="dashboard-donut-chart">
             <polar-area-shadow-chart
+              v-if="loadedpolarAreaCitasByEstado"
               :data="polarAreaCitasByEstado"
               :height="270"
-              v-if="loadedpolarAreaCitasByEstado"
             />
           </div>
         </b-card>
@@ -70,9 +70,6 @@ export default {
     "icon-card": IconCard,
     "line-shadow-chart": LineShadowChart,
     "polar-area-shadow-chart": PolarAreaShadowChart
-  },
-  computed: {
-    ...mapGetters({ currentUser: "currentUser" })
   },
   data() {
     return {
@@ -141,6 +138,9 @@ export default {
         hideNav: true
       }
     };
+  },
+  computed: {
+    ...mapGetters({ currentUser: "currentUser" })
   },
   created() {
     ServicesCore.countVehiculosByTaller(this.currentUser.IdTaller)

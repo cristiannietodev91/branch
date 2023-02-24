@@ -1,25 +1,25 @@
 <template>
-<div>
-    <div class="glide" ref="carouselImages">
-        <div data-glide-el="track" class="glide__track">
-            <div class="glide__slides">
-                <slot></slot>
-            </div>
+  <div>
+    <div ref="carouselImages" class="glide">
+      <div data-glide-el="track" class="glide__track">
+        <div class="glide__slides">
+          <slot />
         </div>
-        <div v-if="!settings.hideNav" class="glide__arrows slider-nav" data-glide-el="controls">
-            <button class="glide__arrow glide__arrow--left left-arrow btn btn-link" data-glide-dir="<">
-                <i class="simple-icon-arrow-left"></i>
-            </button>
+      </div>
+      <div v-if="!settings.hideNav" class="glide__arrows slider-nav" data-glide-el="controls">
+        <button class="glide__arrow glide__arrow--left left-arrow btn btn-link" data-glide-dir="<">
+          <i class="simple-icon-arrow-left" />
+        </button>
 
-            <div class="glide__bullets slider-dot-container" data-glide-el="controls[nav]">
-               <button v-for="i in total" class="glide__bullet slider-dot" :key="i" :data-glide-dir="`=${i}`"></button>
-            </div>
-            <button class="glide__arrow glide__arrow--right right-arrow btn btn-link" data-glide-dir=">">
-                <i class="simple-icon-arrow-right"></i>
-            </button>
+        <div class="glide__bullets slider-dot-container" data-glide-el="controls[nav]">
+          <button v-for="i in total" :key="i" class="glide__bullet slider-dot" :data-glide-dir="`=${i}`" />
         </div>
+        <button class="glide__arrow glide__arrow--right right-arrow btn btn-link" data-glide-dir=">">
+          <i class="simple-icon-arrow-right" />
+        </button>
+      </div>
     </div>
-</div>
+  </div>
 </template>
 
 <script>
@@ -36,7 +36,10 @@ import {
 
 export default {
     props: {
-        settings: Object,
+        settings: {
+            type: Object,
+            default: () => {}
+        },
         // {
         //     type: String,
         //     startAt: Number,
@@ -63,8 +66,14 @@ export default {
         //     throttle: Number,
         //     data: Array,
         // },
-        id: String,
-        className: String
+        id: {
+            type: String,
+            default: ''
+        },
+        className: {
+            type: String,
+            default: ''
+        }
     },
     data() {
         return {
@@ -79,7 +88,7 @@ export default {
         })
     },
     watch: {
-        menuType: function (val) {
+        menuType: function () {
             this.onResize();
         },
     },

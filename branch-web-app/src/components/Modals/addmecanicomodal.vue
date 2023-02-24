@@ -14,13 +14,19 @@
         />
         <b-form-invalid-feedback
           v-if="!$v.newMecanico.identificacion.required"
-        >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
+        >
+          {{ $t('branch.forms.validations.required') }}
+        </b-form-invalid-feedback>
         <b-form-invalid-feedback
           v-else-if="!$v.newMecanico.identificacion.numeric || !$v.newMecanico.identificacion.numeric"
-        >{{$t('branch.forms.validations.numeric')}}</b-form-invalid-feedback>
+        >
+          {{ $t('branch.forms.validations.numeric') }}
+        </b-form-invalid-feedback>
         <b-form-invalid-feedback
           v-else-if="!$v.newMecanico.identificacion.minLength || !$v.newMecanico.identificacion.maxLength"
-        >{{$t('branch.forms.validations.longitud')}}</b-form-invalid-feedback>
+        >
+          {{ $t('branch.forms.validations.longitud') }}
+        </b-form-invalid-feedback>
       </b-form-group>
       <b-form-group :label="$t('branch.mecanico.firstName')">
         <b-form-input
@@ -29,7 +35,9 @@
         />
         <b-form-invalid-feedback
           v-if="!$v.newMecanico.firstName.required"
-        >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
+        >
+          {{ $t('branch.forms.validations.required') }}
+        </b-form-invalid-feedback>
       </b-form-group>
       <b-form-group :label="$t('branch.mecanico.lastName')">
         <b-form-input
@@ -38,20 +46,26 @@
         />
         <b-form-invalid-feedback
           v-if="!$v.newMecanico.lastName.required"
-        >{{$t('branch.forms.validations.required')}}</b-form-invalid-feedback>
+        >
+          {{ $t('branch.forms.validations.required') }}
+        </b-form-invalid-feedback>
       </b-form-group>
       <b-form-group :label="$t('branch.mecanico.skills')">
         <input-tag
           v-model="newMecanico.skills"
           :placeholder="$t('form-components.tags')"
           :limit="4"
-        ></input-tag>
+        />
       </b-form-group>
       <b-button
         variant="outline-secondary"
         @click.once="hideModal('modalAddMecanico')"
-      >{{ $t('pages.cancel') }}</b-button>
-      <b-button type="submit" variant="primary">{{ $t('forms.submit') }}</b-button>
+      >
+        {{ $t('pages.cancel') }}
+      </b-button>
+      <b-button type="submit" variant="primary">
+        {{ $t('forms.submit') }}
+      </b-button>
     </b-form>
   </b-modal>
 </template>
@@ -62,10 +76,11 @@ import { required, numeric } from "vuelidate/lib/validators";
 import ServicesCore from "../../services/service";
 
 export default {
-  props: ["IdTaller", "mecanicoSelected", "visible"],
+  name: 'add-mecanico-modal',
   components: {
     "input-tag": InputTag
   },
+  props: ["idTaller", "mecanicoSelected", "visible"],
   data() {
     return {
       newMecanico: {

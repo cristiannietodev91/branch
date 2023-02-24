@@ -1,18 +1,23 @@
 <template>
-    <div :class="{'notification-container': true, 'notification-container-empty' : items.length===0}">
-    <transition-group name="ntf" tag="div" mode="out"  >
-        <div   v-for="item in items" :key="item.id"  :class="'notification notification-'+item.options.type"  @click="removeItem(item.id)">
-           <div class="notification-message">
-              <h4 class="title" v-if="item.title">{{ item.title }}</h4>
-              <div class="message" v-if="item.message" v-html="item.message"/>
-            </div>
+  <div :class="{'notification-container': true, 'notification-container-empty' : items.length===0}">
+    <transition-group name="ntf" tag="div" mode="out">
+      <div v-for="item in items" :key="item.id" :class="'notification notification-'+item.options.type" @click="removeItem(item.id)">
+        <div class="notification-message">
+          <h4 v-if="item.title" class="title">
+            {{ item.title }}
+          </h4>
+          <div v-if="item.message" class="message">
+            {{ item.message }}
+          </div>
         </div>
+      </div>
     </transition-group>
   </div>
 </template>
 
 <script>
 export default {
+  name: 'common-notification',
   data () {
     return {
       message: null,
@@ -68,7 +73,7 @@ export default {
   }
 }
 </script>
-<style >
+<style>
 .ntf-enter {
   opacity: 0;
 }

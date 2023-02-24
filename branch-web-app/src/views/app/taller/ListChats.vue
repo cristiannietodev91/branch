@@ -13,18 +13,18 @@
         <b-row class="m-3">
           <div class="d-flex align-items-center navbar-left">
             <div
-              :class="{ search: true, 'mobile-view': isMobileSearch }"
               ref="searchContainer"
+              :class="{ search: true, 'mobile-view': isMobileSearch }"
               @mouseenter="isSearchOver = true"
               @mouseleave="isSearchOver = false"
             >
               <b-input
+                v-model="searchKeyword"
                 :placeholder="$t('menu.search')"
                 @keypress.native.enter="search"
-                v-model="searchKeyword"
               />
               <span class="search-icon" @click="searchClick">
-                <i class="simple-icon-magnifier"></i>
+                <i class="simple-icon-magnifier" />
               </span>
             </div>
           </div>
@@ -46,7 +46,7 @@
                 <div class="comment-likes">
                   <span class="post-icon">
                     <b-badge variant="light">{{ conversacionesUnRead.length }}</b-badge>
-                    <router-link to="#"></router-link>
+                    <router-link to="#" />
                   </span>
                 </div>
                 <conversacion-item
@@ -60,7 +60,7 @@
           </b-row>
         </template>
         <template v-else>
-          <div class="loading"></div>
+          <div class="loading" />
         </template>
       </b-colxx>
     </b-row>
@@ -86,6 +86,13 @@ export default {
       conversaciones: []
     };
   },
+  computed: {
+    ...mapGetters(["currentUser"])
+  },
+  watch: {},
+  mounted() {
+    this.loadItems();
+  },
   methods: {
     loadItems() {
       this.isLoad = false;
@@ -110,7 +117,7 @@ export default {
             console.log("Se marcaron como leidos los mensajes");
           }
         })
-        .catch(error => {
+        .catch(() => {
           console.error("Error al marcar como leidos los mensajes");
         });
     },
@@ -138,12 +145,5 @@ export default {
       });
     }
   },
-  computed: {
-    ...mapGetters(["currentUser"])
-  },
-  watch: {},
-  mounted() {
-    this.loadItems();
-  }
 };
 </script>

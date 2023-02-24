@@ -1,50 +1,108 @@
 <template>
   <b-card>
     <b-row>
-      <b-colxx md="6" sm="6" lg="4" xxs="12">
-        <h5 class="mb-1 card-subtitle truncate">{{ data.CodigoOrden }}</h5>
-        <p class="text-muted text-small mb-2">{{ $t("branch.orden.codigoOrden") }}</p>
+      <b-colxx
+        md="6"
+        sm="6"
+        lg="4"
+        xxs="12"
+      >
+        <h5 class="mb-1 card-subtitle truncate">
+          {{ data.CodigoOrden }}
+        </h5>
+        <p class="text-muted text-small mb-2">
+          {{ $t("branch.orden.codigoOrden") }}
+        </p>
       </b-colxx>
-      <b-colxx md="6" sm="6" lg="2" xxs="4">
-        <h5 class="mb-1 card-subtitle truncate">{{ data.vehiculo.placa }}</h5>
-        <p class="text-muted text-small mb-2">{{ $t("branch.orden.placa") }}</p>
+      <b-colxx
+        md="6"
+        sm="6"
+        lg="2"
+        xxs="4"
+      >
+        <h5 class="mb-1 card-subtitle truncate">
+          {{ data.vehiculo.placa }}
+        </h5>
+        <p class="text-muted text-small mb-2">
+          {{ $t("branch.orden.placa") }}
+        </p>
       </b-colxx>
-      <b-colxx md="6" sm="6" lg="2" xxs="4">
-        <h5 class="mb-1 card-subtitle truncate">{{ data.vehiculo.marca.marca }}</h5>
-        <p class="text-muted text-small mb-2">{{ $t("branch.orden.marca") }}</p>
+      <b-colxx
+        md="6"
+        sm="6"
+        lg="2"
+        xxs="4"
+      >
+        <h5 class="mb-1 card-subtitle truncate">
+          {{ data.vehiculo.marca.marca }}
+        </h5>
+        <p class="text-muted text-small mb-2">
+          {{ $t("branch.orden.marca") }}
+        </p>
       </b-colxx>
-      <b-colxx md="6" sm="6" lg="2" xxs="4">
-        <h5 class="mb-1 card-subtitle truncate">{{ data.vehiculo.usuario.firstName }}</h5>
-        <p class="text-muted text-small mb-2">{{ $t("branch.vehiculo.dueno") }}</p>
+      <b-colxx
+        md="6"
+        sm="6"
+        lg="2"
+        xxs="4"
+      >
+        <h5 class="mb-1 card-subtitle truncate">
+          {{ data.vehiculo.usuario.firstName }}
+        </h5>
+        <p class="text-muted text-small mb-2">
+          {{ $t("branch.vehiculo.dueno") }}
+        </p>
       </b-colxx>
-      <b-colxx md="6" sm="6" lg="2" xxs="4">
+      <b-colxx
+        md="6"
+        sm="6"
+        lg="2"
+        xxs="4"
+      >
         <b-button
-          @click="openChat"
           variant="primary"
           class="top-right-button"
           size="xs"
           :aria-controls="`sidebar${data.CodigoOrden}`"
           :aria-expanded="showModal"
+          @click="openChat"
         >
           <!-- <i class="iconsminds-speach-bubble-8"></i> -->
           {{ $t("chat.send") }}
-          <b-badge variant="light" v-if="newmessages > 0">{{ newmessages }}</b-badge>
+          <b-badge
+            v-if="newmessages > 0"
+            variant="light"
+          >
+            {{ newmessages }}
+          </b-badge>
         </b-button>
-        <b-modal :id="`sidebar${data.CodigoOrden}`" right shadow v-model="showModal" no-header>
-          <modal-open-chat :conversacion="infoconversacion" @hide="openChat"></modal-open-chat>
+        <b-modal
+          :id="`sidebar${data.CodigoOrden}`"
+          v-model="showModal"
+          right
+          shadow
+          no-header
+        >
+          <modal-open-chat
+            :conversacion="infoconversacion"
+            @hide="openChat"
+          />
         </b-modal>
       </b-colxx>
     </b-row>
-    <b-row v-if="showQualify" class="rating-container">
+    <b-row
+      v-if="showQualify"
+      class="rating-container"
+    >
       <h6>Por favor califica al cliente de este servicio</h6>
       <b-form-rating
         id="rating-sm-no-border"
         v-model="qualyfyCita"
         size="sm"
         show-value
-        @change="qualifyClient"
         :readonly="readOnlyQualify"
-      ></b-form-rating>
+        @change="qualifyClient"
+      />
     </b-row>
     <horizontal-stepper
       locale="es"
@@ -53,13 +111,12 @@
       @completed-step="completeStep"
       @active-step="isStepActive"
       @stepper-finished="alert"
-    ></horizontal-stepper>
+    />
   </b-card>
 </template>
 <script>
 import { mapGetters } from "vuex";
 import HorizontalStepper from "./../Steps/Steeper";
-import ThumbnailImage from "./ThumbnailImage";
 import Ingreso from "./../Steps/Ingreso";
 import Diagnostico from "./../Steps/Diagnostico";
 import Cotizacion from "./../Steps/Cotizacion";
@@ -70,12 +127,11 @@ import ModalOpenChat from "../Modals/chatmodal";
 import ServicesCore from "./../../services/service";
 
 export default {
-  props: ["link", "data", "mecanicos"],
   components: {
-    ThumbnailImage,
     HorizontalStepper,
     "modal-open-chat": ModalOpenChat
   },
+  props: ["link", "data", "mecanicos"],
   data() {
     return {
       demoSteps: [],
@@ -91,58 +147,6 @@ export default {
     ...mapGetters({
       currentUser: "currentUser"
     })
-  },
-  methods: {
-    openChat() {
-      this.showModal = !this.showModal;
-      this.newmessages = 0;
-      //this.$bvModal.show("modalChat_" + this.data.CodigoOrden);
-    },
-    // Executed when @completed-step event is triggered
-    completeStep(payload) {
-      if (payload.index) {
-        this.demoSteps.forEach(step => {
-          if (step.name === payload.name) {
-            step.completed = true;
-          }
-        });
-      }
-    },
-    // Executed when @active-step event is triggered
-    isStepActive(payload) {
-      this.demoSteps.forEach(step => {
-        //console.debug('Valid steps :::>',step);
-        if (step.name === payload.name) {
-          if (step.completed === true) {
-            step.completed = true;
-          }
-        }
-      });
-    },
-    // Executed when @stepper-finished event is triggered
-    alert(payload) {
-      alert("end");
-    },
-    qualifyClient(value) {
-      const { IdCita } = this.data;
-
-      ServicesCore.calificaCita(IdCita, value)
-        .then(response => {
-          if (response.status == 202) {
-            this.readOnlyQualify = true;
-          }
-        })
-        .catch(error => {
-          console.error(
-            "Error al actualizar cita para calificarla :::>",
-            error
-          );
-          this.$notify("error filled", "ERROR", "Error al actualizar cita", {
-            duration: 3000,
-            permanent: false
-          });
-        });
-    }
   },
   mounted() {
     this.sockets.subscribe("sendmessage", newmessage => {
@@ -171,8 +175,6 @@ export default {
         return true;
       }
     });
-
-    let etapaIngreso = idxIngreso > -1 ? this.data.etapas[idxIngreso] : null;
 
     this.demoSteps.push({
       icon: "info",
@@ -333,6 +335,58 @@ export default {
         this.qualyfyCita = cita.calificacion;
         this.readOnlyQualify = true;
       }
+    }
+  },
+  methods: {
+    openChat() {
+      this.showModal = !this.showModal;
+      this.newmessages = 0;
+      //this.$bvModal.show("modalChat_" + this.data.CodigoOrden);
+    },
+    // Executed when @completed-step event is triggered
+    completeStep(payload) {
+      if (payload.index) {
+        this.demoSteps.forEach(step => {
+          if (step.name === payload.name) {
+            step.completed = true;
+          }
+        });
+      }
+    },
+    // Executed when @active-step event is triggered
+    isStepActive(payload) {
+      this.demoSteps.forEach(step => {
+        //console.debug('Valid steps :::>',step);
+        if (step.name === payload.name) {
+          if (step.completed === true) {
+            step.completed = true;
+          }
+        }
+      });
+    },
+    // Executed when @stepper-finished event is triggered
+    alert() {
+      alert("end");
+    },
+    qualifyClient(value) {
+      const { IdCita } = this.data;
+
+      ServicesCore.calificaCita(IdCita, value)
+        .then(response => {
+          if (response.status == 202) {
+            this.readOnlyQualify = true;
+          }
+        })
+        .catch(error => {
+          console.error(
+            "Error al actualizar cita para calificarla :::>",
+            error
+          );
+          this.$notify("error filled", "ERROR", "Error al actualizar cita", {
+            duration: 3000,
+            permanent: false
+          });
+        });
     }
   }
 };

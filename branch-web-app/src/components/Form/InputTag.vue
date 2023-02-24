@@ -15,7 +15,7 @@ const validators = {
 };
 /* eslint-enable */
 export default {
-    name: 'InputTag',
+    name: 'input-tag',
     props: {
         value: {
             type: Array,
@@ -146,16 +146,22 @@ export default {
 </script>
 
 <template>
-<div @click="focusNewTag()" :class="{
+  <div
+    :class="{
       'read-only': readOnly,
       'vue-tagsinput--focused': isInputActive,
-    }" class="vue-tagsinput">
+    }" class="vue-tagsinput" @click="focusNewTag()"
+  >
     <span v-for="(tag, index) in innerTags" :key="index" class="vue-tagsinput-tag">
-        <span>{{ tag }}</span>
-        <a v-if="!readOnly" @click.prevent.stop="remove(index)" class="vue-tagsinput-remove"></a>
+      <span>{{ tag }}</span>
+      <a v-if="!readOnly" class="vue-tagsinput-remove" @click.prevent.stop="remove(index)" />
     </span>
-    <input v-if="!readOnly && !isLimit" ref="inputtag" :placeholder="placeholder" type="text" v-model="newTag" @keydown.delete.stop="removeLastTag" @keydown.enter="addNew" @blur="handleInputBlur" @focus="handleInputFocus" class="vue-tagsinput-input" />
-</div>
+    <input
+      v-if="!readOnly && !isLimit" ref="inputtag" v-model="newTag" :placeholder="placeholder"
+      type="text" class="vue-tagsinput-input" @keydown.delete.stop="removeLastTag" @keydown.enter="addNew"
+      @blur="handleInputBlur" @focus="handleInputFocus"
+    >
+  </div>
 </template>
 
 <style>

@@ -13,8 +13,8 @@
         <ul class="list-unstyled">
           <li
             v-for="(item) in menuItems"
-            :class="{ 'active' : (selectedParentMenu === item.id && viewingParentMenu === '') || viewingParentMenu === item.id }"
             :key="`parent_${item.id}`"
+            :class="{ 'active' : (selectedParentMenu === item.id && viewingParentMenu === '') || viewingParentMenu === item.id }"
             :data-flag="item.id"
           >
             <a v-if="item.newWindow" :href="item.to" rel="noopener noreferrer" target="_blank">
@@ -23,17 +23,17 @@
             </a>
             <a
               v-else-if="item.subs && item.subs.length>0"
-              @click.prevent="openSubMenu($event,item)"
               :href="`#${item.to}`"
+              @click.prevent="openSubMenu($event,item)"
             >
-              <b-badge variant="light" v-if="item.notifications && newMessages > 0">{{newMessages}}</b-badge>
+              <b-badge v-if="item.notifications && newMessages > 0" variant="light">{{ newMessages }}</b-badge>
               <i :class="item.icon" />
               {{ $t(item.label) }}
             </a>
             <router-link
               v-else
-              @click.native="changeSelectedParentHasNoSubmenu(item.id)"
               :to="item.to"
+              @click.native="changeSelectedParentHasNoSubmenu(item.id)"
             >
               <i :class="item.icon" />
               {{ $t(item.label) }}
@@ -50,28 +50,29 @@
       >
         <ul
           v-for="(item,itemIndex) in menuItems"
+          :key="`sub_${item.id}`"
           :class="{'list-unstyled':true, 'd-block' : (selectedParentMenu === item.id && viewingParentMenu === '') || viewingParentMenu === item.id }"
           :data-parent="item.id"
-          :key="`sub_${item.id}`"
         >
           <li
             v-for="(sub,subIndex) in item.subs"
+            :key="`sub_sub_${sub.id}`"
             :class="{'has-sub-item' : sub.subs && sub.subs.length > 0 , 'active' : $route.path.indexOf(sub.to)>-1}"
           >
             <a v-if="sub.newWindow" :href="sub.to" rel="noopener noreferrer" target="_blank">
               <i :class="sub.icon" />
               <span>{{ $t(sub.label) }}</span>
             </a>
-            <template v-else-if="sub.subs &&  sub.subs.length > 0">
+            <template v-else-if="sub.subs && sub.subs.length > 0">
               <b-link
                 v-b-toggle="`menu_${itemIndex}_${subIndex}`"
                 variant="link"
                 class="rotate-arrow-icon opacity-50"
               >
-                <i class="simple-icon-arrow-down"></i>
-                <span class="d-inline-block">{{$t(sub.label)}}</span>
+                <i class="simple-icon-arrow-down" />
+                <span class="d-inline-block">{{ $t(sub.label) }}</span>
               </b-link>
-              <b-collapse visible :id="`menu_${itemIndex}_${subIndex}`">
+              <b-collapse :id="`menu_${itemIndex}_${subIndex}`" visible>
                 <ul class="list-unstyled third-level-menu">
                   <li
                     v-for="(thirdLevelSub, thirdIndex) in sub.subs"
@@ -96,12 +97,12 @@
                 </ul>
               </b-collapse>
             </template>
-            <router-link v-else :to="sub.to" v-on:click.native="resetUnreadMessages">
+            <router-link v-else :to="sub.to" @click.native="resetUnreadMessages">
               <i :class="sub.icon" />
 
               <span>
                 {{ $t(sub.label) }}
-                <b-badge variant="light" v-if="sub.notifications && newMessages > 0">{{newMessages}}</b-badge>
+                <b-badge v-if="sub.notifications && newMessages > 0" variant="light">{{ newMessages }}</b-badge>
               </span>
             </router-link>
           </li>
@@ -117,6 +118,7 @@ import { menuHiddenBreakpoint, subHiddenBreakpoint } from "../constants/config";
 import menuItems from "../constants/menu";
 
 export default {
+  name: "sidebar-container",
   data() {
     return {
       selectedParentMenu: "",
@@ -125,6 +127,35 @@ export default {
       viewingParentMenu: "",
       newmessages: 0
     };
+  },
+  computed: {
+    ...mapGetters({
+      menuType: "getMenuType",
+      menuClickCount: "getMenuClickCount",
+      selectedMenuHasSubItems: "getSelectedMenuHasSubItems",
+      newMessages: "newMessages"
+    })
+  },
+  watch: {
+    $route(to, from) {
+      if (to.path !== from.path) {
+        const toParentUrl = to.path.split("/").filter(x => x !== "")[1];
+        if (toParentUrl !== undefined || toParentUrl !== null) {
+          this.selectedParentMenu = toParentUrl.toLowerCase();
+        } else {
+          this.selectedParentMenu = "dashboards";
+        }
+        this.selectMenu();
+        this.toggle();
+        this.changeSideMenuStatus({
+          step: 0,
+          classNames: this.menuType,
+          selectedMenuHasSubItems: this.selectedMenuHasSubItems
+        });
+
+        window.scrollTo(0, top);
+      }
+    }
   },
   mounted() {
     this.selectMenu();
@@ -136,7 +167,6 @@ export default {
     document.removeEventListener("click", this.handleDocumentClick);
     window.removeEventListener("resize", this.handleWindowResize);
   },
-
   methods: {
     ...mapMutations([
       "changeSideMenuStatus",
@@ -324,35 +354,6 @@ export default {
     resetUnreadMessages() {
       // this.newmessages = 0;
       this.resetNewMessages();
-    }
-  },
-  computed: {
-    ...mapGetters({
-      menuType: "getMenuType",
-      menuClickCount: "getMenuClickCount",
-      selectedMenuHasSubItems: "getSelectedMenuHasSubItems",
-      newMessages: "newMessages"
-    })
-  },
-  watch: {
-    $route(to, from) {
-      if (to.path !== from.path) {
-        const toParentUrl = to.path.split("/").filter(x => x !== "")[1];
-        if (toParentUrl !== undefined || toParentUrl !== null) {
-          this.selectedParentMenu = toParentUrl.toLowerCase();
-        } else {
-          this.selectedParentMenu = "dashboards";
-        }
-        this.selectMenu();
-        this.toggle();
-        this.changeSideMenuStatus({
-          step: 0,
-          classNames: this.menuType,
-          selectedMenuHasSubItems: this.selectedMenuHasSubItems
-        });
-
-        window.scrollTo(0, top);
-      }
     }
   }
 };

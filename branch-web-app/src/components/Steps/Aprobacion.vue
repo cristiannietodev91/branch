@@ -7,44 +7,63 @@
         class="align-self-center list-thumbnail-letters rounded-circle m-4 small"
       >INGRESO</div>
     </router-link> -->
-    <b-container v-if="data.etapa">      
-        
-        <b-row>
-            <b-colxx md="6" sm="6" lg="6" xxs="12">
-                <p class="text-muted text-small mb-2">{{$t('branch.orden.fechaAprobacion')}}</p>
-                <h5 class="mb-1 card-subtitle truncate">{{data.etapa.createdAt | moment("D MMMM YYYY hh:mm A") }}</h5>
-                <p class="text-muted text-small mb-2">{{$t('branch.orden.mecanico')}}</p>
-                <h5 class="mb-1 card-subtitle truncate">{{data.etapa.mecanico.fullName}}</h5>
-                
-            </b-colxx>
-            <b-colxx md="6" sm="6" lg="6" xxs="12">
-                <p class="text-muted text-small mb-2">{{$t('branch.orden.kilometraje')}}</p>
-                <h5 class="mb-1 card-subtitle truncate">{{data.etapa.kilometraje}} KM</h5>
-                <p class="text-muted text-small mb-2">{{$t('branch.orden.documentos')}}</p>
-                <h5 class="mb-1 card-subtitle truncate">{{data.etapa.DocumentosDeja}}</h5>
-            </b-colxx>
-            </b-row>
-            <b-row>
-            <b-colxx md="12" sm="12" lg="12" xxs="12">
-                <p class="text-muted text-small mb-2">{{$t('branch.orden.observaciones')}}</p>
-                <h5 class="mb-1 card-subtitle truncate">{{data.etapa.Observaciones}}</h5>
-            </b-colxx>
-            </b-row>
-            -
+    <b-container v-if="data.etapa">
+      <b-row>
+        <b-colxx md="6" sm="6" lg="6" xxs="12">
+          <p class="text-muted text-small mb-2">
+            {{ $t('branch.orden.fechaAprobacion') }}
+          </p>
+          <h5 class="mb-1 card-subtitle truncate">
+            {{ data.etapa.createdAt | moment("D MMMM YYYY hh:mm A") }}
+          </h5>
+          <p class="text-muted text-small mb-2">
+            {{ $t('branch.orden.mecanico') }}
+          </p>
+          <h5 class="mb-1 card-subtitle truncate">
+            {{ data.etapa.mecanico.fullName }}
+          </h5>
+        </b-colxx>
+        <b-colxx md="6" sm="6" lg="6" xxs="12">
+          <p class="text-muted text-small mb-2">
+            {{ $t('branch.orden.kilometraje') }}
+          </p>
+          <h5 class="mb-1 card-subtitle truncate">
+            {{ data.etapa.kilometraje }} KM
+          </h5>
+          <p class="text-muted text-small mb-2">
+            {{ $t('branch.orden.documentos') }}
+          </p>
+          <h5 class="mb-1 card-subtitle truncate">
+            {{ data.etapa.DocumentosDeja }}
+          </h5>
+        </b-colxx>
+      </b-row>
+      <b-row>
+        <b-colxx md="12" sm="12" lg="12" xxs="12">
+          <p class="text-muted text-small mb-2">
+            {{ $t('branch.orden.observaciones') }}
+          </p>
+          <h5 class="mb-1 card-subtitle truncate">
+            {{ data.etapa.Observaciones }}
+          </h5>
+        </b-colxx>
+      </b-row>
+      -
     </b-container>    
     <b-container v-else>
-       <h5 class="mb-1 card-subtitle truncate">{{$t('branch.orden.sinetapa')}}</h5>
-        
+      <h5 class="mb-1 card-subtitle truncate">
+        {{ $t('branch.orden.sinetapa') }}
+      </h5>
     </b-container>    
   </b-card>
 </template>
 <script>
 import { validationMixin } from "vuelidate";
-import { required, email } from "vuelidate/lib/validators";
 
 export default {
-  props: ["clickedNext", "currentStep", "data"],
+  name: "aprobacion-step",
   mixins: [validationMixin],
+  props: ["clickedNext", "currentStep", "data"],
   data() {
     return {
       text: "Completed"
