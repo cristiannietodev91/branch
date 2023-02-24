@@ -19,6 +19,8 @@
       }
     }],
     "vue/attribute-hyphenation": ["off"],
+    "vue/require-prop-types": ["off"],
+    "vue/prop-name-casing": ["off"],
     "vue/component-definition-name-casing": ["error", "kebab-case"]
   }
 }

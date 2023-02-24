@@ -36,7 +36,10 @@ import {
 
 export default {
     props: {
-        settings: Object,
+        settings: {
+            type: Object,
+            default: () => {}
+        },
         // {
         //     type: String,
         //     startAt: Number,
@@ -63,8 +66,14 @@ export default {
         //     throttle: Number,
         //     data: Array,
         // },
-        id: String,
-        className: String
+        id: {
+            type: String,
+            default: ''
+        },
+        className: {
+            type: String,
+            default: ''
+        }
     },
     data() {
         return {

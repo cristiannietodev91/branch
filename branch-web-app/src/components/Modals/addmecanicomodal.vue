@@ -80,7 +80,7 @@ export default {
   components: {
     "input-tag": InputTag
   },
-  props: ["IdTaller", "mecanicoSelected", "visible"],
+  props: ["idTaller", "mecanicoSelected", "visible"],
   data() {
     return {
       newMecanico: {

@@ -11,7 +11,7 @@
           {{ $t("pages.branch.add-new-mecanico") }}
         </b-button>
         <modal-add-mecanico
-          :IdTaller="currentUser.IdTaller"
+          :idTaller="currentUser.IdTaller"
           :mecanicoSelected="mecanicoSelected"
           @loadInfoTaller="loadInfoTaller"
         />
