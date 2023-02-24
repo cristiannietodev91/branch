@@ -145,7 +145,7 @@ export default {
     }
   },
   mounted() {
-    this.sockets.listener.subscribe("sendmessage", newmessage => {
+    this.sockets.subscribe("sendmessage", newmessage => {
       if (newmessage.cita == this.data.IdCita) {
         if (!this.showModal) {
           this.newmessages += 1;
@@ -156,7 +156,7 @@ export default {
     this.infoconversacion = {
       IdTaller: this.data.IdTaller,
       nombreTaller: this.data.taller.nombre,
-      usuario: this.data.vehiculo.usuario,
+      usuario: this.data.vehiculo?.usuario,
       IdConversacionUser: this.data.vehiculo.IdUsuario,
       IdCita: this.data.IdCita,
       CodigoOrden: this.data.CodigoOrden,

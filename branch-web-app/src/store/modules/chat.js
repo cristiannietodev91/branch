@@ -1,5 +1,5 @@
 import axios from "axios";
-import { apiUrl } from "../../constants/config";
+import { apiBranchUrl } from "../../constants/config";
 import ServiceCore from "../../services/service";
 
 const state = {
@@ -65,43 +65,9 @@ const mutations = {
 };
 
 const actions = {
-  searchContacts({ commit, state }, { userId, searchKey }) {
-    if (searchKey.length > 0) {
-      axios
-        .get(`${apiUrl}/contacts?search=${searchKey}`)
-        .then(r => r.data)
-        .then(res => {
-          if (res.status) {
-            commit("getContactsSearchSuccess", {
-              contacts: res.data,
-              userId: userId
-            });
-          } else {
-            commit("getContactsError", "error:getContacts");
-          }
-        });
-    } else {
-      commit("getContactsSearchSuccess", {
-        contacts: state.contacts,
-        userId: userId
-      });
-    }
-  },
-  getContacts({ commit }, userId) {
-    axios
-      .get(`${apiUrl}/contacts`)
-      .then(r => r.data)
-      .then(res => {
-        if (res.status) {
-          commit("getContactsSuccess", { contacts: res.data, userId: userId });
-        } else {
-          commit("getContactsError", "error:getContacts");
-        }
-      });
-  },
   getConversations({ commit }, userId) {
     axios
-      .get(`${apiUrl}/conversations`)
+      .get(`${apiBranchUrl}/conversations`)
       .then(r => r.data)
       .then(res => {
         if (res.status) {

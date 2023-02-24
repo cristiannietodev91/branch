@@ -37,7 +37,7 @@ export default {
     });
   },
   mounted() {
-    this.sockets.listener.subscribe("sendmessage", data => {
+    this.sockets.subscribe("sendmessage", data => {
       // console.log("Log in mounted", data);
       this.$notification.show(
         data.user.name,
@@ -53,7 +53,7 @@ export default {
         }
       );
     });
-    this.sockets.listener.subscribe("newcita", data => {
+    this.sockets.subscribe("newcita", data => {
       this.$notification.show(
         data.placa,
         {

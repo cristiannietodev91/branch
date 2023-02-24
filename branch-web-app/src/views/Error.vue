@@ -8,7 +8,6 @@
               <b-card class="auth-card" no-body>
                 <div class="position-relative image-side ">
                   <p class="h2">LA MAGIA ESTÁ EN LOS DETALLES</p>
-                  <p class="mb-0">eso si está indexado!</p>
                 </div>
                 <div class="form-side">
                   <router-link tag="a" to="/">

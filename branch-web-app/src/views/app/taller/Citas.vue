@@ -75,7 +75,7 @@
                 {{eventProps.event.originalEvent.citaObject.horaCita}}
                 <br />
 
-                {{eventProps.event.originalEvent.citaObject.vehiculo.usuario.firstName}}
+                {{eventProps.event.originalEvent.citaObject.vehiculo.usuario?.firstName || ''}}
                 {{eventProps.event.originalEvent.citaObject.vehiculo.marca.marca}} {{eventProps.event.originalEvent.citaObject.vehiculo.placa}}
                 {{eventProps.event.originalEvent.citaObject.servicio}}
                 Recibe: {{eventProps.event.originalEvent.citaObject.mecanico ? eventProps.event.originalEvent.citaObject.mecanico.fullName : 'Sin mecanico asignado'}}
