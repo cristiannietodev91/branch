@@ -1,26 +1,29 @@
 <template>
-<span>
-    <b-button :id="id" :class="{'btn-multiple-state': true,
-                    'show-spinner': status === 'processing',
-                    'show-success':status === 'success',
-                    'show-fail': status === 'fail' }" :variant="variant" @click="handleClick" :disabled="status != 'default'">
-        <b-tooltip :show="messageShow" ref="statusTooltip" :target="id" placement="top">{{ message }}</b-tooltip>
-        <span class="spinner d-inline-block">
-            <span class="bounce1"></span>
-            <span class="bounce2"></span>
-            <span class="bounce3"></span>
-        </span>
-        <span class="icon success">
-            <i class="simple-icon-check"></i>
-        </span>
-        <span class="icon fail">
-            <i class="simple-icon-exclamation"></i>
-        </span>
-        <span class="label">
-            <slot></slot>
-        </span>
+  <span>
+    <b-button
+      :id="id" :class="{'btn-multiple-state': true,
+                        'show-spinner': status === 'processing',
+                        'show-success':status === 'success',
+                        'show-fail': status === 'fail' }" :variant="variant" :disabled="status != 'default'"
+      @click="handleClick"
+    >
+      <b-tooltip ref="statusTooltip" :show="messageShow" :target="id" placement="top">{{ message }}</b-tooltip>
+      <span class="spinner d-inline-block">
+        <span class="bounce1" />
+        <span class="bounce2" />
+        <span class="bounce3" />
+      </span>
+      <span class="icon success">
+        <i class="simple-icon-check" />
+      </span>
+      <span class="icon fail">
+        <i class="simple-icon-exclamation" />
+      </span>
+      <span class="label">
+        <slot />
+      </span>
     </b-button>
-</span>
+  </span>
 </template>
 
 <script>

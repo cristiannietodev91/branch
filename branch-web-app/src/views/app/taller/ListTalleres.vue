@@ -21,24 +21,25 @@
                 variant="primary"
                 @click="selectAll(true)"
               >
-                <label
-                  slot="button-content"
-                  class="custom-control custom-checkbox pl-4 mb-0 d-inline-block"
-                >
-                  <input
-                    v-shortkey="{select: ['ctrl','a'], undo: ['ctrl','d']}"
-                    class="custom-control-input"
-                    type="checkbox"
-                    :checked="isSelectedAll"
-                    @shortkey="keymap"
+                <template #button-content>
+                  <label
+                    class="custom-control custom-checkbox pl-4 mb-0 d-inline-block"
                   >
-                  <span
-                    :class="{
-                      'custom-control-label' :true,
-                      'indeterminate' : isAnyItemSelected
-                    }"
-                  >&nbsp;</span>
-                </label>
+                    <input
+                      v-shortkey="{select: ['ctrl','a'], undo: ['ctrl','d']}"
+                      class="custom-control-input"
+                      type="checkbox"
+                      :checked="isSelectedAll"
+                      @shortkey="keymap"
+                    >
+                    <span
+                      :class="{
+                        'custom-control-label' :true,
+                        'indeterminate' : isAnyItemSelected
+                      }"
+                    >&nbsp;</span>
+                  </label>
+                </template>
                 <b-dropdown-item>{{ $t('pages.delete') }}</b-dropdown-item>
                 <b-dropdown-item>{{ $t('pages.another-action') }}</b-dropdown-item>
               </b-dropdown>

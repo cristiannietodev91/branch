@@ -56,7 +56,7 @@
         >
           <li
             v-for="(sub,subIndex) in item.subs"
-            :key="`sub_sub_${sub.id}`"
+            :key="`sub_sub_${sub.to}`"
             :class="{'has-sub-item' : sub.subs && sub.subs.length > 0 , 'active' : $route.path.indexOf(sub.to)>-1}"
           >
             <a v-if="sub.newWindow" :href="sub.to" rel="noopener noreferrer" target="_blank">

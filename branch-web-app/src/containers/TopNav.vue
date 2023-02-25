@@ -27,7 +27,7 @@
             class="dropdown-menu-right" right variant="empty" toggle-class="p-0"
             menu-class="mt-3" no-caret
           >
-            <template slot="button-content">
+            <template #button-content>
               <span>
                 <img :alt="currentUser.email" :src="currentUser.photoUrl || '/assets/img/profile-pic-6.jpg' ">
               </span>

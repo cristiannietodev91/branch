@@ -19,14 +19,14 @@
           @drop-on-date="onDropDate"
           @click-date="onClickDay"
         >
-          <calendar-view-header
-            slot="header"
-            slot-scope="t"
-            :header-props="t.headerProps"
-            @input="setShowDate"
-          />
+          <template #header="t">
+            <calendar-view-header
+              :header-props="t.headerProps"
+              @input="setShowDate"
+            />
+          </template>
 
-          <template slot="event" slot-scope="eventProps">
+          <template #event="eventProps">
             <!-- <div
               :id="`event-${eventProps.event.originalEvent.citaObject.IdCita}`"
               :title="eventProps.event.title"
