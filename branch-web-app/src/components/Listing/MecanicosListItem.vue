@@ -17,7 +17,7 @@
             <p class="text-muted text-small mb-2">
               Fecha de creación
             </p>
-            <h6>{{ data.createdAt | moment("D MMMM YYYY hh mm A") }}</h6>
+            <h6>{{ dateTime(data.createdAt) }}</h6>
             <p class="text-muted text-small mb-2">
               Habilidades
             </p>
@@ -47,9 +47,14 @@
 </template>
 
 <script>
+import moment from 'moment';
+
 export default {
   props: ["data"],
   methods: {
+    dateTime(value) {
+      return moment(value).format('D MMMM YYYY hh:mm A');
+    },
     editMecanico(mecanico) {
       this.$emit("editMecanico", mecanico);
     },

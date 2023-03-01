@@ -1,5 +1,9 @@
-const CopyWebpackPlugin = require("copy-webpack-plugin");
+const path = require('path')
 
+
+/**
+ * @type {import('@vue/cli-service').ProjectOptions}
+ */
 module.exports = {
   pages: {
     index: {
@@ -9,35 +13,39 @@ module.exports = {
     }
   },
   devServer: {
-    clientLogLevel: "warning",
     hot: true,
-    contentBase: "dist",
+    static: {
+      directory: path.resolve(__dirname, "dist"),
+      watch: {
+        ignored: /node_modules/,
+        usePolling: false,
+      },
+      publicPath: "/"
+    },
     compress: true,
     open: true,
-    overlay: { warnings: false, errors: true },
-    publicPath: "/",
-    quiet: true,
-    watchOptions: {
-      poll: false,
-      ignored: /node_modules/
-    }
+    client: {
+      logging: "warn",
+      overlay: { warnings: false, errors: true },
+    },
   },
   chainWebpack: config => {
+
+    config.resolve.alias.set('vue', '@vue/compat')
+
     config.module
       .rule("vue")
       .use("vue-loader")
-      .tap(args => {
-        args.compilerOptions.whitespace = "preserve";
+      .tap((options) => {
+        return {
+          ...options,
+          compilerOptions: {
+            compatConfig: {
+              MODE: 2
+            }
+          }
+        }
       });
   },
   productionSourceMap: false,
-  assetsDir: "./assets/",
-  configureWebpack: {
-    plugins: [
-      new CopyWebpackPlugin([
-        { from: "src/assets/img", to: "assets/img" },
-        { from: "src/assets/fonts", to: "assets/fonts" }
-      ])
-    ]
-  }
 };

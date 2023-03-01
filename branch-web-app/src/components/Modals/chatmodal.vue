@@ -20,7 +20,7 @@
           type="text"
           :placeholder="$t('chat.saysomething')"
           :readonly="isLoadImage"
-          @keyup.native.enter="sendMessage"
+          @keyup.enter="sendMessage"
         />
         <div class="d-flex flex-row">
           <b-button variant="outline-primary" class="icon-button small ml-1" @click="open">

@@ -1,4 +1,4 @@
-import Vue from "vue";
+import { createApp } from "vue";
 import App from "./App";
 
 // BootstrapVue add
@@ -9,12 +9,12 @@ import store from "./store";
 // Multi Language Add
 import en from "./locales/en.json";
 import es from "./locales/es.json";
-import VueI18n from "vue-i18n";
+import { createI18n } from "vue-i18n";
 import {
   defaultLocale,
 } from "./constants/config";
 // Notification Component Add
-import Notifications from "./components/Common/Notification";
+// import Notifications from "./components/Common/Notification";
 // Breadcrumb Component Add
 import Breadcrumb from "./components/Common/Breadcrumb";
 // RefreshButton Component Add
@@ -36,38 +36,43 @@ require("moment/locale/es");
 
 moment.tz.setDefault("UTC");
 
-import VueMoment from "vue-moment";
 import firebase from "firebase/app";
 // import "firebase/auth";
 
 import Vuelidate from "vuelidate";
 
-Vue.use(Vuelidate);
+const app = createApp({
+  router,
+  store,
+  ...App
+});
+
+
+app.use(Vuelidate);
 
 //console.log('Service account file :::::>',serviceAccount);
 
-Vue.use(BootstrapVue);
-Vue.use(VueI18n);
-Vue.use(VueMoment, { moment });
 const messages = { en: en, es: es };
 const locale = defaultLocale;
-const i18n = new VueI18n({
+
+const i18n = createI18n({
   locale: locale,
   fallbackLocale: "es",
   messages
 });
 
-Vue.use(Notifications);
-Vue.component("piaf-breadcrumb", Breadcrumb);
-Vue.component("b-refresh-button", RefreshButton);
-Vue.component("b-colxx", Colxx);
-Vue.component("vue-perfect-scrollbar", vuePerfectScrollbar);
-Vue.use(require("vue-shortkey"));
-Vue.use(contentmenu);
-Vue.use(VueLineClamp, {
+app.use(BootstrapVue);
+app.use(i18n);
+
+
+
+// app.use(Notifications);
+app.use(require("vue-shortkey"));
+app.use(contentmenu);
+app.use(VueLineClamp, {
   importCss: true
 });
-Vue.use(VCalendar, {
+app.use(VCalendar, {
   firstDayOfWeek: 2, // ...other defaults,
   formats: {
     title: "MMM YYYY",
@@ -80,7 +85,27 @@ Vue.use(VCalendar, {
   popoverExpanded: true,
   popoverDirection: "bottom"
 });
-Vue.use(VueScrollTo);
+app.use(VueScrollTo);
+app.use(
+  new VueSocketIO({
+    debug: false,
+    connection: SocketIO(process.env.VUE_APP_URLBACKSERVICES, options),
+    vuex: {
+      store,
+      actionPrefix: "SOCKET_"
+    }
+  })
+);
+
+app.use(VueNativeNotification, {
+  requestOnNotify: false
+});
+
+app.component("piaf-breadcrumb", Breadcrumb);
+app.component("b-refresh-button", RefreshButton);
+app.component("b-colxx", Colxx);
+app.component("vue-perfect-scrollbar", vuePerfectScrollbar);
+
 
 
 firebase.initializeApp(
@@ -97,22 +122,9 @@ firebase.initializeApp(
 
 const options = { transports: ["websocket"], secure: true };
 
-Vue.use(
-  new VueSocketIO({
-    debug: false,
-    connection: SocketIO(process.env.VUE_APP_URLBACKSERVICES, options),
-    vuex: {
-      store,
-      actionPrefix: "SOCKET_"
-    }
-  })
-);
 
-Vue.use(VueNativeNotification, {
-  requestOnNotify: false
-});
 
-Vue.notification.requestPermission().then(console.log);
+// Vue.notification.requestPermission().then(console.log);
 
 /*firebase.auth().onAuthStateChanged(user => {
   if(user){
@@ -120,11 +132,5 @@ Vue.notification.requestPermission().then(console.log);
   }
 });*/
 
-Vue.config.productionTip = false;
 
-export default new Vue({
-  i18n,
-  router,
-  store,
-  render: h => h(App)
-}).$mount("#app");
+export default app.mount("#app");

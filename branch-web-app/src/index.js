@@ -3,7 +3,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 import "./assets/css/vendor/bootstrap.min.css";
 import "./assets/css/vendor/bootstrap.rtl.only.min.css";
 import 'video.js/dist/video-js.css';
-import { defaultColor } from "./constants/config";
+// import { defaultColor } from "./constants/config";
 /*  if you want use single color theme
 
 - ColorSwitcher component remove in 'src/App.vue' file.
@@ -11,11 +11,12 @@ import { defaultColor } from "./constants/config";
 - Uncomment the two lines below
 
 import "./assets/css/sass/themes/piaf.light.orange.scss";
-import "./main";
+
 */
+import "./main";
 
 /* if you want single color remove this section:multicolor */
-var color = defaultColor;
+/*var color = defaultColor;
 
 if (localStorage.getItem("themeColor")) {
   color = localStorage.getItem("themeColor");
@@ -27,5 +28,5 @@ let render = () => {
   );
 };
 
-render();
+render();*/
 /* if you want single color remove this section:multicolor */

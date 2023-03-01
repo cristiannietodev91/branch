@@ -1,6 +1,6 @@
 <template>
   <div>
-    <router-link to="#" @click.native.prevent="onThumbClick(0)">
+    <router-link to="#" @click.prevent="onThumbClick(0)">
       <img :src="thumb" alt="thumbnail" :class="className">
     </router-link>
     <LightGallery

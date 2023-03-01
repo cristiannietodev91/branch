@@ -10,9 +10,9 @@
         >
           <template #search="{attributes, events}">
             <input
+              v-bind="attributes"
               class="vs__search"
               :required="!newOrden.mecanico"
-              v-bind="attributes"
               v-on="events"
             >
           </template>
@@ -53,7 +53,7 @@
           <h5
             class="mb-1 card-subtitle truncate"
           >
-            {{ data.etapa.createdAt | moment("D MMMM YYYY hh:mm A") }}
+            {{ dateTime(data.etapa.createdAt) }}
           </h5>
         </b-colxx>
         <b-colxx v-if="data.etapa.mecanico" xxs="3">
@@ -93,7 +93,7 @@
                 <!-- <p class="list-item-heading mb-1 truncated">
                   {{documento.nombrearchivo}}
                 </p>-->
-                <b-card-text>{{ documento.date | moment("D MMMM YYYY hh:mm A") }}</b-card-text>
+                <b-card-text>{{ dateTime(documento.date) }}</b-card-text>
               </b-card>
             </div>
           </b-collapse>
@@ -117,7 +117,8 @@ import SingleLightbox from "../Pages/SingleLightbox";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 import vue2Dropzone from "vue2-dropzone";
-import moment from "moment-timezone";
+import momentTZ from "moment-timezone";
+import moment from 'moment';
 import { validationMixin } from "vuelidate";
 import { required } from "vuelidate/lib/validators";
 import ServicesCore from "./../../services/service";
@@ -193,7 +194,7 @@ export default {
   methods: {
     complete(response) {
       if (response.status == "success") {
-        let dateCreated = moment()
+        let dateCreated = momentTZ()
           .tz("UTC")
           .format();
 
@@ -212,6 +213,9 @@ export default {
       this.filesEtapa = this.filesEtapa.filter(value => {
         value.key != file.s3Signature.key;
       });
+    },
+    dateTime(value) {
+      return moment(value).format('D MMMM YYYY hh:mm A');
     },
     onValitadeAddOrden() {
       this.$v.$touch();

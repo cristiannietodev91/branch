@@ -33,7 +33,7 @@
             <router-link
               v-else
               :to="item.to"
-              @click.native="changeSelectedParentHasNoSubmenu(item.id)"
+              @click="changeSelectedParentHasNoSubmenu(item.id)"
             >
               <i :class="item.icon" />
               {{ $t(item.label) }}
@@ -97,7 +97,7 @@
                 </ul>
               </b-collapse>
             </template>
-            <router-link v-else :to="sub.to" @click.native="resetUnreadMessages">
+            <router-link v-else :to="sub.to" @click="resetUnreadMessages">
               <i :class="sub.icon" />
 
               <span>

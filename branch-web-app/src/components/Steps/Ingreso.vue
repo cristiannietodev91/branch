@@ -1,12 +1,5 @@
 <template>
   <b-card class="mb-4" no-body>
-    <!-- <router-link to="?" class="d-flex">
-      <div
-        src="/assets/img/profile-pic-l.jpg"
-        alt="Card image cap"
-        class="align-self-center list-thumbnail-letters rounded-circle m-4 small"
-      >INGRESO</div>
-    </router-link> -->
     <div>
       <b-row>
         <b-colxx md="6" sm="6" lg="6" xxs="12">
@@ -14,7 +7,7 @@
             {{ $t('branch.orden.fechaIngreso') }}
           </p>
           <h5 class="mb-1 card-subtitle truncate">
-            {{ data.createdAt | moment("D MMMM YYYY hh:mm A") }}
+            {{ dateTime(data.createdAt) }}
           </h5>
           <p class="text-muted text-small mb-2">
             {{ $t('branch.orden.mecanico') }}
@@ -22,7 +15,6 @@
           <h5 class="mb-1 card-subtitle truncate">
             {{ data.mecanico.firstName }} {{ data.mecanico.lastName }}
           </h5>
-          <!-- <h5 class="mb-1 card-subtitle truncate">{{data.mecanico.identificacion}} {{data.mecanico.firstName}}</h5> -->
         </b-colxx>
         <b-colxx md="6" sm="6" lg="6" xxs="12">
           <p class="text-muted text-small mb-2">
@@ -59,6 +51,7 @@
 </template>
 <script>
 import { validationMixin } from "vuelidate";
+import moment from 'moment';
 
 export default {
   name: "ingreso-step",
@@ -73,34 +66,18 @@ export default {
     currentStep(val) {
       console.log("Actual paso :::>", val);
     },
-    /*$v: {
-      handler: function(val) {
-        this.$emit("can-continue", { value: true });    
-        /*if (!val.$invalid) {
-          this.$emit("can-continue", { value: true });
-        } else {
-          this.$emit("can-continue", { value: false });
-        }
-      },
-      deep: true
-    },*/
     clickedNext(val) {
       console.log("Clicked next val :::>", val);
       this.$emit("can-continue", { value: val });
-      /*if (val === true) {
-        return true;
-      }*/
     }
   },
   mounted() {
-    //console.log('Clicked mounted :::>');
     this.$emit("can-continue", { value: true });
-    //this.$emit("can-continue", { value: true });
-    /*if (!this.$v.$invalid) {
-      this.$emit("can-continue", { value: true });
-    } else {
-      this.$emit("can-continue", { value: false });
-    }*/
+  },
+  methods: {
+    dateTime(value) {
+      return moment(value).format('D MMMM YYYY hh:mm A');
+    },
   }
 };
 </script>

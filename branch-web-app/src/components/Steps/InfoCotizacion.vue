@@ -18,7 +18,7 @@
               <h5
                 class="mb-1 card-subtitle truncate"
               >
-                {{ orden.createdAt | moment("D MMMM YYYY hh:mm A") }}
+                {{ dateTime(orden.createdAt) }}
               </h5>
             </b-colxx>
             <b-colxx v-if="data.etapa.mecanico" xxs="3">
@@ -61,7 +61,7 @@
                   >
                   <b-card-text>
                     <span>{{ documento.nombrearchivo }}</span>
-                    <span>{{ documento.date | moment("D MMMM YYYY hh:mm A") }}</span>
+                    <span>{{ dateTime(documento.date) }}</span>
                   </b-card-text>
                 </b-link>
               </b-card>
@@ -78,7 +78,7 @@
         <h5
           class="mb-1 card-subtitle truncate"
         >
-          {{ data.etapa.createdAt | moment("D MMMM YYYY hh:mm A") }}
+          {{ dateTime(data.etapa.createdAt) }}
         </h5>
       </b-colxx>
       <b-colxx v-if="data.etapa.mecanico" xxs="3">
@@ -135,7 +135,7 @@
                 >
                 <b-card-text>
                   <span>{{ documento.nombrearchivo }}</span>
-                  <span>{{ documento.date | moment("D MMMM YYYY hh:mm A") }}</span>
+                  <span>{{ dateTime(documento.date) }}</span>
                 </b-card-text>
               </b-link>
             </b-card>
@@ -150,9 +150,16 @@
 </template>
 
 <script>
+import moment from 'moment';
+
 export default {
   props: ["data"],
-  created() {}
+  created() {},
+  methods: {
+    dateTime(value) {
+      return moment(value).format('D MMMM YYYY hh:mm A');
+    },
+  }
 };
 </script>
 

@@ -57,9 +57,9 @@
         <v-select v-model="newCita.servicio" :options="servicios">
           <template #search="{attributes, events}">
             <input
+              v-bind="attributes"
               class="vs__search"
               :required="!newCita.servicio"
-              v-bind="attributes"
               v-on="events"
             >
           </template>
@@ -68,7 +68,7 @@
       <b-form-group v-if="newCita.IdCita" :label="$t('branch.cita.estado')" class="has-float-label">
         <v-select v-model="newCita.estado" :options="estados">
           <template #search="{attributes, events}">
-            <input class="vs__search" :required="!newCita.estado" v-bind="attributes" v-on="events">
+            <input v-bind="attributes" class="vs__search" :required="!newCita.estado" v-on="events">
           </template>
         </v-select>
       </b-form-group>
@@ -159,7 +159,7 @@ export default {
         }
         this.$forceUpdate();
       },
-      { immediate: true }
+      { immediate: true, deep: true }
     );
   },
   methods: {

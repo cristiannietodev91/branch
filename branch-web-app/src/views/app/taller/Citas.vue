@@ -42,7 +42,7 @@
               :style="`top: calc(6.4em + ${eventProps.event.eventRow}*24em + ${eventProps.event.eventRow}*2px);`"
             >
               <h4 class="startTime">
-                {{ new Date(eventProps.event.originalEvent.startDate) | moment("hh:mm A") }}
+                {{ dateTime(new Date(eventProps.event.originalEvent.startDate)) }}
               </h4>
               <p>{{ eventProps.event.originalEvent.estado }}</p>
               <b-button
@@ -91,6 +91,7 @@
 </template>
 
 <script>
+import moment from "moment";
 import { mapGetters } from "vuex";
 import ServicesCore from "../../../services/service";
 import ModalAddCita from "../../../components/Modals/addcitamodal";
@@ -133,6 +134,11 @@ export default {
     this.loadCitasTaller();
   },
   methods: {
+    methods: {
+      dateTime(value) {
+        return moment(value).format('hh:mm A');
+      },
+    },
     loadCitasTaller() {
       ServicesCore.getCitasByIdTaller(this.currentUser.IdTaller)
         .then(response => {

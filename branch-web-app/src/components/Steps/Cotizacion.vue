@@ -11,9 +11,9 @@
         >
           <template #search="{attributes, events}">
             <input
+              v-bind="attributes"
               class="vs__search"
               :required="!newOrden.mecanico"
-              v-bind="attributes"
               v-on="events"
             >
           </template>

@@ -9,8 +9,8 @@
                     </div>
         </template>-->
         <template v-for="(step, index) in steps">
+          <!-- eslint-disable vue/require-v-for-key -->
           <div
-            :key="index"
             :class="['step', isStepActive(index, step)]"
             :style="{width: `${100 / steps.length}%`}"
             @click="nextStep(index)"

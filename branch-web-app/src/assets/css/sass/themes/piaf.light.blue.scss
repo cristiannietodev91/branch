@@ -1,5 +1,3 @@
-@import "../_mixins.scss";
-
 $separator-color-light: $branch-blue-1;
 $separator-color: $branch-blue-4;
 $background-color: white;
@@ -37,6 +35,5 @@ $logoPath: "/assets/img/logo-branch.svg";
 $logoPathMobile: "/assets/img/logo-branch-ico.svg";
 $bgPath: "/assets/img/branch-bg-light.jpg";
 
-@import "../_mixins.scss";
 @import "../_piaf.style.scss";
 @import "../_horizontalStepper.scss";

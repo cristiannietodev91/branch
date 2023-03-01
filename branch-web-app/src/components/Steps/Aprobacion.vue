@@ -14,7 +14,7 @@
             {{ $t('branch.orden.fechaAprobacion') }}
           </p>
           <h5 class="mb-1 card-subtitle truncate">
-            {{ data.etapa.createdAt | moment("D MMMM YYYY hh:mm A") }}
+            {{ dateTime(data.etapa.createdAt) }}
           </h5>
           <p class="text-muted text-small mb-2">
             {{ $t('branch.orden.mecanico') }}
@@ -58,6 +58,7 @@
   </b-card>
 </template>
 <script>
+import moment from "moment";
 import { validationMixin } from "vuelidate";
 
 export default {
@@ -93,14 +94,12 @@ export default {
     }
   },
   mounted() {
-    //console.log('Clicked mounted :::>');
     this.$emit("can-continue", { value: true });
-    //this.$emit("can-continue", { value: true });
-    /*if (!this.$v.$invalid) {
-      this.$emit("can-continue", { value: true });
-    } else {
-      this.$emit("can-continue", { value: false });
-    }*/
+  },
+  methods: {
+    dateTime(value) {
+      return moment(value).format('D MMMM YYYY hh:mm A');
+    },
   }
 };
 </script>

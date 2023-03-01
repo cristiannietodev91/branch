@@ -21,7 +21,7 @@
               <b-input
                 v-model="searchKeyword"
                 :placeholder="$t('menu.search')"
-                @keypress.native.enter="search"
+                @keypress.enter="search"
               />
               <span class="search-icon" @click="searchClick">
                 <i class="simple-icon-magnifier" />
@@ -89,7 +89,6 @@ export default {
   computed: {
     ...mapGetters(["currentUser"])
   },
-  watch: {},
   mounted() {
     this.loadItems();
   },
