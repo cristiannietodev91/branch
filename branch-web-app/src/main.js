@@ -5,7 +5,7 @@ import App from "./App";
 import BootstrapVue from "bootstrap-vue";
 // Router & Store add
 import router from "./router";
-import store from "./store";
+import { store } from "./store";
 // Multi Language Add
 import en from "./locales/en.json";
 import es from "./locales/es.json";
@@ -43,11 +43,10 @@ import Vuelidate from "vuelidate";
 
 const app = createApp({
   router,
-  store,
   ...App
 });
 
-
+app.use(store);
 app.use(Vuelidate);
 
 //console.log('Service account file :::::>',serviceAccount);
@@ -133,4 +132,4 @@ const options = { transports: ["websocket"], secure: true };
 });*/
 
 
-export default app.mount("#app");
+export default app;

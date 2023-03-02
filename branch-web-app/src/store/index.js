@@ -1,14 +1,11 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import { createStore } from 'vuex'
 
 import app from '../main'
 import menu from './modules/menu'
 import user from './modules/user'
 import chat from './modules/chat'
 
-Vue.use(Vuex)
-
-export default new Vuex.Store({
+export const store = createStore({
   state: {
   },
   mutations: {
