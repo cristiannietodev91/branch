@@ -53,39 +53,39 @@
               <b-form class="av-tooltip tooltip-label-right" @submit.prevent="onValitadeFormSubmit">
                 <b-form-group label-cols="2" horizontal :label="$t('branch.taller.nombreTaller')">
                   <b-form-input
-                    v-model="$v.newItem.nombre.$model"
+                    v-model="v$.newItem.nombre.$model"
                     type="text"
-                    :state="!$v.newItem.nombre.$error"
+                    :state="!v$.newItem.nombre.$error"
                   />
                   <b-form-invalid-feedback
-                    v-if="!$v.newItem.nombre.required"
+                    v-if="!v$.newItem.nombre.required"
                   >
                     {{ $t('branch.forms.validations.required') }}
                   </b-form-invalid-feedback>
                   <b-form-invalid-feedback
-                    v-else-if="!$v.newItem.nombre.minLength || !$v.newItem.nombre.maxLength"
+                    v-else-if="!v$.newItem.nombre.minLength || !v$.newItem.nombre.maxLength"
                   >
                     {{ $t('branch.forms.validations.longitud') }}
                   </b-form-invalid-feedback>
                 </b-form-group>
                 <b-form-group label-cols="2" horizontal :label="$t('branch.taller.identificacion')">
                   <b-form-input
-                    v-model="$v.newItem.identificacion.$model"
+                    v-model="v$.newItem.identificacion.$model"
                     type="text"
-                    :state="!$v.newItem.identificacion.$error"
+                    :state="!v$.newItem.identificacion.$error"
                   />
                   <b-form-invalid-feedback
-                    v-if="!$v.newItem.identificacion.required"
+                    v-if="!v$.newItem.identificacion.required"
                   >
                     {{ $t('branch.forms.validations.required') }}
                   </b-form-invalid-feedback>
                   <b-form-invalid-feedback
-                    v-if="!$v.newItem.identificacion.alpha"
+                    v-if="!v$.newItem.identificacion.alpha"
                   >
                     {{ $t('branch.forms.validations.nit') }}
                   </b-form-invalid-feedback>
                   <b-form-invalid-feedback
-                    v-else-if="!$v.newItem.nombre.minLength || !$v.newItem.nombre.maxLength"
+                    v-else-if="!v$.newItem.nombre.minLength || !v$.newItem.nombre.maxLength"
                   >
                     {{ $t('branch.forms.validations.longitud') }}
                   </b-form-invalid-feedback>
@@ -93,17 +93,17 @@
 
                 <b-form-group label-cols="2" horizontal :label="$t('branch.taller.direccion')">
                   <b-form-input
-                    v-model="$v.newItem.direccion.$model"
+                    v-model="v$.newItem.direccion.$model"
                     type="text"
-                    :state="!$v.newItem.direccion.$error"
+                    :state="!v$.newItem.direccion.$error"
                   />
                   <b-form-invalid-feedback
-                    v-if="!$v.newItem.direccion.required"
+                    v-if="!v$.newItem.direccion.required"
                   >
                     {{ $t('branch.forms.validations.required') }}
                   </b-form-invalid-feedback>
                   <b-form-invalid-feedback
-                    v-else-if="!$v.newItem.direccion.minLength || !$v.newItem.direccion.maxLength"
+                    v-else-if="!v$.newItem.direccion.minLength || !v$.newItem.direccion.maxLength"
                   >
                     {{ $t('branch.forms.validations.longitud') }}
                   </b-form-invalid-feedback>
@@ -111,17 +111,17 @@
 
                 <b-form-group label-cols="2" horizontal :label="$t('branch.taller.celular')">
                   <b-form-input
-                    v-model="$v.newItem.celular.$model"
+                    v-model="v$.newItem.celular.$model"
                     type="text"
-                    :state="!$v.newItem.celular.$error"
+                    :state="!v$.newItem.celular.$error"
                   />
                   <b-form-invalid-feedback
-                    v-if="!$v.newItem.celular.required"
+                    v-if="!v$.newItem.celular.required"
                   >
                     {{ $t('branch.forms.validations.required') }}
                   </b-form-invalid-feedback>
                   <b-form-invalid-feedback
-                    v-else-if="!$v.newItem.celular.minLength || !$v.newItem.direccion.maxLength"
+                    v-else-if="!v$.newItem.celular.minLength || !v$.newItem.direccion.maxLength"
                   >
                     {{ $t('branch.forms.validations.longitud') }}
                   </b-form-invalid-feedback>
@@ -129,39 +129,39 @@
 
                 <b-form-group label-cols="2" horizontal :label="$t('branch.taller.email')">
                   <b-form-input
-                    v-model="$v.newItem.email.$model"
+                    v-model="v$.newItem.email.$model"
                     type="text"
-                    :state="!$v.newItem.email.$error"
+                    :state="!v$.newItem.email.$error"
                   />
                   <b-form-invalid-feedback
-                    v-if="!$v.newItem.email.required"
+                    v-if="!v$.newItem.email.required"
                   >
                     {{ $t('branch.forms.validations.required') }}
                   </b-form-invalid-feedback>
                   <b-form-invalid-feedback
-                    v-else-if="!$v.newItem.email.email"
+                    v-else-if="!v$.newItem.email.email"
                   >
                     {{ $t('branch.forms.validations.email') }}
                   </b-form-invalid-feedback>
                   <b-form-invalid-feedback
-                    v-else-if="!$v.newItem.email.minLength || !$v.newItem.email.maxLength"
+                    v-else-if="!v$.newItem.email.minLength || !v$.newItem.email.maxLength"
                   >
                     {{ $t('branch.forms.validations.longitud') }}
                   </b-form-invalid-feedback>
                 </b-form-group>
                 <b-form-group label-cols="2" horizontal :label="$t('branch.taller.logo')">
                   <b-form-input
-                    v-model="$v.newItem.urlLogo.$model"
+                    v-model="v$.newItem.urlLogo.$model"
                     type="text"
-                    :state="!$v.newItem.urlLogo.$error"
+                    :state="!v$.newItem.urlLogo.$error"
                   />
                   <b-form-invalid-feedback
-                    v-if="!$v.newItem.urlLogo.required"
+                    v-if="!v$.newItem.urlLogo.required"
                   >
                     {{ $t('branch.forms.validations.required') }}
                   </b-form-invalid-feedback>
                   <b-form-invalid-feedback
-                    v-else-if="!$v.newItem.urlLogo.url"
+                    v-else-if="!v$.newItem.urlLogo.url"
                   >
                     {{ $t('branch.forms.validations.url') }}
                   </b-form-invalid-feedback>
@@ -281,6 +281,7 @@
 </template>
 
 <script>
+import { useVuelidate } from '@vuelidate/core';
 import {
   required,
   minLength,
@@ -288,7 +289,7 @@ import {
   email,
   helpers,
   url
-} from "vuelidate/lib/validators";
+} from "@vuelidate/validators";
 
 import "vue-select/dist/vue-select.css";
 import ServicesCore from "../../../services/service";
@@ -301,6 +302,7 @@ export default {
   components: {
     "taller-list-item": TallerListItem
   },
+  setup: () => ({ v$: useVuelidate() }),
   data() {
     return {
       isLoad: false,
@@ -510,7 +512,7 @@ export default {
       return "#page-" + pageNum;
     },
     onValitadeFormSubmit() {
-      this.$v.$touch();
+      this.v$.$touch();
       var taller = {
         nombre: this.newItem.nombre,
         identificacion: this.newItem.identificacion,
@@ -520,7 +522,7 @@ export default {
         logo: this.newItem.urlLogo
       };
       // if its still pending or an error is returned do not submit
-      if (this.$v.newItem.$pending || this.$v.newItem.$error) return;
+      if (this.v$.newItem.$pending || this.v$.newItem.$error) return;
 
       console.log(JSON.stringify(taller));
       ServicesCore.createTaller(taller).then(response => {

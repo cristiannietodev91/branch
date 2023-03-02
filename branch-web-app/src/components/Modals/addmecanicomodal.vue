@@ -9,43 +9,43 @@
     <b-form @submit.prevent="onValitadeFormSubmit">
       <b-form-group :label="$t('branch.mecanico.identificacion')">
         <b-form-input
-          v-model="$v.newMecanico.identificacion.$model"
-          :state="!$v.newMecanico.identificacion.$error"
+          v-model="v$.newMecanico.identificacion.$model"
+          :state="!v$.newMecanico.identificacion.$error"
         />
         <b-form-invalid-feedback
-          v-if="!$v.newMecanico.identificacion.required"
+          v-if="!v$.newMecanico.identificacion.required"
         >
           {{ $t('branch.forms.validations.required') }}
         </b-form-invalid-feedback>
         <b-form-invalid-feedback
-          v-else-if="!$v.newMecanico.identificacion.numeric || !$v.newMecanico.identificacion.numeric"
+          v-else-if="!v$.newMecanico.identificacion.numeric || !v$.newMecanico.identificacion.numeric"
         >
           {{ $t('branch.forms.validations.numeric') }}
         </b-form-invalid-feedback>
         <b-form-invalid-feedback
-          v-else-if="!$v.newMecanico.identificacion.minLength || !$v.newMecanico.identificacion.maxLength"
+          v-else-if="!v$.newMecanico.identificacion.minLength || !v$.newMecanico.identificacion.maxLength"
         >
           {{ $t('branch.forms.validations.longitud') }}
         </b-form-invalid-feedback>
       </b-form-group>
       <b-form-group :label="$t('branch.mecanico.firstName')">
         <b-form-input
-          v-model="$v.newMecanico.firstName.$model"
-          :state="!$v.newMecanico.firstName.$error"
+          v-model="v$.newMecanico.firstName.$model"
+          :state="!v$.newMecanico.firstName.$error"
         />
         <b-form-invalid-feedback
-          v-if="!$v.newMecanico.firstName.required"
+          v-if="!v$.newMecanico.firstName.required"
         >
           {{ $t('branch.forms.validations.required') }}
         </b-form-invalid-feedback>
       </b-form-group>
       <b-form-group :label="$t('branch.mecanico.lastName')">
         <b-form-input
-          v-model="$v.newMecanico.lastName.$model"
-          :state="!$v.newMecanico.lastName.$error"
+          v-model="v$.newMecanico.lastName.$model"
+          :state="!v$.newMecanico.lastName.$error"
         />
         <b-form-invalid-feedback
-          v-if="!$v.newMecanico.lastName.required"
+          v-if="!v$.newMecanico.lastName.required"
         >
           {{ $t('branch.forms.validations.required') }}
         </b-form-invalid-feedback>
@@ -71,8 +71,9 @@
 </template>
 
 <script>
+import { useVuelidate } from '@vuelidate/core'
 import InputTag from "../../components/Form/InputTag";
-import { required, numeric } from "vuelidate/lib/validators";
+import { required, numeric } from "@vuelidate/validators";
 import ServicesCore from "../../services/service";
 
 export default {
@@ -81,6 +82,7 @@ export default {
     "input-tag": InputTag
   },
   props: ["idTaller", "mecanicoSelected", "visible"],
+  setup: () => ({ v$: useVuelidate() }),
   data() {
     return {
       newMecanico: {
@@ -138,10 +140,10 @@ export default {
       };
     },
     onValitadeFormSubmit() {
-      this.$v.$touch();
+      this.v$.$touch();
 
       // if its still pending or an error is returned do not submit
-      if (this.$v.newMecanico.$pending || this.$v.newMecanico.$error) return;
+      if (this.v$.newMecanico.$pending || this.v$.newMecanico.$error) return;
 
       var myJsonString = JSON.stringify(this.newMecanico.skills);
       const mecanico = {

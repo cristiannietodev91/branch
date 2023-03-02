@@ -75,22 +75,20 @@
 </template>
 
 <script>
+import { useVuelidate } from '@vuelidate/core';
 import {
     mapGetters,
     mapActions
 } from "vuex";
 import {
-    validationMixin
-} from "vuelidate";
-const {
     required,
     maxLength,
     minLength,
     sameAs
-} = require("vuelidate/lib/validators");
+} from "@vuelidate/validators";
 
 export default {
-    mixins: [validationMixin],
+    setup: () => ({ v$: useVuelidate() }),
     data() {
         return {
             form: {

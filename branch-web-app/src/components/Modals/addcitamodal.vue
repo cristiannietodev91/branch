@@ -9,12 +9,12 @@
     <b-form @submit.prevent="onValitadeAddCita">
       <b-form-group :label="$t('branch.cita.placa')" class="has-float-label">
         <b-form-input
-          v-model="$v.newCita.placa.$model"
-          :state="!$v.newCita.placa.$error"
+          v-model="v$.newCita.placa.$model"
+          :state="!v$.newCita.placa.$error"
           :readonly="newCita.IdCita ? true : false"
         />
         <b-form-invalid-feedback
-          v-if="!$v.newCita.placa.required"
+          v-if="!v$.newCita.placa.required"
         >
           {{ $t('branch.forms.validations.required') }}
         </b-form-invalid-feedback>
@@ -31,12 +31,12 @@
       <b-form-group :label="$t('branch.cita.horacita')" class="has-float-label">
         <b-form-input
           id="txtHoraCita"
-          v-model="$v.newCita.horaCita.$model"
-          :state="!$v.newCita.horaCita.$error"
+          v-model="v$.newCita.horaCita.$model"
+          :state="!v$.newCita.horaCita.$error"
           type="time"
         />
         <b-form-invalid-feedback
-          v-if="!$v.newCita.horaCita.required"
+          v-if="!v$.newCita.horaCita.required"
         >
           {{ $t('branch.forms.validations.required') }}
         </b-form-invalid-feedback>
@@ -89,7 +89,8 @@
 <script>
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
-import { required } from "vuelidate/lib/validators";
+import { useVuelidate } from '@vuelidate/core'
+import { required } from "@vuelidate/validators";
 import ServicesCore from "../../services/service";
 
 export default {
@@ -98,6 +99,7 @@ export default {
     "v-select": vSelect
   },
   props: ["taller", "cita"],
+  setup: () => ({ v$: useVuelidate() }),
   data() {
     return {
       newCita: {
@@ -176,9 +178,9 @@ export default {
       };
     },
     onValitadeAddCita() {
-      this.$v.$touch();
+      this.v$.$touch();
       // if its still pending or an error is returned do not submit
-      if (this.$v.newCita.$pending || this.$v.newCita.$error) return;
+      if (this.v$.newCita.$pending || this.v$.newCita.$error) return;
 
       var citaCreate = {
         IdCita: this.newCita.IdCita,

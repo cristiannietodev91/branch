@@ -23,14 +23,14 @@
           </h6>
           <b-form class="av-tooltip tooltip-label-bottom" @submit.prevent="formSubmit">
             <b-form-group :label="$t('user.email')" class="has-float-label mb-4">
-              <b-form-input v-model="$v.form.email.$model" type="text" :state="!$v.form.email.$error" />
-              <b-form-invalid-feedback v-if="!$v.form.email.required">
+              <b-form-input v-model="v$.form.email.$model" type="text" :state="!v$.form.email.$error" />
+              <b-form-invalid-feedback v-if="!v$.form.email.required">
                 Ingrese su email
               </b-form-invalid-feedback>
-              <b-form-invalid-feedback v-else-if="!$v.form.email.email">
+              <b-form-invalid-feedback v-else-if="!v$.form.email.email">
                 Ingrese un email válido
               </b-form-invalid-feedback>
-              <b-form-invalid-feedback v-else-if="!$v.form.email.minLength">
+              <b-form-invalid-feedback v-else-if="!v$.form.email.minLength">
                 Su email debe tener al menos 4 caracteres
               </b-form-invalid-feedback>
             </b-form-group>
@@ -67,21 +67,19 @@
 </template>
 
 <script>
+import { useVuelidate } from '@vuelidate/core';
 import {
     mapGetters,
     mapActions
 } from "vuex";
 import {
-    validationMixin
-} from "vuelidate";
-const {
     required,
     minLength,
     email
-} = require("vuelidate/lib/validators");
+} from "@vuelidate/validators";
 
 export default {
-    mixins: [validationMixin],
+    setup: () => ({ v$: useVuelidate() }),
     data() {
         return {
             form: {
@@ -126,8 +124,8 @@ export default {
     methods: {
         ...mapActions(["forgotPassword"]),
         formSubmit() {
-            this.$v.form.$touch();
-            if (!this.$v.form.$anyError) {
+            this.v$.form.$touch();
+            if (!this.v$.form.$anyError) {
                 this.forgotPassword({
                     email: this.form.email
                 });

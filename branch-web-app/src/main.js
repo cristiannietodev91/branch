@@ -39,15 +39,12 @@ moment.tz.setDefault("UTC");
 import firebase from "firebase/app";
 // import "firebase/auth";
 
-import Vuelidate from "vuelidate";
-
 const app = createApp({
   router,
   ...App
 });
 
 app.use(store);
-app.use(Vuelidate);
 
 //console.log('Service account file :::::>',serviceAccount);
 

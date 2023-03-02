@@ -59,11 +59,9 @@
 </template>
 <script>
 import moment from "moment";
-import { validationMixin } from "vuelidate";
 
 export default {
   name: "aprobacion-step",
-  mixins: [validationMixin],
   props: ["clickedNext", "currentStep", "data"],
   data() {
     return {
@@ -74,23 +72,9 @@ export default {
     currentStep(val) {
       console.log("Actual paso :::>", val);
     },
-    /*$v: {
-      handler: function(val) {
-        this.$emit("can-continue", { value: true });    
-        /*if (!val.$invalid) {
-          this.$emit("can-continue", { value: true });
-        } else {
-          this.$emit("can-continue", { value: false });
-        }
-      },
-      deep: true
-    },*/
     clickedNext(val) {
       console.log("Clicked next val :::>", val);
       this.$emit("can-continue", { value: val });
-      /*if (val === true) {
-        return true;
-      }*/
     }
   },
   mounted() {

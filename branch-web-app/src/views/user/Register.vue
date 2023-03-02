@@ -24,56 +24,56 @@
           <b-form class="av-tooltip tooltip-label-bottom" @submit.prevent="formSubmit">
             <b-form-group :label="$t('user.fullname')" class="has-float-label mb-4">
               <b-form-input
-                v-model="$v.form.fullname.$model"
+                v-model="v$.form.fullname.$model"
                 type="text"
-                :state="!$v.form.fullname.$error"
+                :state="!v$.form.fullname.$error"
               />
-              <b-form-invalid-feedback v-if="!$v.form.fullname.required">
+              <b-form-invalid-feedback v-if="!v$.form.fullname.required">
                 {{ $t('branch.forms.validations.required') }}
               </b-form-invalid-feedback>
-              <b-form-invalid-feedback v-else-if="!$v.form.fullname.minLength">
+              <b-form-invalid-feedback v-else-if="!v$.form.fullname.minLength">
                 {{ $t('branch.forms.validations.longitud') }}
               </b-form-invalid-feedback>
             </b-form-group>
             <b-form-group :label="$t('user.identificacion')" class="has-float-label mb-4">
               <b-form-input
-                v-model="$v.form.identificacion.$model"
+                v-model="v$.form.identificacion.$model"
                 type="text"
-                :state="!$v.form.identificacion.$error"
+                :state="!v$.form.identificacion.$error"
               />
-              <b-form-invalid-feedback v-if="!$v.form.identificacion.required">
+              <b-form-invalid-feedback v-if="!v$.form.identificacion.required">
                 {{ $t('branch.forms.validations.required') }}
               </b-form-invalid-feedback>
-              <b-form-invalid-feedback v-else-if="!$v.form.identificacion.minLength">
+              <b-form-invalid-feedback v-else-if="!v$.form.identificacion.minLength">
                 {{ $t('branch.forms.validations.longitud') }}
               </b-form-invalid-feedback>
             </b-form-group>
             <b-form-group :label="$t('user.email')" class="has-float-label mb-4">
               <b-form-input
-                v-model="$v.form.email.$model"
+                v-model="v$.form.email.$model"
                 type="text"
-                :state="!$v.form.email.$error"
+                :state="!v$.form.email.$error"
               />
-              <b-form-invalid-feedback v-if="!$v.form.email.required">
+              <b-form-invalid-feedback v-if="!v$.form.email.required">
                 {{ $t('branch.forms.validations.required') }}
               </b-form-invalid-feedback>
-              <b-form-invalid-feedback v-else-if="!$v.form.email.email">
+              <b-form-invalid-feedback v-else-if="!v$.form.email.email">
                 {{ $t('branch.forms.validations.email') }}
               </b-form-invalid-feedback>
-              <b-form-invalid-feedback v-else-if="!$v.form.email.minLength">
+              <b-form-invalid-feedback v-else-if="!v$.form.email.minLength">
                 {{ $t('branch.forms.validations.longitug') }}
               </b-form-invalid-feedback>
             </b-form-group>
             <b-form-group :label="$t('user.password')" class="has-float-label mb-4">
               <b-form-input
-                v-model="$v.form.password.$model"
+                v-model="v$.form.password.$model"
                 type="password"
-                :state="!$v.form.password.$error"
+                :state="!v$.form.password.$error"
               />
-              <b-form-invalid-feedback v-if="!$v.form.password.required">
+              <b-form-invalid-feedback v-if="!v$.form.password.required">
                 {{ $t('branch.forms.validations.required') }}
               </b-form-invalid-feedback>
-              <b-form-invalid-feedback v-else-if="!$v.form.password.minLength">
+              <b-form-invalid-feedback v-else-if="!v$.form.password.minLength">
                 {{ $t('branch.forms.validations.longitud') }}
               </b-form-invalid-feedback>
             </b-form-group>
@@ -95,18 +95,18 @@
   </b-row>
 </template>
 <script>
+import { useVuelidate } from '@vuelidate/core';
 import { mapGetters, mapActions } from "vuex";
-import { validationMixin } from "vuelidate";
-const {
+import {
   required,
   maxLength,
   minLength,
   email
-} = require("vuelidate/lib/validators");
+} from "@vuelidate/validators";
 
 export default {
   name: "register-page",
-  mixins: [validationMixin],
+  setup: () => ({ v$: useVuelidate() }),
   data() {
     return {
       form: {
@@ -166,9 +166,9 @@ export default {
     ...mapActions(["register"]),
     formSubmit() {
       console.log("register");
-      this.$v.$touch();
-      this.$v.form.$touch();
-      if (!this.$v.form.$anyError) {
+      this.v$.$touch();
+      this.v$.form.$touch();
+      if (!this.v$.form.$anyError) {
         this.register({
           firstName: this.form.fullname,
           identificacion: this.form.identificacion,

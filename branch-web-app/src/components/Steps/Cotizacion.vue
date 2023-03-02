@@ -48,8 +48,7 @@ import vSelect from "vue-select";
 import moment from "moment-timezone";
 import "vue-select/dist/vue-select.css";
 import vue2Dropzone from "vue2-dropzone";
-import { validationMixin } from "vuelidate";
-import { required } from "vuelidate/lib/validators";
+
 import ServicesCore from "./../../services/service";
 import InfoCotizacion from "./InfoCotizacion";
 
@@ -60,13 +59,11 @@ export default {
     "v-select": vSelect,
     "info-cotizacion": InfoCotizacion
   },
-  mixins: [validationMixin],
   props: ["clickedNext", "currentStep", "data"],
   data() {
     return {
       newOrden: {
-        mecanico: null,
-        observacion: ""
+        mecanico: null
       },
       filesEtapa: [],
       dropzoneOptions: {
@@ -98,13 +95,6 @@ export default {
         type: "carousel"
       }
     };
-  },
-  validations: {
-    newOrden: {
-      observacion: {
-        required
-      }
-    }
   },
   watch: {
     clickedNext(val) {
@@ -154,7 +144,6 @@ export default {
           IdMecanico: this.newOrden.mecanico,
           IdTaller: this.data.IdTaller,
           IdEtapa: 4,
-          Observaciones: this.newOrden.observacion,
           documentos: this.filesEtapa,
           estado: "Pendiente"
         };
@@ -168,8 +157,7 @@ export default {
                 .then(response => {
                   if (response.status == 200) {
                     this.newOrden = {
-                      mecanico: null,
-                      observacion: null
+                      mecanico: null
                     };
                     this.$notify(
                       "success",

@@ -62,17 +62,17 @@
               <b-form class="av-tooltip" @submit.prevent="onValitadeFormSubmit">
                 <b-form-group :label="$t('branch.vehiculo.placa')">
                   <b-form-input
-                    v-model="$v.newItem.placa.$model"
+                    v-model="v$.newItem.placa.$model"
                     type="text"
-                    :state="!$v.newItem.placa.$error"
+                    :state="!v$.newItem.placa.$error"
                   />
-                  <b-form-invalid-feedback v-if="!$v.newItem.placa.required">
+                  <b-form-invalid-feedback v-if="!v$.newItem.placa.required">
                     {{
                       $t("branch.forms.validations.required")
                     }}
                   </b-form-invalid-feedback>
                   <b-form-invalid-feedback
-                    v-if="!$v.newItem.placa.placaValidate"
+                    v-if="!v$.newItem.placa.placaValidate"
                   >
                     {{
                       $t("branch.forms.validations.formatPlaca")
@@ -82,26 +82,26 @@
 
                 <b-form-group :label="$t('branch.vehiculo.celular')">
                   <b-form-input
-                    v-model="$v.newItem.celular.$model"
+                    v-model="v$.newItem.celular.$model"
                     type="text"
-                    :state="!$v.newItem.celular.$error"
+                    :state="!v$.newItem.celular.$error"
                   />
                   <b-form-invalid-feedback
-                    v-if="!$v.newItem.celular.required"
+                    v-if="!v$.newItem.celular.required"
                   >
                     {{
                       $t("branch.forms.validations.required")
                     }}
                   </b-form-invalid-feedback>
-                  <b-form-invalid-feedback v-if="!$v.newItem.celular.numeric">
+                  <b-form-invalid-feedback v-if="!v$.newItem.celular.numeric">
                     {{
                       $t("branch.forms.validations.numeric")
                     }}
                   </b-form-invalid-feedback>
                   <b-form-invalid-feedback
                     v-else-if="
-                      !$v.newItem.celular.minLength ||
-                        !$v.newItem.celular.maxLength
+                      !v$.newItem.celular.minLength ||
+                        !v$.newItem.celular.maxLength
                     "
                   >
                     {{
@@ -115,11 +115,11 @@
                   class="tooltip-left-bottom"
                 >
                   <b-form-input
-                    v-model="$v.newItem.email.$model"
+                    v-model="v$.newItem.email.$model"
                     type="text"
-                    :state="!$v.newItem.email.$error"
+                    :state="!v$.newItem.email.$error"
                   />
-                  <b-form-invalid-feedback v-if="!$v.newItem.email.email">
+                  <b-form-invalid-feedback v-if="!v$.newItem.email.email">
                     {{
                       $t("branch.forms.validations.email")
                     }}
@@ -260,6 +260,7 @@
 </template>
 
 <script>
+import { useVuelidate } from '@vuelidate/core';
 import { mapGetters } from "vuex";
 import {
   required,
@@ -269,7 +270,7 @@ import {
   email,
   helpers,
   numeric,
-} from "vuelidate/lib/validators";
+} from "@vuelidate/validators";
 
 const placaValidate = helpers.regex(
   "placa",
@@ -285,6 +286,7 @@ export default {
   components: {
     "vehiculo-list-item": VehiculoListItem,
   },
+  setup: () => ({ v$: useVuelidate() }),
   data() {
     return {
       isLoad: false,
@@ -479,7 +481,7 @@ export default {
       return "#page-" + pageNum;
     },
     onValitadeFormSubmit() {
-      this.$v.$touch();
+      this.v$.$touch();
       var vehiculo = {
         placa: this.newItem.placa,
         celular: this.newItem.celular,
@@ -487,7 +489,7 @@ export default {
         IdTaller: this.currentUser.IdTaller,
       };
       // if its still pending or an error is returned do not submit
-      if (this.$v.newItem.$pending || this.$v.newItem.$error) return;
+      if (this.v$.newItem.$pending || this.v$.newItem.$error) return;
 
       ServicesCore.createVehiculo(vehiculo)
         .then((response) => {

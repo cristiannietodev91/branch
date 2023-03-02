@@ -50,12 +50,10 @@
   </b-card>
 </template>
 <script>
-import { validationMixin } from "vuelidate";
 import moment from 'moment';
 
 export default {
   name: "ingreso-step",
-  mixins: [validationMixin],
   props: ["clickedNext", "currentStep", "data"],
   data() {
     return {
@@ -63,11 +61,9 @@ export default {
     };
   },
   watch: {
-    currentStep(val) {
-      console.log("Actual paso :::>", val);
+    currentStep() {
     },
     clickedNext(val) {
-      console.log("Clicked next val :::>", val);
       this.$emit("can-continue", { value: val });
     }
   },

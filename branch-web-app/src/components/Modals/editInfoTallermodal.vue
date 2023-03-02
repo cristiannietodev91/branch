@@ -8,115 +8,115 @@
   >
     <b-form @submit.prevent="onValitadeFormSubmit">
       <b-form-group :label="$t('branch.taller.nombreTaller')">
-        <b-form-input v-model="$v.editTaller.nombre.$model" :state="!$v.editTaller.nombre.$error" />
+        <b-form-input v-model="v$.editTaller.nombre.$model" :state="!v$.editTaller.nombre.$error" />
         <b-form-invalid-feedback
-          v-if="!$v.editTaller.nombre.required"
+          v-if="!v$.editTaller.nombre.required"
         >
           {{ $t('branch.forms.validations.required') }}
         </b-form-invalid-feedback>
       </b-form-group>
       <b-form-group :label="$t('branch.taller.logo')">
-        <b-form-input v-model="$v.editTaller.logo.$model" :state="!$v.editTaller.logo.$error" />
+        <b-form-input v-model="v$.editTaller.logo.$model" :state="!v$.editTaller.logo.$error" />
         <b-form-invalid-feedback
-          v-if="!$v.editTaller.logo.required"
+          v-if="!v$.editTaller.logo.required"
         >
           {{ $t('branch.forms.validations.required') }}
         </b-form-invalid-feedback>
         <b-form-invalid-feedback
-          v-if="!$v.editTaller.logo.url"
+          v-if="!v$.editTaller.logo.url"
         >
           {{ $t('branch.forms.validations.url') }}
         </b-form-invalid-feedback>
       </b-form-group>
       <b-form-group :label="$t('branch.taller.identificacion')">
         <b-form-input
-          v-model="$v.editTaller.identificacion.$model"
-          :state="!$v.editTaller.identificacion.$error"
+          v-model="v$.editTaller.identificacion.$model"
+          :state="!v$.editTaller.identificacion.$error"
         />
         <b-form-invalid-feedback
-          v-if="!$v.editTaller.identificacion.required"
+          v-if="!v$.editTaller.identificacion.required"
         >
           {{ $t('branch.forms.validations.required') }}
         </b-form-invalid-feedback>
         <b-form-invalid-feedback
-          v-if="!$v.editTaller.identificacion.numeric"
+          v-if="!v$.editTaller.identificacion.numeric"
         >
           {{ $t('branch.forms.validations.numeric') }}
         </b-form-invalid-feedback>
       </b-form-group>
       <b-form-group :label="$t('branch.taller.email')">
-        <b-form-input v-model="$v.editTaller.email.$model" :state="!$v.editTaller.email.$error" />
+        <b-form-input v-model="v$.editTaller.email.$model" :state="!v$.editTaller.email.$error" />
         <b-form-invalid-feedback
-          v-if="!$v.editTaller.email.required"
+          v-if="!v$.editTaller.email.required"
         >
           {{ $t('branch.forms.validations.required') }}
         </b-form-invalid-feedback>
         <b-form-invalid-feedback
-          v-if="!$v.editTaller.email.email"
+          v-if="!v$.editTaller.email.email"
         >
           {{ $t('branch.forms.validations.email') }}
         </b-form-invalid-feedback>
       </b-form-group>
       <b-form-group :label="$t('branch.taller.celular')">
         <b-form-input
-          v-model="$v.editTaller.celular.$model"
-          :state="!$v.editTaller.celular.$error"
+          v-model="v$.editTaller.celular.$model"
+          :state="!v$.editTaller.celular.$error"
         />
         <b-form-invalid-feedback
-          v-if="!$v.editTaller.celular.required"
+          v-if="!v$.editTaller.celular.required"
         >
           {{ $t('branch.forms.validations.required') }}
         </b-form-invalid-feedback>
         <b-form-invalid-feedback
-          v-if="!$v.editTaller.celular.numeric"
+          v-if="!v$.editTaller.celular.numeric"
         >
           {{ $t('branch.forms.validations.numeric') }}
         </b-form-invalid-feedback>
         <b-form-invalid-feedback
-          v-else-if="!$v.editTaller.celular.minLength || !$v.editTaller.celular.maxLength"
+          v-else-if="!v$.editTaller.celular.minLength || !v$.editTaller.celular.maxLength"
         >
           {{ $t('branch.forms.validations.longitud') }}
         </b-form-invalid-feedback>
       </b-form-group>
       <b-form-group :label="$t('branch.taller.direccion')">
         <b-form-input
-          v-model="$v.editTaller.direccion.$model"
-          :state="!$v.editTaller.direccion.$error"
+          v-model="v$.editTaller.direccion.$model"
+          :state="!v$.editTaller.direccion.$error"
         />
         <b-form-invalid-feedback
-          v-if="!$v.editTaller.direccion.required"
+          v-if="!v$.editTaller.direccion.required"
         >
           {{ $t('branch.forms.validations.required') }}
         </b-form-invalid-feedback>
       </b-form-group>
       <b-form-group :label="$t('branch.taller.latitude')">
         <b-form-input
-          v-model="$v.editTaller.latitude.$model"
-          :state="!$v.editTaller.latitude.$error"
+          v-model="v$.editTaller.latitude.$model"
+          :state="!v$.editTaller.latitude.$error"
         />
         <b-form-invalid-feedback
-          v-if="!$v.editTaller.latitude.required"
+          v-if="!v$.editTaller.latitude.required"
         >
           {{ $t('branch.forms.validations.required') }}
         </b-form-invalid-feedback>
         <b-form-invalid-feedback
-          v-if="!$v.editTaller.latitude.decimal"
+          v-if="!v$.editTaller.latitude.decimal"
         >
           {{ $t('branch.forms.validations.decimal') }}
         </b-form-invalid-feedback>
       </b-form-group>
       <b-form-group :label="$t('branch.taller.longitud')">
         <b-form-input
-          v-model="$v.editTaller.longitud.$model"
-          :state="!$v.editTaller.longitud.$error"
+          v-model="v$.editTaller.longitud.$model"
+          :state="!v$.editTaller.longitud.$error"
         />
         <b-form-invalid-feedback
-          v-if="!$v.editTaller.longitud.required"
+          v-if="!v$.editTaller.longitud.required"
         >
           {{ $t('branch.forms.validations.required') }}
         </b-form-invalid-feedback>
         <b-form-invalid-feedback
-          v-if="!$v.editTaller.longitud.decimal"
+          v-if="!v$.editTaller.longitud.decimal"
         >
           {{ $t('branch.forms.validations.decimal') }}
         </b-form-invalid-feedback>
@@ -135,6 +135,7 @@
 </template>
 
 <script>
+import { useVuelidate } from '@vuelidate/core'
 import {
   required,
   numeric,
@@ -143,11 +144,12 @@ import {
   maxLength,
   minLength,
   decimal
-} from "vuelidate/lib/validators";
+} from "@vuelidate/validators";
 import ServicesCore from "../../services/service";
 
 export default {
   props: ["taller"],
+  setup: () => ({ v$: useVuelidate() }),
   data() {
     return {
       editTaller: {
@@ -216,10 +218,10 @@ export default {
       this.$refs[refname].hide();
     },
     onValitadeFormSubmit() {
-      this.$v.$touch();
+      this.v$.$touch();
 
       // if its still pending or an error is returned do not submit
-      if (this.$v.editTaller.$pending || this.$v.editTaller.$error) return;
+      if (this.v$.editTaller.$pending || this.v$.editTaller.$error) return;
 
       const taller = {
         IdTaller: this.taller.IdTaller,

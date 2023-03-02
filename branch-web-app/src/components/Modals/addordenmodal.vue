@@ -29,11 +29,11 @@
       </b-form-group>
       <b-form-group :label="$t('branch.orden.kilometraje')">
         <b-form-input
-          v-model="$v.newOrden.kilometraje.$model"
-          :state="!$v.newOrden.kilometraje.$error"
+          v-model="v$.newOrden.kilometraje.$model"
+          :state="!v$.newOrden.kilometraje.$error"
         />
         <b-form-invalid-feedback
-          v-if="!$v.newOrden.kilometraje.required"
+          v-if="!v$.newOrden.kilometraje.required"
         >
           {{ $t('branch.forms.validations.required') }}
         </b-form-invalid-feedback>
@@ -73,9 +73,10 @@
 </template>
 
 <script>
+import { useVuelidate } from '@vuelidate/core'
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
-import { required } from "vuelidate/lib/validators";
+import { required } from "@vuelidate/validators";
 import ServicesCore from "../../services/service";
 
 export default {
@@ -84,6 +85,7 @@ export default {
     "v-select": vSelect
   },
   props: ["taller", "cita"],
+  setup: () => ({ v$: useVuelidate() }),
   data() {
     return {
       newOrden: {
@@ -122,9 +124,9 @@ export default {
       this.$refs[refname].hide();
     },
     onValitadeAddOrden() {
-      this.$v.$touch();
+      this.v$.$touch();
       // if its still pending or an error is returned do not submit
-      if (this.$v.newOrden.$pending || this.$v.newOrden.$error) return;
+      if (this.v$.newOrden.$pending || this.v$.newOrden.$error) return;
 
       if (this.cita) {
         let myJsonDocumentos = JSON.stringify(this.newOrden.documentos);

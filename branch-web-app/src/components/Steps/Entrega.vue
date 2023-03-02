@@ -23,11 +23,11 @@
       </b-form-group>
       <b-form-group :label="$t('branch.orden.observaciones')">
         <b-textarea
-          v-model.trim="$v.newOrden.observacion.$model"
-          :state="!$v.newOrden.observacion.$error"
+          v-model.trim="v$.newOrden.observacion.$model"
+          :state="!v$.newOrden.observacion.$error"
         />
         <b-form-invalid-feedback
-          v-if="!$v.newOrden.observacion.required"
+          v-if="!v$.newOrden.observacion.required"
         >
           {{ $t('branch.forms.validations.required') }}
         </b-form-invalid-feedback>
@@ -108,14 +108,14 @@
   </b-card>
 </template>
 <script>
+import { useVuelidate } from '@vuelidate/core'
 import SingleLightbox from "../Pages/SingleLightbox";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 import vue2Dropzone from "vue2-dropzone";
 import momentTZ from "moment-timezone";
 import moment from "moment";
-import { validationMixin } from "vuelidate";
-import { required } from "vuelidate/lib/validators";
+import { required } from "@vuelidate/validators";
 import ServicesCore from "./../../services/service";
 
 export default {
@@ -125,8 +125,8 @@ export default {
     "v-select": vSelect,
     "single-lightbox": SingleLightbox
   },
-  mixins: [validationMixin],
   props: ["clickedNext", "currentStep", "data"],
+  setup: () => ({ v$: useVuelidate() }),
   data() {
     return {
       newOrden: {
@@ -172,12 +172,7 @@ export default {
     }
   },
   watch: {
-    clickedNext(val) {
-      //console.log("Clicked second step next :::>", val);
-      if (val === true) {
-        //console.log("Orden a crearDB ::::>", this.orden);
-        //this.$v.newOrden.$touch();
-      }
+    clickedNext() {
     }
   },
   mounted() {
@@ -214,9 +209,9 @@ export default {
       });
     },
     onValitadeAddOrden() {
-      this.$v.$touch();
+      this.v$.$touch();
       // if its still pending or an error is returned do not submit
-      if (this.$v.newOrden.$pending || this.$v.newOrden.$error) return;
+      if (this.v$.newOrden.$pending || this.v$.newOrden.$error) return;
 
       if (this.filesEtapa.length > 0) {
         let orden = {

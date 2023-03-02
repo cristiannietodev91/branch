@@ -29,22 +29,22 @@
           <b-form class="av-tooltip tooltip-label-bottom" @submit.prevent="formSubmit">
             <b-form-group :label="$t('user.email')" class="has-float-label mb-4">
               <b-form-input
-                v-model="$v.form.email.$model"
+                v-model="v$.form.email.$model"
                 type="text"
-                :state="!$v.form.email.$error"
+                :state="!v$.form.email.$error"
               />
               <b-form-invalid-feedback
-                v-if="!$v.form.email.required"
+                v-if="!v$.form.email.required"
               >
                 {{ $t('branch.forms.validations.required') }}
               </b-form-invalid-feedback>
               <b-form-invalid-feedback
-                v-else-if="!$v.form.email.email"
+                v-else-if="!v$.form.email.email"
               >
                 {{ $t('branch.forms.validations.email') }}
               </b-form-invalid-feedback>
               <b-form-invalid-feedback
-                v-else-if="!$v.form.email.minLength"
+                v-else-if="!v$.form.email.minLength"
               >
                 {{ $t('branch.forms.validations.longitud') }}
               </b-form-invalid-feedback>
@@ -52,17 +52,17 @@
 
             <b-form-group :label="$t('user.password')" class="has-float-label mb-4">
               <b-form-input
-                v-model="$v.form.password.$model"
+                v-model="v$.form.password.$model"
                 type="password"
-                :state="!$v.form.password.$error"
+                :state="!v$.form.password.$error"
               />
               <b-form-invalid-feedback
-                v-if="!$v.form.password.required"
+                v-if="!v$.form.password.required"
               >
                 {{ $t('branch.forms.validations.required') }}
               </b-form-invalid-feedback>
               <b-form-invalid-feedback
-                v-else-if="!$v.form.password.minLength || !$v.form.password.maxLength"
+                v-else-if="!v$.form.password.minLength || !v$.form.password.maxLength"
               >
                 Su contraseña debe tener al menos 16 caracteres
               </b-form-invalid-feedback>
@@ -106,18 +106,18 @@
 </template>
 
 <script>
+import { useVuelidate } from '@vuelidate/core';
 import { mapGetters, mapActions } from "vuex";
-import { validationMixin } from "vuelidate";
-const {
+import {
   required,
   maxLength,
   minLength,
   email
-} = require("vuelidate/lib/validators");
+} from "@vuelidate/validators";
 
 export default {
   name: "login-page",
-  mixins: [validationMixin],
+  setup: () => ({ v$: useVuelidate() }),
   data() {
     return {
       form: {
@@ -163,9 +163,9 @@ export default {
   methods: {
     ...mapActions(["login"]),
     formSubmit() {
-      this.$v.$touch();
-      this.$v.form.$touch();
-      if (!this.$v.form.$anyError) {
+      this.v$.$touch();
+      this.v$.form.$touch();
+      if (!this.v$.form.$anyError) {
         this.login({
           email: this.form.email,
           password: this.form.password
