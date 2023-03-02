@@ -14,7 +14,7 @@ import {
   defaultLocale,
 } from "./constants/config";
 // Notification Component Add
-// import Notifications from "./components/Common/Notification";
+import Notifications from '@kyvg/vue3-notification'
 // Breadcrumb Component Add
 import Breadcrumb from "./components/Common/Breadcrumb";
 // RefreshButton Component Add
@@ -62,7 +62,7 @@ app.use(i18n);
 
 
 
-// app.use(Notifications);
+app.use(Notifications);
 app.use(require("vue-shortkey"));
 app.use(contentmenu);
 app.use(VueLineClamp, {

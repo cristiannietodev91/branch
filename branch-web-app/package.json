@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@glidejs/glide": "^3.4.1",
+    "@kyvg/vue3-notification": "^2.9.0",
     "@vue/babel-preset-app": "^5.0.8",
     "@vue/compat": "^3.2.47",
     "@vuelidate/core": "^2.0.0",
