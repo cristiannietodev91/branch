@@ -31,9 +31,6 @@ $shadowOffsetsBottom : 1 3 6 10 15;
 $shadowBlursBottom: 3 6 6 5 6;
 $shadowOpacitiesBottom: 0.04 0.1 0.2 0.22 0.22;
 
-$logoPath: "/assets/img/logo-branch.svg";
-$logoPathMobile: "/assets/img/logo-branch-ico.svg";
-$bgPath: "/assets/img/branch-bg-light.jpg";
-
-@import "../_piaf.style.scss";
-@import "../_horizontalStepper.scss";
+$logoPath: "./assets/img/logo-branch.svg";
+$logoPathMobile: "./assets/img/logo-branch-ico.svg";
+$bgPath: "./assets/img/branch-bg-light.jpg";

@@ -46,7 +46,6 @@ Table of Contents
 */
 
 /* 00.Variables and Imports */
-// @import "../_mixins.scss";
 @import url("https://fonts.googleapis.com/css?family=IBM+Plex+Sans:300,400,400i,600,700&display=swap");
 
 $main-menu-item-height: 110px;
@@ -3202,7 +3201,7 @@ main {
 
 .dashboard-search {
   height: 650px;
-  background: url(/assets/img/plane.jpg);
+  background: url(./assets/img/plane.jpg);
   background-size: contain;
   background-repeat: no-repeat;
   background-color: $foreground-color;

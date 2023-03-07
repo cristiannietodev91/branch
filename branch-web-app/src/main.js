@@ -60,8 +60,6 @@ const i18n = createI18n({
 app.use(BootstrapVue);
 app.use(i18n);
 
-
-
 app.use(Notifications);
 app.use(require("vue-shortkey"));
 app.use(contentmenu);

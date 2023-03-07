@@ -48,4 +48,15 @@ module.exports = {
       });
   },
   productionSourceMap: false,
+  css: {
+    loaderOptions: {
+      scss: {
+        additionalData: `
+          @import "@/assets/css/sass/_mixins.scss";
+          @import "@/assets/css/sass/themes/piaf.light.blue.scss";
+          @import "@/assets/css/sass/_piaf.style.scss";
+        `
+      }
+    }
+  }
 };
