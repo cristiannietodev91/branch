@@ -5,7 +5,7 @@ import App from "./App";
 import BootstrapVue from "bootstrap-vue";
 // Router & Store add
 import router from "./router";
-import { store } from "./store";
+import { createStore } from "./store";
 // Multi Language Add
 import en from "./locales/en.json";
 import es from "./locales/es.json";
@@ -39,12 +39,12 @@ moment.tz.setDefault("UTC");
 import firebase from "firebase/app";
 // import "firebase/auth";
 
-const app = createApp({
-  router,
-  ...App
-});
+const app = createApp(App);
+
+const store = createStore(router);
 
 app.use(store);
+app.use(router);
 
 //console.log('Service account file :::::>',serviceAccount);
 
@@ -80,6 +80,9 @@ app.use(VCalendar, {
   popoverDirection: "bottom"
 });
 app.use(VueScrollTo);
+
+const options = { transports: ["websocket"], secure: true };
+
 app.use(
   new VueSocketIO({
     debug: false,
@@ -114,7 +117,7 @@ firebase.initializeApp(
   }
 );
 
-const options = { transports: ["websocket"], secure: true };
+
 
 
 

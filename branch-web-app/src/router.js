@@ -1,8 +1,5 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import AuthRequired from "./utils/AuthRequired";
-
-Vue.use(VueRouter);
 
 const routes = [
   {
@@ -132,15 +129,15 @@ const routes = [
     ]
   },
   {
-    path: "*",
+    path: "/*",
     component: () => import(/* webpackChunkName: "error" */ "./views/Error")
   }
 ];
 
-const router = new VueRouter({
+const router = createRouter({
   linkActiveClass: "active",
   routes,
-  mode: "history"
+  history: createWebHistory(),
 });
 
 export default router;

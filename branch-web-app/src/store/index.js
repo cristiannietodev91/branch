@@ -1,12 +1,15 @@
-import { createStore } from 'vuex'
+import { createStore as _createStore } from 'vuex'
 
 import app from '../main'
 import menu from './modules/menu'
 import user from './modules/user'
 import chat from './modules/chat'
 
-export const store = createStore({
+export const createStore = (router) => _createStore({
   state: {
+    get route() {
+      return router.currentRoute.value;
+    }
   },
   mutations: {
     changeLang (state, payload) {
