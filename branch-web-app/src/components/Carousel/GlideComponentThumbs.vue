@@ -153,7 +153,7 @@ export default {
             this.glideCarouselImages.on("resize", this.onResize);
         }, 500);
     },
-    beforeDestroy() {
+    beforeUnmount() {
         clearTimeout(this.resizeTimeOut);
         clearTimeout(this.mountTimeOut);
         this.glideCarouselImages.destroy();

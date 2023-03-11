@@ -1967,7 +1967,7 @@ button {
     }
 
     @include respond-below(md) {
-      width: $sub-menu-width/2;
+      width: calc($sub-menu-width/2);
 
       input {
         width: 85%;
@@ -10023,7 +10023,7 @@ footer.page-footer {
   }
 
   @include respond-below(md) {
-    width: $sub-menu-width/2;
+    width: calc($sub-menu-width/2);
 
     input {
       width: 85%;

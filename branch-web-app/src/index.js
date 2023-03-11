@@ -1,9 +1,9 @@
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+
 import "./assets/css/vendor/dropzone.min.css";
-import 'bootstrap-vue/dist/bootstrap-vue.css';
-import "./assets/css/vendor/bootstrap.min.css";
-import "./assets/css/vendor/bootstrap.rtl.only.min.css";
 import "./assets/fonts/simple-line-icons/css/simple-line-icons.css"
-import "./assets/fonts/iconsmind-s/css/iconsminds.css"
+import "./assets/fonts/iconsmind-s/css/iconsminds.css" 
 // import 'video.js/dist/video-js.css';
 
 // import { defaultColor } from "./constants/config";

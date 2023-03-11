@@ -48,7 +48,7 @@ export default {
   mounted: function() {
     document.body.classList.add("background");
   },
-  beforeDestroy() {
+  beforeUnmount() {
     document.body.classList.remove("background");
   },
   methods: {

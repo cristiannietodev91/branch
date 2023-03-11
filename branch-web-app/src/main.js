@@ -1,8 +1,8 @@
-import { createApp } from "vue";
+import Vue, { createApp } from "vue";
 import App from "./App";
 
 // BootstrapVue add
-import BootstrapVue from "bootstrap-vue";
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 // Router & Store add
 import router from "./router";
 import { createStore } from "./store";
@@ -57,7 +57,8 @@ const i18n = createI18n({
   messages
 });
 
-app.use(BootstrapVue);
+Vue.use(BootstrapVue);
+Vue.use(IconsPlugin);
 app.use(i18n);
 
 app.use(Notifications);

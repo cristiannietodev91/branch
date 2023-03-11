@@ -163,7 +163,7 @@ export default {
     document.addEventListener("click", this.handleDocumentClick);
     this.handleWindowResize();
   },
-  beforeDestroy() {
+  beforeUnmount() {
     document.removeEventListener("click", this.handleDocumentClick);
     window.removeEventListener("resize", this.handleWindowResize);
   },

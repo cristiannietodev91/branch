@@ -27,14 +27,6 @@
           </template>
 
           <template #event="eventProps">
-            <!-- <div
-              :id="`event-${eventProps.event.originalEvent.citaObject.IdCita}`"
-              :title="eventProps.event.title"
-              :class="`cv-event ${eventProps.event.classes[0]} ${eventProps.event.classes[1]} ${eventProps.event.classes[2]}`"
-              :style="`top: calc(1.4em + ${eventProps.event.eventRow}*10em + ${eventProps.event.eventRow}*2px);`"
-              @click.alt="eventProps.event.originalEvent.estado == 'Solicitada' || eventProps.event.originalEvent.estado == 'Confirmada' ? onCtrlClickEvent(eventProps.event.originalEvent.citaObject) : ''"
-              @click.exact="eventProps.event.originalEvent.estado == 'Confirmada' ? onClickEvent(eventProps.event) : ''"
-            > -->
             <div
               :id="`event-${eventProps.event.originalEvent.citaObject.IdCita}`"
               :title="eventProps.event.title"

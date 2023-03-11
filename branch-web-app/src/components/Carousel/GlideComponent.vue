@@ -99,7 +99,7 @@ export default {
         this.destroyGlide();
         this.initGlide();
     },
-    beforeDestroy() {
+    beforeUnmount() {
         this.destroyGlide();
     },
     methods: {

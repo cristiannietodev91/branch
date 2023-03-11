@@ -133,7 +133,7 @@ export default {
             }
         }
     },
-    beforeDestroy() {
+    beforeUnmount() {
         document.removeEventListener('click', this.handleDocumentforMobileSearch)
     },
     methods: {
