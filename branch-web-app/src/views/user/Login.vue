@@ -4,7 +4,7 @@
       <b-card class="auth-card" no-body>
         <div class="position-relative image-side">
           <h1 class="login-brand">
-            <router-link tag="a" to="/">
+            <router-link to="/">
               <span class="logo-single" />
               <span class="brand-text">Branch - Todo en el mismo lugar</span>
             </router-link>
@@ -16,7 +16,7 @@
             {{ $t('user.text-credentials') }}
             <br>
             {{ $t('user.text-nomember') }},
-            <router-link tag="a" to="/user/register" class>
+            <router-link to="/user/register">
               crea una cuenta
             </router-link>.
           </p>
@@ -69,7 +69,6 @@
             </b-form-group>
             <div class="d-flex justify-content-between align-items-center">
               <router-link
-                tag="a"
                 to="/user/forgot-password"
               >
                 {{ $t('user.forgot-password-question') }}

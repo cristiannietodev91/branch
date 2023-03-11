@@ -9,14 +9,14 @@
           <p class="mb-0">
             {{ $t('user.text-credentials') }}
             <br>{{ $t('user.text-nomember') }}, 
-            <router-link tag="a" to="/user/register" class="">
+            <router-link to="/user/register">
               crear mi cuenta
             </router-link>.
           </p>
         </div>
         <div class="form-side">
-          <router-link tag="a" to="/">
-            <span class="logo-single" />
+          <router-link v-slot="{ navigate }" to="/" custom>
+            <span role="link" class="logo-single" @click="navigate" @keypress.enter="navigate" />
           </router-link>
           <h6 class="mb-4">
             {{ $t('user.login-title') }}
@@ -43,7 +43,7 @@
             </b-form-group>
 
             <div class="d-flex justify-content-between align-items-center">
-              <router-link tag="a" to="/user/forgot-password">
+              <router-link to="/user/forgot-password">
                 {{ $t('user.forgot-password-question') }}
               </router-link>
               <b-button

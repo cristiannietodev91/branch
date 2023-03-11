@@ -8,7 +8,7 @@
         <mobile-menu-icon />
       </a>
     </div>
-    <router-link class="navbar-logo" tag="a" to="/app">
+    <router-link class="navbar-logo" to="/app">
       <span class="logo d-none d-xs-block" />
       <span class="logo-mobile d-block d-xs-none" />
     </router-link>

@@ -12,7 +12,7 @@
                   </p>
                 </div>
                 <div class="form-side">
-                  <router-link tag="a" to="/">
+                  <router-link to="/">
                     <span class="logo-single" />
                   </router-link>
                   <h6 class="mb-4">

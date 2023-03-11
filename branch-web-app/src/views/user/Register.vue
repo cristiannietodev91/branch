@@ -9,14 +9,14 @@
           <p class="mb-0">
             Por favor llene los datos para crear una cuenta
             <br>Si ya está registrado puede
-            <router-link tag="a" to="/user/login" class>
+            <router-link to="/user/login">
               iniciar sesión
-            </router-link>.
+            </router-link>
           </p>
         </div>
         <div class="form-side">
-          <router-link tag="a" to="/">
-            <span class="logo-single" />
+          <router-link v-slot="{ navigate }" to="/" custom>
+            <span role="link" class="logo-single" @click="navigate" @keypress.enter="navigate" />
           </router-link>
           <h6 class="mb-4">
             {{ $t('user.register') }}

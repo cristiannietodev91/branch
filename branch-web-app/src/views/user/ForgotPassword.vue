@@ -9,13 +9,13 @@
           <p class="mb-0">
             Use su email para recuperar su contraseña
             <br>Si no tiene una cuenta, puede crear una 
-            <router-link tag="a" to="/user/register" class="">
+            <router-link to="/user/register">
               aquí
             </router-link>.
           </p>
         </div>
         <div class="form-side">
-          <router-link tag="a" to="/">
+          <router-link to="/">
             <span class="logo-single" />
           </router-link>
           <h6 class="mb-4">
@@ -35,7 +35,7 @@
               </b-form-invalid-feedback>
             </b-form-group>
             <div class="d-flex justify-content-between align-items-center">
-              <router-link tag="a" to="/user/login">
+              <router-link to="/user/login">
                 {{ $t('user.login-title') }}
               </router-link>
               <b-button
