@@ -8,7 +8,7 @@
         <mobile-menu-icon />
       </a>
     </div>
-    <router-link class="navbar-logo" to="/app">
+    <router-link class="navbar-logo" to="/">
       <span class="logo d-none d-xs-block" />
       <span class="logo-mobile d-block d-xs-none" />
     </router-link>
@@ -17,32 +17,22 @@
       <div class="header-icons d-inline-block align-middle">
         <div class="position-relative d-none d-sm-inline-block ">
           <div class="btn-group">
-            <b-button variant="empty" class="header-icon btn-sm" @click="toggleFullScreen">
+            <button class="btn header-icon btn-sm" @click="toggleFullScreen">
               <i :class="{'d-inline-block':true,'simple-icon-size-actual':fullScreen,'simple-icon-size-fullscreen':!fullScreen }" />
-            </b-button>
+            </button>
           </div>
         </div>
         <div class="user d-inline-block">
-          <b-dropdown
-            class="dropdown-menu-right" right variant="empty" toggle-class="p-0"
-            menu-class="mt-3" no-caret
-          >
-            <template #button-content>
-              <span>
-                <img :alt="currentUser.email" :src="currentUser.photoUrl || '/assets/img/profile-pic-6.jpg' ">
-              </span>
+          <div class="dropdown">
+            <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
               <span class="name mr-1">{{ currentUser.displayName }}</span>
-              <!-- <span class="name mr-1">{{currentUser.email}}</span> -->
-            </template>
-            <!-- <b-dropdown-item>Account</b-dropdown-item>
-                    <b-dropdown-item>Features</b-dropdown-item>
-                    <b-dropdown-item>History</b-dropdown-item>
-                    <b-dropdown-item>Support</b-dropdown-item> -->
-            <b-dropdown-divider />
-            <b-dropdown-item @click="logout">
-              Cerrar sesión
-            </b-dropdown-item>
-          </b-dropdown>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="#">Action</a></li>
+              <li><a class="dropdown-item" href="#">Another action</a></li>
+              <li><a class="dropdown-item" href="#">Something else here</a></li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>

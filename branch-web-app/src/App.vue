@@ -1,7 +1,6 @@
 <template>
   <div class="h-100">
     <router-view />
-    <notifications />
   </div>
 </template>
 
@@ -29,6 +28,10 @@ html {
   width: 100%;
   height: 100%;
   background: $background-color;
+}
+
+#app{
+  height: 100%;
 }
 
 </style>

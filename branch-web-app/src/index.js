@@ -1,10 +1,9 @@
 import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
+import 'vue-select/dist/vue-select.css';
 
 import "./assets/css/vendor/dropzone.min.css";
 import "./assets/fonts/simple-line-icons/css/simple-line-icons.css"
 import "./assets/fonts/iconsmind-s/css/iconsminds.css" 
-// import 'video.js/dist/video-js.css';
 
 // import { defaultColor } from "./constants/config";
 /*  if you want use single color theme

@@ -1,8 +1,6 @@
-import Vue, { createApp } from "vue";
+import { createApp } from "vue";
 import App from "./App";
 
-// BootstrapVue add
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 // Router & Store add
 import router from "./router";
 import { createStore } from "./store";
@@ -14,30 +12,21 @@ import {
   defaultLocale,
 } from "./constants/config";
 // Notification Component Add
-import Notifications from '@kyvg/vue3-notification'
+import Notifications from '@kyvg/vue3-notification';
+// Vue select
+import vSelect from 'vue-select';
 // Breadcrumb Component Add
 import Breadcrumb from "./components/Common/Breadcrumb";
-// RefreshButton Component Add
-import RefreshButton from "./components/Common/RefreshButton";
-// Colxx Component Add
-import Colxx from "./components/Common/Colxx";
-// Perfect Scrollbar Add
-import vuePerfectScrollbar from "vue-perfect-scrollbar";
-import contentmenu from "v-contextmenu";
-import VueLineClamp from "vue-line-clamp";
-import VCalendar from "v-calendar";
-import "v-calendar/lib/v-calendar.min.css";
-import VueScrollTo from "vue-scrollto";
-import VueSocketIO from "vue-socket.io";
+// Socket IO
+import VueSocketIO from 'vue-3-socket.io'
+
 import SocketIO from "socket.io-client";
-import VueNativeNotification from "vue-native-notification";
 const moment = require("moment-timezone");
 require("moment/locale/es");
 
 moment.tz.setDefault("UTC");
 
 import firebase from "firebase/app";
-// import "firebase/auth";
 
 const app = createApp(App);
 
@@ -48,6 +37,7 @@ app.use(router);
 
 //console.log('Service account file :::::>',serviceAccount);
 
+
 const messages = { en: en, es: es };
 const locale = defaultLocale;
 
@@ -57,16 +47,10 @@ const i18n = createI18n({
   messages
 });
 
-Vue.use(BootstrapVue);
-Vue.use(IconsPlugin);
 app.use(i18n);
-
 app.use(Notifications);
-app.use(require("vue-shortkey"));
-app.use(contentmenu);
-app.use(VueLineClamp, {
-  importCss: true
-});
+
+/*
 app.use(VCalendar, {
   firstDayOfWeek: 2, // ...other defaults,
   formats: {
@@ -80,7 +64,8 @@ app.use(VCalendar, {
   popoverExpanded: true,
   popoverDirection: "bottom"
 });
-app.use(VueScrollTo);
+*/
+
 
 const options = { transports: ["websocket"], secure: true };
 
@@ -95,14 +80,8 @@ app.use(
   })
 );
 
-app.use(VueNativeNotification, {
-  requestOnNotify: false
-});
-
 app.component("piaf-breadcrumb", Breadcrumb);
-app.component("b-refresh-button", RefreshButton);
-app.component("b-colxx", Colxx);
-app.component("vue-perfect-scrollbar", vuePerfectScrollbar);
+app.component("v-select", vSelect);
 
 
 

@@ -139,14 +139,17 @@ export default {
     },
     methods: {
         ...mapActions(["resetPassword"]),
-        formSubmit() {
+        async formSubmit() {
             this.$v.form.$touch();
-            if (!this.$v.form.$anyError) {
-                this.resetPassword({
-                    newPassword: this.form.password,
-                    resetPasswordCode: this.$route.query.oobCode || ""
-                });
-            }
+
+            const isFormCorrect = await this.v$.$validate()
+
+            if (!isFormCorrect) return
+            this.resetPassword({
+                newPassword: this.form.password,
+                resetPasswordCode: this.$route.query.oobCode || ""
+            });
+            
         }
     },
 };
