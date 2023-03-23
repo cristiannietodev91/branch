@@ -1,89 +1,109 @@
 <template>
-  <b-modal
+  <div
     id="modalAddCita"
-    ref="modalAddCita"
-    :title="newCita.IdCita ? $t('pages.branch.title-edit-cita') : $t('pages.branch.add-new-cita')"
-    modal-class="modal-basic"
-    hide-footer
+    class="modal"
+    tabindex="-1"
+    aria-hidden="true"
   >
-    <b-form @submit.prevent="onValitadeAddCita">
-      <b-form-group :label="$t('branch.cita.placa')" class="has-float-label">
-        <b-form-input
-          v-model="v$.newCita.placa.$model"
-          :state="!v$.newCita.placa.$error"
-          :readonly="newCita.IdCita ? true : false"
-        />
-        <b-form-invalid-feedback
-          v-if="!v$.newCita.placa.required"
-        >
-          {{ $t('branch.forms.validations.required') }}
-        </b-form-invalid-feedback>
-      </b-form-group>
-      <b-form-group :label="$t('branch.cita.fechaCita')" class="has-float-label">
-        <v-date-picker
-          v-model="newCita.fechaCita"
-          :is-required="true"
-          :min-date="new Date()"
-          mode="single"
-          :input-props="{ class:'form-control', placeholder: $t('form-components.date') }"
-        />
-      </b-form-group>
-      <b-form-group :label="$t('branch.cita.horacita')" class="has-float-label">
-        <b-form-input
-          id="txtHoraCita"
-          v-model="v$.newCita.horaCita.$model"
-          :state="!v$.newCita.horaCita.$error"
-          type="time"
-        />
-        <b-form-invalid-feedback
-          v-if="!v$.newCita.horaCita.required"
-        >
-          {{ $t('branch.forms.validations.required') }}
-        </b-form-invalid-feedback>
-      </b-form-group>
-      <b-form-group :label="$t('branch.cita.mecanico')" class="has-float-label">
-        <v-select
-          v-model="newCita.mecanico"
-          :options="taller.mecanicos"
-          label="fullName"
-          :reduce="mecanico => mecanico.IdMecanico"
-        >
-          <template #option="option">
-            {{ option.fullName }} - {{ option.identificacion }}
-          </template>
-        </v-select>
-      </b-form-group>
-      <b-form-group :label="$t('branch.cita.servicio')" class="has-float-label">
-        <v-select v-model="newCita.servicio" :options="servicios">
-          <template #search="{attributes, events}">
-            <input
-              v-bind="attributes"
-              class="vs__search"
-              :required="!newCita.servicio"
-              v-on="events"
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          {{ newCita.IdCita ? $t('pages.branch.title-edit-cita') : $t('pages.branch.add-new-cita') }}
+        </div>
+        <div class="modal-body">
+          <form novalidate @submit.prevent="onValitadeAddCita">
+            <div class="has-float-label">
+              <label for="vehicle_plate" class="form-label">{{ $t('branch.cita.placa') }}</label>
+              <div class="input-group has-validation">
+                <input
+                  id="vehicle_plate"
+                  v-model="v$.newCita.placa.$model"
+                  type="text"
+                  class="form-control"
+                  :class="{ 'is-invalid': v$.newCita.placa.$error }"
+                  :readonly="newCita.IdCita ? true : false"
+                >
+                <div v-if="v$.newCita.placa.required.$invalid" class="invalid-feedback">
+                  {{ $t('branch.forms.validations.required') }}
+                </div>
+              </div>
+            </div>
+            
+            <div class="has-float-label">
+              <label for="appointment_date" class="form-label">{{ $t('branch.cita.fechaCita') }}</label>
+              <div class="input-group has-validation">
+                <!-- <v-date-picker
+                  v-model="newCita.fechaCita"
+                  :is-required="true"
+                  :min-date="new Date()"
+                  mode="single"
+                  :input-props="{ class:'form-control', placeholder: $t('form-components.date') }"
+                /> -->
+              </div>
+            </div>
+            <div class="has-float-label">
+              <label for="appointment_time" class="form-label">{{ $t('branch.cita.horacita') }}</label>
+              <div class="input-group has-validation">
+                <input 
+                  id="appointment_time"
+                  v-model="v$.newCita.horaCita.$model"
+                  type="time"
+                  class="form-control"
+                  :class="{ 'is-invalid': v$.newCita.horaCita.$error }"
+                >
+                <div v-if="v$.newCita.horaCita.required.$invalid" class="invalid-feedback">
+                  {{ $t('branch.forms.validations.required') }}
+                </div>
+              </div>
+            </div>
+            <div class="has-float-label">
+              <label for="appointment_mechanic" class="form-label">{{ $t('branch.cita.mecanico') }}</label>
+              <v-select
+                v-model="newCita.mecanico"
+                :options="taller.mecanicos"
+                label="fullName"
+                :reduce="mecanico => mecanico.IdMecanico"
+              >
+                <template #option="option">
+                  {{ option.fullName }} - {{ option.identificacion }}
+                </template>
+              </v-select>
+            </div>
+            <div class="has-float-label">
+              <label for="appointment_service" class="form-label">{{ $t('branch.cita.servicio') }}</label>
+              <v-select v-model="newCita.servicio" :options="servicios">
+                <template #search="{attributes, events}">
+                  <input
+                    v-bind="attributes"
+                    class="vs__search"
+                    :required="!newCita.servicio"
+                    v-on="events"
+                  >
+                </template>
+              </v-select>
+            </div>    
+            <div v-if="newCita.IdCita" class="has-float-label">
+              <label for="appointment_state" class="form-label">{{ $t('branch.cita.estado') }}</label>
+              <v-select v-model="newCita.estado" :options="estados">
+                <template #search="{attributes, events}">
+                  <input v-bind="attributes" class="vs__search" :required="!newCita.estado" v-on="events">
+                </template>
+              </v-select>
+            </div>
+            <div
+              class="btn btn-outline-secondary"
+              @click="hideModal('modalAddCita')"
             >
-          </template>
-        </v-select>
-      </b-form-group>
-      <b-form-group v-if="newCita.IdCita" :label="$t('branch.cita.estado')" class="has-float-label">
-        <v-select v-model="newCita.estado" :options="estados">
-          <template #search="{attributes, events}">
-            <input v-bind="attributes" class="vs__search" :required="!newCita.estado" v-on="events">
-          </template>
-        </v-select>
-      </b-form-group>
-
-      <b-button
-        variant="outline-secondary"
-        @click="hideModal('modalAddCita')"
-      >
-        {{ $t('pages.cancel') }}
-      </b-button>
-      <b-button type="submit" variant="primary">
-        {{ $t('forms.submit') }}
-      </b-button>
-    </b-form>
-  </b-modal>
+              {{ $t('pages.cancel') }}
+            </div>
+            <div class="btn btn-primary" type="submit">
+              {{ $t('forms.submit') }}
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>

@@ -16,8 +16,8 @@
             <div
               id="modalAddTaller"
               tabindex="-1"
+              class="modal fade"
               aria-hidden="true"
-              class="modal"
             >
               <div class="modal-dialog">
                 <div class="modal-content">

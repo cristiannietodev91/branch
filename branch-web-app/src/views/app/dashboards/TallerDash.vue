@@ -216,7 +216,6 @@ export default {
         }
       })
       .catch(error => {
-        console.error(error);
 
         this.$notify("error filled", "ERROR", error.response.data.error, {
           duration: 3000,

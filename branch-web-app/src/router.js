@@ -35,7 +35,24 @@ const routes = [
               import(
                 /* webpackChunkName: "product" */ "./views/app/taller/ListTalleres"
               )
-          }
+          },
+          {
+            path: "detailTaller",
+            component: () =>
+              import(
+                /* webpackChunkName: "product" */ "./views/app/taller/DetailsTaller"
+              ),
+            redirect: "/app/taller/detailTaller/citas",
+            children: [
+              {
+                path: "citas",
+                component: () =>
+                  import(
+                    /* webpackChunkName: "forms" */ "./views/app/taller/Citas"
+                  )
+              },
+            ]
+          },
         ]
       }
     ]
