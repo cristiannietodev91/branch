@@ -1,25 +1,23 @@
 <template>
-  <b-row>
-    <b-colxx class="mecanicos-branch">
+  <div class="row">
+    <div class="col col-12 mecanicos-branch">
       <div class="top-right-button-container">
-        <b-button
-          variant="primary"
-          size="xs"
-          class="top-right-button"
+        <div
+          class="btn btn-primary btn-xs top-right-button"
           @click="showModal"
         >
           {{ $t("pages.branch.add-new-mecanico") }}
-        </b-button>
+        </div>
         <modal-add-mecanico
           :idTaller="currentUser.IdTaller"
           :mecanicoSelected="mecanicoSelected"
           @loadInfoTaller="loadInfoTaller"
         />
-        <b-modal id="modalDeleteMecanico" title="Eliminar Mecanico" @ok="deleteMecanicoConfirm">
+        <div id="modalDeleteMecanico" class="modal" title="Eliminar Mecanico" @ok="deleteMecanicoConfirm">
           <p class="my-4">
             ¿Esta seguro de eliminar este mecanico?
           </p>
-        </b-modal>
+        </div>
       </div>
       <mecanicos-items
         v-for="(mecanico, index) in mecanicos"
@@ -28,8 +26,8 @@
         @editMecanico="editMecanico"
         @deleteMecanico="deleteMecanico"
       />
-    </b-colxx>
-  </b-row>
+    </div>
+  </div>
 </template>
 
 <script>

@@ -1,10 +1,9 @@
 <template>
-  <b-card
+  <div
+    class="card d-flex flex-row"
     :class="{
-      'd-flex flex-row': true,
       active: selectedItems.includes(data.IdVehiculo)
     }"
-    no-body
     @click.prevent="toggleItem($event, data.IdVehiculo)"
   >
     <div class="img-moto">
@@ -91,15 +90,9 @@
             {{ data.tipoVehiculo }}
           </p>
         </div>
-        <!-- <div class="w-15 w-sm-100">
-          <b-badge pill variant="primary">{{ data.estado }}</b-badge>
-        </div>-->
       </div>
-      <!-- <div class="custom-control custom-checkbox pl-1 align-self-center pr-4">
-        <b-form-checkbox :checked="selectedItems.includes(data.IdTaller)" class="itemCheck mb-0" />
-      </div>-->
     </div>
-  </b-card>
+  </div>
 </template>
 
 <script>

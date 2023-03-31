@@ -1,15 +1,15 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import { createStore as _createStore } from 'vuex'
 
 import app from '../main'
 import menu from './modules/menu'
 import user from './modules/user'
 import chat from './modules/chat'
 
-Vue.use(Vuex)
-
-export default new Vuex.Store({
+export const createStore = (router) => _createStore({
   state: {
+    get route() {
+      return router.currentRoute.value;
+    }
   },
   mutations: {
     changeLang (state, payload) {

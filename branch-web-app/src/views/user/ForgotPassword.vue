@@ -1,45 +1,50 @@
 <template>
-  <b-row class="h-100">
-    <b-colxx xxs="12" md="10" class="mx-auto my-auto">
-      <b-card class="auth-card" no-body>
+  <div class="row h-100">
+    <div class="col col-12 col-md-10 mx-auto my-auto">
+      <div class="card auth-card">
         <div class="position-relative image-side">
-          <p class="h2">
-            {{ $t('dashboards.magic-is-in-the-details') }}
+          <p class="h4">
+            Reset password
           </p>
           <p class="mb-0">
             Use su email para recuperar su contraseña
             <br>Si no tiene una cuenta, puede crear una 
-            <router-link tag="a" to="/user/register" class="">
+            <router-link to="/user/register">
               aquí
             </router-link>.
           </p>
         </div>
         <div class="form-side">
-          <router-link tag="a" to="/">
+          <router-link to="/">
             <span class="logo-single" />
           </router-link>
           <h6 class="mb-4">
             {{ $t('user.forgot-password') }}
           </h6>
-          <b-form class="av-tooltip tooltip-label-bottom" @submit.prevent="formSubmit">
-            <b-form-group :label="$t('user.email')" class="has-float-label mb-4">
-              <b-form-input v-model="$v.form.email.$model" type="text" :state="!$v.form.email.$error" />
-              <b-form-invalid-feedback v-if="!$v.form.email.required">
-                Ingrese su email
-              </b-form-invalid-feedback>
-              <b-form-invalid-feedback v-else-if="!$v.form.email.email">
-                Ingrese un email válido
-              </b-form-invalid-feedback>
-              <b-form-invalid-feedback v-else-if="!$v.form.email.minLength">
-                Su email debe tener al menos 4 caracteres
-              </b-form-invalid-feedback>
-            </b-form-group>
+          <form novalidate @submit.prevent="formSubmit">
+            <div class="has-float-label mb-4">
+              <label for="login_email" class="form-label">{{ $t('user.email') }}</label>
+              <div class="input-group has-validation">
+                <input
+                  id="login_email" v-model="v$.form.email.$model" type="text" class="form-control"
+                  :class="{ 'is-invalid': v$.form.email.$error }"
+                >
+                <div v-if="v$.form.email.required.$invalid" class="invalid-feedback">
+                  Ingrese su email
+                </div>
+                <div v-else-if="v$.form.email.email.$invalid" class="invalid-feedback">
+                  Ingrese un email válido
+                </div>
+              </div>
+            </div>
             <div class="d-flex justify-content-between align-items-center">
-              <router-link tag="a" to="/user/login">
+              <router-link to="/user/login">
                 {{ $t('user.login-title') }}
               </router-link>
-              <b-button
-                type="submit" variant="primary" size="lg" :disabled="processing" 
+              <button
+                class="btn btn-primary btn-lg"
+                type="submit" 
+                :disabled="processing" 
                 :class="{'btn-multiple-state btn-shadow': true,
                          'show-spinner': processing,
                          'show-success': !processing && loginError===false,
@@ -57,35 +62,32 @@
                   <i class="simple-icon-exclamation" />
                 </span>
                 <span class="label">{{ $t('user.reset-password-button') }}</span>
-              </b-button>
+              </button>
             </div>
-          </b-form>
+          </form>
         </div>
-      </b-card>
-    </b-colxx>
-  </b-row>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
+import { useVuelidate } from '@vuelidate/core';
 import {
     mapGetters,
     mapActions
 } from "vuex";
 import {
-    validationMixin
-} from "vuelidate";
-const {
     required,
-    minLength,
     email
-} = require("vuelidate/lib/validators");
+} from "@vuelidate/validators";
 
 export default {
-    mixins: [validationMixin],
+    setup: () => ({ v$: useVuelidate() }),
     data() {
         return {
             form: {
-                email: "test@coloredstrategies.com"
+                email: ""
             }
         };
     },
@@ -94,7 +96,6 @@ export default {
             email: {
                 required,
                 email,
-                minLength: minLength(4)
             }
         }
     },
@@ -125,13 +126,15 @@ export default {
     },
     methods: {
         ...mapActions(["forgotPassword"]),
-        formSubmit() {
-            this.$v.form.$touch();
-            if (!this.$v.form.$anyError) {
-                this.forgotPassword({
-                    email: this.form.email
-                });
-            }
+        async formSubmit() {
+            const isFormCorrect = await this.v$.$validate()
+
+            if (!isFormCorrect) return
+            
+            this.forgotPassword({
+                email: this.form.email
+            });
+            
         }
     },
 };

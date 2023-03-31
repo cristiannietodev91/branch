@@ -1,10 +1,10 @@
 <template>
-  <b-row class="h-100">
-    <b-colxx xxs="12" md="10" class="mx-auto my-auto">
-      <b-card class="auth-card" no-body>
+  <div class="row h-100">
+    <div class="col col-12 col-md-10 mx-auto my-auto">
+      <div class="card auth-card">
         <div class="position-relative image-side">
           <h1 class="login-brand">
-            <router-link tag="a" to="/">
+            <router-link to="/">
               <span class="logo-single" />
               <span class="brand-text">Branch - Todo en el mismo lugar</span>
             </router-link>
@@ -16,7 +16,7 @@
             {{ $t('user.text-credentials') }}
             <br>
             {{ $t('user.text-nomember') }},
-            <router-link tag="a" to="/user/register" class>
+            <router-link to="/user/register">
               crea una cuenta
             </router-link>.
           </p>
@@ -26,58 +26,62 @@
             {{ $t('user.login-title') }}
           </h6>
 
-          <b-form class="av-tooltip tooltip-label-bottom" @submit.prevent="formSubmit">
-            <b-form-group :label="$t('user.email')" class="has-float-label mb-4">
-              <b-form-input
-                v-model="$v.form.email.$model"
-                type="text"
-                :state="!$v.form.email.$error"
-              />
-              <b-form-invalid-feedback
-                v-if="!$v.form.email.required"
-              >
-                {{ $t('branch.forms.validations.required') }}
-              </b-form-invalid-feedback>
-              <b-form-invalid-feedback
-                v-else-if="!$v.form.email.email"
-              >
-                {{ $t('branch.forms.validations.email') }}
-              </b-form-invalid-feedback>
-              <b-form-invalid-feedback
-                v-else-if="!$v.form.email.minLength"
-              >
-                {{ $t('branch.forms.validations.longitud') }}
-              </b-form-invalid-feedback>
-            </b-form-group>
+          <form novalidate @submit.prevent="formSubmit">
+            <div class="has-float-label mb-4">
+              <label for="login_email" class="form-label">{{ $t('user.email') }}</label>
+              <div class="input-group has-validation">
+                <input
+                  id="login_email"
+                  v-model="v$.form.email.$model"
+                  type="text"
+                  class="form-control"
+                  :class="{ 'is-invalid': v$.form.email.$error }"
+                >
+                <div v-if="v$.form.email.required.$invalid" class="invalid-feedback">
+                  {{ $t('branch.forms.validations.required') }}
+                </div>
+                <div v-else-if="v$.form.email.email.$invalid" class="invalid-feedback">
+                  {{ $t('branch.forms.validations.email') }}
+                </div>
+                <div v-else-if="v$.form.email.minLength.$invalid" class="invalid-feedback">
+                  {{ $t('branch.forms.validations.longitud') }}
+                </div>
+              </div>
+            </div>
 
-            <b-form-group :label="$t('user.password')" class="has-float-label mb-4">
-              <b-form-input
-                v-model="$v.form.password.$model"
-                type="password"
-                :state="!$v.form.password.$error"
-              />
-              <b-form-invalid-feedback
-                v-if="!$v.form.password.required"
-              >
-                {{ $t('branch.forms.validations.required') }}
-              </b-form-invalid-feedback>
-              <b-form-invalid-feedback
-                v-else-if="!$v.form.password.minLength || !$v.form.password.maxLength"
-              >
-                Su contraseña debe tener al menos 16 caracteres
-              </b-form-invalid-feedback>
-            </b-form-group>
+            <div class="has-float-label mb-4">
+              <label for="login_password" class="form-label">{{ $t('user.password') }}</label>
+              <div class="input-group has-validation">
+                <input
+                  id="login_password"
+                  v-model="v$.form.password.$model"
+                  type="password"
+                  class="form-control"
+                  :class="{ 'is-invalid': v$.form.password.$error }"
+                >
+                <div
+                  v-if="v$.form.password.required.$invalid"
+                  class="invalid-feedback"
+                >
+                  {{ $t('branch.forms.validations.required') }}
+                </div>
+                <div
+                  v-else-if="v$.form.password.minLength.$invalid || v$.form.password.maxLength.$invalid"
+                  class="invalid-feedback"
+                >
+                  Su contraseña debe tener al menos 16 caracteres
+                </div>
+              </div>
+            </div>
             <div class="d-flex justify-content-between align-items-center">
               <router-link
-                tag="a"
                 to="/user/forgot-password"
               >
                 {{ $t('user.forgot-password-question') }}
               </router-link>
-              <b-button
+              <button
+                class="btn btn-primary btn-lg"
                 type="submit"
-                variant="primary"
-                size="lg"
                 :disabled="processing"
                 :class="{'btn-multiple-state btn-shadow': true,
                          'show-spinner': processing,
@@ -96,28 +100,29 @@
                   <i class="simple-icon-exclamation" />
                 </span>
                 <span class="label">{{ $t('user.login-button') }}</span>
-              </b-button>
+              </button>
             </div>
-          </b-form>
+          </form>
         </div>
-      </b-card>
-    </b-colxx>
-  </b-row>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
+import { useVuelidate } from '@vuelidate/core';
 import { mapGetters, mapActions } from "vuex";
-import { validationMixin } from "vuelidate";
-const {
+import {
   required,
   maxLength,
   minLength,
   email
-} = require("vuelidate/lib/validators");
+} from "@vuelidate/validators";
+
 
 export default {
   name: "login-page",
-  mixins: [validationMixin],
+  setup: () => ({ v$: useVuelidate() }),
   data() {
     return {
       form: {
@@ -162,15 +167,16 @@ export default {
   },
   methods: {
     ...mapActions(["login"]),
-    formSubmit() {
-      this.$v.$touch();
-      this.$v.form.$touch();
-      if (!this.$v.form.$anyError) {
-        this.login({
+    async formSubmit() {
+      const isFormCorrect = await this.v$.$validate()
+
+      if (!isFormCorrect) return
+      
+      this.login({
           email: this.form.email,
           password: this.form.password
-        });
-      }
+      }); 
+      
     }
   }
 };

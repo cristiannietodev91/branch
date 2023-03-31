@@ -1,15 +1,15 @@
 <template>
   <div>
-    <b-row>
-      <b-colxx xxs="12">
-        <piaf-breadcrumb :heading="$t('menu.blank-page')" />
+    <div class="row">
+      <div class="col col-12">
+        <piaf-breadcrumb heading="Blank Page" />
         <div class="separator mb-5" />
-      </b-colxx>
-    </b-row>
-    <b-row>
-      <b-colxx xxs="12">
-        <b-card class="mb-4" :title="$t('menu.blank-page')" />
-      </b-colxx>
-    </b-row>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col col-12">
+        <div class="card mb-4" title="Blank Page" />
+      </div>
+    </div>
   </div>
 </template>

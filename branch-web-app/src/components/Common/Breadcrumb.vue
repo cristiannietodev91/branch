@@ -1,10 +1,18 @@
 <template>
-  <span>
-    <h1 v-if="heading && heading.length>0">{{ heading }}</h1>
-    <b-nav class="pt-0 breadcrumb-container d-none d-sm-block d-lg-inline-block">
-      <b-breadcrumb :items="items" />
-    </b-nav>
-  </span>
+  <div class="d-lg-inline-block">
+    <h1 v-if="heading && heading.length>0">
+      {{ heading }}
+    </h1>
+    <nav style="d-lg-inline-block" aria-label="breadcrumb">
+      <ol v-for="item in items" :key="item.id" class="breadcrumb d-lg-inline-block">
+        <li class="breadcrumb-item" aria-current="page">
+          <router-link :to="item.to || '#'">
+            {{ item.text }}
+          </router-link>
+        </li>
+      </ol>
+    </nav>
+  </div>
 </template>
 
 <script>

@@ -14,7 +14,7 @@ export default {
   mounted () {
     document.body.classList.add('background')
   },
-  beforeDestroy () {
+  beforeUnmount () {
     document.body.classList.remove('background')
   }
 }

@@ -1,100 +1,70 @@
 <template>
-  <b-card>
-    <b-row>
-      <b-colxx
-        md="6"
-        sm="6"
-        lg="4"
-        xxs="12"
-      >
+  <div class="card">
+    <div class="row">
+      <div class="col col-12 col-lg-4 col-md-6 col-sm-6">
         <h5 class="mb-1 card-subtitle truncate">
           {{ data.CodigoOrden }}
         </h5>
         <p class="text-muted text-small mb-2">
           {{ $t("branch.orden.codigoOrden") }}
         </p>
-      </b-colxx>
-      <b-colxx
-        md="6"
-        sm="6"
-        lg="2"
-        xxs="4"
-      >
+      </div>
+      <div class="col col-4 col-sm-6 col-lg-2 col-md-6">
         <h5 class="mb-1 card-subtitle truncate">
           {{ data.vehiculo.placa }}
         </h5>
         <p class="text-muted text-small mb-2">
           {{ $t("branch.orden.placa") }}
         </p>
-      </b-colxx>
-      <b-colxx
-        md="6"
-        sm="6"
-        lg="2"
-        xxs="4"
-      >
+      </div>
+      <div class="col col-4 col-sm-6 col-md-6 col-lg-2">
         <h5 class="mb-1 card-subtitle truncate">
           {{ data.vehiculo.marca.marca }}
         </h5>
         <p class="text-muted text-small mb-2">
           {{ $t("branch.orden.marca") }}
         </p>
-      </b-colxx>
-      <b-colxx
-        md="6"
-        sm="6"
-        lg="2"
-        xxs="4"
-      >
+      </div>
+      <div class="col col-4 col-sm-6 col-md-6 col-lg-2">
         <h5 class="mb-1 card-subtitle truncate">
           {{ data.vehiculo.usuario.firstName }}
         </h5>
         <p class="text-muted text-small mb-2">
           {{ $t("branch.vehiculo.dueno") }}
         </p>
-      </b-colxx>
-      <b-colxx
-        md="6"
-        sm="6"
-        lg="2"
-        xxs="4"
-      >
-        <b-button
-          variant="primary"
-          class="top-right-button"
-          size="xs"
+      </div>
+      <div class="col col-4 col-sm-6 col-md-6 col-lg-2">
+        <button
+          class="btn btn-primary btn-xs top-right-button"
           :aria-controls="`sidebar${data.CodigoOrden}`"
-          :aria-expanded="showModal"
           @click="openChat"
         >
           <!-- <i class="iconsminds-speach-bubble-8"></i> -->
           {{ $t("chat.send") }}
-          <b-badge
+          <span
             v-if="newmessages > 0"
-            variant="light"
+            class="badge text-bg-light"
           >
             {{ newmessages }}
-          </b-badge>
-        </b-button>
-        <b-modal
+          </span>
+        </button>
+        <div
           :id="`sidebar${data.CodigoOrden}`"
-          v-model="showModal"
-          right
-          shadow
-          no-header
+          class="modal shadow"
         >
           <modal-open-chat
             :conversacion="infoconversacion"
             @hide="openChat"
           />
-        </b-modal>
-      </b-colxx>
-    </b-row>
-    <b-row
+        </div>
+      </div>
+    </div>
+    <div
       v-if="showQualify"
-      class="rating-container"
+      class="row rating-container"
     >
       <h6>Por favor califica al cliente de este servicio</h6>
+      <!--
       <b-form-rating
         id="rating-sm-no-border"
         v-model="qualyfyCita"
@@ -103,18 +73,20 @@
         :readonly="readOnlyQualify"
         @change="qualifyClient"
       />
-    </b-row>
+      -->
+    </div>
     <horizontal-stepper
       locale="es"
       :keep-alive="false"
-      :steps="demoSteps"
+      :steps="steps"
       @completed-step="completeStep"
       @active-step="isStepActive"
       @stepper-finished="alert"
     />
-  </b-card>
+  </div>
 </template>
 <script>
+import { shallowRef } from 'vue'
 import { mapGetters } from "vuex";
 import HorizontalStepper from "./../Steps/Steeper";
 import Ingreso from "./../Steps/Ingreso";
@@ -134,7 +106,7 @@ export default {
   props: ["link", "data", "mecanicos"],
   data() {
     return {
-      demoSteps: [],
+      steps: [],
       showModal: false,
       newmessages: 0,
       qualyfyCita: null,
@@ -176,11 +148,11 @@ export default {
       }
     });
 
-    this.demoSteps.push({
+    this.steps.push({
       icon: "info",
       name: "ingreso",
       title: "Ingreso",
-      component: Ingreso,
+      component: shallowRef(Ingreso),
       data: this.data.etapas[idxIngreso],
       completed: idxIngreso > -1
     });
@@ -204,11 +176,11 @@ export default {
       mecanicos: this.mecanicos
     };
 
-    this.demoSteps.push({
+    this.steps.push({
       icon: "help",
       name: "diagnstico",
       title: "Diagnóstico",
-      component: Diagnostico,
+      component: shallowRef(Diagnostico),
       data: dataDiagnostico,
       completed: idxDiagnostico > -1
     });
@@ -236,11 +208,11 @@ export default {
       olderCotizaciones: olderCotizaciones
     };
 
-    this.demoSteps.push({
+    this.steps.push({
       icon: "help",
       name: "cotizacion",
       title: "Cotización",
-      component: Cotizacion,
+      component: shallowRef(Cotizacion),
       data: dataCotizacion,
       completed: idxCotizacion > -1
     });
@@ -264,11 +236,11 @@ export default {
       mecanicos: this.mecanicos
     };
 
-    this.demoSteps.push({
+    this.steps.push({
       icon: "report_problem",
       name: "aprobacion",
       title: "Aprobación",
-      component: Aprobacion,
+      component: shallowRef(Aprobacion),
       data: dataAprobacion,
       completed: idxAprobacion > -1
     });
@@ -292,11 +264,11 @@ export default {
       mecanicos: this.mecanicos
     };
 
-    this.demoSteps.push({
+    this.steps.push({
       icon: "report_problem",
       name: "reparacion",
       title: "Reparación",
-      component: Reparacion,
+      component: shallowRef(Reparacion),
       data: dataReparacion,
       completed: idxReparacion > -1
     });
@@ -319,11 +291,11 @@ export default {
       mecanicos: this.mecanicos
     };
 
-    this.demoSteps.push({
+    this.steps.push({
       icon: "report_problem",
       name: "entrega",
       title: "Entrega",
-      component: Entrega,
+      component: shallowRef(Entrega),
       data: dataEntrega,
       completed: idxEntrega > -1
     });
@@ -346,7 +318,7 @@ export default {
     // Executed when @completed-step event is triggered
     completeStep(payload) {
       if (payload.index) {
-        this.demoSteps.forEach(step => {
+        this.steps.forEach(step => {
           if (step.name === payload.name) {
             step.completed = true;
           }
@@ -355,8 +327,7 @@ export default {
     },
     // Executed when @active-step event is triggered
     isStepActive(payload) {
-      this.demoSteps.forEach(step => {
-        //console.debug('Valid steps :::>',step);
+      this.steps.forEach(step => {
         if (step.name === payload.name) {
           if (step.completed === true) {
             step.completed = true;

@@ -6,108 +6,100 @@
     @touchstart="isMenuOver=true"
   >
     <div class="main-menu">
-      <vue-perfect-scrollbar
-        class="scroll"
-        :settings="{ suppressScrollX: true, wheelPropagation: false }"
-      >
-        <ul class="list-unstyled">
-          <li
-            v-for="(item) in menuItems"
-            :key="`parent_${item.id}`"
-            :class="{ 'active' : (selectedParentMenu === item.id && viewingParentMenu === '') || viewingParentMenu === item.id }"
-            :data-flag="item.id"
+      <ul class="list-unstyled">
+        <li
+          v-for="(item) in menuItems"
+          :key="`parent_${item.id}`"
+          :class="{ 'active' : (selectedParentMenu === item.id && viewingParentMenu === '') || viewingParentMenu === item.id }"
+          :data-flag="item.id"
+        >
+          <a v-if="item.newWindow" :href="item.to" rel="noopener noreferrer" target="_blank">
+            <i :class="item.icon" />
+            {{ $t(item.label) }}
+          </a>
+          <a
+            v-else-if="item.subs && item.subs.length>0"
+            :href="`#${item.to}`"
+            @click.prevent="openSubMenu($event,item)"
           >
-            <a v-if="item.newWindow" :href="item.to" rel="noopener noreferrer" target="_blank">
-              <i :class="item.icon" />
-              {{ $t(item.label) }}
-            </a>
-            <a
-              v-else-if="item.subs && item.subs.length>0"
-              :href="`#${item.to}`"
-              @click.prevent="openSubMenu($event,item)"
-            >
-              <b-badge v-if="item.notifications && newMessages > 0" variant="light">{{ newMessages }}</b-badge>
-              <i :class="item.icon" />
-              {{ $t(item.label) }}
-            </a>
-            <router-link
-              v-else
-              :to="item.to"
-              @click.native="changeSelectedParentHasNoSubmenu(item.id)"
-            >
-              <i :class="item.icon" />
-              {{ $t(item.label) }}
-            </router-link>
-          </li>
-        </ul>
-      </vue-perfect-scrollbar>
+            <span v-if="item.notifications && newMessages > 0" class="badge bg-light">{{ newMessages }}</span>
+            <i :class="item.icon" />
+            {{ $t(item.label) }}
+          </a>
+          <router-link
+            v-else
+            :to="item.to"
+            @click="changeSelectedParentHasNoSubmenu(item.id)"
+          >
+            <i :class="item.icon" />
+            {{ $t(item.label) }}
+          </router-link>
+        </li>
+      </ul>
     </div>
 
     <div class="sub-menu">
-      <vue-perfect-scrollbar
-        class="scroll"
-        :settings="{ suppressScrollX: true, wheelPropagation: false }"
+      <ul
+        v-for="(item,itemIndex) in menuItems"
+        :key="`sub_${item.id}`"
+        :class="{'list-unstyled':true, 'd-block' : (selectedParentMenu === item.id && viewingParentMenu === '') || viewingParentMenu === item.id }"
+        :data-parent="item.id"
       >
-        <ul
-          v-for="(item,itemIndex) in menuItems"
-          :key="`sub_${item.id}`"
-          :class="{'list-unstyled':true, 'd-block' : (selectedParentMenu === item.id && viewingParentMenu === '') || viewingParentMenu === item.id }"
-          :data-parent="item.id"
+        <li
+          v-for="(sub,subIndex) in item.subs"
+          :key="`sub_sub_${sub.to}`"
+          :class="{'has-sub-item' : sub.subs && sub.subs.length > 0 , 'active' : $route.path.indexOf(sub.to)>-1}"
         >
-          <li
-            v-for="(sub,subIndex) in item.subs"
-            :key="`sub_sub_${sub.id}`"
-            :class="{'has-sub-item' : sub.subs && sub.subs.length > 0 , 'active' : $route.path.indexOf(sub.to)>-1}"
-          >
-            <a v-if="sub.newWindow" :href="sub.to" rel="noopener noreferrer" target="_blank">
-              <i :class="sub.icon" />
-              <span>{{ $t(sub.label) }}</span>
-            </a>
-            <template v-else-if="sub.subs && sub.subs.length > 0">
-              <b-link
-                v-b-toggle="`menu_${itemIndex}_${subIndex}`"
-                variant="link"
-                class="rotate-arrow-icon opacity-50"
-              >
-                <i class="simple-icon-arrow-down" />
-                <span class="d-inline-block">{{ $t(sub.label) }}</span>
-              </b-link>
-              <b-collapse :id="`menu_${itemIndex}_${subIndex}`" visible>
-                <ul class="list-unstyled third-level-menu">
-                  <li
-                    v-for="(thirdLevelSub, thirdIndex) in sub.subs"
-                    :key="`third_${itemIndex}_${subIndex}_${thirdIndex}`"
-                    :class="{'third-level-menu':true , 'active' : $route.path ===thirdLevelSub.to}"
+          <a v-if="sub.newWindow" :href="sub.to" rel="noopener noreferrer" target="_blank">
+            <i :class="sub.icon" />
+            <span>{{ $t(sub.label) }}</span>
+          </a>
+          <template v-else-if="sub.subs && sub.subs.length > 0">
+            <button
+              type="button"
+              data-bs-toggle="collapse"
+              :data-bs-target="`#menu_${itemIndex}_${subIndex}`"
+              aria-expanded="false" aria-controls="collapseExample"
+              class="btn btn-link rotate-arrow-icon opacity-50"
+            >
+              <i class="simple-icon-arrow-down" />
+              <span class="d-inline-block">{{ $t(sub.label) }}</span>
+            </button>
+            <div :id="`menu_${itemIndex}_${subIndex}`" class="collapse">
+              <ul class="list-unstyled third-level-menu">
+                <li
+                  v-for="(thirdLevelSub, thirdIndex) in sub.subs"
+                  :key="`third_${itemIndex}_${subIndex}_${thirdIndex}`"
+                  :class="{'third-level-menu':true , 'active' : $route.path ===thirdLevelSub.to}"
+                >
+                  <a
+                    v-if="thirdLevelSub.newWindow"
+                    :href="thirdLevelSub.to"
+                    rel="noopener noreferrer"
+                    target="_blank"
                   >
-                    <a
-                      v-if="thirdLevelSub.newWindow"
-                      :href="thirdLevelSub.to"
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      <i :class="thirdLevelSub.icon" />
-                      <span>{{ $t(thirdLevelSub.label) }}</span>
-                    </a>
+                    <i :class="thirdLevelSub.icon" />
+                    <span>{{ $t(thirdLevelSub.label) }}</span>
+                  </a>
 
-                    <router-link v-else :to="thirdLevelSub.to">
-                      <i :class="thirdLevelSub.icon" />
-                      <span>{{ $t(thirdLevelSub.label) }}</span>
-                    </router-link>
-                  </li>
-                </ul>
-              </b-collapse>
-            </template>
-            <router-link v-else :to="sub.to" @click.native="resetUnreadMessages">
-              <i :class="sub.icon" />
+                  <router-link v-else :to="thirdLevelSub.to">
+                    <i :class="thirdLevelSub.icon" />
+                    <span>{{ $t(thirdLevelSub.label) }}</span>
+                  </router-link>
+                </li>
+              </ul>
+            </div>
+          </template>
+          <router-link v-else :to="sub.to" @click="resetUnreadMessages">
+            <i :class="sub.icon" />
 
-              <span>
-                {{ $t(sub.label) }}
-                <b-badge v-if="sub.notifications && newMessages > 0" variant="light">{{ newMessages }}</b-badge>
-              </span>
-            </router-link>
-          </li>
-        </ul>
-      </vue-perfect-scrollbar>
+            <span>
+              {{ $t(sub.label) }}
+              <span v-if="sub.notifications && newMessages > 0" class="badge text-bg-light">{{ newMessages }}</span>
+            </span>
+          </router-link>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -163,7 +155,7 @@ export default {
     document.addEventListener("click", this.handleDocumentClick);
     this.handleWindowResize();
   },
-  beforeDestroy() {
+  beforeUnmount() {
     document.removeEventListener("click", this.handleDocumentClick);
     window.removeEventListener("resize", this.handleWindowResize);
   },

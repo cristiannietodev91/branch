@@ -1,81 +1,92 @@
 <template>
-  <b-modal
+  <div
     id="modalAddOrden"
-    ref="modalAddOrden"
-    :title="$t('pages.branch.add-orden-vehicle')"
-    modal-class="modal-basic"
-    hide-footer
+    class="modal"
+    tabindex="-1"
+    aria-hidden="true"
   >
-    <b-form @submit.prevent="onValitadeAddOrden">
-      <b-form-group :label="$t('branch.orden.mecanico')">
-        <v-select
-          v-model="newOrden.mecanico"
-          :options="taller.mecanicos"
-          label="fullName"
-          :reduce="mecanico => mecanico.IdMecanico"
-        >
-          <template #search="{attributes, events}">
-            <input
-              class="vs__search"
-              :required="!newOrden.mecanico"
-              v-bind="attributes"
-              v-on="events"
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          {{ $t('pages.branch.add-orden-vehicle') }}
+        </div>
+        <div class="modal-body">
+          <form novalidate @submit.prevent="onValitadeAddOrden">
+            <div class="has-float-label">
+              <label for="select_mechanic" class="form-label">{{ $t('branch.orden.mecanico') }}</label>
+              <div class="input-group has-validation">
+                <v-select
+                  v-model="newOrden.mecanico"
+                  :options="taller.mecanicos"
+                  label="fullName"
+                  :reduce="mecanico => mecanico.IdMecanico"
+                >
+                  <template #search="{attributes, events}">
+                    <input
+                      v-bind="attributes"
+                      class="vs__search"
+                      :required="!newOrden.mecanico"
+                      v-on="events"
+                    >
+                  </template>
+                  <template #option="option">
+                    {{ option.fullName }} - {{ option.identificacion }}
+                  </template>
+                </v-select>
+              </div>
+            </div>
+            <div class="has-float-label">
+              <label for="vehicle_kilometers" class="form-label">{{ $t('branch.orden.kilometraje') }}</label>
+              <div class="input-group has-validation">
+                <input
+                  id="vehicle_kilometers"
+                  v-model="v$.newOrden.kilometraje.$model"
+                  type="text"
+                  class="form-control"
+                  :class="{ 'is-invalid': v$.newOrden.kilometraje.$error }"
+                >
+                <div v-if="v$.newOrden.kilometraje.required.$invalid" class="invalid-feedback">
+                  {{ $t('branch.forms.validations.required') }}
+                </div>
+              </div>
+            </div>
+            <div class="has-float-label">
+              <label for="vehicle_documents" class="form-label">{{ $t('branch.orden.documentos') }}</label>
+              <div class="form-check form-check-inline">
+                <input
+                  id="inlineCheckbox1" v-model="newOrden.documentos" class="form-check-input" type="checkbox"
+                  value="soat"
+                >
+                <label class="form-check-label" for="inlineCheckbox1">SOAT</label>
+              </div>
+            </div>
+            <div class="has-float-label">
+              <label for="vehicle_kilometers" class="form-label">{{ $t('branch.orden.observaciones') }}</label>
+              <div class="input-group has-validation">
+                <textarea v-model.trim="newOrden.observacion" class="form-control" />
+              </div>
+            </div>  
+            <button
+              class="btn btn-outline-secondary"
+              @click.once="hideModal('modalAddOrden')"
             >
-          </template>
-          <template #option="option">
-            {{ option.fullName }} - {{ option.identificacion }}
-          </template>
-        </v-select>
-      </b-form-group>
-      <b-form-group :label="$t('branch.orden.kilometraje')">
-        <b-form-input
-          v-model="$v.newOrden.kilometraje.$model"
-          :state="!$v.newOrden.kilometraje.$error"
-        />
-        <b-form-invalid-feedback
-          v-if="!$v.newOrden.kilometraje.required"
-        >
-          {{ $t('branch.forms.validations.required') }}
-        </b-form-invalid-feedback>
-      </b-form-group>
-      <b-form-group :label="$t('branch.orden.documentos')">
-        <b-form-checkbox-group
-          id="checkbox-documentos"
-          v-model="newOrden.documentos"
-          :state="state"
-          name="docuementos"
-        >
-          <b-form-checkbox value="soat">
-            SOAT
-          </b-form-checkbox>
-          <b-form-checkbox value="tecnomecanica">
-            Tecnico Mecanica
-          </b-form-checkbox>
-        </b-form-checkbox-group>
-        <b-form-invalid-feedback :state="state">
-          {{ $t('branch.forms.validations.required') }}
-        </b-form-invalid-feedback>
-      </b-form-group>
-      <b-form-group :label="$t('branch.orden.observaciones')">
-        <b-textarea v-model.trim="newOrden.observacion" />
-      </b-form-group>
-      <b-button
-        variant="outline-secondary"
-        @click.once="hideModal('modalAddOrden')"
-      >
-        {{ $t('pages.cancel') }}
-      </b-button>
-      <b-button type="submit" variant="primary">
-        {{ $t('forms.submit') }}
-      </b-button>
-    </b-form>
-  </b-modal>
+              {{ $t('pages.cancel') }}
+            </button>
+            <button class="btn btn-primary" type="submit">
+              {{ $t('forms.submit') }}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
+import { useVuelidate } from '@vuelidate/core'
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
-import { required } from "vuelidate/lib/validators";
+import { required } from "@vuelidate/validators";
 import ServicesCore from "../../services/service";
 
 export default {
@@ -84,6 +95,7 @@ export default {
     "v-select": vSelect
   },
   props: ["taller", "cita"],
+  setup: () => ({ v$: useVuelidate() }),
   data() {
     return {
       newOrden: {
@@ -114,7 +126,7 @@ export default {
         //console.log(`Cita recibida:::>`, this.cita);
         this.$forceUpdate();
       },
-      { immediate: true }
+      { immediate: true, deep: true }
     );
   },
   methods: {
@@ -122,9 +134,9 @@ export default {
       this.$refs[refname].hide();
     },
     onValitadeAddOrden() {
-      this.$v.$touch();
+      this.v$.$touch();
       // if its still pending or an error is returned do not submit
-      if (this.$v.newOrden.$pending || this.$v.newOrden.$error) return;
+      if (this.v$.newOrden.$pending || this.v$.newOrden.$error) return;
 
       if (this.cita) {
         let myJsonDocumentos = JSON.stringify(this.newOrden.documentos);

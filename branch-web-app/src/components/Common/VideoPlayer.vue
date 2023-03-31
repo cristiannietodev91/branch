@@ -24,7 +24,7 @@ export default {
             // console.log("player mounted")
         })
     },
-    beforeDestroy() {
+    beforeUnmount() {
         if (this.player) {
             this.player.dispose()
         }

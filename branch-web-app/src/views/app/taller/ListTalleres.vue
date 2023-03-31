@@ -1,285 +1,234 @@
 <template>
-  <b-row>
-    <b-colxx class="disable-text-selection">
-      <b-row>
-        <b-colxx xxs="12">
+  <div class="row">
+    <div class="col disable-text-selection">
+      <div class="row">
+        <div class="col col-12">
           <h1>{{ $t('branch.taller.listaTalleres') }}</h1>
           <div class="top-right-button-container">
-            <b-button
-              v-b-modal.modalAddTaller
-              variant="primary"
-              size="lg"
-              class="top-right-button"
+            <button
+              type="button"
+              class="btn btn-primary top-right-button btn-lg"
+              data-bs-toggle="modal" 
+              data-bs-target="#modalAddTaller"
             >
               {{ $t('pages.add-new') }}
-            </b-button>
-            <b-button-group>
-              <b-dropdown
-                split
-                right
-                class="check-button"
-                variant="primary"
-                @click="selectAll(true)"
-              >
-                <label
-                  slot="button-content"
-                  class="custom-control custom-checkbox pl-4 mb-0 d-inline-block"
-                >
-                  <input
-                    v-shortkey="{select: ['ctrl','a'], undo: ['ctrl','d']}"
-                    class="custom-control-input"
-                    type="checkbox"
-                    :checked="isSelectedAll"
-                    @shortkey="keymap"
-                  >
-                  <span
-                    :class="{
-                      'custom-control-label' :true,
-                      'indeterminate' : isAnyItemSelected
-                    }"
-                  >&nbsp;</span>
-                </label>
-                <b-dropdown-item>{{ $t('pages.delete') }}</b-dropdown-item>
-                <b-dropdown-item>{{ $t('pages.another-action') }}</b-dropdown-item>
-              </b-dropdown>
-            </b-button-group>
-            <b-modal
+            </button>
+            <div
               id="modalAddTaller"
-              ref="modalAddTaller"
-              :title="$t('branch.taller.add-new-taller-title')"
-              hide-footer
+              tabindex="-1"
+              class="modal fade"
+              aria-hidden="true"
             >
-              <b-form class="av-tooltip tooltip-label-right" @submit.prevent="onValitadeFormSubmit">
-                <b-form-group label-cols="2" horizontal :label="$t('branch.taller.nombreTaller')">
-                  <b-form-input
-                    v-model="$v.newItem.nombre.$model"
-                    type="text"
-                    :state="!$v.newItem.nombre.$error"
-                  />
-                  <b-form-invalid-feedback
-                    v-if="!$v.newItem.nombre.required"
-                  >
-                    {{ $t('branch.forms.validations.required') }}
-                  </b-form-invalid-feedback>
-                  <b-form-invalid-feedback
-                    v-else-if="!$v.newItem.nombre.minLength || !$v.newItem.nombre.maxLength"
-                  >
-                    {{ $t('branch.forms.validations.longitud') }}
-                  </b-form-invalid-feedback>
-                </b-form-group>
-                <b-form-group label-cols="2" horizontal :label="$t('branch.taller.identificacion')">
-                  <b-form-input
-                    v-model="$v.newItem.identificacion.$model"
-                    type="text"
-                    :state="!$v.newItem.identificacion.$error"
-                  />
-                  <b-form-invalid-feedback
-                    v-if="!$v.newItem.identificacion.required"
-                  >
-                    {{ $t('branch.forms.validations.required') }}
-                  </b-form-invalid-feedback>
-                  <b-form-invalid-feedback
-                    v-if="!$v.newItem.identificacion.alpha"
-                  >
-                    {{ $t('branch.forms.validations.nit') }}
-                  </b-form-invalid-feedback>
-                  <b-form-invalid-feedback
-                    v-else-if="!$v.newItem.nombre.minLength || !$v.newItem.nombre.maxLength"
-                  >
-                    {{ $t('branch.forms.validations.longitud') }}
-                  </b-form-invalid-feedback>
-                </b-form-group>
-
-                <b-form-group label-cols="2" horizontal :label="$t('branch.taller.direccion')">
-                  <b-form-input
-                    v-model="$v.newItem.direccion.$model"
-                    type="text"
-                    :state="!$v.newItem.direccion.$error"
-                  />
-                  <b-form-invalid-feedback
-                    v-if="!$v.newItem.direccion.required"
-                  >
-                    {{ $t('branch.forms.validations.required') }}
-                  </b-form-invalid-feedback>
-                  <b-form-invalid-feedback
-                    v-else-if="!$v.newItem.direccion.minLength || !$v.newItem.direccion.maxLength"
-                  >
-                    {{ $t('branch.forms.validations.longitud') }}
-                  </b-form-invalid-feedback>
-                </b-form-group>
-
-                <b-form-group label-cols="2" horizontal :label="$t('branch.taller.celular')">
-                  <b-form-input
-                    v-model="$v.newItem.celular.$model"
-                    type="text"
-                    :state="!$v.newItem.celular.$error"
-                  />
-                  <b-form-invalid-feedback
-                    v-if="!$v.newItem.celular.required"
-                  >
-                    {{ $t('branch.forms.validations.required') }}
-                  </b-form-invalid-feedback>
-                  <b-form-invalid-feedback
-                    v-else-if="!$v.newItem.celular.minLength || !$v.newItem.direccion.maxLength"
-                  >
-                    {{ $t('branch.forms.validations.longitud') }}
-                  </b-form-invalid-feedback>
-                </b-form-group>
-
-                <b-form-group label-cols="2" horizontal :label="$t('branch.taller.email')">
-                  <b-form-input
-                    v-model="$v.newItem.email.$model"
-                    type="text"
-                    :state="!$v.newItem.email.$error"
-                  />
-                  <b-form-invalid-feedback
-                    v-if="!$v.newItem.email.required"
-                  >
-                    {{ $t('branch.forms.validations.required') }}
-                  </b-form-invalid-feedback>
-                  <b-form-invalid-feedback
-                    v-else-if="!$v.newItem.email.email"
-                  >
-                    {{ $t('branch.forms.validations.email') }}
-                  </b-form-invalid-feedback>
-                  <b-form-invalid-feedback
-                    v-else-if="!$v.newItem.email.minLength || !$v.newItem.email.maxLength"
-                  >
-                    {{ $t('branch.forms.validations.longitud') }}
-                  </b-form-invalid-feedback>
-                </b-form-group>
-                <b-form-group label-cols="2" horizontal :label="$t('branch.taller.logo')">
-                  <b-form-input
-                    v-model="$v.newItem.urlLogo.$model"
-                    type="text"
-                    :state="!$v.newItem.urlLogo.$error"
-                  />
-                  <b-form-invalid-feedback
-                    v-if="!$v.newItem.urlLogo.required"
-                  >
-                    {{ $t('branch.forms.validations.required') }}
-                  </b-form-invalid-feedback>
-                  <b-form-invalid-feedback
-                    v-else-if="!$v.newItem.urlLogo.url"
-                  >
-                    {{ $t('branch.forms.validations.url') }}
-                  </b-form-invalid-feedback>
-                </b-form-group>
-                <b-button
-                  variant="outline-secondary"
-                  @click="hideModal('modalAddTaller')"
-                >
-                  {{ $t('pages.cancel') }}
-                </b-button>
-                <b-button type="submit" variant="primary">
-                  {{ $t('forms.submit') }}
-                </b-button>
-              </b-form>
-            </b-modal>
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    {{ $t('branch.taller.add-new-taller-title') }}
+                  </div>
+                  <div class="modal-body">
+                    <form novalidate @submit.prevent="onValitadeFormSubmit">
+                      <div class="row">
+                        <label for="workshop_name" class="form-label">{{ $t('branch.taller.nombreTaller') }}</label>
+                        <div class="input-group col-sm-10 has-validation">
+                          <input
+                            id="workshop_name"
+                            v-model="v$.newItem.nombre.$model"
+                            type="text"
+                            class="form-control"
+                            :class="{ 'is-invalid': v$.newItem.nombre.$error }"
+                          >
+                          <div v-if="v$.newItem.nombre.required.$invalid" class="invalid-feedback">
+                            {{ $t('branch.forms.validations.required') }}
+                          </div>
+                          <div
+                            v-else-if="v$.newItem.nombre.minLength.$invalid || v$.newItem.nombre.maxLength.$invalid"
+                            class="invalid-feedback"
+                          >
+                            {{ $t('branch.forms.validations.longitud') }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <label for="workshop_id" class="form-label">{{ $t('branch.taller.identificacion') }}</label>
+                        <div class="input-group col-sm-10 has-validation">
+                          <input
+                            id="workshop_id"
+                            v-model="v$.newItem.identificacion.$model"
+                            type="text"
+                            class="form-control"
+                            :class="{ 'is-invalid': v$.newItem.identificacion.$error }"
+                          >
+                          <div v-if="v$.newItem.identificacion.required.$invalid" class="invalid-feedback">
+                            {{ $t('branch.forms.validations.required') }}
+                          </div>
+                          <div
+                            v-else-if="v$.newItem.identificacion.alpha.$invalid"
+                            class="invalid-feedback"
+                          >
+                            {{ $t('branch.forms.validations.nit') }}
+                          </div>
+                          <div
+                            v-else-if="v$.newItem.nombre.minLength.$invalid || v$.newItem.nombre.maxLength.$invalid"
+                            class="invalid-feedback"
+                          >
+                            {{ $t('branch.forms.validations.longitud') }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <label for="workshop_address" class="form-label">{{ $t('branch.taller.direccion') }}</label>
+                        <div class="input-group col-sm-10 has-validation">
+                          <input
+                            id="workshop_address"
+                            v-model="v$.newItem.direccion.$model"
+                            type="text"
+                            class="form-control"
+                            :class="{ 'is-invalid': v$.newItem.direccion.$error }"
+                          >
+                          <div
+                            v-if="v$.newItem.direccion.required.$invalid"
+                            class="invalid-feedback"
+                          >
+                            {{ $t('branch.forms.validations.required') }}
+                          </div>
+                          <div
+                            v-else-if="v$.newItem.direccion.minLength.$invalid || v$.newItem.direccion.maxLength.$invalid"
+                            class="invalid-feedback"
+                          >
+                            {{ $t('branch.forms.validations.longitud') }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <label for="workshop_phone" class="form-label">{{ $t('branch.taller.celular') }}</label>
+                        <div class="input-group col-sm-10 has-validation">
+                          <input
+                            id="workshop_phone"
+                            v-model="v$.newItem.celular.$model"
+                            type="text"
+                            class="form-control"
+                            :class="{ 'is-invalid': v$.newItem.celular.$error }"
+                          >
+                          <div
+                            v-if="v$.newItem.celular.required.$invalid"
+                            class="invalid-feedback"
+                          >
+                            {{ $t('branch.forms.validations.required') }}
+                          </div>
+                          <div
+                            v-else-if="v$.newItem.celular.minLength.$invalid || v$.newItem.direccion.maxLength.$invalid"
+                          >
+                            {{ $t('branch.forms.validations.longitud') }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <label for="workshop_email" class="form-label">{{ $t('branch.taller.email') }}</label>
+                        <div class="input-group col-sm-10 has-validation">
+                          <input
+                            id="workshop_email"
+                            v-model="v$.newItem.email.$model"
+                            type="text"
+                            class="form-control"
+                            :class="{ 'is-invalid': v$.newItem.email.$error }"
+                          >
+                          <div
+                            v-if="v$.newItem.email.required.$invalid"
+                            class="invalid-feedback"
+                          >
+                            {{ $t('branch.forms.validations.required') }}
+                          </div>
+                          <div
+                            v-else-if="v$.newItem.email.email.$invalid"
+                            class="invalid-feedback"
+                          >
+                            {{ $t('branch.forms.validations.email') }}
+                          </div>
+                          <div
+                            v-else-if="v$.newItem.email.minLength.$invalid || v$.newItem.email.maxLength.$invalid"
+                            class="invalid-feedback"
+                          >
+                            {{ $t('branch.forms.validations.longitud') }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <label for="workshop_logo" class="form-label">{{ $t('branch.taller.logo') }}</label>
+                        <div class="input-group col-sm-10 has-validation">
+                          <input
+                            id="workshop_logo"
+                            v-model="v$.newItem.urlLogo.$model"
+                            type="text"
+                            class="form-control"
+                            :class="{ 'is-invalid': v$.newItem.urlLogo.$error }"
+                          >
+                          <div
+                            v-if="v$.newItem.urlLogo.required.$invalid"
+                            class="invalid-feedback"
+                          >
+                            {{ $t('branch.forms.validations.required') }}
+                          </div>
+                          <div
+                            v-else-if="v$.newItem.urlLogo.url.$invalid"
+                            class="invalid-feedback"
+                          >
+                            {{ $t('branch.forms.validations.url') }}
+                          </div>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        @click="hideModal('modalAddTaller')"
+                      >
+                        {{ $t('pages.cancel') }}
+                      </button>
+                      <button type="submit" class="btn btn-primary">
+                        {{ $t('forms.submit') }}
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <piaf-breadcrumb />
           <div class="mb-2 mt-2">
-            <b-button
-              v-b-toggle.displayOptions
-              variant="empty"
-              class="pt-0 pl-0 d-inline-block d-md-none"
+            <button
+              class="btn pt-0 pl-0 d-inline-block d-md-none"
+              data-bs-toggle="collapse"
+              data-bs-target="#displayOptions"
+              aria-expanded="false" 
+              aria-controls="displayOptions"
             >
               {{ $t('pages.display-options') }}
               <i class="simple-icon-arrow-down align-middle" />
-            </b-button>
-            <b-collapse id="displayOptions" class="d-md-block">
-              <div class="d-block d-md-inline-block pt-1">
-                <b-dropdown
-                  id="ddown1"
-                  :text="`${$t('pages.orderby')} ${sort.label}`"
-                  variant="outline-dark"
-                  class="mr-1 float-md-left btn-group"
-                  size="xs"
-                >
-                  <b-dropdown-item
-                    v-for="(order,index) in sortOptions"
-                    :key="index"
-                    @click="changeOrderBy(order)"
-                  >
-                    {{ order.label }}
-                  </b-dropdown-item>
-                </b-dropdown>
-
-                <div class="search-sm d-inline-block float-md-left mr-1 align-top">
-                  <b-input v-model="search" :placeholder="$t('menu.search')" />
-                </div>
-              </div>
-              <div class="float-md-right pt-1">
-                <span class="text-muted text-small mr-1 mb-2">{{ from }}-{{ to }} of {{ total }}</span>
-                <b-dropdown
-                  id="ddown2"
-                  right
-                  :text="`${perPage}`"
-                  variant="outline-dark"
-                  class="d-inline-block"
-                  size="xs"
-                >
-                  <b-dropdown-item
-                    v-for="(size,index) in pageSizes"
-                    :key="index"
-                    @click="changePageSize(size)"
-                  >
-                    {{ size }}
-                  </b-dropdown-item>
-                </b-dropdown>
-              </div>
-            </b-collapse>
+            </button>
           </div>
           <div class="separator mb-5" />
-        </b-colxx>
-      </b-row>
+        </div>
+      </div>
       <template v-if="isLoad">
-        <b-row>
-          <b-colxx
-            v-for="(item,index) in items" :id="item.id" :key="index" xxs="12"
-            class="mb-3"
+        <div class="row">
+          <div
+            v-for="(item,index) in items" :id="item.id" :key="index"
+            class="col col-12 mb-3"
           >
             <taller-list-item
               :key="item.id"
               :data="item"
-              :selected-items="selectedItems"
-              @toggle-item="toggleItem"
             />
-          </b-colxx>
-        </b-row>
-        <b-row v-if="lastPage>1">
-          <b-colxx xxs="12">
-            <b-pagination-nav
-              v-model="page"
-              :number-of-pages="lastPage"
-              :link-gen="linkGen"
-              :per-page="perPage"
-              align="center"
-            >
-              <template #next-text>
-                <i class="simple-icon-arrow-right" />
-              </template>
-              <template #prev-text>
-                <i class="simple-icon-arrow-left" />
-              </template>
-              <template #first-text>
-                <i class="simple-icon-control-start" />
-              </template>
-              <template #last-text>
-                <i class="simple-icon-control-end" />
-              </template>
-            </b-pagination-nav>
-          </b-colxx>
-        </b-row>
+          </div>
+        </div>
       </template>
       <template v-else>
         <div class="loading" />
       </template>
-    </b-colxx>
-  </b-row>
+    </div>
+  </div>
 </template>
 
 <script>
+import { useVuelidate } from '@vuelidate/core';
 import {
   required,
   minLength,
@@ -287,9 +236,8 @@ import {
   email,
   helpers,
   url
-} from "vuelidate/lib/validators";
+} from "@vuelidate/validators";
 
-import "vue-select/dist/vue-select.css";
 import ServicesCore from "../../../services/service";
 
 import TallerListItem from "../../../components/Listing/TallerListItem";
@@ -300,6 +248,7 @@ export default {
   components: {
     "taller-list-item": TallerListItem
   },
+  setup: () => ({ v$: useVuelidate() }),
   data() {
     return {
       isLoad: false,
@@ -509,7 +458,7 @@ export default {
       return "#page-" + pageNum;
     },
     onValitadeFormSubmit() {
-      this.$v.$touch();
+      this.v$.$touch();
       var taller = {
         nombre: this.newItem.nombre,
         identificacion: this.newItem.identificacion,
@@ -519,7 +468,7 @@ export default {
         logo: this.newItem.urlLogo
       };
       // if its still pending or an error is returned do not submit
-      if (this.$v.newItem.$pending || this.$v.newItem.$error) return;
+      if (this.v$.newItem.$pending || this.v$.newItem.$error) return;
 
       console.log(JSON.stringify(taller));
       ServicesCore.createTaller(taller).then(response => {

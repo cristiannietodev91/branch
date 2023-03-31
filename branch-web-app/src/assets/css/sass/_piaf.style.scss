@@ -46,7 +46,6 @@ Table of Contents
 */
 
 /* 00.Variables and Imports */
-@import "../_mixins.scss";
 @import url("https://fonts.googleapis.com/css?family=IBM+Plex+Sans:300,400,400i,600,700&display=swap");
 
 $main-menu-item-height: 110px;
@@ -1968,7 +1967,7 @@ button {
     }
 
     @include respond-below(md) {
-      width: $sub-menu-width/2;
+      width: calc($sub-menu-width/2);
 
       input {
         width: 85%;
@@ -3202,7 +3201,7 @@ main {
 
 .dashboard-search {
   height: 650px;
-  background: url(/assets/img/plane.jpg);
+  background: url(./assets/img/plane.jpg);
   background-size: contain;
   background-repeat: no-repeat;
   background-color: $foreground-color;
@@ -3861,8 +3860,8 @@ div[data-notify="container"] {
   text-align: center;
   width: unset !important;
   position: absolute;
-  z-index: 4;
-  margin-top: -0.5rem;
+  z-index: 6;
+  margin-top: 2.5rem;
   left: 50%;
   transform: translateX(-50%);
   @include depth(1);
@@ -6507,7 +6506,7 @@ input:-webkit-autofill {
   opacity: 1;
   top: -0.4em;
   left: 0.75rem;
-  z-index: 3;
+  z-index: 6;
   line-height: 1;
   padding: 0 1px;
 }
@@ -10024,7 +10023,7 @@ footer.page-footer {
   }
 
   @include respond-below(md) {
-    width: $sub-menu-width/2;
+    width: calc($sub-menu-width/2);
 
     input {
       width: 85%;

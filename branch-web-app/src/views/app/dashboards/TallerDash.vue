@@ -1,13 +1,13 @@
 <template>
   <div>
-    <b-row>
-      <b-colxx xxs="12">
+    <div class="row">
+      <div class="col col-12">
         <piaf-breadcrumb :heading="$t('menu.analytics')" />
         <div class="separator mb-5" />
-      </b-colxx>
-    </b-row>
-    <b-row>
-      <b-colxx xl="6" lg="12">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col col-xl-6 col-lg-12">
         <div class="icon-cards-row">
           <glide-component :settings="glideIconsOption">
             <icon-card
@@ -33,24 +33,16 @@
           </glide-component>
         </div>
 
-        <b-card :title="$t('dashboards.citasByMonth')">
-          <div class="dashboard-line-chart">
-            <line-shadow-chart v-if="loadedLineChartCitas" :data="lineChartCitas" :height="300" />
-          </div>
-        </b-card>
-      </b-colxx>
-      <b-colxx lg="4" md="12" class="mb-4">
-        <b-card :title="$t('dashboards.citasByState')">
-          <div class="dashboard-donut-chart">
-            <polar-area-shadow-chart
-              v-if="loadedpolarAreaCitasByEstado"
-              :data="polarAreaCitasByEstado"
-              :height="270"
-            />
-          </div>
-        </b-card>
-      </b-colxx>
-    </b-row>
+        <div class="card" :title="$t('dashboards.citasByMonth')">
+          <div class="dashboard-line-chart" />
+        </div>
+      </div>
+      <div class="col col-lg-4 col-md-12 mb-4">
+        <div class="card" :title="$t('dashboards.citasByState')">
+          <div class="dashboard-donut-chart" />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -59,8 +51,6 @@ import { mapGetters } from "vuex";
 import GlideComponent from "../../../components/Carousel/GlideComponent";
 import IconCard from "../../../components/Cards/IconCard";
 import ServicesCore from "../../../services/service";
-import LineShadowChart from "../../../components/Charts/LineShadowCitas";
-import PolarAreaShadowChart from "../../../components/Charts/PolarAreaShadow";
 import { ThemeColors } from "../../../utils";
 const colors = ThemeColors();
 
@@ -68,8 +58,6 @@ export default {
   components: {
     "glide-component": GlideComponent,
     "icon-card": IconCard,
-    "line-shadow-chart": LineShadowChart,
-    "polar-area-shadow-chart": PolarAreaShadowChart
   },
   data() {
     return {
@@ -228,7 +216,6 @@ export default {
         }
       })
       .catch(error => {
-        console.error(error);
 
         this.$notify("error filled", "ERROR", error.response.data.error, {
           duration: 3000,

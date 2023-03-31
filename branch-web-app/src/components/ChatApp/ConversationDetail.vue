@@ -23,16 +23,12 @@
       </div>
     </div>
     <div class="separator mb-5" />
-    <vue-perfect-scrollbar
-      ref="chatArea"
-      class="scroll"
-      :settings="{ suppressScrollX: true, wheelPropagation: false }"
-    >
+    <div>
       <div v-for="(message, index) in messages" :key="`message${index}`">
-        <b-card
+        <div
+          class="card d-inline-block mb-3"
           no-body
           :class="{
-            'd-inline-block mb-3': true,
             'float-left': message.user._id === otherUser.uid,
             'float-right': message.user._id === currentUser.uid
           }"
@@ -53,36 +49,32 @@
               </span>
             </div>
           </div>
-          <b-card-body class="body-chat">
+          <div class="card-body body-chat">
             <div v-if="message.user._id === currentUser.uid" class="d-flex flex-row" />
             <div v-else class="d-flex flex-row pb-1" />
             <div>
               <p v-if="message.text" class="mb-0 text-semi-muted">
                 {{ message.text }}
               </p>
-              <single-lightbox-lazy
+              <!-- <single-lightbox-lazy
                 v-else
                 :thumb="
                   message.image.replace('branchmedia', 'branchmedia-resized')
                 "
                 :large="message.image"
                 class-name="responsive"
-              />
+              /> -->
             </div>
-          </b-card-body>
-        </b-card>
+          </div>
+        </div>
         <div class="clearfix" />
       </div>
-    </vue-perfect-scrollbar>
+    </div>
   </div>
 </template>
 <script>
-import SingleLightboxLazy from "../Pages/SingleLightboxLazy";
 
 export default {
-  components: {
-    "single-lightbox-lazy": SingleLightboxLazy
-  },
   props: ["currentUser", "otherUser", "messages"],
   mounted() {
     this.scrollToEnd();

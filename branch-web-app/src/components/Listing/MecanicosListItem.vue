@@ -1,6 +1,6 @@
 <template>
-  <b-colxx md="2" sm="2" lg="2" xxs="12">
-    <b-card class="mb-4 d-flex flex-row" no-body>
+  <div class="col col-12 col-lg-2 col-md-2">
+    <div class="card mb-4 d-flex flex-row" no-body>
       <!-- <img src="/assets/img/profile-pic-l.jpg" alt="Card image cap" class="img-thumbnail list-thumbnail  rounded-circle align-self-center m-4" /> -->
       <div class="d-flex flex-grow-1 min-width-zero">
         <div
@@ -17,39 +17,43 @@
             <p class="text-muted text-small mb-2">
               Fecha de creación
             </p>
-            <h6>{{ data.createdAt | moment("D MMMM YYYY hh mm A") }}</h6>
+            <h6>{{ dateTime(data.createdAt) }}</h6>
             <p class="text-muted text-small mb-2">
               Habilidades
             </p>
             <p>
-              <b-badge
+              <span
                 v-for="(skill) in JSON.parse(data.skills)"
                 :key="`${skill}`"
-                pill
-                variant="primary"
+                class="badge rounded-pill text-bg-primary"
               >
                 {{ skill }}
-              </b-badge>
+              </span>
             </p>
             <p class="text-muted text-small mb-2">
-              <b-button size="xs" variant="outline-primary" @click="editMecanico(data)">
+              <button class="btn btn-outline-primary btn-xs" @click="editMecanico(data)">
                 Editar
-              </b-button>
-              <b-button size="xs" variant="outline-danger" @click="eliminarMecanico(data)">
+              </button>
+              <button class="btn btn-outline-danger btn-xs" @click="eliminarMecanico(data)">
                 Eliminar
-              </b-button>
+              </button>
             </p>
           </div>
         </div>
       </div>
-    </b-card>
-  </b-colxx>
+    </div>
+  </div>
 </template>
 
 <script>
+import moment from 'moment';
+
 export default {
   props: ["data"],
   methods: {
+    dateTime(value) {
+      return moment(value).format('D MMMM YYYY hh:mm A');
+    },
     editMecanico(mecanico) {
       this.$emit("editMecanico", mecanico);
     },

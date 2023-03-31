@@ -1,86 +1,107 @@
 <template>
-  <b-modal
+  <div
     id="modalAddMecanico"
-    ref="modalAddMecanico"
-    :title="$t('pages.branch.add-new-mecanico')"
-    modal-class="modal-right"
-    hide-footer
+    class="modal modal-right"
+    tabindex="-1"
+    aria-hidden="true"
   >
-    <b-form @submit.prevent="onValitadeFormSubmit">
-      <b-form-group :label="$t('branch.mecanico.identificacion')">
-        <b-form-input
-          v-model="$v.newMecanico.identificacion.$model"
-          :state="!$v.newMecanico.identificacion.$error"
-        />
-        <b-form-invalid-feedback
-          v-if="!$v.newMecanico.identificacion.required"
-        >
-          {{ $t('branch.forms.validations.required') }}
-        </b-form-invalid-feedback>
-        <b-form-invalid-feedback
-          v-else-if="!$v.newMecanico.identificacion.numeric || !$v.newMecanico.identificacion.numeric"
-        >
-          {{ $t('branch.forms.validations.numeric') }}
-        </b-form-invalid-feedback>
-        <b-form-invalid-feedback
-          v-else-if="!$v.newMecanico.identificacion.minLength || !$v.newMecanico.identificacion.maxLength"
-        >
-          {{ $t('branch.forms.validations.longitud') }}
-        </b-form-invalid-feedback>
-      </b-form-group>
-      <b-form-group :label="$t('branch.mecanico.firstName')">
-        <b-form-input
-          v-model="$v.newMecanico.firstName.$model"
-          :state="!$v.newMecanico.firstName.$error"
-        />
-        <b-form-invalid-feedback
-          v-if="!$v.newMecanico.firstName.required"
-        >
-          {{ $t('branch.forms.validations.required') }}
-        </b-form-invalid-feedback>
-      </b-form-group>
-      <b-form-group :label="$t('branch.mecanico.lastName')">
-        <b-form-input
-          v-model="$v.newMecanico.lastName.$model"
-          :state="!$v.newMecanico.lastName.$error"
-        />
-        <b-form-invalid-feedback
-          v-if="!$v.newMecanico.lastName.required"
-        >
-          {{ $t('branch.forms.validations.required') }}
-        </b-form-invalid-feedback>
-      </b-form-group>
-      <b-form-group :label="$t('branch.mecanico.skills')">
-        <input-tag
-          v-model="newMecanico.skills"
-          :placeholder="$t('form-components.tags')"
-          :limit="4"
-        />
-      </b-form-group>
-      <b-button
-        variant="outline-secondary"
-        @click.once="hideModal('modalAddMecanico')"
-      >
-        {{ $t('pages.cancel') }}
-      </b-button>
-      <b-button type="submit" variant="primary">
-        {{ $t('forms.submit') }}
-      </b-button>
-    </b-form>
-  </b-modal>
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          {{ $t('pages.branch.add-new-mecanico') }}
+        </div>
+        <div class="modal-body">
+          <form novalidate @submit.prevent="onValitadeFormSubmit">
+            <div>
+              <label for="mechanic_id" class="form-label">{{ $t('branch.mecanico.identificacion') }}</label>
+              <div class="input-group has-validation">
+                <input
+                  id="mechanic_id"
+                  v-model="v$.newMecanico.identificacion.$model"
+                  type="text"
+                  class="form-control"
+                  :class="{ 'is-invalid': v$.newMecanico.identificacion.$error }"
+                >
+                <div v-if="v$.newMecanico.identificacion.required.$invalid" class="invalid-feedback">
+                  {{ $t('branch.forms.validations.required') }}
+                </div>
+                <div v-else-if="v$.newMecanico.identificacion.numeric.$invalid || v$.newMecanico.identificacion.numeric.$invalid" class="invalid-feedback">
+                  {{ $t('branch.forms.validations.numeric') }}
+                </div>
+                <div
+                  v-else-if="v$.newMecanico.identificacion.minLength.$invalid || v$.newMecanico.identificacion.maxLength.$invalid"
+                  class="invalid-feedback"
+                >
+                  {{ $t('branch.forms.validations.longitud') }}
+                </div>
+              </div>
+            </div>
+            <div>
+              <label for="mechanic_name" class="form-label">{{ $t('branch.mecanico.firstName') }}</label>
+              <div class="input-group has-validation">
+                <input
+                  id="mechanic_name"
+                  v-model="v$.newMecanico.firstName.$model"
+                  type="text"
+                  class="form-control"
+                  :class="{ 'is-invalid': v$.newMecanico.firstName.$error }"
+                >
+                <div v-if="v$.newMecanico.firstName.required.$invalid" class="invalid-feedback">
+                  {{ $t('branch.forms.validations.required') }}
+                </div>
+              </div>
+            </div>
+            <div>
+              <label for="mechanic_last_name" class="form-label">{{ $t('branch.mecanico.lastName') }}</label>
+              <div class="input-group has-validation">
+                <input
+                  id="mechanic_last_name"
+                  v-model="v$.newMecanico.lastName.$model"
+                  type="text"
+                  class="form-control"
+                  :class="{ 'is-invalid': v$.newMecanico.lastName.$error }"
+                >
+                <div v-if="v$.newMecanico.lastName.required.$invalid" class="invalid-feedback">
+                  {{ $t('branch.forms.validations.required') }}
+                </div>
+              </div>
+            </div>
+            <div>
+              <label for="mechanic_last_name" class="form-label">{{ $t('branch.mecanico.lastName') }}</label>
+              <div class="input-group has-validation">
+                <!-- <input-tag
+                  :modelValue="newMecanico.skills"
+                  :placeholder="$t('form-components.tags')"
+                  :limit="4"
+                /> -->
+              </div>
+            </div>
+            <button 
+              type="button"
+              class="btn btn-outline-secondary"
+              @click.once="hideModal('modalAddMecanico')"
+            >
+              {{ $t('pages.cancel') }}
+            </button>
+            <button class="btn btn-primary" type="submit">
+              {{ $t('forms.submit') }}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import InputTag from "../../components/Form/InputTag";
-import { required, numeric } from "vuelidate/lib/validators";
+import { useVuelidate } from '@vuelidate/core'
+import { required, numeric } from "@vuelidate/validators";
 import ServicesCore from "../../services/service";
 
 export default {
   name: 'add-mecanico-modal',
-  components: {
-    "input-tag": InputTag
-  },
   props: ["idTaller", "mecanicoSelected", "visible"],
+  setup: () => ({ v$: useVuelidate() }),
   data() {
     return {
       newMecanico: {
@@ -124,7 +145,7 @@ export default {
         }
         this.$forceUpdate();
       },
-      { immediate: true }
+      { immediate: true , deep: true }
     );
   },
   methods: {
@@ -138,10 +159,10 @@ export default {
       };
     },
     onValitadeFormSubmit() {
-      this.$v.$touch();
+      this.v$.$touch();
 
       // if its still pending or an error is returned do not submit
-      if (this.$v.newMecanico.$pending || this.$v.newMecanico.$error) return;
+      if (this.v$.newMecanico.$pending || this.v$.newMecanico.$error) return;
 
       var myJsonString = JSON.stringify(this.newMecanico.skills);
       const mecanico = {

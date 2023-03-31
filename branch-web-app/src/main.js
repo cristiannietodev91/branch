@@ -1,73 +1,57 @@
-import Vue from "vue";
+import { createApp } from "vue";
 import App from "./App";
 
-// BootstrapVue add
-import BootstrapVue from "bootstrap-vue";
 // Router & Store add
 import router from "./router";
-import store from "./store";
+import { createStore } from "./store";
 // Multi Language Add
 import en from "./locales/en.json";
 import es from "./locales/es.json";
-import VueI18n from "vue-i18n";
+import { createI18n } from "vue-i18n";
 import {
   defaultLocale,
 } from "./constants/config";
 // Notification Component Add
-import Notifications from "./components/Common/Notification";
+import Notifications from "@kyvg/vue3-notification";
+// Vue select
+import vSelect from "vue-select";
 // Breadcrumb Component Add
 import Breadcrumb from "./components/Common/Breadcrumb";
-// RefreshButton Component Add
-import RefreshButton from "./components/Common/RefreshButton";
-// Colxx Component Add
-import Colxx from "./components/Common/Colxx";
-// Perfect Scrollbar Add
-import vuePerfectScrollbar from "vue-perfect-scrollbar";
-import contentmenu from "v-contextmenu";
-import VueLineClamp from "vue-line-clamp";
-import VCalendar from "v-calendar";
-import "v-calendar/lib/v-calendar.min.css";
-import VueScrollTo from "vue-scrollto";
-import VueSocketIO from "vue-socket.io";
+// Socket IO
+import VueSocketIO from "vue-3-socket.io"
+
 import SocketIO from "socket.io-client";
-import VueNativeNotification from "vue-native-notification";
 const moment = require("moment-timezone");
 require("moment/locale/es");
 
 moment.tz.setDefault("UTC");
 
-import VueMoment from "vue-moment";
 import firebase from "firebase/app";
-// import "firebase/auth";
 
-import Vuelidate from "vuelidate";
+const app = createApp(App);
 
-Vue.use(Vuelidate);
+const store = createStore(router);
 
-//console.log('Service account file :::::>',serviceAccount);
+app.use(store);
+app.use(router);
 
-Vue.use(BootstrapVue);
-Vue.use(VueI18n);
-Vue.use(VueMoment, { moment });
+//console.log("Service account file :::::>",serviceAccount);
+
+
 const messages = { en: en, es: es };
 const locale = defaultLocale;
-const i18n = new VueI18n({
+
+const i18n = createI18n({
   locale: locale,
   fallbackLocale: "es",
   messages
 });
 
-Vue.use(Notifications);
-Vue.component("piaf-breadcrumb", Breadcrumb);
-Vue.component("b-refresh-button", RefreshButton);
-Vue.component("b-colxx", Colxx);
-Vue.component("vue-perfect-scrollbar", vuePerfectScrollbar);
-Vue.use(require("vue-shortkey"));
-Vue.use(contentmenu);
-Vue.use(VueLineClamp, {
-  importCss: true
-});
-Vue.use(VCalendar, {
+app.use(i18n);
+app.use(Notifications);
+
+/*
+app.use(VCalendar, {
   firstDayOfWeek: 2, // ...other defaults,
   formats: {
     title: "MMM YYYY",
@@ -80,7 +64,25 @@ Vue.use(VCalendar, {
   popoverExpanded: true,
   popoverDirection: "bottom"
 });
-Vue.use(VueScrollTo);
+*/
+
+
+const options = { transports: ["websocket"], secure: true };
+
+app.use(
+  new VueSocketIO({
+    debug: false,
+    connection: SocketIO(process.env.VUE_APP_URLBACKSERVICES, options),
+    vuex: {
+      store,
+      actionPrefix: "SOCKET_"
+    }
+  })
+);
+
+app.component("piaf-breadcrumb", Breadcrumb);
+app.component("v-select", vSelect);
+
 
 
 firebase.initializeApp(
@@ -95,24 +97,11 @@ firebase.initializeApp(
   }
 );
 
-const options = { transports: ["websocket"], secure: true };
 
-Vue.use(
-  new VueSocketIO({
-    debug: false,
-    connection: SocketIO(process.env.VUE_APP_URLBACKSERVICES, options),
-    vuex: {
-      store,
-      actionPrefix: "SOCKET_"
-    }
-  })
-);
 
-Vue.use(VueNativeNotification, {
-  requestOnNotify: false
-});
 
-Vue.notification.requestPermission().then(console.log);
+
+// Vue.notification.requestPermission().then(console.log);
 
 /*firebase.auth().onAuthStateChanged(user => {
   if(user){
@@ -120,11 +109,5 @@ Vue.notification.requestPermission().then(console.log);
   }
 });*/
 
-Vue.config.productionTip = false;
 
-export default new Vue({
-  i18n,
-  router,
-  store,
-  render: h => h(App)
-}).$mount("#app");
+export default app;

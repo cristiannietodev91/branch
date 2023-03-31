@@ -1,72 +1,70 @@
 <template>
-  <b-card>
-    <b-form v-if="!data.etapa || data.etapa.estado=='Rechazado'" @submit.prevent="uploadFiles">
+  <div class="card">
+    <form v-if="!data.etapa || data.etapa.estado=='Rechazado'" novalidate @submit.prevent="uploadFiles">
       <info-cotizacion v-if="data.etapa && data.etapa.estado=='Rechazado'" :data="data" />
-      <b-form-group :label="$t('branch.orden.mecanico')">
-        <v-select
-          v-model="newOrden.mecanico"
-          :options="data.mecanicos"
-          label="firstName"
-          :reduce="mecanico => mecanico.IdMecanico"
-        >
-          <template #search="{attributes, events}">
-            <input
-              class="vs__search"
-              :required="!newOrden.mecanico"
-              v-bind="attributes"
-              v-on="events"
-            >
-          </template>
-          <template
-            #option="option"
+      <div>
+        <label for="mechanic_id" class="form-label">{{ $t('branch.orden.mecanico') }}</label>
+        <div class="input-group has-validation">
+          <v-select
+            v-model="newOrden.mecanico"
+            :options="data.mecanicos"
+            label="firstName"
+            :reduce="mecanico => mecanico.IdMecanico"
           >
-            {{ option.firstName }} {{ option.lastName }} - {{ option.identificacion }}
-          </template>
-        </v-select>
-      </b-form-group>
-      <vue-dropzone
+            <template #search="{attributes, events}">
+              <input
+                v-bind="attributes"
+                class="vs__search"
+                :required="!newOrden.mecanico"
+                v-on="events"
+              >
+            </template>
+            <template
+              #option="option"
+            >
+              {{ option.firstName }} {{ option.lastName }} - {{ option.identificacion }}
+            </template>
+          </v-select>
+        </div>
+      </div>
+      <!-- <vue-dropzone
         id="dropzone"
         ref="myVueDropzone"
         :awss3="awss3"
         :options="dropzoneOptions"
         @vdropzone-complete="complete"
         @vdropzone-removed-file="removeFile"
-      />
+      /> -->
       <div class="btn-icon">
-        <b-button type="submit" variant="primary" class="mt-4" size="lg">
+        <button type="submit" class="btn btn-primary btn-lg mt-4">
           <i class="iconsminds-upload-1" />
           Cargar Cotización
           <!-- {{ $t('forms.submit') }} -->
-        </b-button>
+        </button>
       </div>
-    </b-form>
+    </form>
     <info-cotizacion v-else :data="data" />
-  </b-card>
+  </div>
 </template>
 <script>
 import vSelect from "vue-select";
 import moment from "moment-timezone";
 import "vue-select/dist/vue-select.css";
-import vue2Dropzone from "vue2-dropzone";
-import { validationMixin } from "vuelidate";
-import { required } from "vuelidate/lib/validators";
+
 import ServicesCore from "./../../services/service";
 import InfoCotizacion from "./InfoCotizacion";
 
 export default {
   name: "cotizacion-step",
   components: {
-    "vue-dropzone": vue2Dropzone,
     "v-select": vSelect,
     "info-cotizacion": InfoCotizacion
   },
-  mixins: [validationMixin],
   props: ["clickedNext", "currentStep", "data"],
   data() {
     return {
       newOrden: {
-        mecanico: null,
-        observacion: ""
+        mecanico: null
       },
       filesEtapa: [],
       dropzoneOptions: {
@@ -99,13 +97,6 @@ export default {
       }
     };
   },
-  validations: {
-    newOrden: {
-      observacion: {
-        required
-      }
-    }
-  },
   watch: {
     clickedNext(val) {
       if (val === true) {
@@ -115,7 +106,6 @@ export default {
     }
   },
   mounted() {
-    console.log("Data :::>", this.data);
     if (this.data.etapa) {
       this.$emit("can-continue", { value: true });
     } else {
@@ -154,7 +144,6 @@ export default {
           IdMecanico: this.newOrden.mecanico,
           IdTaller: this.data.IdTaller,
           IdEtapa: 4,
-          Observaciones: this.newOrden.observacion,
           documentos: this.filesEtapa,
           estado: "Pendiente"
         };
@@ -168,8 +157,7 @@ export default {
                 .then(response => {
                   if (response.status == 200) {
                     this.newOrden = {
-                      mecanico: null,
-                      observacion: null
+                      mecanico: null
                     };
                     this.$notify(
                       "success",

@@ -1,5 +1,5 @@
 <template>
-  <b-card :class="{'d-flex flex-row':true,'active' : selectedItems.includes(data.id)}" no-body @click.prevent="toggleItem($event,data.IdTaller)">
+  <div class="card d-flex flex-row">
     <div class="pl-2 d-flex flex-grow-1 min-width-zero">
       <div class="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
         <router-link :to="`detailTaller/info`" class="w-40 w-sm-100">
@@ -14,25 +14,15 @@
           {{ data.direccion }}
         </p>
         <div class="w-15 w-sm-100">
-          <b-badge pill :variant="data.statusColor">
-            {{ data.estado }}
-          </b-badge>
+          <span class="badge rounded-pill text-bg-success">{{ data.estado }}</span>
         </div>
       </div>
-      <div class="custom-control custom-checkbox pl-1 align-self-center pr-4">
-        <b-form-checkbox :checked="selectedItems.includes(data.IdTaller)" class="itemCheck mb-0" />
-      </div>
     </div>
-  </b-card>
+  </div>
 </template>
 
 <script>
 export default {
-    props: ['data', 'selectedItems'],
-    methods: {
-        toggleItem(event, itemId) {
-            this.$emit('toggle-item', event, itemId)
-        }
-    }
+    props: ['data']
 }
 </script>

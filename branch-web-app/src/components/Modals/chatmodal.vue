@@ -1,8 +1,7 @@
 <template v-slot:default="{ hide }" class="modal-chat">
   <div class="p-3">
-    <!-- <b-button variant="primary" block @click="hide">Cerrar Chat</b-button> -->
-    <b-row>
-      <b-colxx xxs="12" class="chat-app">
+    <div class="row">
+      <div class="col col-12 chat-app">
         <conversation-detail
           v-if="otherUser != null"
           key="conversation"
@@ -11,24 +10,25 @@
           :messages="messages"
         />
         <div v-else key="conversationLoading" class="loading" />
-      </b-colxx>
-    </b-row>
-    <div class>
+      </div>
+    </div>
+    <div>
       <div v-if="!isLoadImage" class="d-flex justify-content-between align-items-center">
-        <b-input
+        <input
           v-model="message"
+          class="form-control"
           type="text"
           :placeholder="$t('chat.saysomething')"
           :readonly="isLoadImage"
-          @keyup.native.enter="sendMessage"
-        />
+          @keyup.enter="sendMessage"
+        >
         <div class="d-flex flex-row">
-          <b-button variant="outline-primary" class="icon-button small ml-1" @click="open">
+          <button class="btn btn-outline-primary icon-button small ml-1" @click="open">
             <i class="simple-icon-paper-clip" />
-          </b-button>
-          <b-button variant="primary" class="icon-button small ml-1" @click="sendMessage">
+          </button>
+          <button class="btn btn-primary icon-button small ml-1" @click="sendMessage">
             <i class="simple-icon-arrow-right" />
-          </b-button>
+          </button>
         </div>
         <span v-if="showErrorMessage">{{ errorMessage }}</span>
       </div>
@@ -37,7 +37,7 @@
       </template>
     </div>
 
-    <vue-dropzone
+    <!-- <vue-dropzone
       id="dropzone"
       ref="myVueDropzone"
       :awss3="awss3"
@@ -46,20 +46,18 @@
       @vdropzone-complete="complete"
       @vdropzone-file-added="starLoad"
       @vdropzone-error="errorLoadFile"
-    />
+    /> -->
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions, mapMutations } from "vuex";
-import vue2Dropzone from "vue2-dropzone";
 import ConversationDetail from "../ChatApp/ConversationDetail";
 import { v4 as uuidv4 } from "uuid";
 
 export default {
   name: "chat-modal",
   components: {
-    "vue-dropzone": vue2Dropzone,
     "conversation-detail": ConversationDetail
   },
   props: ["conversacion"],

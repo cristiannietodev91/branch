@@ -1,27 +1,31 @@
 <template>
   <div>
-    <b-card
+    <div
       v-if="data.olderCotizaciones != null"
-      class="mb-4"
+      class="card mb-4"
       :title="$t('branch.orden.cotizacionrechadaza')"
     >
       <div v-for="(orden,index) in data.olderCotizaciones" :key="index" class="border">
-        <b-button v-b-toggle.collapseAccordion1 variant="link">
+        <a
+          class="btn btn-link" 
+          data-bs-toggle="collapse" href="#collapseAccordion1" role="button" aria-expanded="false"
+          aria-controls="collapseAccordion1"
+        >
           Cotización {{ index+1 }}
-        </b-button>
-        <b-collapse id="collapseAccordion1" accordion="my-accordion">
-          <b-row class="m-3">
-            <b-colxx xxs="3">
+        </a>
+        <div id="collapseAccordion1" class="collapse">
+          <div class="row m-3">
+            <div class="col col-3">
               <p class="text-muted text-small mb-2">
                 {{ $t('branch.orden.fechaIngreso') }}
               </p>
               <h5
                 class="mb-1 card-subtitle truncate"
               >
-                {{ orden.createdAt | moment("D MMMM YYYY hh:mm A") }}
+                {{ dateTime(orden.createdAt) }}
               </h5>
-            </b-colxx>
-            <b-colxx v-if="data.etapa.mecanico" xxs="3">
+            </div>
+            <div v-if="data.etapa.mecanico" class="col col-3">
               <p class="text-muted text-small mb-2">
                 {{ $t('branch.orden.mecanico') }}
               </p>
@@ -30,58 +34,58 @@
               >
                 {{ orden.mecanico.identificacion }} {{ orden.mecanico.fullName }}
               </h5>
-            </b-colxx>
-            <b-colxx>
+            </div>
+            <div class="col">
               <p class="text-muted text-small mb-2">
                 {{ $t('branch.orden.observaciones') }}
               </p>
               <h5 class="mb-1 card-subtitle truncate">
                 {{ orden.Observaciones }}
               </h5>
-            </b-colxx>
-            <b-colxx>
+            </div>
+            <div class="col">
               <p class="text-muted text-small mb-2">
                 {{ $t('branch.orden.observaciones') }}
               </p>
               <h5 class="mb-1 card-subtitle truncate">
                 {{ orden.estado }}
               </h5>
-            </b-colxx>
+            </div>
             <div
               v-for="(documento,docIndx) in orden.documentos"
               :key="`contact${docIndx}`"
               class="branch-image"
             >
-              <b-card no-body>
-                <b-link :href="documento.url" target="_blank">
+              <div class="card">
+                <a :href="documento.url" target="_blank">
                   <img
                     alt="Thumbnail"
                     src="/assets/img/pdflogo.jpg"
                     class="list-thumbnail responsive border-0"
                   >
-                  <b-card-text>
+                  <p class="catd-text">
                     <span>{{ documento.nombrearchivo }}</span>
-                    <span>{{ documento.date | moment("D MMMM YYYY hh:mm A") }}</span>
-                  </b-card-text>
-                </b-link>
-              </b-card>
+                    <span>{{ dateTime(documento.date) }}</span>
+                  </p>
+                </a>
+              </div>
             </div>
-          </b-row>
-        </b-collapse>
+          </div>
+        </div>
       </div>
-    </b-card>
-    <b-row>
-      <b-colxx xxs="3">
+    </div>
+    <div class="row">
+      <div class="col col-3">
         <p class="text-muted text-small mb-2">
           {{ $t('branch.orden.fechaIngreso') }}
         </p>
         <h5
           class="mb-1 card-subtitle truncate"
         >
-          {{ data.etapa.createdAt | moment("D MMMM YYYY hh:mm A") }}
+          {{ dateTime(data.etapa.createdAt) }}
         </h5>
-      </b-colxx>
-      <b-colxx v-if="data.etapa.mecanico" xxs="3">
+      </div>
+      <div v-if="data.etapa.mecanico" class="col col-3">
         <p class="text-muted text-small mb-2">
           {{ $t('branch.orden.mecanico') }}
         </p>
@@ -90,24 +94,24 @@
         >
           {{ data.etapa.mecanico.identificacion }} {{ data.etapa.mecanico.fullName }}
         </h5>
-      </b-colxx>
-      <b-colxx>
+      </div>
+      <div class="col col-3">
         <p class="text-muted text-small mb-2">
           {{ $t('branch.orden.observaciones') }}
         </p>
         <h5 class="mb-1 card-subtitle truncate">
           {{ data.etapa.Observaciones }}
         </h5>
-      </b-colxx>
-      <b-colxx>
+      </div>
+      <div class="col">
         <p class="text-muted text-small mb-2">
           {{ $t('branch.orden.observaciones') }}
         </p>
         <h5 class="mb-1 card-subtitle truncate">
           {{ data.etapa.estado }}
         </h5>
-      </b-colxx>
-      <b-colxx>
+      </div>
+      <div class="col">
         <p class="text-muted text-small mb-2">
           {{ $t('branch.orden.nrcotizacionrechadaza') }}
         </p>
@@ -116,43 +120,53 @@
         >
           {{ data.olderCotizaciones ? data.olderCotizaciones.length : 0 }}
         </h5>
-      </b-colxx>
-    </b-row>
+      </div>
+    </div>
     <div class="icon-cards-row">
       <div class="branch-gallery">
-        <b-collapse id="collapse-cotizacion">
+        <div id="collapse-cotizacion" class="collapse">
           <div
             v-for="(documento,index) in data.etapa.documentos"
             :key="`contact${index}`"
             class="branch-image"
           >
-            <b-card no-body>
-              <b-link :href="documento.url" target="_blank">
+            <div class="card">
+              <a :href="documento.url" target="_blank">
                 <img
                   alt="Thumbnail"
                   src="/assets/img/pdflogo.jpg"
                   class="list-thumbnail responsive border-0"
                 >
-                <b-card-text>
+                <p class="card-text">
                   <span>{{ documento.nombrearchivo }}</span>
-                  <span>{{ documento.date | moment("D MMMM YYYY hh:mm A") }}</span>
-                </b-card-text>
-              </b-link>
-            </b-card>
+                  <span>{{ dateTime(documento.date) }}</span>
+                </p>
+              </a>
+            </div>
           </div>
-        </b-collapse>
-        <b-button v-b-toggle="'collapse-cotizacion'" class="m-1">
+        </div>
+        <button
+          type="button" class="btn btn-primary m-1" data-bs-toggle="collapse"
+          data-bs-target="#collapse-cotizacion" aria-expanded="false" aria-controls="collapse-cotizacion"
+        >
           Ver cotizaciones
-        </b-button>
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import moment from 'moment';
+
 export default {
   props: ["data"],
-  created() {}
+  created() {},
+  methods: {
+    dateTime(value) {
+      return moment(value).format('D MMMM YYYY hh:mm A');
+    },
+  }
 };
 </script>
 

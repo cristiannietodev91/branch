@@ -1,38 +1,47 @@
 <template>
-  <b-card>
-    <!-- <b-form @submit.prevent="onValitadeAddOrden" v-if="!data.etapa" class="p-5 w-90 ml-5"> -->
-    <b-form v-if="!data.etapa" @submit.prevent="onValitadeAddOrden">
-      <b-form-group :label="$t('branch.orden.mecanico')">
-        <v-select
-          v-model="newOrden.mecanico"
-          :options="data.mecanicos"
-          label="fullName"
-          :reduce="mecanico => mecanico.IdMecanico"
-        >
-          <template #search="{attributes, events}">
-            <input
-              class="vs__search"
-              :required="!newOrden.mecanico"
-              v-bind="attributes"
-              v-on="events"
-            >
-          </template>
-          <template #option="option">
-            {{ option.fullName }} - {{ option.identificacion }}
-          </template>
-        </v-select>
-      </b-form-group>
-      <b-form-group :label="$t('branch.orden.observaciones')">
-        <b-textarea
-          v-model.trim="$v.newOrden.observacion.$model"
-          :state="!$v.newOrden.observacion.$error"
-        />
-        <b-form-invalid-feedback
-          v-if="!$v.newOrden.observacion.required"
-        >
-          {{ $t('branch.forms.validations.required') }}
-        </b-form-invalid-feedback>
-      </b-form-group>
+  <div class="card">
+    <form v-if="!data.etapa" novalidate @submit.prevent="onValitadeAddOrden">
+      <div>
+        <label for="mechanic_id" class="form-label">{{ $t('branch.orden.mecanico') }}</label>
+        <div class="input-group has-validation">
+          <v-select
+            id="mechanic_id"
+            v-model="newOrden.mecanico"
+            :options="data.mecanicos"
+            label="fullName"
+            :reduce="mecanico => mecanico.IdMecanico"
+          >
+            <template #search="{attributes, events}">
+              <input
+                v-bind="attributes"
+                class="vs__search"
+                :required="!newOrden.mecanico"
+                v-on="events"
+              >
+            </template>
+            <template #option="option">
+              {{ option.fullName }} - {{ option.identificacion }}
+            </template>
+          </v-select>
+        </div>
+      </div>
+      <div>
+        <label for="order_observation" class="form-label">{{ $t('branch.orden.observaciones') }}</label>
+        <div class="input-group has-validation">
+          <textarea
+            v-model.trim="v$.newOrden.observacion.$model"
+            class="form-control"
+            :class="{ 'is-invalid': v$.newOrden.observacion.$error }"
+          />
+          <div
+            v-if="v$.newOrden.observacion.required.$invalid"
+            class="invalid-feedback"
+          >
+            {{ $t('branch.forms.validations.required') }}
+          </div>
+        </div>
+      </div>    
+      <!--
       <vue-dropzone
         id="dropzone"
         ref="myVueDropzone"
@@ -41,27 +50,27 @@
         @vdropzone-complete="complete"
         @vdropzone-removed-file="removeFile"
       />
+      -->
       <div class="btn-icon">
-        <b-button type="submit" variant="primary" class="mt-4" size="lg">
+        <button type="submit" class="btn btn-primary btn-lg mt-4">
           <i class="iconsminds-upload-1" />
           Cargar Diagnóstico
-          <!-- {{ $t('forms.submit') }} -->
-        </b-button>
+        </button>
       </div>
-    </b-form>
+    </form>
     <div v-else>
-      <b-row>
-        <b-colxx xxs="3">
+      <div class="row">
+        <div class="col col-3">
           <p class="text-muted text-small mb-2">
             {{ $t('branch.orden.fechaIngreso') }}
           </p>
           <h5
             class="mb-1 card-subtitle truncate"
           >
-            {{ data.etapa.createdAt | moment("D MMMM YYYY hh:mm A") }}
+            {{ dateTime(data.etapa.createdAt) }}
           </h5>
-        </b-colxx>
-        <b-colxx v-if="data.etapa.mecanico" xxs="3">
+        </div>
+        <div v-if="data.etapa.mecanico" class="col col-3">
           <p class="text-muted text-small mb-2">
             {{ $t('branch.orden.mecanico') }}
           </p>
@@ -70,71 +79,73 @@
           >
             {{ data.etapa.mecanico.identificacion }} {{ data.etapa.mecanico.firstName }}
           </h5>
-        </b-colxx>
-        <b-colxx>
+        </div>
+        <div class="col">
           <p class="text-muted text-small mb-2">
             {{ $t('branch.orden.observaciones') }}
           </p>
           <h5 class="mb-1 card-subtitle truncate">
             {{ data.etapa.Observaciones }}
           </h5>
-        </b-colxx>
-      </b-row>
+        </div>
+      </div>
       <div class="icon-cards-row">
         <div v-if="data.etapa.documentos" class="branch-gallery">
-          <b-collapse id="collapse-diagnostico">
+          <div id="collapse-diagnostico" class="collapse">
             <div
               v-for="(documento,index) in data.etapa.documentos"
               :key="`contact${index}`"
               class="branch-image"
             >
-              <b-card no-body>
-                <single-lightbox
+              <div class="card">
+                <!-- <single-lightbox
                   :thumb="documento.url"
                   :large="documento.url"
                   class-name="responsive"
-                />
+                /> -->
                 <!-- <p class="list-item-heading mb-1 truncated">
                   {{documento.nombrearchivo}}
                 </p>-->
-                <b-card-text>{{ documento.date | moment("D MMMM YYYY hh:mm A") }}</b-card-text>
-              </b-card>
+                <p class="card-text">
+                  {{ dateTime(documento.date) }}
+                </p>
+              </div>
             </div>
-          </b-collapse>
-          <b-button v-b-toggle="'collapse-diagnostico'" class="m-1">
+          </div>
+          <button
+            class="btn btn-primary m-1" type="button" data-bs-toggle="collapse" 
+            data-bs-target="#collapse-diagnostico" aria-expanded="false" aria-controls="collapse-diagnostico"
+          >
             Ver fotos del diagnóstico
-          </b-button>
+          </button>
         </div>
         <div v-else class="pl-2 d-flex flex-grow-1 min-width-zero">
-          <b-card-body class="align-self-center d-flex min-width-zero">
+          <div class="card-body align-self-center d-flex min-width-zero">
             <p class="text-muted text-small mb-0 font-weight-light">
               Sin documentos asociados
             </p>
-          </b-card-body>
+          </div>
         </div>
       </div>
     </div>
-  </b-card>
+  </div>
 </template>
 <script>
-import SingleLightbox from "../Pages/SingleLightbox";
+import { useVuelidate } from '@vuelidate/core'
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
-import vue2Dropzone from "vue2-dropzone";
-import moment from "moment-timezone";
-import { validationMixin } from "vuelidate";
-import { required } from "vuelidate/lib/validators";
+import momentTZ from "moment-timezone";
+import moment from "moment";
+import { required } from "@vuelidate/validators";
 import ServicesCore from "./../../services/service";
 
 export default {
   name: 'diagnostico-step',
   components: {
-    "single-lightbox": SingleLightbox,
-    "vue-dropzone": vue2Dropzone,
     "v-select": vSelect,
   },
-  mixins: [validationMixin],
   props: ["clickedNext", "currentStep", "data"],
+  setup: () => ({ v$: useVuelidate() }),
   data() {
     return {
       newOrden: {
@@ -179,12 +190,7 @@ export default {
     }
   },
   watch: {
-    clickedNext(val) {
-      //console.log("Clicked second step next :::>", val);
-      if (val === true) {
-        //console.log("Orden a crearDB ::::>", this.orden);
-        //this.$v.newOrden.$touch();
-      }
+    clickedNext() {
     }
   },
   mounted() {
@@ -195,9 +201,12 @@ export default {
     }
   },
   methods: {
+    dateTime(value) {
+      return moment(value).format('D MMMM YYYY hh:mm A');
+    },
     complete(response) {
       if (response.status == "success") {
-        let dateCreated = moment()
+        let dateCreated = momentTZ()
           .tz("UTC")
           .format();
 
@@ -218,9 +227,9 @@ export default {
       });
     },
     onValitadeAddOrden() {
-      this.$v.$touch();
+      this.v$.$touch();
       // if its still pending or an error is returned do not submit
-      if (this.$v.newOrden.$pending || this.$v.newOrden.$error) return;
+      if (this.v$.newOrden.$pending || this.v$.newOrden.$error) return;
 
       if (this.filesEtapa.length > 0) {
         let orden = {
