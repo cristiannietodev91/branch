@@ -1,7 +1,8 @@
 <template>
-  <b-card>
-    <b-form v-if="!data.etapa" class="p-5 w-90 ml-5" @submit.prevent="onValitadeAddOrden">
-      <b-form-group :label="$t('branch.orden.mecanico')">
+  <div class="card">
+    <form v-if="!data.etapa" novalidate class="p-5 w-90 ml-5" @submit.prevent="onValitadeAddOrden">
+      <div>
+        <label for="mechanic_id" class="form-label">{{ $t('branch.orden.mecanico') }}</label>
         <v-select
           v-model="newOrden.mecanico"
           :options="data.mecanicos"
@@ -20,99 +21,107 @@
             {{ option.fullName }} - {{ option.identificacion }}
           </template>
         </v-select>
-      </b-form-group>
-      <b-form-group :label="$t('branch.orden.observaciones')">
-        <b-textarea
-          v-model.trim="v$.newOrden.observacion.$model"
-          :state="!v$.newOrden.observacion.$error"
-        />
-        <b-form-invalid-feedback
-          v-if="!v$.newOrden.observacion.required"
-        >
-          {{ $t('branch.forms.validations.required') }}
-        </b-form-invalid-feedback>
-      </b-form-group>
-      <vue-dropzone
+      </div>
+      <div>
+        <label for="order_observation" class="form-label">{{ $t('branch.orden.observaciones') }}</label>
+        <div class="input-group has-validation">
+          <textarea
+            v-model.trim="v$.newOrden.observacion.$model"
+            class="form-control"
+            :class="{ 'is-invalid': v$.newOrden.observacion.$error }"
+          />
+          <div
+            v-if="v$.newOrden.observacion.required.$invalid"
+            class="invalid-feedback"
+          >
+            {{ $t('branch.forms.validations.required') }}
+          </div>
+        </div>
+      </div>
+      <!-- <vue-dropzone
         id="dropzone"
         ref="myVueDropzone"
         :awss3="awss3"
         :options="dropzoneOptions"
         @vdropzone-complete="complete"
         @vdropzone-removed-file="removeFile"
-      />
-      <b-button type="submit" variant="primary" class="mt-4" size="lg">
+      /> -->
+      <button type="submit" class="btn btn-primary btn-lg mt-4">
         {{ $t('forms.submit') }}
-      </b-button>
-    </b-form>
+      </button>
+    </form>
     <div v-else>
-      <b-row>
-        <b-colxx xxs="3">
+      <div class="row">
+        <div class="col col-3">
           <p class="text-muted text-small mb-2">
             {{ $t('branch.orden.fechaIngreso') }}
           </p>
           <p class="mb-3">
             {{ dateTime(data.etapa.createdAt) }}
           </p>
-        </b-colxx>
-        <b-colxx v-if="data.etapa.mecanico" xxs="3">
+        </div>
+        <div v-if="data.etapa.mecanico" class="col col-3">
           <p class="text-muted text-small mb-2">
             {{ $t('branch.orden.mecanico') }}
           </p>
           <p class="mb-3">
             {{ data.etapa.mecanico.identificacion }} {{ data.etapa.mecanico.fullName }}
           </p>
-        </b-colxx>
-        <b-colxx>
+        </div>
+        <div class="col">
           <p class="text-muted text-small mb-2">
             {{ $t('branch.orden.observaciones') }}
           </p>
           <p class="mb-3">
             {{ data.etapa.Observaciones }}
           </p>
-        </b-colxx>
-      </b-row>
+        </div>
+      </div>
       <div class="icon-cards-row">
         <div v-if="data.etapa.documentos" class="branch-gallery">
-          <b-collapse id="collapse-diagnostico">
+          <div id="collapse-diagnostico" class="collapse">
             <div
               v-for="(documento,index) in data.etapa.documentos"
               :key="`contact${index}`"
               class="branch-image"
             >
-              <b-card no-body>
-                <single-lightbox
+              <div class="card">
+                <!-- <single-lightbox
                   :thumb="documento.url.replace('branchmedia','branchmedia-resized')"
                   :large="documento.url"
                   class-name="responsive"
-                />
+                /> -->
                 <!-- <p class="list-item-heading mb-1 truncated">
                   {{documento.nombrearchivo}}
                 </p>-->
-                <b-card-text>{{ dateTime(documento.date) }}</b-card-text>
-              </b-card>
+                <p class="card-text">
+                  {{ dateTime(documento.date) }}
+                </p>
+              </div>
             </div>
-          </b-collapse>
-          <b-button v-b-toggle="'collapse-diagnostico'" class="m-1">
+          </div>
+          <button
+            class="btn btn-primary m-1" type="button" data-bs-toggle="collapse" 
+            data-bs-target="#collapse-diagnostico" aria-expanded="false" aria-controls="collapse-diagnostico"
+          >
             Ver fotos de la entrega
-          </b-button>
+          </button>
         </div>
         <div v-else class="pl-2 d-flex flex-grow-1 min-width-zero">
-          <b-card-body class="align-self-center d-flex min-width-zero">
+          <div class="card-body align-self-center d-flex min-width-zero">
             <p class="text-muted text-small mb-0 font-weight-light">
               Sin documentos asociados
             </p>
-          </b-card-body>
+          </div>
         </div>
       </div>
     </div>
-  </b-card>
+  </div>
 </template>
 <script>
 import { useVuelidate } from '@vuelidate/core'
-import SingleLightbox from "../Pages/SingleLightbox";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
-import vue2Dropzone from "vue2-dropzone";
 import momentTZ from "moment-timezone";
 import moment from "moment";
 import { required } from "@vuelidate/validators";
@@ -121,9 +130,7 @@ import ServicesCore from "./../../services/service";
 export default {
   name: "entrega-step",
   components: {
-    "vue-dropzone": vue2Dropzone,
     "v-select": vSelect,
-    "single-lightbox": SingleLightbox
   },
   props: ["clickedNext", "currentStep", "data"],
   setup: () => ({ v$: useVuelidate() }),

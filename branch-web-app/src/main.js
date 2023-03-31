@@ -12,13 +12,13 @@ import {
   defaultLocale,
 } from "./constants/config";
 // Notification Component Add
-import Notifications from '@kyvg/vue3-notification';
+import Notifications from "@kyvg/vue3-notification";
 // Vue select
-import vSelect from 'vue-select';
+import vSelect from "vue-select";
 // Breadcrumb Component Add
 import Breadcrumb from "./components/Common/Breadcrumb";
 // Socket IO
-import VueSocketIO from 'vue-3-socket.io'
+import VueSocketIO from "vue-3-socket.io"
 
 import SocketIO from "socket.io-client";
 const moment = require("moment-timezone");
@@ -35,7 +35,7 @@ const store = createStore(router);
 app.use(store);
 app.use(router);
 
-//console.log('Service account file :::::>',serviceAccount);
+//console.log("Service account file :::::>",serviceAccount);
 
 
 const messages = { en: en, es: es };

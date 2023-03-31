@@ -96,22 +96,7 @@ export default {
     },
     steps: {
       type: Array,
-      default: function() {
-        return [
-          {
-            icon: "mail",
-            name: "first",
-            title: "Sample title 1",
-            subtitle: "Subtitle sample"
-          },
-          {
-            icon: "report_problem",
-            name: "second",
-            title: "Sample title 2",
-            subtitle: "Subtitle sample"
-          }
-        ];
-      }
+      default: () =>  []
     },
     keepAlive: {
       type: Boolean,
@@ -212,11 +197,9 @@ export default {
       }
     },
     nextStep(index) {
-      const { completed } = this.steps[index === 0 ? 0 : index - 1];
-      if (!this.$listeners || !this.$listeners["before-next-step"]) {
-        if (completed) {
-          this.nextStepAction(index);
-        }
+      const { completed } = this.steps[index === 0 ? 0 : index - 1]; 
+      if (completed) {
+        this.nextStepAction(index);
       }
     },
     backStep() {

@@ -17,7 +17,7 @@ const validators = {
 export default {
     name: 'input-tag',
     props: {
-        value: {
+        modelValue: {
             type: Array,
             default: () => []
         },
@@ -60,7 +60,7 @@ export default {
     data() {
         return {
             newTag: '',
-            innerTags: [...this.value],
+            innerTags: [...this.modelValue],
             isInputActive: false
         }
     },
@@ -139,7 +139,7 @@ export default {
         },
         tagChange() {
             this.$emit('update:tags', this.innerTags)
-            this.$emit('input', this.innerTags)
+            this.$emit('update:modelValue', this.innerTags)
         }
     }
 }

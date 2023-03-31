@@ -1,262 +1,151 @@
 <template>
-  <b-row>
-    <b-colxx class="disable-text-selection">
-      <b-row>
-        <b-colxx xxs="12">
+  <div class="row">
+    <div class="col disable-text-selection">
+      <div class="row">
+        <div class="col col-12">
           <h1>{{ $t("branch.clientes.listaClientes") }}</h1>
           <div class="top-right-button-container">
-            <b-button
-              v-b-modal.modaladdvehiculo
-              variant="primary"
-              size="lg"
-              class="top-right-button"
+            <button
+              type="button"
+              data-bs-toggle="modal" data-bs-target="#modaladdvehiculo"
+              class="btn btn-primary btn-lg top-right-button"
             >
               {{ $t("pages.add-new") }}
-            </b-button>
-            <b-button-group>
-              <b-dropdown
-                split
-                right
-                class="check-button"
-                variant="primary"
-                @click="selectAll(true)"
-              >
-                <template #button-content>
-                  <label
-                    class="
-                    custom-control custom-checkbox
-                    pl-4
-                    mb-0
-                    d-inline-block
-                  "
-                  >
-                    <input
-                      v-shortkey="{ select: ['ctrl', 'a'], undo: ['ctrl', 'd'] }"
-                      class="custom-control-input"
-                      type="checkbox"
-                      :checked="isSelectedAll"
-                      @shortkey="keymap"
-                    >
-                    <span
-                      :class="{
-                        'custom-control-label': true,
-                        indeterminate: isAnyItemSelected,
-                      }"
-                    >&nbsp;</span>
-                  </label>
-                </template>
-                <b-dropdown-item>{{ $t("pages.delete") }}</b-dropdown-item>
-                <b-dropdown-item>
-                  {{
-                    $t("pages.another-action")
-                  }}
-                </b-dropdown-item>
-              </b-dropdown>
-            </b-button-group>
-            <b-modal
+            </button>
+            <div
               id="modaladdvehiculo"
               ref="modaladdvehiculo"
-              :title="$t('pages.branch.add-new-vehiculo')"
-              hide-footer
+              class="modal fade"
+              tabindex="-1"
+              aria-hidden="true"
+              aria-labelledby="modaladdvehiculoLabel"
             >
-              <b-form class="av-tooltip" @submit.prevent="onValitadeFormSubmit">
-                <b-form-group :label="$t('branch.vehiculo.placa')">
-                  <b-form-input
-                    v-model="v$.newItem.placa.$model"
-                    type="text"
-                    :state="!v$.newItem.placa.$error"
-                  />
-                  <b-form-invalid-feedback v-if="!v$.newItem.placa.required">
-                    {{
-                      $t("branch.forms.validations.required")
-                    }}
-                  </b-form-invalid-feedback>
-                  <b-form-invalid-feedback
-                    v-if="!v$.newItem.placa.placaValidate"
-                  >
-                    {{
-                      $t("branch.forms.validations.formatPlaca")
-                    }}
-                  </b-form-invalid-feedback>
-                </b-form-group>
-
-                <b-form-group :label="$t('branch.vehiculo.celular')">
-                  <b-form-input
-                    v-model="v$.newItem.celular.$model"
-                    type="text"
-                    :state="!v$.newItem.celular.$error"
-                  />
-                  <b-form-invalid-feedback
-                    v-if="!v$.newItem.celular.required"
-                  >
-                    {{
-                      $t("branch.forms.validations.required")
-                    }}
-                  </b-form-invalid-feedback>
-                  <b-form-invalid-feedback v-if="!v$.newItem.celular.numeric">
-                    {{
-                      $t("branch.forms.validations.numeric")
-                    }}
-                  </b-form-invalid-feedback>
-                  <b-form-invalid-feedback
-                    v-else-if="
-                      !v$.newItem.celular.minLength ||
-                        !v$.newItem.celular.maxLength
-                    "
-                  >
-                    {{
-                      $t("branch.forms.validations.longitud")
-                    }}
-                  </b-form-invalid-feedback>
-                </b-form-group>
-
-                <b-form-group
-                  :label="$t('branch.vehiculo.email')"
-                  class="tooltip-left-bottom"
-                >
-                  <b-form-input
-                    v-model="v$.newItem.email.$model"
-                    type="text"
-                    :state="!v$.newItem.email.$error"
-                  />
-                  <b-form-invalid-feedback v-if="!v$.newItem.email.email">
-                    {{
-                      $t("branch.forms.validations.email")
-                    }}
-                  </b-form-invalid-feedback>
-                </b-form-group>
-                <b-button
-                  variant="outline-secondary"
-                  @click="hideModal('modaladdvehiculo')"
-                >
-                  {{ $t("pages.cancel") }}
-                </b-button>
-                <b-button type="submit" variant="primary">
-                  {{
-                    $t("forms.submit")
-                  }}
-                </b-button>
-              </b-form>
-            </b-modal>
-          </div>
-          <piaf-breadcrumb />
-          <div class="mb-2 mt-2">
-            <b-button
-              v-b-toggle.displayOptions
-              variant="empty"
-              class="pt-0 pl-0 d-inline-block d-md-none"
-            >
-              {{ $t("pages.display-options") }}
-              <i class="simple-icon-arrow-down align-middle" />
-            </b-button>
-            <b-collapse id="displayOptions" class="d-md-block">
-              <div class="d-block d-md-inline-block pt-1">
-                <b-dropdown
-                  id="ddown1"
-                  :text="`${$t('pages.filterby')} ${filter.label}`"
-                  variant="outline-dark"
-                  class="mr-1 float-md-left btn-group"
-                  size="xs"
-                >
-                  <b-dropdown-item
-                    v-for="(filterOption, index) in filterOptions"
-                    :key="index"
-                    @click="changeFilterBy(filterOption)"
-                  >
-                    {{ filterOption.label }}
-                  </b-dropdown-item>
-                </b-dropdown>
-
-                <div
-                  class="search-sm d-inline-block float-md-left mr-1 align-top"
-                >
-                  <b-input v-model="search" :placeholder="$t('menu.search')" />
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 id="modaladdvehiculoLabel" class="modal-title fs-5">
+                      {{ $t('pages.branch.add-new-vehiculo') }}
+                    </h1>
+                  </div>
+                  <div class="modal-body">
+                    <form novalidate class="av-tooltip" @submit.prevent="onValitadeFormSubmit">
+                      <div>
+                        <label for="vehicle_plate" class="form-label">{{ $t('branch.vehiculo.placa') }}</label>
+                        <div class="input-group has-validation">
+                          <input
+                            id="vehicle_plate"
+                            v-model="v$.newItem.placa.$model"
+                            type="text"
+                            class="form-control"
+                            :class="{ 'is-invalid': v$.newItem.placa.$error }"
+                          >
+                          <div v-if="v$.newItem.placa.required.$invalid" class="invalid-feedback">
+                            {{ $t('branch.forms.validations.required') }}
+                          </div>
+                          <div v-else-if="v$.newItem.placa.placaValidate.$invalid" class="invalid-feedback">
+                            {{ $t("branch.forms.validations.formatPlaca") }}
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+                        <label for="client_phone" class="form-label">{{ $t('branch.vehiculo.celular') }}</label>
+                        <div class="input-group has-validation">
+                          <input
+                            id="client_phone"
+                            v-model="v$.newItem.celular.$model"
+                            type="text"
+                            class="form-control"
+                            :class="{ 'is-invalid': v$.newItem.celular.$error }"
+                          >
+                          <div v-if="v$.newItem.celular.required.$invalid" class="invalid-feedback">
+                            {{ $t('branch.forms.validations.required') }}
+                          </div>
+                          <div v-else-if="v$.newItem.celular.numeric.$invalid" class="invalid-feedback">
+                            {{ $t("branch.forms.validations.formatPlaca") }}
+                          </div>
+                          <div v-else-if="v$.newItem.celular.minLength.$invalid || v$.newItem.celular.maxLength.$invalid" class="invalid-feedback">
+                            {{ $t("branch.forms.validations.longitud") }}
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+                        <label for="client_phone" class="form-label">{{ $t('branch.vehiculo.celular') }}</label>
+                        <div class="input-group has-validation">
+                          <input
+                            id="client_phone"
+                            v-model="v$.newItem.celular.$model"
+                            type="text"
+                            class="form-control"
+                            :class="{ 'is-invalid': v$.newItem.celular.$error }"
+                          >
+                          <div v-if="v$.newItem.celular.required.$invalid" class="invalid-feedback">
+                            {{ $t('branch.forms.validations.required') }}
+                          </div>
+                          <div v-else-if="v$.newItem.celular.numeric.$invalid" class="invalid-feedback">
+                            {{ $t("branch.forms.validations.formatPlaca") }}
+                          </div>
+                          <div v-else-if="v$.newItem.celular.minLength.$invalid || v$.newItem.celular.maxLength.$invalid" class="invalid-feedback">
+                            {{ $t("branch.forms.validations.longitud") }}
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+                        <label for="client_email" class="form-label">{{ $t('branch.vehiculo.email') }}</label>
+                        <div class="input-group has-validation">
+                          <input
+                            id="client_email"
+                            v-model="v$.newItem.email.$model"
+                            type="text"
+                            class="form-control"
+                            :class="{ 'is-invalid': v$.newItem.email.$error }"
+                          >
+                          <div v-if="v$.newItem.email.email.$invalid" class="invalid-feedback">
+                            {{ $t("branch.forms.validations.email") }}
+                          </div>
+                        </div>
+                      </div>
+                      <button
+                        class="btn btn-outline-secondary"
+                        type="button"
+                        @click="hideModal('modaladdvehiculo')"
+                      >
+                        {{ $t("pages.cancel") }}
+                      </button>
+                      <button type="submit" class="btn btn-primary">
+                        {{
+                          $t("forms.submit")
+                        }}
+                      </button>
+                    </form>
+                  </div>
                 </div>
               </div>
-              <div class="float-md-right pt-1">
-                <span class="text-muted text-small mr-1 mb-2">{{ from }}-{{ to }} of {{ total }}</span>
-                <b-dropdown
-                  id="ddown2"
-                  right
-                  :text="`${perPage}`"
-                  variant="outline-dark"
-                  class="d-inline-block"
-                  size="xs"
-                >
-                  <b-dropdown-item
-                    v-for="(size, index) in pageSizes"
-                    :key="index"
-                    @click="changePageSize(size)"
-                  >
-                    {{ size }}
-                  </b-dropdown-item>
-                </b-dropdown>
-              </div>
-            </b-collapse>
+            </div>
           </div>
+          <piaf-breadcrumb />
           <div class="separator mb-5" />
-        </b-colxx>
-      </b-row>
+        </div>
+      </div>
       <template v-if="isLoad">
-        <b-colxx
+        <div
           v-for="(item, index) in items"
           :id="item.id"
           :key="index"
-          xxs="12"
-          class="mb-3"
+          class="col col-12 mb-3"
         >
           <vehiculo-list-item
             :key="item.id"
-            v-contextmenu:contextmenu
             :data="item"
             :selected-items="selectedItems"
             @toggle-item="toggleItem"
           />
-        </b-colxx>
-        <b-row v-if="lastPage > 1">
-          <b-colxx xxs="12">
-            <b-pagination-nav
-              v-model="page"
-              :number-of-pages="lastPage"
-              :link-gen="linkGen"
-              :per-page="perPage"
-              align="center"
-            >
-              <template #next-text>
-                <i class="simple-icon-arrow-right" />
-              </template>
-              <template #prev-text>
-                <i class="simple-icon-arrow-left" />
-              </template>
-              <template #first-text>
-                <i class="simple-icon-control-start" />
-              </template>
-              <template #last-text>
-                <i class="simple-icon-control-end" />
-              </template>
-            </b-pagination-nav>
-          </b-colxx>
-        </b-row>
+        </div>
       </template>
       <template v-else>
         <div class="loading" />
       </template>
-      <v-contextmenu ref="contextmenu" @contextmenu="handleContextmenu">
-        <v-contextmenu-item @click="onContextCopy()">
-          <i class="simple-icon-docs" />
-          <span>Copy</span>
-        </v-contextmenu-item>
-        <v-contextmenu-item @click="onContextArchive()">
-          <i class="simple-icon-drawer" />
-          <span>Move to archive</span>
-        </v-contextmenu-item>
-        <v-contextmenu-item @click="onContextDelete()">
-          <i class="simple-icon-trash" />
-          <span>Delete</span>
-        </v-contextmenu-item>
-      </v-contextmenu>
-    </b-colxx>
-  </b-row>
+    </div>
+  </div>
 </template>
 
 <script>

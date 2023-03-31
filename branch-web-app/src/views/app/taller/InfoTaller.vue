@@ -1,26 +1,29 @@
 <template>
-  <b-row>
-    <b-colxx xl="12" lg="12" class="mb-4">
-      <b-card class="mb-4 detalle-taller">
+  <div class="row">
+    <div class="col col-12 mb-4">
+      <div class="card mb-4 detalle-taller">
         <div class="position-absolute card-top-buttons">
-          <b-button v-b-modal.modalEditTaller class="icon-button">
+          <button
+            type="button" class="btn icon-button"
+            data-bs-toggle="modal" data-bs-target="#modalEditTaller"
+          >
             <i class="simple-icon-pencil" />
-          </b-button>
+          </button>
           <modal-edit-taller
             v-if="taller.IdTaller"
             :taller="taller"
             @loadInfoTaller="loadInfoTaller"
           />
         </div>
-        <b-row>
-          <b-colxx class="logo-taller">
+        <div class="row">
+          <div class="col logo-taller">
             <img
               :alt="taller.email"
               :src="taller.logo || '/assets/img/preload.gif'"
               class="card-img-top-2"
             >
-          </b-colxx>
-          <b-colxx>
+          </div>
+          <div class="col">
             <h5 class="mb-1 card-subtitle truncate">
               {{ taller.nombre }}
             </h5>
@@ -39,8 +42,8 @@
             <p class="text-muted text-small mb-2">
               {{ $t("branch.taller.celular") }}
             </p>
-          </b-colxx>
-          <b-colxx>
+          </div>
+          <div class="col">
             <h5 class="mb-1 card-subtitle truncate">
               {{ taller.email }}
             </h5>
@@ -53,11 +56,11 @@
             <p class="text-muted text-small mb-2">
               {{ $t("branch.taller.direccion") }}
             </p>
-          </b-colxx>
-        </b-row>
-      </b-card>
-    </b-colxx>
-  </b-row>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>

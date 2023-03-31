@@ -22,9 +22,9 @@
           @drop-on-date="onDropDate"
           @click-date="onClickDay"
         >
-          <template #header="t">
+          <template #header="{ headerProps }">
             <calendar-view-header
-              :header-props="t.headerProps"
+              :header-props="headerProps"
               @input="setShowDate"
             />
           </template>
@@ -91,8 +91,9 @@ import ModalAddOrden from "../../../components/Modals/addordenmodal";
 import {
   CalendarView,
   CalendarViewHeader,
-  CalendarMathMixin
 } from "vue-simple-calendar";
+
+import "../../../../node_modules/vue-simple-calendar/dist/style.css"
 
 export default {
   name: "citas-workshop",
@@ -102,7 +103,6 @@ export default {
     "calendar-view": CalendarView,
     "calendar-view-header": CalendarViewHeader
   },
-  mixins: [CalendarMathMixin],
   data() {
     return {
       calendar: {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-row class="m-3">
+    <div class="row m-3">
       <div class="search-container">
         <div
           ref="searchContainer"
@@ -8,27 +8,27 @@
           @mouseenter="isSearchOver = true"
           @mouseleave="isSearchOver = false"
         >
-          <b-input
+          <input
             v-model="searchKeyword"
+            class="form-control"
             :placeholder="$t('menu.search')"
             @keypress.enter="search"
-          />
+          >
           <span class="search-icon" @click="searchClick">
             <i class="simple-icon-magnifier" />
           </span>
         </div>
       </div>
-    </b-row>
-    <b-row>
-      <b-colxx
+    </div>
+    <div class="row">
+      <div
         v-for="(orden, ordenIndex) in ordenes"
         :key="`orden_${ordenIndex}`"
-        xxs="12"
-        class="ordenes-branch"
+        class="col col-12 ordenes-branch"
       >
         <orden-card :data="orden" :mecanicos="taller.mecanicos" />
-      </b-colxx>
-    </b-row>
+      </div>
+    </div>
   </div>
 </template>
 

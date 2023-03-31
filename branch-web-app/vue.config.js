@@ -30,20 +30,12 @@ module.exports = {
     },
   },
   chainWebpack: config => {
-
-    config.resolve.alias.set('vue', '@vue/compat')
-
     config.module
       .rule("vue")
       .use("vue-loader")
       .tap((options) => {
         return {
           ...options,
-          compilerOptions: {
-            compatConfig: {
-              MODE: 2
-            }
-          }
         }
       });
   },
@@ -55,6 +47,7 @@ module.exports = {
           @import "@/assets/css/sass/_mixins.scss";
           @import "@/assets/css/sass/themes/piaf.light.blue.scss";
           @import "@/assets/css/sass/_piaf.style.scss";
+          @import "@/assets/css/sass/_horizontalStepper.scss";
         `
       }
     }

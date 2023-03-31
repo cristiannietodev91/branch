@@ -9,7 +9,7 @@
           <p class="mb-0">
             Por favor llene los datos para crear una cuenta
             <br>Si ya está registrado puede
-            <router-link to="/login">
+            <router-link to="/user/login">
               iniciar sesión
             </router-link>
           </p>

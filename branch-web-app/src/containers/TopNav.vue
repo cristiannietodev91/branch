@@ -28,9 +28,7 @@
               <span class="name mr-1">{{ currentUser.displayName }}</span>
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
-              <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
+              <li><a class="dropdown-item" href="#" @click="logout">Cerrar sesión</a></li>
             </ul>
           </div>
         </div>

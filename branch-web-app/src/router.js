@@ -26,21 +26,21 @@ const routes = [
       {
         path: "app/taller",
         component: () =>
-          import(/* webpackChunkName: "pages" */ "./views/app/taller"),
+          import(/* webpackChunkName: "workshop" */ "./views/app/taller"),
         redirect: "/app/taller/listTalleres",
         children: [
           {
             path: "listTalleres",
             component: () =>
               import(
-                /* webpackChunkName: "product" */ "./views/app/taller/ListTalleres"
+                /* webpackChunkName: "workshop" */ "./views/app/taller/ListTalleres"
               )
           },
           {
             path: "detailTaller",
             component: () =>
               import(
-                /* webpackChunkName: "product" */ "./views/app/taller/DetailsTaller"
+                /* webpackChunkName: "workshop" */ "./views/app/taller/DetailsTaller"
               ),
             redirect: "/app/taller/detailTaller/citas",
             children: [
@@ -48,11 +48,46 @@ const routes = [
                 path: "citas",
                 component: () =>
                   import(
-                    /* webpackChunkName: "forms" */ "./views/app/taller/Citas"
+                    /* webpackChunkName: "workshop" */ "./views/app/taller/Citas"
                   )
               },
+              {
+                path: "mecanicos",
+                component: () =>
+                  import(
+                    /* webpackChunkName: "workshop" */ "./views/app/taller/Mecanicos"
+                  )
+              },
+              {
+                path: "ordenes/:cita?",
+                component: () =>
+                  import(
+                    /* webpackChunkName: "workshop" */ "./views/app/taller/Ordenes"
+                  )
+              },
+              {
+                path: "info",
+                component: () =>
+                  import(
+                    /* webpackChunkName: "workshop" */ "./views/app/taller/InfoTaller"
+                  )
+              }
             ]
           },
+          {
+            path: "listClients",
+            component: () =>
+              import(
+                /* webpackChunkName: "product" */ "./views/app/taller/ListClientes"
+              )
+          },
+          {
+            path: "listChats",
+            component: () =>
+              import(
+                /* webpackChunkName: "product" */ "./views/app/taller/ListChats"
+              )
+          }
         ]
       }
     ]
@@ -76,6 +111,11 @@ const routes = [
         path: "forgot-password",
         component: () =>
           import(/* webpackChunkName: "user" */ "./views/user/ForgotPassword")
+      },
+      {
+        path: "reset-password",
+        component: () =>
+          import(/* webpackChunkName: "user" */ "./views/user/ResetPassword")
       }
     ]
   }

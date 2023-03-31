@@ -1,16 +1,16 @@
 <template>
   <div>
-    <b-row>
-      <b-colxx class="disable-text-selection">
-        <b-row>
-          <b-colxx xxs="12">
+    <div class="row">
+      <div class="col disable-text-selection">
+        <div class="row">
+          <div class="col col-12">
             <h1>{{ $t('branch.chat.conversaciones') }}</h1>
             <piaf-breadcrumb />
 
             <div class="separator mb-5" />
-          </b-colxx>
-        </b-row>
-        <b-row class="m-3">
+          </div>
+        </div>
+        <div class="row m-3">
           <div class="d-flex align-items-center navbar-left">
             <div
               ref="searchContainer"
@@ -18,52 +18,58 @@
               @mouseenter="isSearchOver = true"
               @mouseleave="isSearchOver = false"
             >
-              <b-input
+              <input
                 v-model="searchKeyword"
+                type="text"
                 :placeholder="$t('menu.search')"
                 @keypress.enter="search"
-              />
+              >
               <span class="search-icon" @click="searchClick">
                 <i class="simple-icon-magnifier" />
               </span>
             </div>
           </div>
-        </b-row>
+        </div>
         <template v-if="isLoad">
-          <b-row>
-            <b-colxx xxs="12" lg="8">
-              <b-card class="mb-4" :title="$t('pages.comments')">
+          <div class="row">
+            <div class="col col-12 col-lg-8">
+              <div class="card mb-4" :title="$t('pages.comments')">
                 <conversacion-item
                   v-for="(item,index) in conversaciones"
                   :key="index"
                   :conversacion="item"
                   @markreadmessages="markreadmessages"
                 />
-              </b-card>
-            </b-colxx>
-            <b-colxx xxs="12" lg="4">
-              <b-card class="mb-4" :title="$t('branch.chat.conversacionesunread')">
-                <div class="comment-likes">
-                  <span class="post-icon">
-                    <b-badge variant="light">{{ conversacionesUnRead.length }}</b-badge>
-                    <router-link to="#" />
-                  </span>
+              </div>
+            </div>
+            <div class="col col-12 col-lg-4">
+              <div class="card mb-4">
+                <div class="card-body">
+                  <h5 class="card-title">
+                    {{ $t('branch.chat.conversacionesunread') }}
+                  </h5>
+                  <div class="comment-likes">
+                    <span class="post-icon">
+                      <span class="badge text-bg-light">{{ conversacionesUnRead.length }}</span>
+                      <router-link to="#" />
+                    </span>
+                  </div>
+                  <conversacion-item
+                    v-for="(item,index) in conversacionesUnRead"
+                    :key="index"
+                    :conversacion="item"
+                    @markreadmessages="markreadmessages"
+                  />
                 </div>
-                <conversacion-item
-                  v-for="(item,index) in conversacionesUnRead"
-                  :key="index"
-                  :conversacion="item"
-                  @markreadmessages="markreadmessages"
-                />
-              </b-card>
-            </b-colxx>
-          </b-row>
+              </div>
+            </div>
+          </div>
         </template>
         <template v-else>
           <div class="loading" />
         </template>
-      </b-colxx>
-    </b-row>
+      </div>
+    </div>
   </div>
 </template>
 

@@ -1,8 +1,8 @@
 <template>
   <div class="d-flex flex-row m-2 border-bottom border-top cardChats" @click="openChat">
-    <b-badge v-if="newmessages > 0" variant="light" class="align-self-center">
+    <span v-if="newmessages > 0" class="badge text-bg-light align-self-center">
       {{ newmessages }}
-    </b-badge>
+    </span>
     <div class="pl-3 pt-2 pr-2 pb-2">
       <p class="list-item-heading">
         {{ conversacion.usuario.firstName }}
@@ -18,16 +18,14 @@
         {{ conversacion.createdAt }}
       </div>
     </div>
-    <b-modal
+    <div
       v-if="renderModal"
       :id="`sidebar${uidChat}`"
-      v-model="showModal"
-      right
-      shadow
-      no-header
+      class="modal"
+      tabindex="-1"
     >
       <modal-open-chat :conversacion="infoconversacion" @hide="openChat" />
-    </b-modal>
+    </div>
   </div>
 </template>
 

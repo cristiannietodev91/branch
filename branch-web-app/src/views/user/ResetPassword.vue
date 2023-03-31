@@ -1,7 +1,7 @@
 <template>
-  <b-row class="h-100">
-    <b-colxx xxs="12" md="10" class="mx-auto my-auto">
-      <b-card class="auth-card" no-body>
+  <div class="row h-100">
+    <div class="col col-12 col-md-10 mx-auto my-auto">
+      <div class="card auth-card">
         <div class="position-relative image-side">
           <p class="h2">
             {{ $t('dashboards.magic-is-in-the-details') }}
@@ -22,34 +22,52 @@
             {{ $t('user.login-title') }}
           </h6>
 
-          <b-form class="av-tooltip tooltip-label-bottom" @submit.prevent="formSubmit">
-            <b-form-group :label="$t('user.password')" class="has-float-label mb-4">
-              <b-form-input v-model="$v.form.password.$model" type="password" :state="!$v.form.password.$error" />
-              <b-form-invalid-feedback v-if="!$v.form.password.required">
-                Ingrese la nueva contraseña
-              </b-form-invalid-feedback>
-              <b-form-invalid-feedback v-else-if="!$v.form.password.minLength || !$v.form.password.maxLength">
-                Su contraseña debe tener entre 4 y 16 caracteres
-              </b-form-invalid-feedback>
-            </b-form-group>
-            <b-form-group :label="$t('user.password-again')" class="has-float-label mb-4">
-              <b-form-input v-model="$v.form.passwordAgain.$model" type="password" :state="!$v.form.passwordAgain.$error" />
-              <b-form-invalid-feedback v-if="!$v.form.passwordAgain.required">
-                verifique su nueva contraseña
-              </b-form-invalid-feedback>
-              <b-form-invalid-feedback v-else-if="!$v.form.passwordAgain.sameAsPassword">
-                Las contraseñas no coinciden
-              </b-form-invalid-feedback>
-            </b-form-group>
-
+          <form novalidate class="av-tooltip tooltip-label-bottom" @submit.prevent="formSubmit">
+            <div class="has-float-label mb-4">
+              <label for="reset_password" class="form-label">{{ $t('user.password') }}</label>
+              <div class="input-group has-validation">
+                <input
+                  id="reset_password" v-model="v$.form.password.$model" type="password" class="form-control"
+                  :class="{ 'is-invalid': v$.form.password.$error }"
+                >
+                <div v-if="v$.form.password.required.$invalid" class="invalid-feedback">
+                  Ingrese la nueva contraseña
+                </div>
+                <div
+                  v-else-if="v$.form.password.minLength.$invalid || !v$.form.password.maxLength.$invalid" 
+                  class="invalid-feedback"
+                >
+                  Su contraseña debe tener entre 4 y 16 caracteres
+                </div>
+              </div>
+            </div>
+            <div class="has-float-label mb-4">
+              <label for="reset_repeat_password" class="form-label">{{ $t('user.password-again') }}</label>
+              <div class="input-group has-validation">
+                <input
+                  id="reset_repeat_password" v-model="v$.form.passwordAgain.$model" type="password" class="form-control"
+                  :class="{ 'is-invalid': v$.form.passwordAgain.$error }"
+                >
+                <div v-if="v$.form.passwordAgain.required.$invalid" class="invalid-feedback">
+                  Verifique su nueva contraseña
+                </div>
+                <div
+                  v-else-if="v$.form.passwordAgain.sameAsPassword.$invalid" 
+                  class="invalid-feedback"
+                >
+                  Las contraseñas no coinciden
+                </div>
+              </div>
+            </div>
             <div class="d-flex justify-content-between align-items-center">
               <router-link to="/user/forgot-password">
                 {{ $t('user.forgot-password-question') }}
               </router-link>
-              <b-button
-                type="submit" variant="primary" size="lg" :disabled="processing"
-                :class="{'btn-multiple-state btn-shadow': true,
-                         'show-spinner': processing,
+              <button
+                type="submit" 
+                class="btn btn-primary btn-lg btn-multiple-state btn-shadow"
+                variant="primary" size="lg" :disabled="processing"
+                :class="{'show-spinner': processing,
                          'show-success': !processing && loginError===false,
                          'show-fail': !processing && loginError }"
               >
@@ -65,13 +83,13 @@
                   <i class="simple-icon-exclamation" />
                 </span>
                 <span class="label">{{ $t('user.reset-password-button') }}</span>
-              </b-button>
+              </button>
             </div>
-          </b-form>
+          </form>
         </div>
-      </b-card>
-    </b-colxx>
-  </b-row>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -140,7 +158,7 @@ export default {
     methods: {
         ...mapActions(["resetPassword"]),
         async formSubmit() {
-            this.$v.form.$touch();
+            this.v$.form.$touch();
 
             const isFormCorrect = await this.v$.$validate()
 

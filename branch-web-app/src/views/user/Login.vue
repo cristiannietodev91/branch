@@ -16,7 +16,7 @@
             {{ $t('user.text-credentials') }}
             <br>
             {{ $t('user.text-nomember') }},
-            <router-link to="/register">
+            <router-link to="/user/register">
               crea una cuenta
             </router-link>.
           </p>
@@ -75,7 +75,7 @@
             </div>
             <div class="d-flex justify-content-between align-items-center">
               <router-link
-                to="/forgot-password"
+                to="/user/forgot-password"
               >
                 {{ $t('user.forgot-password-question') }}
               </router-link>

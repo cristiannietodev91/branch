@@ -1,5 +1,5 @@
 <template>
-  <b-card class="mb-4" no-body>
+  <div class="card mb-4">
     <!-- <router-link to="?" class="d-flex">
       <div
         src="/assets/img/profile-pic-l.jpg"
@@ -7,9 +7,9 @@
         class="align-self-center list-thumbnail-letters rounded-circle m-4 small"
       >INGRESO</div>
     </router-link> -->
-    <b-container v-if="data.etapa">
-      <b-row>
-        <b-colxx md="6" sm="6" lg="6" xxs="12">
+    <div v-if="data.etapa" class="container">
+      <div class="row">
+        <div class="col col-12 col-sm-6 col-md-6 col-lg-6">
           <p class="text-muted text-small mb-2">
             {{ $t('branch.orden.fechaAprobacion') }}
           </p>
@@ -22,8 +22,8 @@
           <h5 class="mb-1 card-subtitle truncate">
             {{ data.etapa.mecanico.fullName }}
           </h5>
-        </b-colxx>
-        <b-colxx md="6" sm="6" lg="6" xxs="12">
+        </div>
+        <div class="col col-12 col-sm-6 col-md-6 col-lg-6">
           <p class="text-muted text-small mb-2">
             {{ $t('branch.orden.kilometraje') }}
           </p>
@@ -36,26 +36,26 @@
           <h5 class="mb-1 card-subtitle truncate">
             {{ data.etapa.DocumentosDeja }}
           </h5>
-        </b-colxx>
-      </b-row>
-      <b-row>
-        <b-colxx md="12" sm="12" lg="12" xxs="12">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col col-12">
           <p class="text-muted text-small mb-2">
             {{ $t('branch.orden.observaciones') }}
           </p>
           <h5 class="mb-1 card-subtitle truncate">
             {{ data.etapa.Observaciones }}
           </h5>
-        </b-colxx>
-      </b-row>
+        </div>
+      </div>
       -
-    </b-container>    
-    <b-container v-else>
+    </div>    
+    <div v-else class="container">
       <h5 class="mb-1 card-subtitle truncate">
         {{ $t('branch.orden.sinetapa') }}
       </h5>
-    </b-container>    
-  </b-card>
+    </div>    
+  </div>
 </template>
 <script>
 import moment from "moment";
@@ -69,11 +69,11 @@ export default {
     };
   },
   watch: {
-    currentStep(val) {
-      console.log("Actual paso :::>", val);
+    currentStep() {
+      
     },
     clickedNext(val) {
-      console.log("Clicked next val :::>", val);
+      
       this.$emit("can-continue", { value: val });
     }
   },

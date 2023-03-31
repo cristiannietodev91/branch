@@ -1,7 +1,7 @@
 <template>
   <div
     id="modalAddCita"
-    class="modal"
+    class="modal modal-right"
     tabindex="-1"
     aria-hidden="true"
   >
@@ -90,15 +90,16 @@
                 </template>
               </v-select>
             </div>
-            <div
+            <button
+              type="button"
               class="btn btn-outline-secondary"
               @click="hideModal('modalAddCita')"
             >
               {{ $t('pages.cancel') }}
-            </div>
-            <div class="btn btn-primary" type="submit">
+            </button>
+            <button class="btn btn-primary" type="submit">
               {{ $t('forms.submit') }}
-            </div>
+            </button>
           </form>
         </div>
       </div>
