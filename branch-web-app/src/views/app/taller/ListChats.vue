@@ -4,9 +4,7 @@
       <div class="col disable-text-selection">
         <div class="row">
           <div class="col col-12">
-            <h1>{{ $t('branch.chat.conversaciones') }}</h1>
-            <piaf-breadcrumb />
-
+            <v-breadcrumb :heading="$t('branch.chat.conversaciones')" />
             <div class="separator mb-5" />
           </div>
         </div>

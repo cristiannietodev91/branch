@@ -2,8 +2,7 @@
   <div>
     <div class="row">
       <div class="col col-12">
-        <h1>{{ $t("menu.taller") }}</h1>
-        <piaf-breadcrumb />
+        <v-breadcrumb :heading="$t('menu.taller')" />
         <div class="card" title="Card Title">
           <div class="card-header">
             <ul class="nav nav-tabs">

@@ -18,7 +18,7 @@ const routes = [
             path: "taller",
             component: () =>
               import(
-                /* webpackChunkName: "dashboards" */ "./views/app/dashboards/TallerDash"
+                /* webpackChunkName: "dashboards" */ "./views/app/dashboards/workshop-dashboard"
               )
           }
         ]
@@ -78,14 +78,14 @@ const routes = [
             path: "listClients",
             component: () =>
               import(
-                /* webpackChunkName: "product" */ "./views/app/taller/ListClientes"
+                /* webpackChunkName: "workshop" */ "./views/app/taller/ListClientes"
               )
           },
           {
             path: "listChats",
             component: () =>
               import(
-                /* webpackChunkName: "product" */ "./views/app/taller/ListChats"
+                /* webpackChunkName: "workshop" */ "./views/app/taller/ListChats"
               )
           }
         ]

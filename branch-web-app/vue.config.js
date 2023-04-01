@@ -45,9 +45,10 @@ module.exports = {
       scss: {
         additionalData: `
           @import "@/assets/css/sass/_mixins.scss";
+          @import "@/assets/css/sass/_horizontalStepper.scss";
+          @import "@/assets/css/sass/_bootstrap.scss";
           @import "@/assets/css/sass/themes/piaf.light.blue.scss";
           @import "@/assets/css/sass/_piaf.style.scss";
-          @import "@/assets/css/sass/_horizontalStepper.scss";
         `
       }
     }

@@ -80,7 +80,7 @@ app.use(
   })
 );
 
-app.component("piaf-breadcrumb", Breadcrumb);
+app.component("v-breadcrumb", Breadcrumb);
 app.component("v-select", vSelect);
 
 
