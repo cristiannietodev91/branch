@@ -3,7 +3,6 @@
     <div class="col disable-text-selection">
       <div class="row">
         <div class="col col-12">
-          <h1>{{ $t('branch.taller.listaTalleres') }}</h1>
           <div class="top-right-button-container">
             <button
               type="button"
@@ -191,7 +190,7 @@
               </div>
             </div>
           </div>
-          <piaf-breadcrumb />
+          <v-breadcrumb :heading="$t('branch.taller.listaTalleres')" />
           <div class="mb-2 mt-2">
             <button
               class="btn pt-0 pl-0 d-inline-block d-md-none"

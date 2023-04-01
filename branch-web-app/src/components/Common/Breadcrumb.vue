@@ -1,18 +1,18 @@
 <template>
-  <div class="d-lg-inline-block">
+  <span>
     <h1 v-if="heading && heading.length>0">
       {{ heading }}
     </h1>
-    <nav style="d-lg-inline-block" aria-label="breadcrumb">
-      <ol v-for="item in items" :key="item.id" class="breadcrumb d-lg-inline-block">
-        <li class="breadcrumb-item" aria-current="page">
+    <nav aria-label="breadcrumb" class="d-inline-block">
+      <ol class="breadcrumb">
+        <li v-for="item in items" :key="item.id" class="breadcrumb-item">
           <router-link :to="item.to || '#'">
             {{ item.text }}
           </router-link>
         </li>
       </ol>
     </nav>
-  </div>
+  </span>
 </template>
 
 <script>

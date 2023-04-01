@@ -2,7 +2,7 @@
   <div>
     <div class="row">
       <div class="col col-12">
-        <piaf-breadcrumb heading="Blank Page" />
+        <v-breadcrumb heading="Blank Page" />
         <div class="separator mb-5" />
       </div>
     </div>

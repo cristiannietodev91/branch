@@ -2,7 +2,7 @@
   <div>
     <div class="row">
       <div class="col col-12">
-        <piaf-breadcrumb :heading="$t('menu.analytics')" />
+        <v-breadcrumb :heading="$t('menu.analytics')" />
         <div class="separator mb-5" />
       </div>
     </div>
