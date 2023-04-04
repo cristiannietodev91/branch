@@ -158,9 +158,12 @@ export default {
     },
     loginError(val) {
       if (val != null) {
-        this.$notify("error", "Login Error", val, {
+        this.$notify({
+          title: "Login Error",
+          type: "error",
           duration: 3000,
-          permanent: false
+          permanent: false,
+          text: val
         });
       }
     }

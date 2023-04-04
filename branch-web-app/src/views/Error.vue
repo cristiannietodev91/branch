@@ -26,7 +26,7 @@
                       404
                     </p>
                     <button
-                      type="submit"
+                      type="button"
                       class="btn btn-primary btn-lg btn-shadow"
                       @click="goBack"
                     >

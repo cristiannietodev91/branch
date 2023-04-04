@@ -28,7 +28,11 @@
               <span class="name mr-1">{{ currentUser.displayName }}</span>
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
-              <li><a class="dropdown-item" href="#" @click="logout">Cerrar sesión</a></li>
+              <li>
+                <button class="btn btn-link dropdown-item" @click="logout">
+                  Cerrar sesión
+                </button>
+              </li>
             </ul>
           </div>
         </div>

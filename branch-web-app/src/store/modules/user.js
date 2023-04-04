@@ -111,7 +111,6 @@ export default {
               });
           },
           err => {
-            console.log("Errr :::>", err);
             localStorage.removeItem("user");
             commit("setError", err.message);
             setTimeout(() => {
