@@ -118,6 +118,11 @@ const routes = [
           import(/* webpackChunkName: "user" */ "./views/user/ResetPassword")
       }
     ]
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    name: 'NotFound',
+    component: () => import(/* webpackChunkName: "error" */ "./views/Error")
   }
 ];
 

@@ -16,7 +16,6 @@ export const defaultDirection = "ltr";
 
 export const apiBranchUrl = process.env.VUE_APP_URLBACKSERVICES;
 
-export const isDemo = true;
 export const themeRadiusStorageKey = "theme_radius";
 export const defaultColor = "light.blue";
 export const colors = [
