@@ -63,7 +63,7 @@
                     src="/assets/img/pdflogo.jpg"
                     class="list-thumbnail responsive border-0"
                   >
-                  <p class="catd-text">
+                  <p class="card-text">
                     <span>{{ documento.nombrearchivo }}</span>
                     <span>{{ dateTime(documento.date) }}</span>
                   </p>

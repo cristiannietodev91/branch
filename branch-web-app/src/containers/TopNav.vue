@@ -15,13 +15,6 @@
 
     <div class="navbar-right">
       <div class="header-icons d-inline-block align-middle">
-        <div class="position-relative d-none d-sm-inline-block ">
-          <div class="btn-group">
-            <button class="btn header-icon btn-sm" @click="toggleFullScreen">
-              <i :class="{'d-inline-block':true,'simple-icon-size-actual':fullScreen,'simple-icon-size-fullscreen':!fullScreen }" />
-            </button>
-          </div>
-        </div>
         <div class="user d-inline-block">
           <div class="dropdown">
             <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -166,34 +159,6 @@ export default {
             this.signOut().then(() => {
                 this.$router.push('/user/login')
             })
-        },
-
-        toggleFullScreen() {
-            const isInFullScreen = this.isInFullScreen()
-
-            var docElm = document.documentElement
-            if (!isInFullScreen) {
-                if (docElm.requestFullscreen) {
-                    docElm.requestFullscreen()
-                } else if (docElm.mozRequestFullScreen) {
-                    docElm.mozRequestFullScreen()
-                } else if (docElm.webkitRequestFullScreen) {
-                    docElm.webkitRequestFullScreen()
-                } else if (docElm.msRequestFullscreen) {
-                    docElm.msRequestFullscreen()
-                }
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen()
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen()
-                } else if (document.mozCancelFullScreen) {
-                    document.mozCancelFullScreen()
-                } else if (document.msExitFullscreen) {
-                    document.msExitFullscreen()
-                }
-            }
-            this.fullScreen = !isInFullScreen
         },
         getThemeColor() {
             return localStorage.getItem('themeColor') ?

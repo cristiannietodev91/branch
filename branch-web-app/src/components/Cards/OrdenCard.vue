@@ -1,61 +1,63 @@
 <template>
   <div class="card">
-    <div class="row">
-      <div class="col col-12 col-lg-4 col-md-6 col-sm-6">
-        <h5 class="mb-1 card-subtitle truncate">
-          {{ data.CodigoOrden }}
-        </h5>
-        <p class="text-muted text-small mb-2">
-          {{ $t("branch.orden.codigoOrden") }}
-        </p>
-      </div>
-      <div class="col col-4 col-sm-6 col-lg-2 col-md-6">
-        <h5 class="mb-1 card-subtitle truncate">
-          {{ data.vehiculo.placa }}
-        </h5>
-        <p class="text-muted text-small mb-2">
-          {{ $t("branch.orden.placa") }}
-        </p>
-      </div>
-      <div class="col col-4 col-sm-6 col-md-6 col-lg-2">
-        <h5 class="mb-1 card-subtitle truncate">
-          {{ data.vehiculo.marca.marca }}
-        </h5>
-        <p class="text-muted text-small mb-2">
-          {{ $t("branch.orden.marca") }}
-        </p>
-      </div>
-      <div class="col col-4 col-sm-6 col-md-6 col-lg-2">
-        <h5 class="mb-1 card-subtitle truncate">
-          {{ data.vehiculo.usuario.firstName }}
-        </h5>
-        <p class="text-muted text-small mb-2">
-          {{ $t("branch.vehiculo.dueno") }}
-        </p>
-      </div>
-      <div class="col col-4 col-sm-6 col-md-6 col-lg-2">
-        <button
-          class="btn btn-primary btn-xs top-right-button"
-          :aria-controls="`sidebar${data.CodigoOrden}`"
-          @click="openChat"
-        >
-          <!-- <i class="iconsminds-speach-bubble-8"></i> -->
-          {{ $t("chat.send") }}
-          <span
-            v-if="newmessages > 0"
-            class="badge text-bg-light"
+    <div class="card-body">
+      <div class="row">
+        <div class="col col-12 col-lg-4 col-md-6 col-sm-6">
+          <h5 class="mb-1 card-subtitle truncate">
+            {{ data.CodigoOrden }}
+          </h5>
+          <p class="text-muted text-small mb-2">
+            {{ $t("branch.orden.codigoOrden") }}
+          </p>
+        </div>
+        <div class="col col-4 col-sm-6 col-lg-2 col-md-6">
+          <h5 class="mb-1 card-subtitle truncate">
+            {{ data.vehiculo.placa }}
+          </h5>
+          <p class="text-muted text-small mb-2">
+            {{ $t("branch.orden.placa") }}
+          </p>
+        </div>
+        <div class="col col-4 col-sm-6 col-md-6 col-lg-2">
+          <h5 class="mb-1 card-subtitle truncate">
+            {{ data.vehiculo.marca.marca }}
+          </h5>
+          <p class="text-muted text-small mb-2">
+            {{ $t("branch.orden.marca") }}
+          </p>
+        </div>
+        <div class="col col-4 col-sm-6 col-md-6 col-lg-2">
+          <h5 class="mb-1 card-subtitle truncate">
+            {{ data.vehiculo.usuario.firstName }}
+          </h5>
+          <p class="text-muted text-small mb-2">
+            {{ $t("branch.vehiculo.dueno") }}
+          </p>
+        </div>
+        <div class="col col-4 col-sm-6 col-md-6 col-lg-2">
+          <button
+            class="btn btn-primary btn-xs top-right-button"
+            :aria-controls="`sidebar${data.CodigoOrden}`"
+            @click="openChat"
           >
-            {{ newmessages }}
-          </span>
-        </button>
-        <div
-          :id="`sidebar${data.CodigoOrden}`"
-          class="modal shadow"
-        >
-          <modal-open-chat
-            :conversacion="infoconversacion"
-            @hide="openChat"
-          />
+            <!-- <i class="iconsminds-speach-bubble-8"></i> -->
+            {{ $t("chat.send") }}
+            <span
+              v-if="newmessages > 0"
+              class="badge text-bg-light"
+            >
+              {{ newmessages }}
+            </span>
+          </button>
+          <div
+            :id="`sidebar${data.CodigoOrden}`"
+            class="modal shadow"
+          >
+            <modal-open-chat
+              :conversacion="infoconversacion"
+              @hide="openChat"
+            />
+          </div>
         </div>
       </div>
     </div>

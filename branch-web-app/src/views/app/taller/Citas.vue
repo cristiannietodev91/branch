@@ -2,58 +2,59 @@
   <div class="row">
     <div class="col col-12 mb-4">
       <div class="card">
-        <h5 class="card-title">
-          {{ $t('dashboards.calendar') }}
-        </h5>
-        <modal-add-cita :taller="taller" :cita="cita" @loadcitastalleres="loadCitasTaller" />
-        <modal-add-orden :taller="taller" :cita="cita" @loadcitastalleres="loadCitasTaller" />
-        <calendar-view
-          :is-expanded="true"
-          class="theme-default holiday-us-traditional holiday-us-official"
-          style="min-height:500px"
-          :events="calendar.events"
-          :show-date="calendar.showDate"
-          :time-format-options="{hour: 'numeric', minute:'2-digit'}"
-          :enable-drag-drop="false"
-          :show-event-times="true"
-          display-period-uom="week"
-          :starting-day-of-week="1"
-          current-period-label="Today"
-          @drop-on-date="onDropDate"
-          @click-date="onClickDay"
-        >
-          <template #header="{ headerProps }">
-            <calendar-view-header
-              :header-props="headerProps"
-              @input="setShowDate"
-            />
-          </template>
+        <div class="card-body">
+          <h5 class="card-title">
+            {{ $t('dashboards.calendar') }}
+          </h5>
+          <modal-add-cita :taller="taller" :cita="cita" @loadcitastalleres="loadCitasTaller" />
+          <modal-add-orden :taller="taller" :cita="cita" @loadcitastalleres="loadCitasTaller" />
+          <calendar-view
+            :is-expanded="true"
+            class="theme-default holiday-us-traditional holiday-us-official"
+            style="min-height:500px"
+            :events="calendar.events"
+            :show-date="calendar.showDate"
+            :time-format-options="{hour: 'numeric', minute:'2-digit'}"
+            :enable-drag-drop="false"
+            :show-event-times="true"
+            display-period-uom="week"
+            :starting-day-of-week="1"
+            current-period-label="Today"
+            @drop-on-date="onDropDate"
+            @click-date="onClickDay"
+          >
+            <template #header="{ headerProps }">
+              <calendar-view-header
+                :header-props="headerProps"
+                @input="setShowDate"
+              />
+            </template>
 
-          <template #event="eventProps">
-            <div
-              :id="`event-${eventProps.event.originalEvent.citaObject.IdCita}`"
-              :title="eventProps.event.title"
-              :class="`cv-event ${eventProps.event.classes[0]} ${eventProps.event.classes[1]} ${eventProps.event.classes[2]}`"
-              :style="`top: calc(6.4em + ${eventProps.event.eventRow}*24em + ${eventProps.event.eventRow}*2px);`"
-            >
-              <h4 class="startTime">
-                {{ dateTime(new Date(eventProps.event.originalEvent.startDate)) }}
-              </h4>
-              <p>{{ eventProps.event.originalEvent.estado }}</p>
+            <template #event="eventProps">
               <div
-                class="btn btn-primary btn-xs mb-2 editar-cita"
-                @click="eventProps.event.originalEvent.estado == 'Solicitada' || eventProps.event.originalEvent.estado == 'Confirmada' ? onCtrlClickEvent(eventProps.event.originalEvent.citaObject) : ''"
+                :id="`event-${eventProps.event.originalEvent.citaObject.IdCita}`"
+                :title="eventProps.event.title"
+                :class="`cv-event ${eventProps.event.classes[0]} ${eventProps.event.classes[1]} ${eventProps.event.classes[2]}`"
+                :style="`top: calc(6.4em + ${eventProps.event.eventRow}*24em + ${eventProps.event.eventRow}*2px);`"
               >
-                <small :class="'glyph-icon simple-icon-pencil'" />
-                <span>Editar</span>
-              </div>
-              <div
-                class="btn btn-primary btn-xs mb-2 ingresar-moto"
-                @click.exact="eventProps.event.originalEvent.estado == 'Confirmada' ? onClickEvent(eventProps.event) : ''"
-              >
-                <small :class="'glyph-icon simple-icon-arrow-right'" />
-                <span>Ingresar</span>
-              </div>
+                <h4 class="startTime">
+                  {{ dateTime(new Date(eventProps.event.originalEvent.startDate)) }}
+                </h4>
+                <p>{{ eventProps.event.originalEvent.estado }}</p>
+                <div
+                  class="btn btn-primary btn-xs mb-2 editar-cita"
+                  @click="eventProps.event.originalEvent.estado == 'Solicitada' || eventProps.event.originalEvent.estado == 'Confirmada' ? onCtrlClickEvent(eventProps.event.originalEvent.citaObject) : ''"
+                >
+                  <small :class="'glyph-icon simple-icon-pencil'" />
+                  <span>Editar</span>
+                </div>
+                <div
+                  class="btn btn-primary btn-xs mb-2 ingresar-moto"
+                  @click.exact="eventProps.event.originalEvent.estado == 'Confirmada' ? onClickEvent(eventProps.event) : ''"
+                >
+                  <small :class="'glyph-icon simple-icon-arrow-right'" />
+                  <span>Ingresar</span>
+                </div>
               
               <!-- <b-popover
                 id="calendar-tooltip"
@@ -73,9 +74,10 @@
                 {{ eventProps.event.originalEvent.citaObject.servicio }}
                 Recibe: {{ eventProps.event.originalEvent.citaObject.mecanico ? eventProps.event.originalEvent.citaObject.mecanico.fullName : 'Sin mecanico asignado' }}
               </b-popover> -->
-            </div>
-          </template>
-        </calendar-view>
+              </div>
+            </template>
+          </calendar-view>
+        </div>
       </div>
     </div>
   </div>
