@@ -20,7 +20,7 @@
             <div class="col logo-taller">
               <img
                 :alt="taller.email"
-                :src="taller.logo || '/assets/img/preload.gif'"
+                :src="taller.logo || logoDefault"
                 class="card-img-top-2"
               >
             </div>
@@ -66,6 +66,8 @@
 </template>
 
 <script>
+import logoDefault from "../../../assets/img/preload.gif"
+
 import { mapGetters } from "vuex";
 import ServicesCore from "../../../services/service";
 import ModalEditTaller from "../../../components/Modals/editInfoTallermodal";
@@ -76,7 +78,8 @@ export default {
   },
   data() {
     return {
-      taller: {}
+      taller: {},
+      logoDefault
     };
   },
   computed: {

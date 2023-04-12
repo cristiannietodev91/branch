@@ -60,7 +60,7 @@
                 <a :href="documento.url" target="_blank">
                   <img
                     alt="Thumbnail"
-                    src="/assets/img/pdflogo.jpg"
+                    src="../../assets/img/pdflogo.jpg"
                     class="list-thumbnail responsive border-0"
                   >
                   <p class="card-text">
@@ -134,7 +134,7 @@
               <a :href="documento.url" target="_blank">
                 <img
                   alt="Thumbnail"
-                  src="/assets/img/pdflogo.jpg"
+                  src="../../assets/img/pdflogo.jpg"
                   class="list-thumbnail responsive border-0"
                 >
                 <p class="card-text">
