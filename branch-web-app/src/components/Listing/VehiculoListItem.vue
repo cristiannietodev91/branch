@@ -8,9 +8,7 @@
   >
     <div class="img-moto">
       <div
-        :style="{
-          backgroundImage: `url('${data.fotos && data.fotos[0] ? data.fotos[0].url : data.marca.urllogo}')`,
-        }"
+        class="logo-single"
       />
     </div>
 

@@ -9,16 +9,17 @@
       </a>
     </div>
     <router-link class="navbar-logo" to="/">
-      <span class="logo d-none d-xs-block" />
-      <span class="logo-mobile d-block d-xs-none" />
+      <span class="logo d-block" />
     </router-link>
 
     <div class="navbar-right">
       <div class="header-icons d-inline-block align-middle">
         <div class="user d-inline-block">
           <div class="dropdown">
-            <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <span class="name mr-1">{{ currentUser.displayName }}</span>
+            <button class="btn btn-empty p-0 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <span>
+                <img :alt="currentUser.email" :src="currentUser.photoUrl || defaultProfilePicture ">
+              </span>
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
               <li>
@@ -35,6 +36,7 @@
 </template>
 
 <script>
+import defaultProfilePicture from "../assets/img/profile-pic-2.jpg"
 import {
     mapGetters,
     mapMutations,
@@ -69,7 +71,8 @@ export default {
             menuHiddenBreakpoint,
             searchPath,
             buyUrl,
-            isDarkActive: false
+            isDarkActive: false,
+            defaultProfilePicture
         }
     },
     computed: {

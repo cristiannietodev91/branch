@@ -1,6 +1,6 @@
 <template>
-  <div class="card mb-4">
-    <div>
+  <div class="card">
+    <div class="card-body">
       <div class="row">
         <div class="col col-12 col-sm-6 col-md-6 col-lg-6">
           <p class="text-muted text-small mb-2">

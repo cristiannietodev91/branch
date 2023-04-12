@@ -766,6 +766,7 @@ button {
 
 .btn-empty {
   background: transparent !important;
+  border-color: transparent !important;
 }
 
 .btn-lg,
@@ -9678,7 +9679,6 @@ footer.page-footer {
 }
 .detalle-taller{
   .logo-taller{
-    // background: url("/assets/img/preload.gif") no-repeat center center;
     text-align: center;
     .card-img-top-2{
       width: auto;
