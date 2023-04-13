@@ -99,14 +99,11 @@
                 class="branch-image"
               >
                 <div class="card">
-                  <!-- <single-lightbox
-                  :thumb="documento.url"
-                  :large="documento.url"
-                  class-name="responsive"
-                /> -->
-                  <!-- <p class="list-item-heading mb-1 truncated">
-                  {{documento.nombrearchivo}}
-                </p>-->
+                  <single-lightbox
+                    :thumb="documento.url"
+                    :large="documento.url"
+                    class-name="responsive"
+                  />
                   <p class="card-text">
                     {{ dateTime(documento.date) }}
                   </p>
@@ -133,6 +130,7 @@
   </div>
 </template>
 <script>
+import SingleLightbox from "../Pages/SingleLightbox";
 import { useVuelidate } from '@vuelidate/core'
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
@@ -144,6 +142,7 @@ import ServicesCore from "./../../services/service";
 export default {
   name: 'diagnostico-step',
   components: {
+    "single-lightbox": SingleLightbox,
     "v-select": vSelect,
   },
   props: ["clickedNext", "currentStep", "data"],

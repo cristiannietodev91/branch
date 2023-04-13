@@ -86,14 +86,11 @@
               class="branch-image"
             >
               <div class="card">
-                <!-- <single-lightbox
+                <single-lightbox
                   :thumb="documento.url.replace('branchmedia','branchmedia-resized')"
                   :large="documento.url"
                   class-name="responsive"
-                /> -->
-                <!-- <p class="list-item-heading mb-1 truncated">
-                  {{documento.nombrearchivo}}
-                </p>-->
+                />
                 <p class="card-text">
                   {{ dateTime(documento.date) }}
                 </p>
@@ -119,6 +116,7 @@
   </div>
 </template>
 <script>
+import SingleLightbox from "../Pages/SingleLightbox";
 import { useVuelidate } from '@vuelidate/core'
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
@@ -130,6 +128,7 @@ import ServicesCore from "./../../services/service";
 export default {
   name: "entrega-step",
   components: {
+    "single-lightbox": SingleLightbox,
     "v-select": vSelect,
   },
   props: ["clickedNext", "currentStep", "data"],

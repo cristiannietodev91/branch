@@ -262,12 +262,13 @@ export default {
     handleDocumentClick(e) {
       if (!this.isMenuOver) {
         let cont = true;
-        var path = e.path || (e.composedPath && e.composedPath());
-
+        const path = e.path || (e.composedPath && e.composedPath());
         path.map(p => {
           if (
             p.nodeName !== "svg" &&
+            p.nodeName !== "line" &&
             p.nodeName !== "rect" &&
+            p.nodeName !== "g" &&
             p.className !== undefined &&
             p.className.indexOf("menu-button") > -1
           ) {
