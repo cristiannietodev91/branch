@@ -191,7 +191,7 @@ export default function AgregarVehiculo(
         referencia: data.referencia,
       },
       modelo: data.modelo,
-      usuarios: {
+      usuario: {
         email: user?.email,
         uid: user?.uid,
       },

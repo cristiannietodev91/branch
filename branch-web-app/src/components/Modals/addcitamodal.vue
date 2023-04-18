@@ -66,7 +66,7 @@
         </v-select>
       </b-form-group>
       <b-form-group v-if="newCita.IdCita" :label="$t('branch.cita.estado')" class="has-float-label">
-        <v-select v-model="newCita.estado" :options="estados">
+        <v-select v-model="newCita.estado" :options="estados" :reduce="estado => estado.key">
           <template #search="{attributes, events}">
             <input class="vs__search" :required="!newCita.estado" v-bind="attributes" v-on="events">
           </template>
@@ -152,7 +152,7 @@ export default {
           this.newCita.placa = this.cita.vehiculo.placa;
           this.newCita.IdCita = this.cita.IdCita;
           this.newCita.mecanico = this.cita.IdMecanico;
-          this.newCita.fechaCita = new Date(this.cita.fechaCita);
+          this.newCita.fechaCita = this.$moment(this.cita.fechaCita).toDate();
           this.newCita.horaCita = this.cita.horaCita;
           this.newCita.servicio = this.cita.servicio;
           this.newCita.estado = this.cita.estado;
@@ -180,11 +180,11 @@ export default {
       // if its still pending or an error is returned do not submit
       if (this.$v.newCita.$pending || this.$v.newCita.$error) return;
 
-      var citaCreate = {
+      const citaCreate = {
         IdCita: this.newCita.IdCita,
         placa: this.newCita.placa,
         mecanico: this.newCita.mecanico,
-        fechaCita: this.$moment(this.newCita.fechaCita).format("DD/MM/YYYY"),
+        fechaCita: this.$moment(this.newCita.fechaCita).format("YYYY/MM/DD"),
         taller: this.taller.IdTaller,
         horaCita: this.newCita.horaCita,
         servicio: this.newCita.servicio.label,
