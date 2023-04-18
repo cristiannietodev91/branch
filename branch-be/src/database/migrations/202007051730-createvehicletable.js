@@ -18,14 +18,8 @@ module.exports = {
         }
       },
       IdUsuario: {
-        type: Sequelize.INTEGER.UNSIGNED,
+        type: Sequelize.STRING(150),
         allowNull: false,
-        references: {
-          model: {
-            tableName: "usuarios"
-          },
-          key: "IdUsuario"
-        }
       },
       IdTaller: {
         type: Sequelize.INTEGER,
