@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>74838816843-q0ec65r0u4biufh2u72nklihidbgkcq4.apps.googleusercontent.com</string>
+	<string>785009778188-vlseic38efq03q5cfs6vur1osanekifj.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.74838816843-q0ec65r0u4biufh2u72nklihidbgkcq4</string>
+	<string>com.googleusercontent.apps.785009778188-vlseic38efq03q5cfs6vur1osanekifj</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDLx9gzUmHRjimMtug0ARtxabZ3p1bDWPs</string>
+	<string>AIzaSyB4C-pi-5DYrN17MO8zJzXz7We7gHu2BuU</string>
 	<key>GCM_SENDER_ID</key>
-	<string>74838816843</string>
+	<string>785009778188</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.co.bog.branch</string>
 	<key>PROJECT_ID</key>
-	<string>branch-263701</string>
+	<string>branch-54c5d</string>
 	<key>STORAGE_BUCKET</key>
-	<string>branch-263701.appspot.com</string>
+	<string>branch-54c5d.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,8 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:74838816843:ios:6f871f3b09a6554852b5ce</string>
-	<key>DATABASE_URL</key>
-	<string>https://branch-263701.firebaseio.com</string>
+	<string>1:785009778188:ios:82975e7a92f7ea4d3bd829</string>
 </dict>
 </plist>
