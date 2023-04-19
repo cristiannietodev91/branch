@@ -355,9 +355,12 @@ export default {
             "Error al actualizar cita para calificarla :::>",
             error
           );
-          this.$notify("error filled", "ERROR", "Error al actualizar cita", {
+          this.$notify({
+            title: "ERROR",
+            type: "error",
             duration: 3000,
-            permanent: false
+            permanent: false,
+            text: 'Error updating appointment'
           });
         });
     }

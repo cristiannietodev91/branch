@@ -72,9 +72,12 @@ export default {
           }
         })
         .catch(error => {
-          this.$notify("error filled", "ERROR", error.response.data.error, {
+          this.$notify({
+            title: "ERROR",
+            type: "error",
             duration: 3000,
-            permanent: false
+            permanent: false,
+            text: error.response.data.error
           });
         });
     } else {
@@ -86,9 +89,12 @@ export default {
           }
         })
         .catch(error => {
-          this.$notify("error filled", "ERROR", error.response.data.error, {
+          this.$notify({
+            title: "ERROR",
+            type: "error",
             duration: 3000,
-            permanent: false
+            permanent: false,
+            text: error.response.data.error
           });
         });
     }
@@ -105,9 +111,12 @@ export default {
           }
         })
         .catch(error => {
-          this.$notify("error filled", "ERROR", error.response.data.error, {
+          this.$notify({
+            title: "ERROR",
+            type: "error",
             duration: 3000,
-            permanent: false
+            permanent: false,
+            text: error.response.data.error
           });
         });
     },

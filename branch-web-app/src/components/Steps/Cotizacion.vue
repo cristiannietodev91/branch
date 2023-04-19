@@ -5,28 +5,26 @@
         <info-cotizacion v-if="data.etapa && data.etapa.estado=='Rechazado'" :data="data" />
         <div>
           <label for="mechanic_id" class="form-label">{{ $t('branch.orden.mecanico') }}</label>
-          <div class="input-group has-validation">
-            <v-select
-              v-model="newOrden.mecanico"
-              :options="data.mecanicos"
-              label="firstName"
-              :reduce="mecanico => mecanico.IdMecanico"
-            >
-              <template #search="{attributes, events}">
-                <input
-                  v-bind="attributes"
-                  class="vs__search"
-                  :required="!newOrden.mecanico"
-                  v-on="events"
-                >
-              </template>
-              <template
-                #option="option"
+          <v-select
+            v-model="newOrden.mecanico"
+            :options="data.mecanicos"
+            label="firstName"
+            :reduce="mecanico => mecanico.IdMecanico"
+          >
+            <template #search="{attributes, events}">
+              <input
+                v-bind="attributes"
+                class="vs__search"
+                :required="!newOrden.mecanico"
+                v-on="events"
               >
-                {{ option.firstName }} {{ option.lastName }} - {{ option.identificacion }}
-              </template>
-            </v-select>
-          </div>
+            </template>
+            <template
+              #option="option"
+            >
+              {{ option.firstName }} {{ option.lastName }} - {{ option.identificacion }}
+            </template>
+          </v-select>
         </div>
         <!-- <vue-dropzone
           id="dropzone"
@@ -180,19 +178,20 @@ export default {
                 .catch(error => {
                   this.$emit("can-continue", { value: false });
                   if (error.response) {
-                    this.$notify(
-                      "error filled",
-                      "ERROR",
-                      error.response.data.error,
-                      {
-                        duration: 3000,
-                        permanent: false
-                      }
-                    );
-                  } else {
-                    this.$notify("error filled", "ERROR", error, {
+                    this.$notify({
+                      title: "ERROR",
+                      type: "error",
                       duration: 3000,
-                      permanent: false
+                      permanent: false,
+                      text: error.response.data.error
+                    });
+                  } else {
+                    this.$notify({
+                      title: "ERROR",
+                      type: "error",
+                      duration: 3000,
+                      permanent: false,
+                      text: error
                     });
                   }
                 });
@@ -201,27 +200,31 @@ export default {
           .catch(error => {
             this.$emit("can-continue", { value: false });
             if (error.response) {
-              this.$notify("error filled", "ERROR", error.response.data.error, {
+              this.$notify({
+                title: "ERROR",
+                type: "error",
                 duration: 3000,
-                permanent: false
+                permanent: false,
+                text: error.response.data.error
               });
             } else {
-              this.$notify("error filled", "ERROR", error, {
+              this.$notify({
+                title: "ERROR",
+                type: "error",
                 duration: 3000,
-                permanent: false
+                permanent: false,
+                text: error
               });
             }
           });
       } else {
-        this.$notify(
-          "error filled",
-          "ERROR",
-          "Debe cargar un archivo a la cotizacion",
-          {
-            duration: 3000,
-            permanent: false
-          }
-        );
+        this.$notify({
+          title: "ERROR",
+          type: "error",
+          duration: 3000,
+          permanent: false,
+          text: "You should update a file to the quotation"
+        });
       }
     },
     dropzoneTemplate() {

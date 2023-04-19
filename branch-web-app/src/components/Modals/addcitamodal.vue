@@ -235,9 +235,12 @@ export default {
               );
             } else {
               this.hideModal("modalAddCita");
-              this.$notify("error filled", "ERROR", "Error al crear cita", {
+              this.$notify({
+                title: "ERROR",
+                type: "error",
                 duration: 3000,
-                permanent: false
+                permanent: false,
+                text: 'Error creating appointment'
               });
             }
           })
@@ -245,14 +248,20 @@ export default {
             //this.hideModal("modalAddCita");
             //console.error("Error al crear cita :::>",error);
             if (error.response) {
-              this.$notify("error filled", "ERROR", error.response.data.error, {
+              this.$notify({
+                title: "ERROR",
+                type: "error",
                 duration: 3000,
-                permanent: false
+                permanent: false,
+                text: error.response.data.error
               });
             } else {
-              this.$notify("error filled", "ERROR", error.message, {
+              this.$notify({
+                title: "ERROR",
+                type: "error",
                 duration: 3000,
-                permanent: false
+                permanent: false,
+                text: error.message
               });
             }
           });
@@ -277,29 +286,33 @@ export default {
               );
             } else {
               this.hideModal("modalAddCita");
-              this.$notify(
-                "error filled",
-                "ERROR",
-                "Error al actualizar cita",
-                {
-                  duration: 3000,
-                  permanent: false
-                }
-              );
+              this.$notify({
+                title: "ERROR",
+                type: "error",
+                duration: 3000,
+                permanent: false,
+                text: "Error updating appointment"
+              });
             }
           })
           .catch(error => {
             //this.hideModal("modalAddCita");
             console.error("Error al crear cita :::>", error);
             if (error.response) {
-              this.$notify("error filled", "ERROR", error.response.data.error, {
+              this.$notify({
+                title: "ERROR",
+                type: "error",
                 duration: 3000,
-                permanent: false
+                permanent: false,
+                text: error.response.data.error
               });
             } else {
-              this.$notify("error filled", "ERROR", error.message, {
+              this.$notify({
+                title: "ERROR",
+                type: "error",
                 duration: 3000,
-                permanent: false
+                permanent: false,
+                text: error.message
               });
             }
           });
