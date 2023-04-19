@@ -40,16 +40,14 @@
             </div>
           </div>
         </div>    
-        <!--
-      <vue-dropzone
-        id="dropzone"
-        ref="myVueDropzone"
-        :awss3="awss3"
-        :options="dropzoneOptions"
-        @vdropzone-complete="complete"
-        @vdropzone-removed-file="removeFile"
-      />
-      -->
+        <vue-dropzone
+          id="dropzone"
+          ref="myVueDropzone"
+          :awss3="awss3"
+          :options="dropzoneOptions"
+          @vdropzone-complete="complete"
+          @vdropzone-removed-file="removeFile"
+        />
         <div class="btn-icon">
           <button type="submit" class="btn btn-primary btn-lg mt-4">
             <i class="iconsminds-upload-1" />
@@ -128,17 +126,19 @@
   </div>
 </template>
 <script>
-import SingleLightbox from "../Pages/SingleLightbox";
+import vueDropzone from "dropzone-vue3";
 import { useVuelidate } from '@vuelidate/core'
 import momentTZ from "moment-timezone";
 import moment from "moment";
 import { required } from "@vuelidate/validators";
+import SingleLightbox from "../Pages/SingleLightbox";
 import ServicesCore from "./../../services/service";
 
 export default {
   name: 'diagnostico-step',
   components: {
     "single-lightbox": SingleLightbox,
+    vueDropzone,
   },
   props: ["clickedNext", "currentStep", "data"],
   setup: () => ({ v$: useVuelidate() }),
