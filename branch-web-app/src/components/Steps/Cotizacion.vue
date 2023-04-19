@@ -26,19 +26,18 @@
             </template>
           </v-select>
         </div>
-        <!-- <vue-dropzone
+        <vue-dropzone
           id="dropzone"
           ref="myVueDropzone"
           :awss3="awss3"
           :options="dropzoneOptions"
           @vdropzone-complete="complete"
           @vdropzone-removed-file="removeFile"
-        /> -->
+        />
         <div class="btn-icon">
           <button type="submit" class="btn btn-primary btn-lg mt-4">
             <i class="iconsminds-upload-1" />
             Cargar Cotización
-            <!-- {{ $t('forms.submit') }} -->
           </button>
         </div>
       </form>
@@ -47,6 +46,7 @@
   </div>
 </template>
 <script>
+import vueDropzone from "dropzone-vue3";
 import vSelect from "vue-select";
 import moment from "moment-timezone";
 import "vue-select/dist/vue-select.css";
@@ -58,7 +58,8 @@ export default {
   name: "cotizacion-step",
   components: {
     "v-select": vSelect,
-    "info-cotizacion": InfoCotizacion
+    "info-cotizacion": InfoCotizacion,
+    vueDropzone,
   },
   props: ["clickedNext", "currentStep", "data"],
   data() {

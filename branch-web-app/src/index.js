@@ -2,7 +2,7 @@ import "vue-select/dist/vue-select.css";
 
 import 'bootstrap'
 
-import "./assets/css/vendor/dropzone.min.css";
+// import "./assets/css/vendor/dropzone.min.css";
 import "./assets/fonts/simple-line-icons/css/simple-line-icons.css"
 import "./assets/fonts/iconsmind-s/css/iconsminds.css" 
 

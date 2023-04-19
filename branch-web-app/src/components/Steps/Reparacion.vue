@@ -38,14 +38,14 @@
           </div>
         </div>
       </div>
-      <!-- <vue-dropzone
+      <vue-dropzone
         id="dropzone"
         ref="myVueDropzone"
         :awss3="awss3"
         :options="dropzoneOptions"
         @vdropzone-complete="complete"
         @vdropzone-removed-file="removeFile"
-      /> -->
+      />
       <button type="submit" class="btn btn-primary btn-lg mt-4">
         {{ $t('forms.submit') }}
       </button>
@@ -121,6 +121,7 @@
   </div>
 </template>
 <script>
+import vueDropzone from "dropzone-vue3";
 import SingleLightbox from "../Pages/SingleLightbox";
 import { useVuelidate } from '@vuelidate/core';
 import vSelect from "vue-select";
@@ -135,6 +136,7 @@ export default {
   components: {
     "single-lightbox": SingleLightbox,
     "v-select": vSelect,
+    vueDropzone,
   },
   props: ["clickedNext", "currentStep", "data"],
   setup: () => ({ v$: useVuelidate() }),

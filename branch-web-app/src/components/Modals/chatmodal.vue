@@ -36,8 +36,7 @@
         <div class="loading" />
       </template>
     </div>
-
-    <!-- <vue-dropzone
+    <vue-dropzone
       id="dropzone"
       ref="myVueDropzone"
       :awss3="awss3"
@@ -46,11 +45,12 @@
       @vdropzone-complete="complete"
       @vdropzone-file-added="starLoad"
       @vdropzone-error="errorLoadFile"
-    /> -->
+    /> 
   </div>
 </template>
 
 <script>
+import vueDropzone from "dropzone-vue3";
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import ConversationDetail from "../ChatApp/ConversationDetail";
 import { v4 as uuidv4 } from "uuid";
@@ -58,7 +58,8 @@ import { v4 as uuidv4 } from "uuid";
 export default {
   name: "chat-modal",
   components: {
-    "conversation-detail": ConversationDetail
+    "conversation-detail": ConversationDetail,
+    vueDropzone,
   },
   props: ["conversacion"],
   data() {
