@@ -407,9 +407,12 @@ export default {
         })
         .catch((error) => {
           console.log("Error al registrar cliente :::>", error);
-          this.$notify("error filled", "ERROR", "Error al registrar cliente", {
+          this.$notify({
+            title: "ERROR",
+            type: "error",
             duration: 3000,
             permanent: false,
+            text: "Error creating client"
           });
         });
     },

@@ -269,19 +269,20 @@ export default {
                 .catch(error => {
                   this.$emit("can-continue", { value: false });
                   if (error.response) {
-                    this.$notify(
-                      "error filled",
-                      "ERROR",
-                      error.response.data.error,
-                      {
-                        duration: 3000,
-                        permanent: false
-                      }
-                    );
-                  } else {
-                    this.$notify("error filled", "ERROR", error, {
+                    this.$notify({
+                      title: "ERROR",
+                      type: "error",
                       duration: 3000,
-                      permanent: false
+                      permanent: false,
+                      text: error.response.data.error
+                    });
+                  } else {
+                    this.$notify({
+                      title: "ERROR",
+                      type: "error",
+                      duration: 3000,
+                      permanent: false,
+                      text: error
                     });
                   }
                 });
@@ -290,27 +291,31 @@ export default {
           .catch(error => {
             this.$emit("can-continue", { value: false });
             if (error.response) {
-              this.$notify("error filled", "ERROR", error.response.data.error, {
+              this.$notify({
+                title: "ERROR",
+                type: "error",
                 duration: 3000,
-                permanent: false
+                permanent: false,
+                text: error.response.data.error
               });
             } else {
-              this.$notify("error filled", "ERROR", error, {
+              this.$notify({
+                title: "ERROR",
+                type: "error",
                 duration: 3000,
-                permanent: false
+                permanent: false,
+                text: error
               });
             }
           });
       } else {
-        this.$notify(
-          "error filled",
-          "ERROR",
-          "Le recomendamos subir fotos al diagnostico",
-          {
-            duration: 3000,
-            permanent: false
-          }
-        );
+        this.$notify({
+          title: "ERROR",
+          type: "error",
+          duration: 3000,
+          permanent: false,
+          text: 'Please upload photos to the vehicle diagnostic'
+        });
       }
     },
     dropzoneTemplate() {

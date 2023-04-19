@@ -1,4 +1,4 @@
-import 'vue-select/dist/vue-select.css';
+import "vue-select/dist/vue-select.css";
 
 import 'bootstrap'
 

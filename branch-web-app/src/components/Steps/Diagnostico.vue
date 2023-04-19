@@ -4,27 +4,25 @@
       <form v-if="!data.etapa" novalidate @submit.prevent="onValitadeAddOrden">
         <div>
           <label for="mechanic_id" class="form-label">{{ $t('branch.orden.mecanico') }}</label>
-          <div class="input-group has-validation">
-            <v-select
-              id="mechanic_id"
-              v-model="newOrden.mecanico"
-              :options="data.mecanicos"
-              label="fullName"
-              :reduce="mecanico => mecanico.IdMecanico"
-            >
-              <template #search="{attributes, events}">
-                <input
-                  v-bind="attributes"
-                  class="vs__search"
-                  :required="!newOrden.mecanico"
-                  v-on="events"
-                >
-              </template>
-              <template #option="option">
-                {{ option.fullName }} - {{ option.identificacion }}
-              </template>
-            </v-select>
-          </div>
+          <v-select
+            id="mechanic_id"
+            v-model="newOrden.mecanico"
+            :options="data.mecanicos"
+            label="fullName"
+            :reduce="mecanico => mecanico.IdMecanico"
+          >
+            <template #search="{attributes, events}">
+              <input
+                v-bind="attributes"
+                class="vs__search"
+                :required="!newOrden.mecanico"
+                v-on="events"
+              >
+            </template>
+            <template #option="option">
+              {{ option.fullName }} - {{ option.identificacion }}
+            </template>
+          </v-select>
         </div>
         <div>
           <label for="order_observation" class="form-label">{{ $t('branch.orden.observaciones') }}</label>
@@ -132,8 +130,6 @@
 <script>
 import SingleLightbox from "../Pages/SingleLightbox";
 import { useVuelidate } from '@vuelidate/core'
-import vSelect from "vue-select";
-import "vue-select/dist/vue-select.css";
 import momentTZ from "moment-timezone";
 import moment from "moment";
 import { required } from "@vuelidate/validators";
@@ -143,7 +139,6 @@ export default {
   name: 'diagnostico-step',
   components: {
     "single-lightbox": SingleLightbox,
-    "v-select": vSelect,
   },
   props: ["clickedNext", "currentStep", "data"],
   setup: () => ({ v$: useVuelidate() }),
@@ -227,10 +222,10 @@ export default {
         value.key != file.s3Signature.key;
       });
     },
-    onValitadeAddOrden() {
-      this.v$.$touch();
-      // if its still pending or an error is returned do not submit
-      if (this.v$.newOrden.$pending || this.v$.newOrden.$error) return;
+    async onValitadeAddOrden() {
+      const isFormCorrect = await this.v$.$validate()
+
+      if (!isFormCorrect) return
 
       if (this.filesEtapa.length > 0) {
         let orden = {
@@ -278,19 +273,20 @@ export default {
                 .catch(error => {
                   this.$emit("can-continue", { value: false });
                   if (error.response) {
-                    this.$notify(
-                      "error filled",
-                      "ERROR",
-                      error.response.data.error,
-                      {
-                        duration: 3000,
-                        permanent: false
-                      }
-                    );
-                  } else {
-                    this.$notify("error filled", "ERROR", error, {
+                    this.$notify({
+                      title: "ERROR",
+                      type: "error",
                       duration: 3000,
-                      permanent: false
+                      permanent: false,
+                      text: error.response.data.error
+                    });
+                  } else {
+                    this.$notify({
+                      title: "ERROR",
+                      type: "error",
+                      duration: 3000,
+                      permanent: false,
+                      text: error
                     });
                   }
                 });
@@ -299,27 +295,31 @@ export default {
           .catch(error => {
             this.$emit("can-continue", { value: false });
             if (error.response) {
-              this.$notify("error filled", "ERROR", error.response.data.error, {
+              this.$notify({
+                title: "ERROR",
+                type: "error",
                 duration: 3000,
-                permanent: false
+                permanent: false,
+                text: error.response.data.error
               });
             } else {
-              this.$notify("error filled", "ERROR", error, {
+              this.$notify({
+                title: "ERROR",
+                type: "error",
                 duration: 3000,
-                permanent: false
+                permanent: false,
+                text: error
               });
             }
           });
       } else {
-        this.$notify(
-          "error filled",
-          "ERROR",
-          "Le recomendamos subir fotos al diagnostico",
-          {
-            duration: 3000,
-            permanent: false
-          }
-        );
+        this.$notify({
+          title: "ERROR",
+          type: "error",
+          duration: 3000,
+          permanent: false,
+          text: 'You should update photos to the diagnostic.'
+        });
       }
     },
     dropzoneTemplate() {
@@ -345,3 +345,4 @@ export default {
   }
 };
 </script>
+

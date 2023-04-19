@@ -87,16 +87,14 @@ export default {
             }
           })
           .catch(error => {
-            console.log("Error al eliminar mecanico :::>", error);
-            this.$notify(
-              "error filled",
-              "ERROR",
-              "Error al eliminar mecanico",
-              {
-                duration: 3000,
-                permanent: false
-              }
-            );
+            console.log("Error removing mechanic :::>", error);
+            this.$notify({
+              title: "ERROR",
+              type: "error",
+              duration: 3000,
+              permanent: false,
+              text: "Error removing mechanic"
+            });
           });
       }
     }
