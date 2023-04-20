@@ -44,7 +44,7 @@
     "sequelize": "^6.6.5",
     "sequelize-paginate": "^1.1.6",
     "socket.io": "4.4.1",
-    "sqlite3": "^5.1.1",
+    "sqlite3": "^5.1.5",
     "twilio": "^3.39.3"
   },
   "devDependencies": {
