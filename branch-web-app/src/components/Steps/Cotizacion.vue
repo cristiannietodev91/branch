@@ -5,35 +5,48 @@
         <info-cotizacion v-if="data.etapa && data.etapa.estado=='Rechazado'" :data="data" />
         <div>
           <label for="mechanic_id" class="form-label">{{ $t('branch.orden.mecanico') }}</label>
-          <v-select
-            v-model="newOrden.mecanico"
-            :options="data.mecanicos"
-            label="firstName"
-            :reduce="mecanico => mecanico.IdMecanico"
-          >
-            <template #search="{attributes, events}">
-              <input
-                v-bind="attributes"
-                class="vs__search"
-                :required="!newOrden.mecanico"
-                v-on="events"
-              >
-            </template>
-            <template
-              #option="option"
+          <div class="input-group has-validation">
+            <v-select
+              id="mechanic_id"
+              v-model="newOrden.mecanico"
+              :options="data.mecanicos"
+              label="fullName"
+              :reduce="mecanico => mecanico.IdMecanico"
+              class="w-100"
+              :class="{ 'is-invalid': v$.newOrden.mecanico.$error }"
             >
-              {{ option.firstName }} {{ option.lastName }} - {{ option.identificacion }}
-            </template>
-          </v-select>
+              <template #search="{attributes, events}">
+                <input
+                  v-bind="attributes"
+                  class="vs__search"
+                  v-on="events"
+                >
+              </template>
+              <template
+                #option="option"
+              >
+                {{ option.firstName }} {{ option.lastName }} - {{ option.identificacion }}
+              </template>
+            </v-select>
+            <div
+              v-if="v$.newOrden.mecanico.required.$invalid"
+              class="invalid-feedback"
+            >
+              {{ $t('branch.forms.validations.required') }}
+            </div>
+          </div>
         </div>
-        <vue-dropzone
-          id="dropzone"
-          ref="myVueDropzone"
-          :awss3="awss3"
-          :options="dropzoneOptions"
-          @vdropzone-complete="complete"
-          @vdropzone-removed-file="removeFile"
-        />
+        <div>
+          <label for="dropzone" class="form-label">{{ $t('branch.forms.labels.files') }}</label>
+          <vue-dropzone
+            id="dropzone"
+            ref="myVueDropzone"
+            :awss3="awss3"
+            :options="dropzoneOptions"
+            @vdropzone-complete="complete"
+            @vdropzone-removed-file="removeFile"
+          />
+        </div>  
         <div class="btn-icon">
           <button type="submit" class="btn btn-primary btn-lg mt-4">
             <i class="iconsminds-upload-1" />
@@ -47,21 +60,20 @@
 </template>
 <script>
 import vueDropzone from "dropzone-vue3";
-import vSelect from "vue-select";
+import { useVuelidate } from "@vuelidate/core";
+import { required } from "@vuelidate/validators";
 import moment from "moment-timezone";
-import "vue-select/dist/vue-select.css";
-
 import ServicesCore from "./../../services/service";
 import InfoCotizacion from "./InfoCotizacion";
 
 export default {
   name: "cotizacion-step",
   components: {
-    "v-select": vSelect,
     "info-cotizacion": InfoCotizacion,
     vueDropzone,
   },
   props: ["clickedNext", "currentStep", "data"],
+  setup: () => ({ v$: useVuelidate() }),
   data() {
     return {
       newOrden: {
@@ -98,6 +110,13 @@ export default {
       }
     };
   },
+  validations: {
+    newOrden: {
+      mecanico: {
+        required
+      } 
+    }
+  },
   watch: {
     clickedNext(val) {
       if (val === true) {
@@ -120,7 +139,7 @@ export default {
           .tz("UTC")
           .format();
 
-        let documento = {
+        const documento = {
           nombrearchivo: response.name,
           url: response.s3Url + "/" + response.s3Signature.key,
           type: response.type,
@@ -136,7 +155,12 @@ export default {
         value.key != file.s3Signature.key;
       });
     },
-    uploadFiles() {
+    async uploadFiles() {
+
+      const isFormCorrect = await this.v$.$validate()
+
+      if (!isFormCorrect) return
+
       if (this.filesEtapa.length > 0) {
         let orden = {
           CodigoOrden: this.data.CodigoOrden,

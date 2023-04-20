@@ -3,24 +3,34 @@
     <form v-if="!data.etapa" novalidate class="p-5 w-90 ml-5" @submit.prevent="onValitadeAddOrden">
       <div>
         <label for="mechanic_id" class="form-label">{{ $t('branch.orden.mecanico') }}</label>
-        <v-select
-          v-model="newOrden.mecanico"
-          :options="data.mecanicos"
-          label="fullName"
-          :reduce="mecanico => mecanico.IdMecanico"
-        >
-          <template #search="{attributes, events}">
-            <input
-              v-bind="attributes"
-              class="vs__search"
-              :required="!newOrden.mecanico"
-              v-on="events"
-            >
-          </template>
-          <template #option="option">
-            {{ option.fullName }} - {{ option.identificacion }}
-          </template>
-        </v-select>
+        <div class="input-group has-validation">
+          <v-select
+            id="mechanic_id"
+            v-model="newOrden.mecanico"
+            :options="data.mecanicos"
+            label="fullName"
+            :reduce="mecanico => mecanico.IdMecanico"
+            class="w-100"
+            :class="{ 'is-invalid': v$.newOrden.mecanico.$error }"
+          >
+            <template #search="{attributes, events}">
+              <input
+                v-bind="attributes"
+                class="vs__search"
+                v-on="events"
+              >
+            </template>
+            <template #option="option">
+              {{ option.fullName }} - {{ option.identificacion }}
+            </template>
+          </v-select>
+          <div
+            v-if="v$.newOrden.mecanico.required.$invalid"
+            class="invalid-feedback"
+          >
+            {{ $t('branch.forms.validations.required') }}
+          </div>
+        </div>
       </div>
       <div>
         <label for="order_observation" class="form-label">{{ $t('branch.orden.observaciones') }}</label>
@@ -38,14 +48,17 @@
           </div>
         </div>
       </div>
-      <vue-dropzone
-        id="dropzone"
-        ref="myVueDropzone"
-        :awss3="awss3"
-        :options="dropzoneOptions"
-        @vdropzone-complete="complete"
-        @vdropzone-removed-file="removeFile"
-      />
+      <div>
+        <label for="dropzone" class="form-label">{{ $t('branch.forms.labels.files') }}</label>
+        <vue-dropzone
+          id="dropzone"
+          ref="myVueDropzone"
+          :awss3="awss3"
+          :options="dropzoneOptions"
+          @vdropzone-complete="complete"
+          @vdropzone-removed-file="removeFile"
+        />
+      </div>
       <button type="submit" class="btn btn-primary btn-lg mt-4">
         {{ $t('forms.submit') }}
       </button>
@@ -119,8 +132,6 @@
 import vueDropzone from "dropzone-vue3";
 import SingleLightbox from "../Pages/SingleLightbox";
 import { useVuelidate } from '@vuelidate/core'
-import vSelect from "vue-select";
-import "vue-select/dist/vue-select.css";
 import momentTZ from "moment-timezone";
 import moment from "moment";
 import { required } from "@vuelidate/validators";
@@ -130,7 +141,6 @@ export default {
   name: "entrega-step",
   components: {
     "single-lightbox": SingleLightbox,
-    "v-select": vSelect,
     vueDropzone,
   },
   props: ["clickedNext", "currentStep", "data"],
@@ -176,7 +186,10 @@ export default {
     newOrden: {
       observacion: {
         required
-      }
+      },
+      mecanico: {
+        required
+      } 
     }
   },
   watch: {
@@ -216,10 +229,10 @@ export default {
         value.key != file.s3Signature.key;
       });
     },
-    onValitadeAddOrden() {
-      this.v$.$touch();
-      // if its still pending or an error is returned do not submit
-      if (this.v$.newOrden.$pending || this.v$.newOrden.$error) return;
+    async onValitadeAddOrden() {
+      const isFormCorrect = await this.v$.$validate()
+
+      if (!isFormCorrect) return
 
       if (this.filesEtapa.length > 0) {
         let orden = {
