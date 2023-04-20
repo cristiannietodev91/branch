@@ -144,7 +144,7 @@ export default {
     this.renderModal = true;
   },
   created() {
-    var idxIngreso = this.data.etapas.findIndex(element => {
+    const idxIngreso = this.data.etapas.findIndex(element => {
       if (element.IdEtapa == 2) {
         return true;
       }
@@ -159,16 +159,16 @@ export default {
       completed: idxIngreso > -1
     });
 
-    let idxDiagnostico = this.data.etapas.findIndex(element => {
+    const idxDiagnostico = this.data.etapas.findIndex(element => {
       if (element.IdEtapa == 3) {
         return true;
       }
     });
 
-    let etapaDiagnostico =
+    const etapaDiagnostico =
       idxDiagnostico > -1 ? this.data.etapas[idxDiagnostico] : null;
 
-    let dataDiagnostico = {
+    const dataDiagnostico = {
       IdCita: this.data.IdCita,
       IdTaller: this.data.IdTaller,
       CodigoOrden: this.data.CodigoOrden,
@@ -187,19 +187,19 @@ export default {
       completed: idxDiagnostico > -1
     });
 
-    let idxCotizacion = this.data.etapas.findIndex(element => {
+    const idxCotizacion = this.data.etapas.findIndex(element => {
       if (element.IdEtapa == 4) {
         return true;
       }
     });
 
-    let etapaCotizacion =
+    const etapaCotizacion =
       idxDiagnostico > -1 ? this.data.etapas[idxCotizacion] : null;
 
-    let olderCotizaciones =
+    const olderCotizaciones =
       idxDiagnostico > -1 ? this.data.olderCotizaciones : null;
 
-    let dataCotizacion = {
+    const dataCotizacion = {
       IdCita: this.data.IdCita,
       IdTaller: this.data.IdTaller,
       CodigoOrden: this.data.CodigoOrden,
@@ -219,16 +219,16 @@ export default {
       completed: idxCotizacion > -1
     });
 
-    let idxAprobacion = this.data.etapas.findIndex(element => {
+    const idxAprobacion = this.data.etapas.findIndex(element => {
       if (element.IdEtapa == 5) {
         return true;
       }
     });
 
-    let etapaAprobacion =
+    const etapaAprobacion =
       idxAprobacion > -1 ? this.data.etapas[idxAprobacion] : null;
 
-    let dataAprobacion = {
+    const dataAprobacion = {
       IdCita: this.data.IdCita,
       IdTaller: this.data.IdTaller,
       CodigoOrden: this.data.CodigoOrden,
@@ -247,16 +247,16 @@ export default {
       completed: idxAprobacion > -1
     });
 
-    let idxReparacion = this.data.etapas.findIndex(element => {
+    const idxReparacion = this.data.etapas.findIndex(element => {
       if (element.IdEtapa == 6) {
         return true;
       }
     });
 
-    let etapaReparacion =
+    const etapaReparacion =
       idxReparacion > -1 ? this.data.etapas[idxReparacion] : null;
 
-    let dataReparacion = {
+    const dataReparacion = {
       IdCita: this.data.IdCita,
       IdTaller: this.data.IdTaller,
       CodigoOrden: this.data.CodigoOrden,
@@ -275,15 +275,15 @@ export default {
       completed: idxReparacion > -1
     });
 
-    let idxEntrega = this.data.etapas.findIndex(element => {
+    const idxEntrega = this.data.etapas.findIndex(element => {
       if (element.IdEtapa == 7) {
         return true;
       }
     });
 
-    let etapaEntrega = idxEntrega > -1 ? this.data.etapas[idxEntrega] : null;
+    const etapaEntrega = idxEntrega > -1 ? this.data.etapas[idxEntrega] : null;
 
-    let dataEntrega = {
+    const dataEntrega = {
       IdCita: this.data.IdCita,
       IdTaller: this.data.IdTaller,
       CodigoOrden: this.data.CodigoOrden,

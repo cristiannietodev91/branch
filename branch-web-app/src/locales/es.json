@@ -35,6 +35,9 @@
         "formatPlaca": "El formato de la placa debe ser AAA00A o AAA000",
         "decimal": "Requiere un valor decimal",
         "alpha": "Solo valores alfabeticos"
+      },
+      "labels": {
+        "files" : "Archivos"
       }
     },
     "clientes": {
