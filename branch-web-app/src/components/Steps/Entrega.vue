@@ -185,7 +185,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      mecanicos: "workshopMecanicos",
+      mecanicos: "workshopMechanics",
     })
   },
   validations: {

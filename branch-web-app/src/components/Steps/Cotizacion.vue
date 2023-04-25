@@ -113,7 +113,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      mecanicos: "workshopMecanicos",
+      mecanicos: "workshopMechanics",
     })
   },
   validations: {
@@ -162,7 +162,7 @@ export default {
 
       const { workOrder } = this.data;
 
-      if (this.filesEtapa.length > 0) {
+      if (workOrder && this.filesEtapa.length > 0) {
         let orden = {
           CodigoOrden: workOrder.CodigoOrden,
           IdCita: workOrder.IdCita,

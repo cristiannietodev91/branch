@@ -12,7 +12,7 @@ const state = {
 const getters = {
   workOrders: (state) => state.workOrders,
   workshopInfo: (state) => state.infoWorkshop,
-  workshopMecanicos: (state) => state.infoWorkshop?.mecanicos || [],
+  workshopMechanics: (state) => state.infoWorkshop?.mecanicos || [],
   workOrdersByOrderCode: (_, getters) => getters.workOrders.reduce((group, curr) => {
     const { CodigoOrden } = curr;
     group[CodigoOrden] = group[CodigoOrden] ?? [];
