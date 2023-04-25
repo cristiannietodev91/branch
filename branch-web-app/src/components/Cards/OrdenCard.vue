@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col col-12 col-lg-4 col-md-6 col-sm-6">
           <h5 class="mb-1 card-subtitle truncate">
-            {{ data.CodigoOrden }}
+            {{ workOrderViewed.CodigoOrden }}
           </h5>
           <p class="text-muted text-small mb-2">
             {{ $t("branch.orden.codigoOrden") }}
@@ -12,7 +12,7 @@
         </div>
         <div class="col col-4 col-sm-6 col-lg-2 col-md-6">
           <h5 class="mb-1 card-subtitle truncate">
-            {{ data.vehiculo.placa }}
+            {{ workOrderViewed.vehiculo.placa }}
           </h5>
           <p class="text-muted text-small mb-2">
             {{ $t("branch.orden.placa") }}
@@ -20,7 +20,7 @@
         </div>
         <div class="col col-4 col-sm-6 col-md-6 col-lg-2">
           <h5 class="mb-1 card-subtitle truncate">
-            {{ data.vehiculo.marca.marca }}
+            {{ workOrderViewed.vehiculo.marca.marca }}
           </h5>
           <p class="text-muted text-small mb-2">
             {{ $t("branch.orden.marca") }}
@@ -28,7 +28,7 @@
         </div>
         <div class="col col-4 col-sm-6 col-md-6 col-lg-2">
           <h5 class="mb-1 card-subtitle truncate">
-            {{ data.vehiculo.usuario.firstName }}
+            {{ workOrderViewed.vehiculo.usuario.firstName }}
           </h5>
           <p class="text-muted text-small mb-2">
             {{ $t("branch.vehiculo.dueno") }}
@@ -37,7 +37,7 @@
         <div class="col col-4 col-sm-6 col-md-6 col-lg-2">
           <button
             class="btn btn-primary btn-xs top-right-button"
-            :aria-controls="`sidebar${data.CodigoOrden}`"
+            :aria-controls="`sidebar${workOrderViewed.CodigoOrden}`"
             @click="openChat"
           >
             <!-- <i class="iconsminds-speach-bubble-8"></i> -->
@@ -50,7 +50,7 @@
             </span>
           </button>
           <div
-            :id="`sidebar${data.CodigoOrden}`"
+            :id="`sidebar${workOrderViewed.CodigoOrden}`"
             class="modal shadow"
           >
             <modal-open-chat
@@ -90,6 +90,7 @@
 <script>
 import { shallowRef } from 'vue'
 import { mapGetters } from "vuex";
+import { stages } from "../../utils/constants";
 import HorizontalStepper from "./../Steps/Steeper";
 import Ingreso from "./../Steps/Ingreso";
 import Diagnostico from "./../Steps/Diagnostico";
@@ -105,7 +106,12 @@ export default {
     HorizontalStepper,
     "modal-open-chat": ModalOpenChat
   },
-  props: ["link", "data", "mecanicos"],
+  props: {
+    workOrder: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {
       steps: [],
@@ -114,15 +120,23 @@ export default {
       qualyfyCita: null,
       showQualify: false,
       readOnlyQualify: false,
-      infoconversacion: {}
+      infoconversacion: {},
+      workOrderViewed: null,
     };
   },
   computed: {
-    ...mapGetters({
-      currentUser: "currentUser"
-    })
+    ...mapGetters([
+      "currentUser",
+      "workOrdersByOrderCodeAndStages",
+    ])
+  },
+  watch: {
+    workOrdersByOrderCodeAndStages() {
+      this.buildSteps();
+    }
   },
   mounted() {
+    /*
     this.sockets.subscribe("sendmessage", newmessage => {
       if (newmessage.cita == this.data.IdCita) {
         if (!this.showModal) {
@@ -140,169 +154,14 @@ export default {
       CodigoOrden: this.data.CodigoOrden,
       IdOrdenTrabajo: this.data.IdOrdenTrabajo,
       IdEtapa: this.data.IdEtapa
-    };
+    };*/
     this.renderModal = true;
   },
   created() {
-    const idxIngreso = this.data.etapas.findIndex(element => {
-      if (element.IdEtapa == 2) {
-        return true;
-      }
-    });
+    this.buildSteps();
 
-    this.steps.push({
-      icon: "info",
-      name: "ingreso",
-      title: "Ingreso",
-      component: shallowRef(Ingreso),
-      data: this.data.etapas[idxIngreso],
-      completed: idxIngreso > -1
-    });
-
-    const idxDiagnostico = this.data.etapas.findIndex(element => {
-      if (element.IdEtapa == 3) {
-        return true;
-      }
-    });
-
-    const etapaDiagnostico =
-      idxDiagnostico > -1 ? this.data.etapas[idxDiagnostico] : null;
-
-    const dataDiagnostico = {
-      IdCita: this.data.IdCita,
-      IdTaller: this.data.IdTaller,
-      CodigoOrden: this.data.CodigoOrden,
-      IdVehiculo: this.data.IdVehiculo,
-      kilometraje: this.data.kilometraje,
-      etapa: etapaDiagnostico,
-      mecanicos: this.mecanicos
-    };
-
-    this.steps.push({
-      icon: "help",
-      name: "diagnstico",
-      title: "Diagnóstico",
-      component: shallowRef(Diagnostico),
-      data: dataDiagnostico,
-      completed: idxDiagnostico > -1
-    });
-
-    const idxCotizacion = this.data.etapas.findIndex(element => {
-      if (element.IdEtapa == 4) {
-        return true;
-      }
-    });
-
-    const etapaCotizacion =
-      idxDiagnostico > -1 ? this.data.etapas[idxCotizacion] : null;
-
-    const olderCotizaciones =
-      idxDiagnostico > -1 ? this.data.olderCotizaciones : null;
-
-    const dataCotizacion = {
-      IdCita: this.data.IdCita,
-      IdTaller: this.data.IdTaller,
-      CodigoOrden: this.data.CodigoOrden,
-      IdVehiculo: this.data.IdVehiculo,
-      kilometraje: this.data.kilometraje,
-      etapa: etapaCotizacion,
-      mecanicos: this.mecanicos,
-      olderCotizaciones: olderCotizaciones
-    };
-
-    this.steps.push({
-      icon: "help",
-      name: "cotizacion",
-      title: "Cotización",
-      component: shallowRef(Cotizacion),
-      data: dataCotizacion,
-      completed: idxCotizacion > -1
-    });
-
-    const idxAprobacion = this.data.etapas.findIndex(element => {
-      if (element.IdEtapa == 5) {
-        return true;
-      }
-    });
-
-    const etapaAprobacion =
-      idxAprobacion > -1 ? this.data.etapas[idxAprobacion] : null;
-
-    const dataAprobacion = {
-      IdCita: this.data.IdCita,
-      IdTaller: this.data.IdTaller,
-      CodigoOrden: this.data.CodigoOrden,
-      IdVehiculo: this.data.IdVehiculo,
-      kilometraje: this.data.kilometraje,
-      etapa: etapaAprobacion,
-      mecanicos: this.mecanicos
-    };
-
-    this.steps.push({
-      icon: "report_problem",
-      name: "aprobacion",
-      title: "Aprobación",
-      component: shallowRef(Aprobacion),
-      data: dataAprobacion,
-      completed: idxAprobacion > -1
-    });
-
-    const idxReparacion = this.data.etapas.findIndex(element => {
-      if (element.IdEtapa == 6) {
-        return true;
-      }
-    });
-
-    const etapaReparacion =
-      idxReparacion > -1 ? this.data.etapas[idxReparacion] : null;
-
-    const dataReparacion = {
-      IdCita: this.data.IdCita,
-      IdTaller: this.data.IdTaller,
-      CodigoOrden: this.data.CodigoOrden,
-      IdVehiculo: this.data.IdVehiculo,
-      kilometraje: this.data.kilometraje,
-      etapa: etapaReparacion,
-      mecanicos: this.mecanicos
-    };
-
-    this.steps.push({
-      icon: "report_problem",
-      name: "reparacion",
-      title: "Reparación",
-      component: shallowRef(Reparacion),
-      data: dataReparacion,
-      completed: idxReparacion > -1
-    });
-
-    const idxEntrega = this.data.etapas.findIndex(element => {
-      if (element.IdEtapa == 7) {
-        return true;
-      }
-    });
-
-    const etapaEntrega = idxEntrega > -1 ? this.data.etapas[idxEntrega] : null;
-
-    const dataEntrega = {
-      IdCita: this.data.IdCita,
-      IdTaller: this.data.IdTaller,
-      CodigoOrden: this.data.CodigoOrden,
-      IdVehiculo: this.data.IdVehiculo,
-      kilometraje: this.data.kilometraje,
-      etapa: etapaEntrega,
-      mecanicos: this.mecanicos
-    };
-
-    this.steps.push({
-      icon: "report_problem",
-      name: "entrega",
-      title: "Entrega",
-      component: shallowRef(Entrega),
-      data: dataEntrega,
-      completed: idxEntrega > -1
-    });
-
-    if (idxEntrega > -1) {
+    /*
+    if (entrega) {
       this.showQualify = true;
       const { cita } = this.data;
       if (cita.calificacion) {
@@ -310,8 +169,94 @@ export default {
         this.readOnlyQualify = true;
       }
     }
+    */
   },
   methods: {
+    buildSteps() {
+
+      this.steps = [];
+
+      this.workOrderViewed = this.workOrdersByOrderCodeAndStages[this.workOrder];
+
+      const ingreso = this.workOrderViewed.etapas[stages.INGRESO];
+      const diagnostico = this.workOrderViewed.etapas[stages.DIAGNOSTICO];
+      const cotizacion = this.workOrderViewed.etapas[stages.COTIZACION];
+      const aprobacion = this.workOrderViewed.etapas[stages.APROBACION];
+      const reparacion = this.workOrderViewed.etapas[stages.REPARACION];
+      const entrega = this.workOrderViewed.etapas[stages.ENTREGA];
+
+      this.steps.push({
+        icon: "info",
+        name: "ingreso",
+        title: "Ingreso",
+        component: shallowRef(Ingreso),
+        data: {
+          workOrder: this.workOrderViewed,
+          etapa: ingreso,
+        },
+        completed: ingreso ? true : false
+      });
+      
+      this.steps.push({
+        icon: "help",
+        name: "diagnstico",
+        title: "Diagnóstico",
+        component: shallowRef(Diagnostico),
+        data: {
+          workOrder: this.workOrderViewed,
+          etapa: diagnostico,
+        },
+        completed: diagnostico ? true : false
+      });
+
+      this.steps.push({
+        icon: "help",
+        name: "cotizacion",
+        title: "Cotización",
+        component: shallowRef(Cotizacion),
+        data: {
+          workOrder: this.workOrderViewed,
+          etapa: cotizacion,
+        },
+        completed: cotizacion ? true : false,
+      });
+
+      this.steps.push({
+        icon: "report_problem",
+        name: "aprobacion",
+        title: "Aprobación",
+        component: shallowRef(Aprobacion),
+        data: {
+          workOrder: this.workOrderViewed,
+          etapa: aprobacion,
+        },
+        completed: aprobacion ? true : false,
+      });
+
+      this.steps.push({
+        icon: "report_problem",
+        name: "reparacion",
+        title: "Reparación",
+        component: shallowRef(Reparacion),
+        data: {
+          workOrder: this.workOrderViewed,
+          etapa: reparacion,
+        },
+        completed: reparacion ? true : false,
+      });
+
+      this.steps.push({
+        icon: "report_problem",
+        name: "entrega",
+        title: "Entrega",
+        component: shallowRef(Entrega),
+        data: {
+          workOrder: this.workOrderViewed,
+          etapa: entrega,
+        },
+        completed: entrega ? true : false,
+      });
+    },
     openChat() {
       this.showModal = !this.showModal;
       this.newmessages = 0;

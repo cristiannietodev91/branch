@@ -69,11 +69,7 @@ export default {
     };
   },
   watch: {
-    currentStep() {
-      
-    },
     clickedNext(val) {
-      
       this.$emit("can-continue", { value: val });
     }
   },
