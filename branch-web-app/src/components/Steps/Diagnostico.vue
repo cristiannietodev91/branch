@@ -8,7 +8,7 @@
             <v-select
               id="mechanic_id"
               v-model="newOrden.mecanico"
-              :options="data.mecanicos"
+              :options="mecanicos"
               label="fullName"
               :reduce="mecanico => mecanico.IdMecanico"
               class="w-100"
@@ -138,6 +138,7 @@
   </div>
 </template>
 <script>
+import { mapGetters, mapMutations } from "vuex";
 import vueDropzone from "dropzone-vue3";
 import { useVuelidate } from '@vuelidate/core'
 import { required } from "@vuelidate/validators";
@@ -190,6 +191,11 @@ export default {
       }
     };
   },
+  computed: {
+    ...mapGetters({
+      mecanicos: "workshopMecanicos",
+    })
+  },
   validations: {
     newOrden: {
       observacion: {
@@ -200,10 +206,6 @@ export default {
       } 
     }
   },
-  watch: {
-    clickedNext() {
-    }
-  },
   mounted() {
     if (this.data.etapa) {
       this.$emit("can-continue", { value: true });
@@ -212,6 +214,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(["addWorkOrder"]),
     dateTime(value) {
       return moment(value).format('D MMMM YYYY hh:mm A');
     },
@@ -242,20 +245,20 @@ export default {
 
       if (!isFormCorrect) return
 
+      const { workOrder } = this.data;
+
       if (this.filesEtapa.length > 0) {
         let orden = {
-          CodigoOrden: this.data.CodigoOrden,
-          IdCita: this.data.IdCita,
-          kilometraje: this.data.kilometraje,
+          CodigoOrden: workOrder.CodigoOrden,
+          IdCita: workOrder.IdCita,
+          kilometraje: workOrder.kilometraje,
           IdMecanico: this.newOrden.mecanico,
-          IdTaller: this.data.IdTaller,
+          IdTaller: workOrder.IdTaller,
           IdEtapa: 3,
           Observaciones: this.newOrden.observacion,
           documentos: this.filesEtapa,
           estado: "Aceptado"
         };
-
-        console.log("Orden a enviar al servicio::>", orden);
 
         ServicesCore.createOrden(orden)
           .then(response => {
@@ -278,9 +281,8 @@ export default {
                         permanent: false
                       }
                     );
-                    console.log("Data get orden By Id :::>", response.data);
-                    // TODO: Fix issue to mutate received data
-                    // this.data.etapa = response.data;
+                    
+                    this.addWorkOrder(response.data);
                     this.$emit("can-continue", { value: true });
                     this.$emit("success-step");
                   }

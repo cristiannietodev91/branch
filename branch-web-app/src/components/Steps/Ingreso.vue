@@ -7,13 +7,13 @@
             {{ $t('branch.orden.fechaIngreso') }}
           </p>
           <h5 class="mb-1 card-subtitle truncate">
-            {{ dateTime(data.createdAt) }}
+            {{ dateTime(data.etapa.createdAt) }}
           </h5>
           <p class="text-muted text-small mb-2">
             {{ $t('branch.orden.mecanico') }}
           </p>
           <h5 class="mb-1 card-subtitle truncate">
-            {{ data.mecanico.firstName }} {{ data.mecanico.lastName }}
+            {{ data.etapa.mecanico.firstName }} {{ data.etapa.mecanico.lastName }}
           </h5>
         </div>
         <div class="col col-12 col-sm-6 col-md-6 col-lg-6">
@@ -21,14 +21,14 @@
             {{ $t('branch.orden.kilometraje') }}
           </p>
           <h5 class="mb-1 card-subtitle truncate">
-            {{ data.kilometraje }} KM
+            {{ data.etapa.kilometraje }} KM
           </h5>
           <p class="text-muted text-small mb-2">
             {{ $t('branch.orden.documentos') }}
           </p>
           <h5 class="mb-1 card-subtitle truncate">
             <span
-              v-for="(documento) in JSON.parse(data.DocumentosDeja)" :key="`${documento}`" pill variant="primary"
+              v-for="(documento) in JSON.parse(data.etapa.DocumentosDeja)" :key="`${documento}`" pill variant="primary"
               class="badge m-1"
             >
               {{ documento }}
@@ -42,7 +42,7 @@
             {{ $t('branch.orden.observaciones') }}
           </p>
           <h5 class="mb-1 card-subtitle truncate">
-            {{ data.Observaciones }}
+            {{ data.etapa.Observaciones }}
           </h5>
         </div>
       </div>

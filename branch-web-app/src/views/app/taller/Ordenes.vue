@@ -22,18 +22,18 @@
     </div>
     <div class="row">
       <div
-        v-for="(orden, ordenIndex) in ordenes"
-        :key="`orden_${ordenIndex}`"
+        v-for="(order) in Object.keys(workOrdersByOrderCode)"
+        :key="`orden_${order}`"
         class="col col-12 ordenes-branch"
       >
-        <orden-card :data="orden" :mecanicos="taller.mecanicos" />
+        <orden-card :workOrder="order" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import OrdenCard from "../../../components/Cards/OrdenCard";
 import ServicesCore from "../../../services/service";
 
@@ -47,47 +47,20 @@ export default {
       searchKeyword: "",
       isMobileSearch: false,
       ordenes: [],
-      taller: {}
     };
   },
   computed: {
     ...mapGetters({
-      currentUser: "currentUser"
+      currentUser: "currentUser",
+      workOrdersByOrderCode: "workOrdersByOrderCode",
     })
   },
   created() {
-    ServicesCore.getTallerById(this.currentUser.IdTaller).then(response => {
-      if (response.status == 200) {
-        this.taller = response.data;
-      }
-    });
     if (this.$route.params.cita) {
       ServicesCore.getOrdenesByIdTallerAndIdCita(
         this.currentUser.IdTaller,
         this.$route.params.cita
       )
-        .then(response => {
-          if (response.status == 200) {
-            this.formatOrdenes(response.data);
-          }
-        })
-        .catch(error => {
-          this.$notify({
-            title: "ERROR",
-            type: "error",
-            duration: 3000,
-            permanent: false,
-            text: error.response.data.error
-          });
-        });
-    } else {
-      //Carga ordenes activas del taller
-      ServicesCore.getOrdenesByIdTallerAndFilter(this.currentUser.IdTaller, "")
-        .then(async response => {
-          if (response.status == 200) {
-            this.formatOrdenes(response.data);
-          }
-        })
         .catch(error => {
           this.$notify({
             title: "ERROR",
@@ -99,17 +72,16 @@ export default {
         });
     }
   },
+  mounted() {
+    this.loadWorkshop();
+  },
   methods: {
+    ...mapActions(["loadWorkshop"]),
     search() {
       ServicesCore.getOrdenesByIdTallerAndFilter(
         this.currentUser.IdTaller,
         this.searchKeyword
       )
-        .then(async response => {
-          if (response.status == 200) {
-            this.formatOrdenes(response.data);
-          }
-        })
         .catch(error => {
           this.$notify({
             title: "ERROR",
@@ -119,72 +91,6 @@ export default {
             text: error.response.data.error
           });
         });
-    },
-    async formatOrdenes(data) {
-      let ordenList = [];
-      let codeorden = "";
-      let objMyOrden = null;
-      for await (const orden of data) {
-        if (orden.CodigoOrden != codeorden) {
-          codeorden = orden.CodigoOrden;
-          objMyOrden = {
-            CodigoOrden: orden.CodigoOrden,
-            IdTaller: orden.IdTaller,
-            IdCita: orden.IdCita,
-            IdVehiculo: orden.IdVehiculo,
-            vehiculo: orden.vehiculo,
-            taller: orden.taller,
-            cita: orden.cita,
-            etapas: [],
-            olderCotizaciones: []
-          };
-          let etapa = {
-            CodigoOrden: orden.CodigoOrden,
-            IdOrdenTrabajo: orden.IdOrdenTrabajo,
-            IdEtapa: orden.IdEtapa,
-            IdMecanico: orden.IdMecanico,
-            kilometraje: orden.kilometraje,
-            DocumentosDeja: orden.DocumentosDeja,
-            Observaciones: orden.Observaciones,
-            createdAt: orden.createdAt,
-            mecanico: orden.mecanico,
-            etapa: orden.etapa,
-            documentos: orden.documentos,
-            estado: orden.estado
-          };
-          objMyOrden.etapas.push(etapa);
-
-          if (orden.estado == "Rechazado") {
-            objMyOrden.olderCotizaciones.push(etapa);
-          }
-
-          ordenList.push(objMyOrden);
-        } else {
-          //Si es la misma orden agrega la etapa unicamanete
-          let etapa = {
-            CodigoOrden: orden.CodigoOrden,
-            IdOrdenTrabajo: orden.IdOrdenTrabajo,
-            IdEtapa: orden.IdEtapa,
-            IdMecanico: orden.IdMecanico,
-            kilometraje: orden.kilometraje,
-            DocumentosDeja: orden.DocumentosDeja,
-            Observaciones: orden.Observaciones,
-            createdAt: orden.createdAt,
-            mecanico: orden.mecanico,
-            etapa: orden.etapa,
-            documentos: orden.documentos,
-            estado: orden.estado
-          };
-          if (orden.estado != "Rechazado") {
-            ordenList[ordenList.length - 1].etapas.push(etapa);
-          } else {
-            ordenList[ordenList.length - 1].olderCotizaciones.push(etapa);
-          }
-          //objMyOrden.etapas.push(etapa);
-        }
-      }
-
-      this.ordenes = ordenList;
     },
     searchClick() {
       if (window.innerWidth < this.menuHiddenBreakpoint) {

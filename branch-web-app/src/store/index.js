@@ -1,9 +1,10 @@
-import { createStore as _createStore } from 'vuex'
+import { createStore as _createStore } from "vuex";
 
-import app from '../main'
-import menu from './modules/menu'
-import user from './modules/user'
-import chat from './modules/chat'
+import app from "../main";
+import menu from "./modules/menu";
+import user from "./modules/user";
+import chat from "./modules/chat";
+import workshop from "./modules/workshop";
 
 export const createStore = (router) => _createStore({
   state: {
@@ -26,5 +27,6 @@ export const createStore = (router) => _createStore({
     menu,
     user,
     chat,
-  }
+    workshop,
+  },
 })
