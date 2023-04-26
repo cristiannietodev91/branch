@@ -42,7 +42,7 @@ export default function DetailCita({
     });
   }, [register]);
 
-  const aprobarCotizacion = async (data: any) => {
+  const aprobarCotizacion = (data: any) => {
     let orden = cita.ordentrabajos[2];
     let ordenToUpdate = orden;
     ordenToUpdate.estado = "Aceptado";
@@ -67,7 +67,7 @@ export default function DetailCita({
       })
       .catch((error) => console.error(error));
 
-    let ordenCreate = {
+    const ordenCreate = {
       IdTaller: orden.IdTaller,
       CodigoOrden: orden.CodigoOrden,
       IdEtapa: 5,

@@ -120,52 +120,55 @@ const createOrden = (req: Request, res: Response) => {
                     debug("Se creo la notificacion correctamente :::>");
                   })
                   .catch((error) => {
-                    return res
-                      .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                      .json({ error: error.message });
+                    debug("Error al crear la notificacion :::>", error);
                   });
               }
+            }  
 
-              ordenDAO
-                .create(ordenDB)
-                ?.then((orden) => {
-                  if (orden) {
-                    if (orden.IdEtapa) {
-                      const citaToUpdate: Partial<CitaCreationAttributes> = {
-                        estado: "Cumplida",
-                      };
+            ordenDAO
+              .create(ordenDB)
+              ?.then((orden) => {
+                if (orden) {
+                  if (orden.IdEtapa) {
+                    const citaToUpdate: Partial<CitaCreationAttributes> = {
+                      estado: "Cumplida",
+                    };
 
-                      if (orden.IdEtapa == 7) {
-                        citaToUpdate.estado = "Finalizada";
-                      }
-
-                      citaDAO
-                        .update(cita.IdCita, citaToUpdate)
-                        ?.then((cita) => {
-                          if (cita) {
-                            return res.status(HttpStatus.OK).json({ orden });
-                          }
-                        })
-                        .catch((error) => {
-                          return res
-                            .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                            .json({ error: error.message });
-                        });
-                    } else {
-                      return res.status(HttpStatus.OK).json({ orden });
+                    if (orden.IdEtapa == 7) {
+                      citaToUpdate.estado = "Finalizada";
                     }
+
+                    citaDAO
+                      .update(cita.IdCita, citaToUpdate)
+                      ?.then((cita) => {
+                        if (cita) {
+                          return res.status(HttpStatus.OK).json({ orden });
+                        }
+                      })
+                      .catch((error) => {
+                        return res
+                          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                          .json({ error: error.message });
+                      });
                   } else {
-                    return res
-                      .status(HttpStatus.OK)
-                      .json({ error: "No se creo la cita" });
+                    return res.status(HttpStatus.OK).json({ orden });
                   }
-                })
-                .catch((error) => {
+                } else {
                   return res
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .json({ error: error.message });
-                });
-            }
+                    .status(HttpStatus.OK)
+                    .json({ error: "No se creo la cita" });
+                }
+              })
+              .catch((error) => {
+                return res
+                  .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                  .json({ error: error.message });
+              });
+            
+          } else {
+            return res
+              .status(HttpStatus.INTERNAL_SERVER_ERROR)
+              .json({ error: "Cita does not find" });
           }
         })
         .catch((error) => {
@@ -195,7 +198,7 @@ const updateOrden = (req: Request, res: Response) => {
 
     debug("Orden recibida para actualizar :::>", orden);
     if (IdOrdenTrabajo) {
-      let ordenDb = {
+      const ordenDb = {
         IdTaller: orden.IdTaller,
         CodigoOrden: orden.CodigoOrden,
         IdEtapa: orden.IdEtapa,

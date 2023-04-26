@@ -6,11 +6,6 @@ module.exports = {
       "etapa",
       [
         {
-          NombreEtapa: "Reparacion",
-          requiereDocumentos: false,
-          requiereAprobacion: true,
-        },
-        {
           NombreEtapa: "Ingreso",
           requiereDocumentos: false,
           requiereAprobacion: false,
@@ -29,6 +24,11 @@ module.exports = {
           NombreEtapa: "Aprobacion",
           requiereDocumentos: true,
           requiereAprobacion: false,
+        },
+        {
+          NombreEtapa: "Reparacion",
+          requiereDocumentos: false,
+          requiereAprobacion: true,
         },
         {
           NombreEtapa: "Entrega",

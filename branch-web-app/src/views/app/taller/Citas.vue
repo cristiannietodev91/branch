@@ -12,7 +12,7 @@
             :is-expanded="true"
             class="theme-default holiday-us-traditional holiday-us-official"
             style="min-height:500px"
-            :events="calendar.events"
+            :items="calendar.items"
             :show-date="calendar.showDate"
             :time-format-options="{hour: 'numeric', minute:'2-digit'}"
             :enable-drag-drop="false"
@@ -30,33 +30,34 @@
               />
             </template>
 
-            <template #event="eventProps">
+            <template #item="{ value: item }">
               <div
-                :id="`event-${eventProps.event.originalEvent.citaObject.IdCita}`"
-                :title="eventProps.event.title"
-                :class="`cv-event ${eventProps.event.classes[0]} ${eventProps.event.classes[1]} ${eventProps.event.classes[2]}`"
-                :style="`top: calc(6.4em + ${eventProps.event.eventRow}*24em + ${eventProps.event.eventRow}*2px);`"
+                :id="`event-${item.originalItem.citaObject.IdCita}`"
+                :title="item.title"
+                :class="`cv-item ${item.classes.join(' ')}`"
+                :style="`top: calc(6.4em + ${item.itemRow}*24em + ${item.itemRow}*2px);`"
               >
                 <h4 class="startTime">
-                  {{ dateTime(new Date(eventProps.event.originalEvent.startDate)) }}
+                  {{ dateTime(new Date(item.originalItem.startDate)) }}
                 </h4>
-                <p>{{ eventProps.event.originalEvent.estado }}</p>
+                <p>{{ item.originalItem.estado }}</p>
                 <div
                   class="btn btn-primary btn-xs mb-2 editar-cita"
-                  @click="eventProps.event.originalEvent.estado == 'Solicitada' || eventProps.event.originalEvent.estado == 'Confirmada' ? onCtrlClickEvent(eventProps.event.originalEvent.citaObject) : ''"
+                  @click="item.originalItem.estado === 'Solicitada' || item.originalItem.estado === 'Confirmada' ? onCtrlClickEvent(item.originalItem.citaObject) : ''"
                 >
                   <small :class="'glyph-icon simple-icon-pencil'" />
                   <span>Editar</span>
                 </div>
                 <div
                   class="btn btn-primary btn-xs mb-2 ingresar-moto"
-                  @click.exact="eventProps.event.originalEvent.estado == 'Confirmada' ? onClickEvent(eventProps.event) : ''"
+                  @click.exact="item.originalItem.estado === 'Confirmada' ? onClickEvent(item) : ''"
                 >
                   <small :class="'glyph-icon simple-icon-arrow-right'" />
                   <span>Ingresar</span>
                 </div>
-              
-              <!-- <b-popover
+              </div>
+            </template>
+            <!-- <b-popover
                 id="calendar-tooltip"
                 :target="`event-${eventProps.event.originalEvent.citaObject.IdCita}`"
                 triggers="hover"
@@ -74,8 +75,6 @@
                 {{ eventProps.event.originalEvent.citaObject.servicio }}
                 Recibe: {{ eventProps.event.originalEvent.citaObject.mecanico ? eventProps.event.originalEvent.citaObject.mecanico.fullName : 'Sin mecanico asignado' }}
               </b-popover> -->
-              </div>
-            </template>
           </calendar-view>
         </div>
       </div>
@@ -109,7 +108,7 @@ export default {
     return {
       calendar: {
         showDate: this.thisMonth(1),
-        events: []
+        items: []
       },
       taller: {},
       cita: {}
@@ -135,7 +134,7 @@ export default {
         .then(response => {
           if (response.status == 200) {
             this.cita = {};
-            this.calendar.events = response.data;
+            this.calendar.items = response.data;
           }
         })
         .catch(error => {
