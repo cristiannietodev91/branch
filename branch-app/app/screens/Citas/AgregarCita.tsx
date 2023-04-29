@@ -82,8 +82,8 @@ export default function AgregarCita({
     });
     const citaCreate = {
       placa: data.placa,
-      taller: vehiculo?.taller.IdTaller, //TODO: Taller del vehiculo
-      fechaCita: Moment(data.fechacita).format("DD/MM/YYYY"),
+      taller: vehiculo?.taller.IdTaller,
+      fechaCita: Moment(data.fechacita).format("YYYY/MM/DD"),
       horaCita: Moment(data.horacita).format("HH:mm"),
       servicio: data.servicio,
       estado: "Solicitada",

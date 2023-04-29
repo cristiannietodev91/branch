@@ -6,8 +6,20 @@
           <h5 class="card-title">
             {{ $t('dashboards.calendar') }}
           </h5>
-          <modal-add-cita :taller="taller" :cita="cita" @loadcitastalleres="loadCitasTaller" />
-          <modal-add-orden :taller="taller" :cita="cita" @loadcitastalleres="loadCitasTaller" />
+          <modal-add-cita
+            :cita="cita" :open="isOpenModalAppointment" @loadcitastalleres="loadCitasTaller"
+            @close="() => { 
+              isOpenModalAppointment = false
+              cita = {}
+            }"
+          />
+          <modal-add-orden
+            :cita="cita" :open="isOpenModalOrder" @loadcitastalleres="loadCitasTaller" 
+            @close="() => { 
+              isOpenModalOrder = false
+              cita = {}
+            }"
+          />
           <calendar-view
             :is-expanded="true"
             class="theme-default holiday-us-traditional holiday-us-official"
@@ -42,15 +54,17 @@
                 </h4>
                 <p>{{ item.originalItem.estado }}</p>
                 <div
+                  v-if="item.originalItem.estado === 'Solicitada' || item.originalItem.estado === 'Confirmada'"
                   class="btn btn-primary btn-xs mb-2 editar-cita"
-                  @click="item.originalItem.estado === 'Solicitada' || item.originalItem.estado === 'Confirmada' ? onCtrlClickEvent(item.originalItem.citaObject) : ''"
+                  @click="onCtrlClickEvent(item.originalItem.citaObject)"
                 >
                   <small :class="'glyph-icon simple-icon-pencil'" />
                   <span>Editar</span>
                 </div>
                 <div
+                  v-if="item.originalItem.estado === 'Confirmada'"
                   class="btn btn-primary btn-xs mb-2 ingresar-moto"
-                  @click.exact="item.originalItem.estado === 'Confirmada' ? onClickEvent(item) : ''"
+                  @click.exact="onClickEvent(item)"
                 >
                   <small :class="'glyph-icon simple-icon-arrow-right'" />
                   <span>Ingresar</span>
@@ -84,7 +98,7 @@
 
 <script>
 import moment from "moment";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import ServicesCore from "../../../services/service";
 import ModalAddCita from "../../../components/Modals/addcitamodal";
 import ModalAddOrden from "../../../components/Modals/addordenmodal";
@@ -110,22 +124,22 @@ export default {
         showDate: this.thisMonth(1),
         items: []
       },
-      taller: {},
-      cita: {}
+      cita: {},
+      isOpenModalAppointment: false,
+      isOpenModalOrder: false,
     };
   },
   computed: {
     ...mapGetters({ currentUser: "currentUser" })
   },
   created() {
-    ServicesCore.getTallerById(this.currentUser.IdTaller).then(response => {
-      if (response.status == 200) {
-        this.taller = response.data;
-      }
-    });
     this.loadCitasTaller();
   },
+  mounted(){
+    this.loadWorkshop();
+  },
   methods: {
+    ...mapActions(["loadWorkshop"]),
     dateTime(value) {
         return moment(value).format('hh:mm A');
     },
@@ -158,13 +172,11 @@ export default {
       );
     },
     onClickDay() {
-      this.cita = {};
-      this.$bvModal.show("modalAddCita");
+      this.isOpenModalAppointment = true;
     },
     onClickEvent(e) {
       this.cita = e;
-      this.$bvModal.show("modalAddOrden");
-      //console.log(`You clicked id Placa: ${e.placa}`);
+      this.isOpenModalOrder = true;
     },
     onDropDate(event, date) {
       console.log(`You dropped ${event.id} on ${date.toLocaleDateString()}`);
@@ -175,11 +187,11 @@ export default {
     },
     onCtrlClickEvent(event) {
       this.cita = event;
-      this.$bvModal.show("modalAddCita");
+      this.isOpenModalAppointment = true;
     },
     setShowDate(d) {
       this.calendar.showDate = d;
-    }
+    },
   }
 };
 </script>

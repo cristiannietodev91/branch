@@ -58,7 +58,7 @@ const createCita = (cita: CitaRequestAttributes) => {
             IdVehiculo: vehiculo.IdVehiculo,
             IdTaller: cita.IdTaller,
             IdMecanico: cita.IdMecanico,
-            fechaCita: moment(cita.fechaCita, "DD/MM/YYYY").toDate(),
+            fechaCita: moment(cita.fechaCita, "YYYY/MM/DD").toDate(),
             horaCita: cita.horaCita,
             servicio: cita.servicio,
             estado: cita.estado,
@@ -140,7 +140,7 @@ const updateCitaByIdCita = (
   return new Promise<CitaInstance | null>((resolve, reject) => {
     try {
       const momentHour = moment(cita.horaCita, "hh:mm:ss");
-      const fechaCita = moment(cita.fechaCita, "DD/MM/YYYY")
+      const fechaCita = moment(cita.fechaCita, "YYYY/MM/DD")
         .hour(momentHour.hour())
         .minute(momentHour.minute());
 
