@@ -1,127 +1,129 @@
 <template>
   <div class="card">
-    <form v-if="!data.etapa" novalidate class="p-5 w-90 ml-5" @submit.prevent="onValitadeAddOrden">
-      <div>
-        <label for="mechanic_id" class="form-label">{{ $t('branch.orden.mecanico') }}</label>
-        <div class="input-group has-validation">
-          <v-select
-            id="mechanic_id"
-            v-model="newOrden.mecanico"
-            :options="mecanicos"
-            label="fullName"
-            :reduce="mecanico => mecanico.IdMecanico"
-            class="w-100"
-            :class="{ 'is-invalid': v$.newOrden.mecanico.$error }"
-          >
-            <template #search="{attributes, events}">
-              <input
-                v-bind="attributes"
-                class="vs__search"
-                v-on="events"
-              >
-            </template>
-            <template #option="option">
-              {{ option.fullName }} - {{ option.identificacion }}
-            </template>
-          </v-select>
-          <div
-            v-if="v$.newOrden.mecanico.required.$invalid"
-            class="invalid-feedback"
-          >
-            {{ $t('branch.forms.validations.required') }}
-          </div>
-        </div>
-      </div>
-      <div>
-        <label for="order_observation" class="form-label">{{ $t('branch.orden.observaciones') }}</label>
-        <div class="input-group has-validation">
-          <textarea
-            v-model.trim="v$.newOrden.observacion.$model"
-            class="form-control"
-            :class="{ 'is-invalid': v$.newOrden.observacion.$error }"
-          />
-          <div
-            v-if="v$.newOrden.observacion.required.$invalid"
-            class="invalid-feedback"
-          >
-            {{ $t('branch.forms.validations.required') }}
-          </div>
-        </div>
-      </div>
-      <div>
-        <label for="dropzone" class="form-label">{{ $t('branch.forms.labels.files') }}</label>
-        <vue-dropzone
-          id="dropzone"
-          ref="myVueDropzone"
-          :awss3="awss3"
-          :options="dropzoneOptions"
-          @vdropzone-complete="complete"
-          @vdropzone-removed-file="removeFile"
-        />
-      </div>
-      <button type="submit" class="btn btn-primary btn-lg mt-4">
-        {{ $t('forms.submit') }}
-      </button>
-    </form>
-    <div v-else>
-      <div class="row">
-        <div class="col col-3">
-          <p class="text-muted text-small mb-2">
-            {{ $t('branch.orden.fechaIngreso') }}
-          </p>
-          <p class="mb-3">
-            {{ dateTime(data.etapa.createdAt) }}
-          </p>
-        </div>
-        <div v-if="data.etapa.mecanico" class="col col-3">
-          <p class="text-muted text-small mb-2">
-            {{ $t('branch.orden.mecanico') }}
-          </p>
-          <p class="mb-3">
-            {{ data.etapa.mecanico.identificacion }} {{ data.etapa.mecanico.fullName }}
-          </p>
-        </div>
-        <div class="col">
-          <p class="text-muted text-small mb-2">
-            {{ $t('branch.orden.observaciones') }}
-          </p>
-          <p class="mb-3">
-            {{ data.etapa.Observaciones }}
-          </p>
-        </div>
-      </div>
-      <div class="icon-cards-row">
-        <div v-if="data.etapa.documentos" class="branch-gallery">
-          <div id="collapse-diagnostico" class="collapse">
-            <div
-              v-for="(documento,index) in data.etapa.documentos"
-              :key="`contact${index}`"
-              class="branch-image"
+    <div class="card-body">
+      <form v-if="!data.etapa" novalidate @submit.prevent="onValitadeAddOrden">
+        <div>
+          <label for="mechanic_id" class="form-label">{{ $t('branch.orden.mecanico') }}</label>
+          <div class="input-group has-validation">
+            <v-select
+              id="mechanic_id"
+              v-model="newOrden.mecanico"
+              :options="mecanicos"
+              label="fullName"
+              :reduce="mecanico => mecanico.IdMecanico"
+              class="w-100"
+              :class="{ 'is-invalid': v$.newOrden.mecanico.$error }"
             >
-              <div class="card">
-                <single-lightbox
-                  :thumb="documento.url.replace('branchmedia','branchmedia-resized')"
-                  :large="documento.url"
-                  class-name="responsive"
-                />
-                <p class="card-text">
-                  {{ dateTime(documento.date) }}
-                </p>
-              </div>
+              <template #search="{attributes, events}">
+                <input
+                  v-bind="attributes"
+                  class="vs__search"
+                  v-on="events"
+                >
+              </template>
+              <template #option="option">
+                {{ option.fullName }} - {{ option.identificacion }}
+              </template>
+            </v-select>
+            <div
+              v-if="v$.newOrden.mecanico.required.$invalid"
+              class="invalid-feedback"
+            >
+              {{ $t('branch.forms.validations.required') }}
             </div>
           </div>
-          <button
-            class="btn btn-primary m-1" type="button" data-bs-toggle="collapse" 
-            data-bs-target="#collapse-diagnostico" aria-expanded="false" aria-controls="collapse-diagnostico"
-          >
-            Ver fotos de la entrega
-          </button>
         </div>
-        <div v-else class="pl-2 d-flex flex-grow-1 min-width-zero">
-          <div class="card-body align-self-center d-flex min-width-zero">
-            <p class="text-muted text-small mb-0 font-weight-light">
-              Sin documentos asociados
+        <div>
+          <label for="order_observation" class="form-label">{{ $t('branch.orden.observaciones') }}</label>
+          <div class="input-group has-validation">
+            <textarea
+              v-model.trim="v$.newOrden.observacion.$model"
+              class="form-control"
+              :class="{ 'is-invalid': v$.newOrden.observacion.$error }"
+            />
+            <div
+              v-if="v$.newOrden.observacion.required.$invalid"
+              class="invalid-feedback"
+            >
+              {{ $t('branch.forms.validations.required') }}
+            </div>
+          </div>
+        </div>
+        <div>
+          <label for="dropzone" class="form-label">{{ $t('branch.forms.labels.files') }}</label>
+          <vue-dropzone
+            id="dropzone"
+            ref="myVueDropzone"
+            :awss3="awss3"
+            :options="dropzoneOptions"
+            @vdropzone-complete="complete"
+            @vdropzone-removed-file="removeFile"
+          />
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg mt-4">
+          {{ $t('forms.submit') }}
+        </button>
+      </form>
+      <div v-else>
+        <div class="row">
+          <div class="col col-3">
+            <p class="text-muted text-small mb-2">
+              {{ $t('branch.orden.fechaIngreso') }}
             </p>
+            <p class="mb-3">
+              {{ dateTime(data.etapa.createdAt) }}
+            </p>
+          </div>
+          <div v-if="data.etapa.mecanico" class="col col-3">
+            <p class="text-muted text-small mb-2">
+              {{ $t('branch.orden.mecanico') }}
+            </p>
+            <p class="mb-3">
+              {{ data.etapa.mecanico.identificacion }} {{ data.etapa.mecanico.fullName }}
+            </p>
+          </div>
+          <div class="col">
+            <p class="text-muted text-small mb-2">
+              {{ $t('branch.orden.observaciones') }}
+            </p>
+            <p class="mb-3">
+              {{ data.etapa.Observaciones }}
+            </p>
+          </div>
+        </div>
+        <div class="icon-cards-row">
+          <div v-if="data.etapa.documentos" class="branch-gallery">
+            <div id="collapse-diagnostico" class="collapse">
+              <div
+                v-for="(documento,index) in data.etapa.documentos"
+                :key="`contact${index}`"
+                class="branch-image"
+              >
+                <div class="card">
+                  <single-lightbox
+                    :thumb="documento.url.replace('branchmedia','branchmedia-resized')"
+                    :large="documento.url"
+                    class-name="responsive"
+                  />
+                  <p class="card-text">
+                    {{ dateTime(documento.date) }}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <button
+              class="btn btn-primary m-1" type="button" data-bs-toggle="collapse" 
+              data-bs-target="#collapse-diagnostico" aria-expanded="false" aria-controls="collapse-diagnostico"
+            >
+              Ver fotos de la entrega
+            </button>
+          </div>
+          <div v-else class="pl-2 d-flex flex-grow-1 min-width-zero">
+            <div class="card-body align-self-center d-flex min-width-zero">
+              <p class="text-muted text-small mb-0 font-weight-light">
+                Sin documentos asociados
+              </p>
+            </div>
           </div>
         </div>
       </div>

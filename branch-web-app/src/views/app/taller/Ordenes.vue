@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters } from "vuex";
 import OrdenCard from "../../../components/Cards/OrdenCard";
 import ServicesCore from "../../../services/service";
 
@@ -72,11 +72,7 @@ export default {
         });
     }
   },
-  mounted() {
-    this.loadWorkshop();
-  },
   methods: {
-    ...mapActions(["loadWorkshop"]),
     search() {
       ServicesCore.getOrdenesByIdTallerAndFilter(
         this.currentUser.IdTaller,

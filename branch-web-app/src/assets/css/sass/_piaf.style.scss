@@ -3307,7 +3307,7 @@ main {
   }
 
   .cv-day,
-  .cv-event,
+  .cv-item,
   .cv-header-day,
   .cv-header-days,
   .cv-week,
@@ -3482,7 +3482,7 @@ main {
       .cv-day-number {
         padding: 10px;
       }
-      .cv-event {
+      .cv-item {
         font-size: 0.5em !important;
         // border-radius: 25px !important;
         text-align: center !important;
