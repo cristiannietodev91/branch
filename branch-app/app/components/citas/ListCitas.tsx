@@ -16,11 +16,11 @@ import { EmptyDate } from "./../../../assets/svg/EmptyDate";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { NotificationContext } from "../ContextNotifications";
 import ActionButton from "react-native-action-button";
-import { ActiveAppoinmentStackScreenProps } from "../../../types/types";
+import { ActiveAppointmentStackScreenProps } from "../../../types/types";
 
 interface ListCitasProps
   extends Pick<
-    ActiveAppoinmentStackScreenProps<"NavigateAppoinment">,
+    ActiveAppointmentStackScreenProps<"NavigateAppoinment">,
     "navigation"
   > {
   citas: any[];
@@ -30,13 +30,13 @@ interface ListCitasProps
 
 interface AddCitaButtonProps
   extends Pick<
-    ActiveAppoinmentStackScreenProps<"NavigateAppoinment">,
+    ActiveAppointmentStackScreenProps<"NavigateAppoinment">,
     "navigation"
   > {}
 
 interface CitaProps
   extends Pick<
-    ActiveAppoinmentStackScreenProps<"NavigateAppoinment">,
+    ActiveAppointmentStackScreenProps<"NavigateAppoinment">,
     "navigation"
   > {
   cita: any;

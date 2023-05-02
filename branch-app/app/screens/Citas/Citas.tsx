@@ -6,12 +6,12 @@ import { URL_SERVICES } from "@env";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
 import styles from "./../../styles/App.scss";
-import { ActiveAppoinmentStackScreenProps } from "../../../types/types";
+import { ActiveAppointmentStackScreenProps } from "../../../types/types";
 
 const CitasScreen = ({
   navigation,
   route,
-}: ActiveAppoinmentStackScreenProps<"NavigateAppoinment">) => {
+}: ActiveAppointmentStackScreenProps<"NavigateAppoinment">) => {
   const { etapa } = route.params;
   const [isLoading, setLoading] = useState(true);
   const [citas, setListCitas] = useState([]);

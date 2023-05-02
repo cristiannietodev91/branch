@@ -330,7 +330,7 @@ export default function EditarVehiculo(
           <DateTimePicker
             testID="dateTimePicker"
             timeZoneOffsetInMinutes={0}
-            value={new Date()}
+            value={fechaCompra}
             mode="date"
             is24Hour={true}
             display="default"

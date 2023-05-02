@@ -103,8 +103,7 @@ export default function AgregarCita({
         return response.json();
       })
       .then((json) => {
-        console.log("Respuesta de crear la cita ::>", json);
-        navigation.navigate("Citas");
+        navigation.goBack();
       })
       .catch((error) => console.error(error));
   };
@@ -188,16 +187,17 @@ export default function AgregarCita({
         {showCalendar && (
           <DateTimePicker
             testID="datePicker"
-            timeZoneOffsetInMinutes={0}
-            value={new Date()}
+            value={fechaCita}
             mode="date"
             is24Hour={true}
             display="default"
             locale="es-ES"
-            onChange={(event, selectedDate) => {
+            onChange={(_, selectedDate) => {
               setShowCalendar(Platform.OS === "ios" ? true : false);
-              setValue("fechacita", selectedDate);
-              setFechaCita(selectedDate!);
+              if (selectedDate) {
+                setFechaCita(selectedDate);
+                setValue("fechacita", selectedDate);
+              }
             }}
             minimumDate={new Date()}
           />
@@ -219,7 +219,7 @@ export default function AgregarCita({
         {showTime && (
           <DateTimePicker
             testID="TimePicker"
-            value={new Date()}
+            value={horaCita}
             mode="time"
             is24Hour={false}
             display="default"

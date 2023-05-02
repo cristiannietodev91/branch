@@ -304,7 +304,7 @@ const updateVehiculo = (
           if (marca && vehiculo.usuarios) {
             const vehiculoUpdate = {
               IdMarca: marca.IdMarca,
-              IdUsuario: vehiculo.usuarios.IdUsuario,
+              IdUsuario: vehiculo.usuarios.uid,
               IdTaller: vehiculo.IdTaller,
               tipoVehiculo: "Moto",
               placa: vehiculo.placa,

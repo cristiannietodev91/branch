@@ -1,10 +1,10 @@
 import React from "react";
 import { View, StyleSheet, Dimensions } from "react-native";
 import Pdf from "react-native-pdf";
-import { ActiveAppoinmentStackScreenProps } from "../../../types/types";
+import { ActiveAppointmentStackScreenProps } from "../../../types/types";
 
 export default function ViewPdf(
-  props: ActiveAppoinmentStackScreenProps<"Pdfdetail">
+  props: ActiveAppointmentStackScreenProps<"Pdfdetail">
 ) {
   const { route } = props;
   const { pdf } = route.params;
