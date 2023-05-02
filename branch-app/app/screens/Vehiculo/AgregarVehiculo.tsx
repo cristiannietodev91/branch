@@ -382,15 +382,17 @@ export default function AgregarVehiculo(
           <DateTimePicker
             testID="dateTimePicker"
             timeZoneOffsetInMinutes={0}
-            value={new Date()}
+            value={fechaCompra}
             mode="date"
             is24Hour={true}
             display="default"
             locale="es-ES"
             onChange={(event, selectedDate) => {
               setShowCalendar(Platform.OS === "ios" ? true : false);
-              setValue("fechacompra", selectedDate);
-              setFechaCompra(selectedDate!);
+              if (selectedDate) {
+                setValue("fechacompra", selectedDate);
+                setFechaCompra(selectedDate);
+              }
             }}
           />
         )}

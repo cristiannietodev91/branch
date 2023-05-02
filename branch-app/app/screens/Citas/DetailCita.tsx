@@ -9,7 +9,7 @@ import ActionButton from "react-native-action-button";
 import { URL_SERVICES } from "@env";
 import { useForm } from "react-hook-form";
 import styles from "../../styles/App.scss";
-import { ActiveAppoinmentStackScreenProps } from "../../../types/types";
+import { ActiveAppointmentStackScreenProps } from "../../../types/types";
 
 type FormData = {
   comentario: string;
@@ -18,7 +18,7 @@ type FormData = {
 export default function DetailCita({
   navigation,
   route,
-}: ActiveAppoinmentStackScreenProps<"Detail">) {
+}: ActiveAppointmentStackScreenProps<"Detail">) {
   const { cita } = route.params;
   const [currentPosition, setCurrentPosition] = useState(0);
   const {
@@ -410,7 +410,7 @@ const Cita = (props: { cita: any }) => {
 };
 
 interface OpenChatProps
-  extends Pick<ActiveAppoinmentStackScreenProps<"Detail">, "navigation"> {
+  extends Pick<ActiveAppointmentStackScreenProps<"Detail">, "navigation"> {
   cita: any;
 }
 

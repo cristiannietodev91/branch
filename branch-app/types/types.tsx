@@ -6,7 +6,7 @@ import type {
 } from "@react-navigation/native";
 import { FirebaseAuthTypes } from "@react-native-firebase/auth";
 
-export type AppoimentStackParamList = {
+export type InternalAppointmentStackParamList = {
   NavigateAppoinment: { etapa: string };
   Detail: { cita: any };
   Pdfdetail: { pdf: any; orden?: any; cita?: any };
@@ -14,12 +14,12 @@ export type AppoimentStackParamList = {
   Addappoinment: undefined;
 };
 
-export type ActiveAppoinmentStackScreenProps<
-  T extends keyof AppoimentStackParamList
-> = StackScreenProps<AppoimentStackParamList, T>;
+export type ActiveAppointmentStackScreenProps<
+  T extends keyof InternalAppointmentStackParamList
+> = StackScreenProps<InternalAppointmentStackParamList, T>;
 
 export type AppointmentStackParamList = {
-  Active: NavigatorScreenParams<AppoimentStackParamList>;
+  Active: NavigatorScreenParams<InternalAppointmentStackParamList>;
   Past: undefined;
   Future: undefined;
 };
@@ -32,7 +32,7 @@ export type AppoinmentScreenNavigationProp = CompositeScreenProps<
   StackScreenProps<AppoinmentMainStackParamList, "Citas">,
   CompositeScreenProps<
     BottomTabScreenProps<AppointmentStackParamList>,
-    ActiveAppoinmentStackScreenProps<keyof AppoimentStackParamList>
+    ActiveAppointmentStackScreenProps<keyof InternalAppointmentStackParamList>
   >
 >;
 

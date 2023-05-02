@@ -4,9 +4,9 @@ import CitaScreen from "../screens/Citas/Citas";
 import DetailCitaScreen from "../screens/Citas/DetailCita";
 import VerPDFScreen from "../screens/pdf/viewPdf";
 import AgregarCitaScreen from "../screens/Citas/AgregarCita";
-import { AppoimentStackParamList } from "../../types/types";
+import { InternalAppointmentStackParamList } from "../../types/types";
 
-const Stack = createStackNavigator<AppoimentStackParamList>();
+const Stack = createStackNavigator<InternalAppointmentStackParamList>();
 
 const CitasFuturasStacks = () => {
   return (
