@@ -129,6 +129,7 @@ export default {
     "v-modal": Modal,
   },
   props: ["cita", "open"],
+  emits: ['loadcitastalleres', 'close'],
   setup: () => ({ v$: useVuelidate() }),
   data() {
     return {

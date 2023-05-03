@@ -11,7 +11,9 @@
         <modal-add-mecanico
           :idTaller="currentUser.IdTaller"
           :mecanicoSelected="mecanicoSelected"
-          @loadInfoTaller="loadInfoTaller"
+          :open="isOpenModal"
+          @loadInfoTaller="loadInfoTaller" 
+          @close="isOpenModal = false"
         />
         <div id="modalDeleteMecanico" class="modal" title="Eliminar Mecanico" @ok="deleteMecanicoConfirm">
           <p class="my-4">
@@ -45,7 +47,8 @@ export default {
   data() {
     return {
       mecanicos: {},
-      mecanicoSelected: {}
+      mecanicoSelected: {},
+      isOpenModal: false,
     };
   },
   computed: {
@@ -57,11 +60,11 @@ export default {
   methods: {
     showModal() {
       this.mecanicoSelected = {};
-      this.$bvModal.show("modalAddMecanico");
+      this.isOpenModal = true;
     },
     editMecanico(mecanico) {
       this.mecanicoSelected = mecanico;
-      this.$bvModal.show("modalAddMecanico");
+      this.isOpenModal = true;
     },
     deleteMecanico(mecanico) {
       this.mecanicoSelected = mecanico;
