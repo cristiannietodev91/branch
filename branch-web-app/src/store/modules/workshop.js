@@ -2,7 +2,7 @@ import ServiceCore from "../../services/service";
 import { workshopStages } from "../../utils/constants";
 
 const state = {
-  infoWorkshop: null,
+  infoWorkshop: localStorage.getItem("infoWorkshop") || null,
   workOrders: localStorage.getItem("workOrders") != null
   ? JSON.parse(localStorage.getItem("workOrders"))
   : [],
@@ -13,14 +13,14 @@ const getters = {
   workOrders: (state) => state.workOrders,
   workshopInfo: (state) => state.infoWorkshop,
   workshopMechanics: (state) => state.infoWorkshop?.mecanicos || [],
-  workOrdersByOrderCode: (_, getters) => getters.workOrders.reduce((group, curr) => {
+  workOrdersGroupByOrderCode: (_, getters) => getters.workOrders.reduce((group, curr) => {
     const { CodigoOrden } = curr;
     group[CodigoOrden] = group[CodigoOrden] ?? [];
     group[CodigoOrden].push(curr);
     return group;
   }, {}),
-  workOrdersByOrderCodeAndStages: (_, getters) => Object.keys(getters.workOrdersByOrderCode).reduce((acc, key) => {
-    const workOrder = getters.workOrdersByOrderCode[key];
+  workOrdersByOrderCodeAndStages: (_, getters) => Object.keys(getters.workOrdersGroupByOrderCode).reduce((acc, key) => {
+    const workOrder = getters.workOrdersGroupByOrderCode[key];
     return {
       ...acc,
       [key]: {
@@ -41,11 +41,13 @@ const getters = {
       }
     };
   }, {}),
+  workOrdersByOrderCode: (_, getters) => (workOrderCode) => getters.workOrdersByOrderCodeAndStages[workOrderCode] || {},
 };
 
 const mutations = {
   setWorkshopInfo: (state, payload) => {
     state.infoWorkshop = payload;
+    localStorage.setItem("infoWorkshop", JSON.stringify(payload))
   },
   setWorkOrders: (state, payload) => {
     state.workOrders = payload.workOrders;

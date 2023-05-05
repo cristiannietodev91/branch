@@ -1,74 +1,83 @@
-<template v-slot:default="{ hide }" class="modal-chat">
-  <div class="p-3">
-    <div class="row">
-      <div class="col col-12 chat-app">
-        <conversation-detail
-          v-if="otherUser != null"
-          key="conversation"
-          :current-user="currentUser"
-          :other-user="otherUser"
-          :messages="messages"
-        />
-        <div v-else key="conversationLoading" class="loading" />
-      </div>
-    </div>
-    <div>
-      <div v-if="!isLoadImage" class="d-flex justify-content-between align-items-center">
-        <input
-          v-model="message"
-          class="form-control"
-          type="text"
-          :placeholder="$t('chat.saysomething')"
-          :readonly="isLoadImage"
-          @keyup.enter="sendMessage"
-        >
-        <div class="d-flex flex-row">
-          <button class="btn btn-outline-primary icon-button small ml-1" @click="open">
-            <i class="simple-icon-paper-clip" />
-          </button>
-          <button class="btn btn-primary icon-button small ml-1" @click="sendMessage">
-            <i class="simple-icon-arrow-right" />
-          </button>
+<template class="modal-chat">
+  <v-modal
+    :id="`sidebar${workorder}`"
+    :ref="`sidebar${workorder}`"
+    class="shadow"
+    :show="open"
+    @close="hideModal(`sidebar${workorder}`)"
+  >
+    <div class="p-3">
+      <div class="row">
+        <div class="col col-12 chat-app">
+          <conversation-detail
+            v-if="conversacion && conversacion.usuario"
+            key="conversation"
+            :current-user="currentUser"
+            :other-user="conversacion.usuario"
+            :messages="messages"
+          />
+          <div v-else key="conversationLoading" class="loading" />
         </div>
-        <span v-if="showErrorMessage">{{ errorMessage }}</span>
       </div>
-      <template v-else>
-        <div class="loading" />
-      </template>
+      <div>
+        <div v-if="!isLoadImage" class="d-flex justify-content-between align-items-center">
+          <input
+            v-model="message"
+            class="form-control"
+            type="text"
+            :placeholder="$t('chat.saysomething')"
+            :readonly="isLoadImage"
+            @keyup.enter="sendMessage"
+          >
+          <div class="d-flex flex-row">
+            <button class="btn btn-outline-primary icon-button small ml-1" @click="openFileHandler">
+              <i class="simple-icon-paper-clip" />
+            </button>
+            <button class="btn btn-primary icon-button small ml-1" @click="sendMessage">
+              <i class="simple-icon-arrow-right" />
+            </button>
+          </div>
+          <span v-if="showErrorMessage">{{ errorMessage }}</span>
+        </div>
+        <template v-else>
+          <div class="loading" />
+        </template>
+      </div>
+      <vue-dropzone
+        id="dropzone"
+        ref="myVueDropzone"
+        :awss3="awss3"
+        :options="dropzoneOptions"
+        class="d-none"
+        @vdropzone-complete="complete"
+        @vdropzone-file-added="starLoad"
+        @vdropzone-error="errorLoadFile"
+      /> 
     </div>
-    <vue-dropzone
-      id="dropzone"
-      ref="myVueDropzone"
-      :awss3="awss3"
-      :options="dropzoneOptions"
-      class="d-none"
-      @vdropzone-complete="complete"
-      @vdropzone-file-added="starLoad"
-      @vdropzone-error="errorLoadFile"
-    /> 
-  </div>
+  </v-modal>
 </template>
 
 <script>
 import vueDropzone from "dropzone-vue3";
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import ConversationDetail from "../ChatApp/ConversationDetail";
+import Modal from "./SharedModal.vue";
 import { v4 as uuidv4 } from "uuid";
 
 export default {
   name: "chat-modal",
   components: {
+    "v-modal": Modal,
     "conversation-detail": ConversationDetail,
     vueDropzone,
   },
-  props: ["conversacion"],
+  props: ["conversacion", "workorder", "open"],
   data() {
     return {
       tabIndex: 0,
       message: "",
       searchKey: "",
       isLoadCurrentConversation: false,
-      otherUser: null,
       isLoadImage: false,
       errorMessage: "",
       showErrorMessage: false,
@@ -100,7 +109,6 @@ export default {
     //...mapGetters(['currentUser', 'isLoadContacts', 'isLoadConversations', 'error', 'contacts', 'contactsSearchResult', 'conversations'])
   },
   created() {
-    this.otherUser = this.conversacion.usuario;
     this.$socket.emit(
       "joinroom",
       { room: this.conversacion.IdConversacionUser },
@@ -116,10 +124,12 @@ export default {
   methods: {
     ...mapMutations(["addMessageItem"]),
     ...mapActions(["getMessages"]),
-    // selectConversation(otherUser, messages) {
-    //     this.otherUser = otherUser
-    //     this.conversationMessages = messages
-    // },
+    hideModal(refname) {
+        if(this.$refs[refname] && this.$refs[refname].open){
+            this.$refs[refname].hide();
+        }
+        this.$emit('close')
+    },
     sendMessage() {
       let newmessage = {
         _id: uuidv4(),
@@ -171,9 +181,6 @@ export default {
         }, 2500);
       }
     },
-    hide() {
-      this.$emit("hide");
-    },
     complete(response) {
       this.isLoadImage = false;
       if (response.status == "success") {
@@ -206,7 +213,7 @@ export default {
         );
       }
     },
-    open() {
+    openFileHandler() {
       this.$refs.myVueDropzone.dropzone.hiddenFileInput.click();
     }
   }
