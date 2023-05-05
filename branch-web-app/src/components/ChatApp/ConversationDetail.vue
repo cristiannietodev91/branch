@@ -76,19 +76,5 @@
 
 export default {
   props: ["currentUser", "otherUser", "messages"],
-  mounted() {
-    this.scrollToEnd();
-  },
-  updated() {
-    this.scrollToEnd();
-  },
-  methods: {
-    scrollToEnd() {
-      setTimeout(() => {
-        const container = this.$refs.chatArea.$el;
-        container.scrollTop = container.scrollHeight;
-      }, 0);
-    }
-  }
 };
 </script>

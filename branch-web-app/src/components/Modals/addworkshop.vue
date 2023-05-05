@@ -137,7 +137,7 @@ export default {
     props: {
         open: {
             type: Boolean,
-            default: true,
+            default: false,
         }
     },
     emits: ['loadItems', 'close'],

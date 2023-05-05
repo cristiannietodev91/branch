@@ -49,15 +49,13 @@
               {{ newmessages }}
             </span>
           </button>
-          <div
-            :id="`sidebar${workOrderViewed.CodigoOrden}`"
-            class="modal shadow"
-          >
-            <modal-open-chat
-              :conversacion="infoconversacion"
-              @hide="openChat"
-            />
-          </div>
+          
+          <modal-open-chat
+            :conversacion="infoconversacion"
+            :workorder="workOrderViewed.CodigoOrden"
+            :open="showModal"
+            @close="showModal = false"
+          />
         </div>
       </div>
     </div>
@@ -107,7 +105,7 @@ export default {
     "modal-open-chat": ModalOpenChat
   },
   props: {
-    workOrder: {
+    workOrderCode: {
       type: String,
       default: ''
     }
@@ -128,7 +126,11 @@ export default {
     ...mapGetters([
       "currentUser",
       "workOrdersByOrderCodeAndStages",
-    ])
+      "workshopInfo",
+    ]),
+    workOrder () {
+      return this.$store.getters.workOrdersByOrderCode(this.workOrderCode)
+    }
   },
   watch: {
     workOrdersByOrderCodeAndStages() {
@@ -144,18 +146,15 @@ export default {
         }
       }
     });
-
+    */
     this.infoconversacion = {
-      IdTaller: this.data.IdTaller,
-      nombreTaller: this.data.taller.nombre,
-      usuario: this.data.vehiculo?.usuario,
-      IdConversacionUser: this.data.vehiculo.IdUsuario,
-      IdCita: this.data.IdCita,
-      CodigoOrden: this.data.CodigoOrden,
-      IdOrdenTrabajo: this.data.IdOrdenTrabajo,
-      IdEtapa: this.data.IdEtapa
-    };*/
-    this.renderModal = true;
+      IdTaller: this.workshopInfo.IdTaller,
+      nombreTaller: this.workshopInfo.nombre,
+      usuario: this.workOrder.vehiculo?.usuario,
+      IdConversacionUser: this.workOrder.vehiculo.IdUsuario,
+      IdCita: this.workOrder.IdCita,
+      CodigoOrden: this.workOrder.CodigoOrden,
+    };
   },
   created() {
     this.buildSteps();
@@ -176,7 +175,7 @@ export default {
 
       this.steps = [];
 
-      this.workOrderViewed = this.workOrdersByOrderCodeAndStages[this.workOrder];
+      this.workOrderViewed = this.workOrdersByOrderCodeAndStages[this.workOrderCode];
 
       const ingreso = this.workOrderViewed.etapas[stages.INGRESO];
       const diagnostico = this.workOrderViewed.etapas[stages.DIAGNOSTICO];

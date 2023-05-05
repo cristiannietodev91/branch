@@ -22,11 +22,11 @@
     </div>
     <div class="row">
       <div
-        v-for="(order) in Object.keys(workOrdersByOrderCode)"
+        v-for="(order) in Object.keys(workOrdersGroupByOrderCode)"
         :key="`orden_${order}`"
         class="col col-12 ordenes-branch"
       >
-        <orden-card :workOrder="order" />
+        <orden-card :workOrderCode="order" />
       </div>
     </div>
   </div>
@@ -52,7 +52,7 @@ export default {
   computed: {
     ...mapGetters({
       currentUser: "currentUser",
-      workOrdersByOrderCode: "workOrdersByOrderCode",
+      workOrdersGroupByOrderCode: "workOrdersGroupByOrderCode",
     })
   },
   created() {
