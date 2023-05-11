@@ -89,6 +89,7 @@ export default {
     }
   },
   mounted() {
+    console.log("Mounttt")
     this.scrollToEnd();
   },
   updated() {
