@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import styles from "../../styles/App.scss";
 import { ImageBackground, View, Text, TouchableOpacity } from "react-native";
-import { Button, Icon, Rating, Image } from "@rneui/base";
+import { Button, Icon, Image } from "@rneui/base";
 import { URL_SERVICES } from "@env";
 import Loading from "../../components/Loading";
 import { LoginManager, AccessToken } from "react-native-fbsdk-next";
@@ -18,7 +18,6 @@ export default function Usuario(props: UserStackScreenProps<"User">) {
   const [facebookUser, setFacebookUser] =
     useState<FirebaseAuthTypes.UserInfo>();
   const [urlFoto] = useState();
-  const starImage = require("./../../../assets/drawable-xxxhdpi/ionic-ios-star.png");
 
   let userLogged = auth().currentUser;
 
@@ -178,25 +177,11 @@ export default function Usuario(props: UserStackScreenProps<"User">) {
               source={require("./../../../assets/drawable-xxxhdpi/bgUserCard.png")}
               style={styles.bgUserCardImage}
             />
-            <Text style={[styles.headingPrimary, styles.headingUserCard]}>
+            <Text style={[styles.headingUserCard, styles.headingSecondary]}>
               {facebookUser
                 ? facebookUser.displayName
                 : userLogged?.displayName}
             </Text>
-            <View style={styles.rating}>
-              <Rating
-                type="custom"
-                imageSize={15}
-                ratingColor="rgba(255,255,266,.8)"
-                readonly={true}
-                ratingBackgroundColor="#0396c8"
-                ratingImage={starImage}
-              />
-            </View>
-            {/* <View style={styles.userButtons}>
-              <ButtonBranch iconName="bell-outline" onPress={() => {}} />
-              <ButtonBranch iconName="settings-outline" onPress={() => {}} />
-            </View> */}
             <View style={styles.userInfoContainer}>
               <View>
                 <View style={styles.userInfoItem}>

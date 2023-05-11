@@ -1,6 +1,7 @@
 import axios from "axios";
 import { apiBranchUrl } from "../../constants/config";
 import ServiceCore from "../../services/service";
+import $socket from '../../utils/socketInstance';
 
 const state = {
   isLoadContacts: false,
@@ -55,7 +56,7 @@ const mutations = {
   addMessageItem(state, newMessage) {
     state.messages.push(newMessage);
     const { typeusuario } = newMessage;
-    if (typeusuario == "cliente") {
+    if (typeusuario === "cliente") {
       state.newMessages = state.newMessages + 1;
     }
   },
@@ -96,7 +97,7 @@ const actions = {
   },
   SOCKET_newcliente({ state }, data) {
     console.log("New cliente data ", data);
-    this._vm.$socket.emit("joinroom", { room: data.room }, result => {
+    $socket.emit("joinroom", { room: data.room }, result => {
       const conversations = [...state.conversations];
       const existConversions = conversations.find(element => {
         element == data.room;

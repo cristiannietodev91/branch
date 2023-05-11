@@ -46,36 +46,11 @@ export default {
     });
   },
   mounted() {
-    this.sockets.subscribe("sendmessage", data => {
-      // console.log("Log in mounted", data);
-      this.$notification.show(
-        data.user.name,
-        {
-          body: data.text
-        },
-        {
-          onclick: () => {
-            this.$router.push({
-              path: `/app/taller/detailTaller/ordenes/${data.cita}`
-            });
-          }
-        }
-      );
+    this.sockets.subscribe("sendmessage", () => {
+      //TODO: Show notifications when a user send a message
     });
-    this.sockets.subscribe("newcita", data => {
-      this.$notification.show(
-        data.placa,
-        {
-          body: data.text
-        },
-        {
-          onclick: () => {
-            this.$router.push({
-              path: `/app/taller/detailTaller/citas`
-            });
-          }
-        }
-      );
+    this.sockets.subscribe("newcita", () => {
+      //TODO: Show notifications when a new cita is created
     });
   }
 };

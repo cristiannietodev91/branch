@@ -131,7 +131,7 @@ export default {
         this.$emit('close')
     },
     sendMessage() {
-      let newmessage = {
+      const newmessage = {
         _id: uuidv4(),
         createdAt: new Date(),
         text: this.message,
