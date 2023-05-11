@@ -19,8 +19,8 @@ import vSelect from "vue-select";
 import Breadcrumb from "./components/Common/Breadcrumb";
 // Socket IO
 import VueSocketIO from "vue-3-socket.io"
+import $socket from './utils/socketInstance';
 
-import SocketIO from "socket.io-client";
 const moment = require("moment-timezone");
 require("moment/locale/es");
 
@@ -67,12 +67,12 @@ app.use(VCalendar, {
 */
 
 
-const options = { transports: ["websocket"], secure: true };
+
 
 app.use(
   new VueSocketIO({
     debug: false,
-    connection: SocketIO(process.env.VUE_APP_URLBACKSERVICES, options),
+    connection: $socket,
     vuex: {
       store,
       actionPrefix: "SOCKET_"

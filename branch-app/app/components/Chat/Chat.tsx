@@ -67,13 +67,14 @@ export default function Chat(props: ChatComponentProps) {
         setMessages(GiftedChat.append(messages, json));
       })
       .catch((error) => console.error(error));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [IdTaller]);
 
-  /*useEffect(() => {
+  useEffect(() => {
     socket.on("sendmessage", (message: any) => {
       setMessages(GiftedChat.append(messages, message));
     });
-  }, [messages]);*/
+  }, [messages]);
 
   const onSend = (newmessage: never[]) => {
     setMessages(GiftedChat.append(messages, newmessage));

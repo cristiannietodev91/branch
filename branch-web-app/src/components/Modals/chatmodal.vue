@@ -106,7 +106,6 @@ export default {
   },
   computed: {
     ...mapGetters(["currentUser", "messages"])
-    //...mapGetters(['currentUser', 'isLoadContacts', 'isLoadConversations', 'error', 'contacts', 'contactsSearchResult', 'conversations'])
   },
   created() {
     this.$socket.emit(
@@ -131,7 +130,7 @@ export default {
         this.$emit('close')
     },
     sendMessage() {
-      let newmessage = {
+      const newmessage = {
         _id: uuidv4(),
         createdAt: new Date(),
         text: this.message,
@@ -184,7 +183,7 @@ export default {
     complete(response) {
       this.isLoadImage = false;
       if (response.status == "success") {
-        let newmessage = {
+        const newmessage = {
           _id: uuidv4(),
           createdAt: new Date(),
           image: response.s3Url + "/" + response.s3Signature.key,

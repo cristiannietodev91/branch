@@ -32,10 +32,13 @@ In a terminal run
 
 ``npx react-native start``
 
-then run
+then run (IOS)
 
 ``npx react-native run-ios``
 
+and/or run (Android)
+
+``npx react-native run-android``
 
 ### Test
 

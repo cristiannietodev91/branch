@@ -8589,7 +8589,7 @@ i.large-icon {
     float: left !important;
   }
 
-  .float-left {
+  .float-left{
     float: right !important;
   }
 
@@ -10094,16 +10094,18 @@ footer.page-footer {
   .p-3, .modal-body{
     padding: 0 !important;
   }
-  .ps-container{
+  .ps{
     height: 330px !important;
   }
   div[class*="float-"]{
     max-width: 70%;
   }
   .float-left{
+    float: left !important;
     background-color: $branch-blue-2;
   }
   .float-right{
+    float: right !important;
     background-color: $branch-blue-4;
     color: white;
     .text-muted{

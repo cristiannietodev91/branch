@@ -4,7 +4,7 @@
       <div class="d-flex">
         <img
           :alt="otherUser.firstName"
-          src="/assets/img/profile-pic-l.jpg"
+          :src="defaultProfilePicture"
           class="img-thumbnail border-0 rounded-circle ml-0 mr-4 list-thumbnail align-self-center small"
         >
       </div>
@@ -23,11 +23,13 @@
       </div>
     </div>
     <div class="separator mb-5" />
-    <div>
+    <perfect-scrollbar
+      ref="chatArea"
+      class="scroll"
+    >
       <div v-for="(message, index) in messages" :key="`message${index}`">
         <div
           class="card d-inline-block mb-3"
-          no-body
           :class="{
             'float-left': message.user._id === otherUser.uid,
             'float-right': message.user._id === currentUser.uid
@@ -69,12 +71,38 @@
         </div>
         <div class="clearfix" />
       </div>
-    </div>
+    </perfect-scrollbar>
   </div>
 </template>
 <script>
+import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
+import defaultProfilePicture from "../../assets/img/profile-pic-l.jpg"
 
 export default {
+  components: {
+        PerfectScrollbar
+  },
   props: ["currentUser", "otherUser", "messages"],
+  data() {
+    return {
+      defaultProfilePicture
+    }
+  },
+  mounted() {
+    console.log("Mounttt")
+    this.scrollToEnd();
+  },
+  updated() {
+    this.scrollToEnd();
+  },
+  methods: {
+    scrollToEnd() {
+      setTimeout(() => {
+        const container = this.$refs.chatArea.$el;
+        container.scrollTop = container.scrollHeight;
+      }, 0);
+    }
+  }
 };
 </script>
+<style src="vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css" />
