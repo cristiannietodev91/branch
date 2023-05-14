@@ -147,6 +147,10 @@ export default {
       }
     });
     */
+    
+  },
+  created() {
+    this.buildSteps();
     this.infoconversacion = {
       IdTaller: this.workshopInfo.IdTaller,
       nombreTaller: this.workshopInfo.nombre,
@@ -155,9 +159,6 @@ export default {
       IdCita: this.workOrder.IdCita,
       CodigoOrden: this.workOrder.CodigoOrden,
     };
-  },
-  created() {
-    this.buildSteps();
 
     /*
     if (entrega) {

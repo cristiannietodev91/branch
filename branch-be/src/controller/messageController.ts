@@ -1,6 +1,7 @@
 import messageAdapter from "../adapter/messageAdapter";
 import HttpStatus from "http-status-codes";
 import { Request, Response } from "express";
+import { OrderItem } from "sequelize";
 
 const createMessage = (req: Request, res: Response) => {
   try {
@@ -31,15 +32,16 @@ const createMessage = (req: Request, res: Response) => {
 const getMessagesByConversacion = (req: Request, res: Response) => {
   try {
     console.log("Peticion recibida de mensajes :::>", req.query);
-    const { IdConversacionUser, IdTaller, order } = req.query;
+    const { IdConversacionUser, IdTaller, order = "DESC" } = req.query;
 
     const conversacion = {
-      //uid: IdConversacionUser,
-      //IdTaller: IdTaller,
-      //TODO: Organize query params
+      uid: IdConversacionUser as string,
+      IdTaller: IdTaller as string,
     };
+
+    const orderMessages: OrderItem = ["IdMessage" , order as string]; 
     messageAdapter
-      .getMessagesByConversacion(conversacion)
+      .getMessagesByConversacion(conversacion, orderMessages)
       .then((messages) => {
         if (messages) {
           res.status(HttpStatus.OK).json(messages);

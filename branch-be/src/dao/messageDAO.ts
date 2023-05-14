@@ -1,4 +1,4 @@
-import { FindAttributeOptions, Order, WhereOptions } from "sequelize";
+import { FindAttributeOptions, OrderItem, WhereOptions } from "sequelize";
 import { MessageModel } from "../database/models";
 import { MessageAttributes, MessageCreationAttributes, MessageInstance } from "../types";
 
@@ -14,7 +14,7 @@ const update = (
   message: Partial<MessageInstance>
 ) => {
   // Find all users
-  return MessageModel.sequelize?.transaction((t1) => {
+  return MessageModel.sequelize?.transaction(() => {
     return MessageModel.update(message, {
       where: filter,
     });
@@ -23,12 +23,13 @@ const update = (
 
 const findAllByFilter = (
   filterMessages: WhereOptions<MessageAttributes>,
-  order: Order
+  order: OrderItem
 ): Promise<MessageInstance[]> | undefined => {
   // Find all users
-  return MessageModel.sequelize?.transaction((t1) => {
+  return MessageModel.sequelize?.transaction(() => {
     return MessageModel.findAll({
       where: filterMessages,
+      order: [order]
       //order: [["createdAt", order ? order : "DESC"]],
       //TODO: Validate type
     });
@@ -63,4 +64,4 @@ export default {
   findAllByFilter,
   findDistinctAllByFilter,
   count
-}
+};
