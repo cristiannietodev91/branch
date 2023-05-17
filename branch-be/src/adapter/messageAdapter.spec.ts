@@ -95,7 +95,7 @@ describe("messages adapter functionality", () => {
 
     let result: MessageInstance[];
 
-    describe("get conversation and list of messages succefully", () => {
+    describe("get conversation and list of messages successfully", () => {
       const conversationReturnedMock = {
         ...mockFilterConversation,
         uid: "DSDSAD665DSAD",

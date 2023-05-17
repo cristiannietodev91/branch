@@ -34,6 +34,10 @@ const getMessagesByConversacion = (req: Request, res: Response) => {
     console.log("Peticion recibida de mensajes :::>", req.query);
     const { IdConversacionUser, IdTaller, order = "DESC" } = req.query;
 
+    if(!IdConversacionUser) {
+      throw new Error("Missing IdConversacionUser required param.");
+    }
+
     const conversacion = {
       uid: IdConversacionUser as string,
       IdTaller: IdTaller as string,
@@ -53,7 +57,6 @@ const getMessagesByConversacion = (req: Request, res: Response) => {
           .json({ error: error.message });
       });
   } catch (error) {
-    console.error("Error al crear vehiculo ::::::>", error);
     if (error instanceof Error) {
       return res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
