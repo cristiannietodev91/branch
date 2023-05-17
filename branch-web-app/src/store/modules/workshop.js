@@ -2,8 +2,9 @@ import ServiceCore from "../../services/service";
 import { workshopStages } from "../../utils/constants";
 
 const state = {
-  infoWorkshop: localStorage.getItem("infoWorkshop") || null,
-  workOrders: localStorage.getItem("workOrders") != null
+  infoWorkshop: localStorage.getItem("infoWorkshop") !== null ? 
+    JSON.parse(localStorage.getItem("infoWorkshop")) : null,
+  workOrders: localStorage.getItem("workOrders") !== null
   ? JSON.parse(localStorage.getItem("workOrders"))
   : [],
   error: null,

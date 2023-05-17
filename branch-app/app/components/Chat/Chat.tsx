@@ -54,7 +54,7 @@ export default function Chat(props: ChatComponentProps) {
       URL_SERVICES +
         `message/getMessagesByConversacion?IdConversacionUser=${
           auth().currentUser?.uid
-        }&IdTaller=${IdTaller}`,
+        }&IdTaller=${IdTaller}&order=DESC`,
       {
         method: "GET",
         headers: {

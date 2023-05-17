@@ -14,7 +14,7 @@ const createOrGetConversacion = (
   debug("Conversacion param :::>", paramconversacion);
   return new Promise<ConversationInstance>((resolve, rejected) => {
     conversacionDAO
-      .findOneByFilter({ IdConversacion: 1 })
+      .findOneByFilter(paramconversacion)
       ?.then((conversacion) => {
         if (conversacion && conversacion.IdConversacion) {
           resolve(conversacion);

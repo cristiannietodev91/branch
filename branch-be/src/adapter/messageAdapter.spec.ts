@@ -11,7 +11,7 @@ import {
 } from "../types";
 import messageAdapter from "./messageAdapter";
 import conversacionDAO from "../dao/conversacionDAO";
-import { WhereOptions, Order, FindAttributeOptions } from "sequelize/types";
+import { WhereOptions, FindAttributeOptions, OrderItem } from "sequelize/types";
 
 describe("messages adapter functionality", () => {
   const mockMessagesReturned: MessageCreationAttributes[] = [
@@ -39,7 +39,7 @@ describe("messages adapter functionality", () => {
       Promise<MessageInstance> | undefined
     >;
 
-    let mockCreationMessage: MessageCreationAttributes = {
+    const mockCreationMessage: MessageCreationAttributes = {
       _id: "SADSD4564ASD564SAD654DS",
       IdConversacion: 1,
       delivered: true,
@@ -48,7 +48,7 @@ describe("messages adapter functionality", () => {
       user: { name: "cnieto" } as unknown as JSON,
     };
 
-    let mockCreationMessageResult: MessageCreationAttributes = {
+    const mockCreationMessageResult: MessageCreationAttributes = {
       IdMessage: 1,
       ...mockCreationMessage,
     };
@@ -80,7 +80,7 @@ describe("messages adapter functionality", () => {
 
   describe("get messages by conversation functionality", () => {
     let getMessagesStub: sinon.SinonStub<
-      [filterMessages: WhereOptions<MessageAttributes>, order: Order],
+      [filterMessages: WhereOptions<MessageAttributes>, order: OrderItem],
       Promise<MessageInstance[]> | undefined
     >;
 
@@ -89,27 +89,13 @@ describe("messages adapter functionality", () => {
       Promise<ConversationInstance | null> | undefined
     >;
 
-    let mockCreationMessage: MessageCreationAttributes = {
-      _id: "SADSD4564ASD564SAD654DS",
-      IdConversacion: 1,
-      delivered: true,
-      read: true,
-      typeusuario: "cliente",
-      user: { name: "cnieto" } as unknown as JSON,
-    };
-
-    const mockCreationMessageResult: MessageCreationAttributes = {
-      IdMessage: 1,
-      ...mockCreationMessage,
-    };
-
     const mockFilterConversation = {
       IdConversacion: 1,
     };
 
     let result: MessageInstance[];
 
-    describe("get conversation and list of messages succefully", () => {
+    describe("get conversation and list of messages successfully", () => {
       const conversationReturnedMock = {
         ...mockFilterConversation,
         uid: "DSDSAD665DSAD",

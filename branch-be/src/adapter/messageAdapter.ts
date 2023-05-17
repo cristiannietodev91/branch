@@ -1,6 +1,6 @@
 import messageDAO from "../dao/messageDAO";
 import conversacionDAO from "../dao/conversacionDAO";
-import { Order, WhereOptions } from "sequelize";
+import { OrderItem, WhereOptions } from "sequelize";
 import {
   ConversationAttributes,
   ConversationInstance,
@@ -14,7 +14,7 @@ const createMessage = (message: MessageCreationAttributes) => {
 
 const getMessagesByConversacion = (
   conversacion: WhereOptions<ConversationAttributes>,
-  order: Order = ["IdConversacion", "DESC"]
+  order: OrderItem = ["IdMessage", "DESC"]
 ) => {
   return new Promise<MessageInstance[]>((resolve, rejected) => {
     conversacionDAO
@@ -46,7 +46,7 @@ const getAllConversationsUnread = (IdTaller: string | number) => {
     messageDAO
       .findDistinctAllByFilter({ read: false, typeusuario: "cliente" })
       ?.then((messages) => {
-        let Ids = messages.map((a) => a.IdConversacion);
+        const Ids = messages.map((a) => a.IdConversacion);
 
         const filter: WhereOptions<ConversationAttributes> = {
           IdTaller: IdTaller,
