@@ -42,6 +42,7 @@ const routes = [
               import(
                 /* webpackChunkName: "workshop" */ "./views/app/taller/DetailsTaller"
               ),
+            props: route => ({ path: route.path }),
             redirect: "/app/taller/detailTaller/citas",
             children: [
               {

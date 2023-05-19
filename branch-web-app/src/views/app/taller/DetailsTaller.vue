@@ -8,14 +8,13 @@
             <ul class="nav nav-tabs nav-fill">
               <li
                 v-for="(navItem, index) in navItems" :key="index" class="nav-item"
-                @click="activeTab(navItem)"
               >
                 <button
                   class="nav-link"
                   type="button"
                   role="tab"
                   :class="{
-                    'active': navItem.isActive
+                    'active': path === navItem.to
                   }"
                   @click="$router.push(navItem.to)"
                 >
@@ -38,29 +37,31 @@
 <script>
 
 export default {
+  props: {
+    path: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {
       isLoad: false,
       navItems: [
         {
           text: "branch.cita.cita",
-          to: "/app/taller/detailTaller",
-          isActive: true
+          to: "/app/taller/detailTaller/citas",
         },
         {
           text: "pages.branch.mecanicos",
           to: "/app/taller/detailTaller/mecanicos",
-          isActive: false
         },
         {
           text: "pages.branch.ordentrabajo",
           to: "/app/taller/detailTaller/ordenes",
-          isActive: false
         },
         {
           text: "pages.details",
           to: "/app/taller/detailTaller/info",
-          isActive: false
         }
       ]
     };
@@ -70,15 +71,5 @@ export default {
       this.isLoad = true;
     }, 50);
   },
-  methods: {
-    activeTab(item) {
-      if(item.isActive) {
-        return
-      }
-      this.navItems = this.navItems.reduce((acc, curr)=> {
-        return [...acc, { ...curr, isActive: curr.to === item.to ? true : false }]
-      },[]);
-    }
-  }
 };
 </script>
