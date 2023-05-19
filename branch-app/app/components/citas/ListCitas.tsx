@@ -20,7 +20,7 @@ import { ActiveAppointmentStackScreenProps } from "../../../types/types";
 
 interface ListCitasProps
   extends Pick<
-    ActiveAppointmentStackScreenProps<"NavigateAppoinment">,
+    ActiveAppointmentStackScreenProps<"NavigateAppointment">,
     "navigation"
   > {
   citas: any[];
@@ -30,13 +30,13 @@ interface ListCitasProps
 
 interface AddCitaButtonProps
   extends Pick<
-    ActiveAppointmentStackScreenProps<"NavigateAppoinment">,
+    ActiveAppointmentStackScreenProps<"NavigateAppointment">,
     "navigation"
   > {}
 
 interface CitaProps
   extends Pick<
-    ActiveAppointmentStackScreenProps<"NavigateAppoinment">,
+    ActiveAppointmentStackScreenProps<"NavigateAppointment">,
     "navigation"
   > {
   cita: any;
@@ -138,7 +138,7 @@ function Cita(props: CitaProps) {
   let fechaHora = Moment(dateFecha).format("hh:mm A");
   const { resetNotificaciones } = useContext(NotificationContext);
 
-  return cita.estado !== "Solicitada" && cita.estado !== "Cancelada" ? (
+  return (
     <View style={styles.cardMoto}>
       <View style={styles.cardMotoImageContainer}>
         <Image
@@ -165,53 +165,27 @@ function Cita(props: CitaProps) {
           Hora: <Text style={styles.bodyTextBold}>{fechaHora}</Text>
         </Text>
       </View>
-      <View style={styles.cardMotoButtons}>
-        <ButtonBranch
-          iconName="chevron-right"
-          onPress={() => {
-            navigation.navigate("Detail", {
-              cita,
-            });
-          }}
-        />
-        <ButtonBranch
-          iconName="chat-processing"
-          onPress={() => {
-            resetNotificaciones();
-            navigation.navigate("Chat", {
-              IdTaller: cita.IdTaller,
-            });
-          }}
-        />
-      </View>
-    </View>
-  ) : (
-    <View style={styles.cardMoto}>
-      <View style={styles.cardMotoImageContainer}>
-        <Image
-          style={styles.cardMotoImage}
-          // source={{ uri: cita.vehiculo.fotos.url }}
-          source={require("./../../../assets/drawable-xxxhdpi/imageNoMoto.png")}
-        />
-      </View>
-      <View>
-        <Text style={styles.headingSecondary}>{cita.servicio}</Text>
-        <Text style={styles.bodyText}>
-          Taller: <Text style={styles.bodyTextBold}>{cita.taller.nombre}</Text>
-        </Text>
-        <Text style={styles.bodyText}>
-          Placa: <Text style={styles.bodyTextBold}>{cita.vehiculo.placa}</Text>
-        </Text>
-        {/* <Text style={styles.bodyText}>
-          Estado: <Text style={styles.bodyTextBold}>{cita.estado}</Text>
-        </Text> */}
-        <Text style={styles.bodyText}>
-          Fecha: <Text style={styles.bodyTextBold}>{fechaCita}</Text>
-        </Text>
-        <Text style={styles.bodyText}>
-          Hora: <Text style={styles.bodyTextBold}>{fechaHora}</Text>
-        </Text>
-      </View>
+      {cita.estado === "Cumplida" && (
+        <View style={styles.cardMotoButtons}>
+          <ButtonBranch
+            iconName="chevron-right"
+            onPress={() => {
+              navigation.navigate("Detail", {
+                cita,
+              });
+            }}
+          />
+          <ButtonBranch
+            iconName="chat-processing"
+            onPress={() => {
+              resetNotificaciones();
+              navigation.navigate("Chat", {
+                IdTaller: cita.IdTaller,
+              });
+            }}
+          />
+        </View>
+      )}
     </View>
   );
 }

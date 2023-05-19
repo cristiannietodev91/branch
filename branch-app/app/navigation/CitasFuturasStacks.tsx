@@ -12,7 +12,7 @@ const CitasFuturasStacks = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen
-        name="NavigateAppoinment"
+        name="NavigateAppointment"
         component={CitaScreen}
         initialParams={{ etapa: "futuras" }}
       />

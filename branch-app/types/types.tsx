@@ -7,7 +7,7 @@ import type {
 import { FirebaseAuthTypes } from "@react-native-firebase/auth";
 
 export type InternalAppointmentStackParamList = {
-  NavigateAppoinment: { etapa: string };
+  NavigateAppointment: { etapa: string };
   Detail: { cita: any };
   Pdfdetail: { pdf: any; orden?: any; cita?: any };
   Chat: { IdTaller: number };

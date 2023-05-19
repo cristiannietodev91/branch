@@ -11,7 +11,7 @@ import { ActiveAppointmentStackScreenProps } from "../../../types/types";
 const CitasScreen = ({
   navigation,
   route,
-}: ActiveAppointmentStackScreenProps<"NavigateAppoinment">) => {
+}: ActiveAppointmentStackScreenProps<"NavigateAppointment">) => {
   const { etapa } = route.params;
   const [isLoading, setLoading] = useState(true);
   const [citas, setListCitas] = useState([]);
