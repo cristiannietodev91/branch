@@ -8,7 +8,7 @@
 
 - Set SSH Key in git for your user
 - Download the project from the repo
-- run ``yarn install`` command to install all project neccesary dependencies
+- run ``yarn install`` command to install all project necessary dependencies
 - create an database called ``branch``
 
 

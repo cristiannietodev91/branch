@@ -162,4 +162,4 @@ export default {
   findAllByFilter,
   getById,
   count
-}
+};
