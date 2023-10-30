@@ -37,7 +37,7 @@ $env:GOOGLE_APPLICATION_CREDENTIALS="C:\Users\username\Downloads\service-account
     DBUSER=root
     FIREBASE_PROJECT_NAME=firebaseproject
     ``
-- run ``yarn install`` command to install all project neccesary dependencies
+- run ``yarn install`` command to install all project necessary dependencies
 - create an database called ``branch``
 
 ### Run migrations
@@ -49,7 +49,7 @@ $env:GOOGLE_APPLICATION_CREDENTIALS="C:\Users\username\Downloads\service-account
 ### Run Seeders
 - run ``npx sequelize-cli db:seed:all`` 
 
-Run specific sedd ``npx sequelize-cli db:seed --seed fileName``
+Run specific seed ``npx sequelize-cli db:seed --seed fileName``
 
 ## Runing project locally
 

@@ -1,6 +1,6 @@
 # branch-app
 
-react-native app which connect to `branch-be` node app
+react-native app which connects to `branch-be` node app
 
 ## Dev environment
 
@@ -11,7 +11,7 @@ react-native app which connect to `branch-be` node app
 - react-navigate v6
 
 
-### Runing project
+### Running project
 
 ``yarn install``
 
