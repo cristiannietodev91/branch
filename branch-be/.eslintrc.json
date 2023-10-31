@@ -6,6 +6,8 @@
   },
   "extends": [
     "eslint:recommended",
+    "plugin:node/recommended",
+    "plugin:security/recommended",
     "plugin:@typescript-eslint/recommended"
   ],
   "parser": "@typescript-eslint/parser",
@@ -16,6 +18,7 @@
   "plugins": [
     "@typescript-eslint"
   ],
+  "ignorePatterns": ["/dist"],
   "rules": {
     "indent": [
       "error",
@@ -32,6 +35,15 @@
     "semi": [
       "error",
       "always"
-    ]
+    ],
+    "node/no-unsupported-features/es-syntax": [
+      "off"
+    ],
+    "node/no-missing-import": [
+      "off"
+    ],
+    "node/no-unpublished-import": ["error", {
+      "allowModules": ["chai", "sinon", "supertest"]
+    }]
   }
 }

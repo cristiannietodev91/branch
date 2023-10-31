@@ -210,11 +210,11 @@ export const parseTextByEstadoCita = (
   cita: CitaAttributes
 ): string | undefined => {
   switch (estado) {
-    case "Confirmada":
-      return "Se confirmo su cita exitosamente";
-    case "Cancelada":
-      return (
-        "Hola " +
+  case "Confirmada":
+    return "Se confirmo su cita exitosamente";
+  case "Cancelada":
+    return (
+      "Hola " +
         cita.vehiculo?.usuarios?.firstName +
         "! Se cancelo la cita que tenias el " +
         moment(cita.fechaCita).format("D [de] MMMM YYYY") +
@@ -225,28 +225,23 @@ export const parseTextByEstadoCita = (
         "  " +
         cita.vehiculo?.placa +
         ", BRANCH tendra el gusto de recibirte en una proxima oportunidad. Tu experiencia nuestro motor! BRANCH"
-      );
-    case "Incumplida":
-      return `Hola " +
-        ${
-          cita.vehiculo?.usuarios?.firstName
-        }! Incumpliste la cita que tenias el 
-        ${moment(cita.fechaCita).format("D [de] MMMM YYYY")} a las ${
-        cita.horaCita
-      } con tu 
-        ${cita.vehiculo?.tipoVehiculo} ${
-        cita.vehiculo?.placa
-      }, esto afectara tu puntuacion en nuestra plataforma.
+    );
+  case "Incumplida":
+    return `Hola " +
+        ${cita.vehiculo?.usuarios?.firstName
+}! Incumpliste la cita que tenias el 
+        ${moment(cita.fechaCita).format("D [de] MMMM YYYY")} a las ${cita.horaCita
+} con tu 
+        ${cita.vehiculo?.tipoVehiculo} ${cita.vehiculo?.placa
+}, esto afectara tu puntuacion en nuestra plataforma.
         BRANCH tendra el gusto de recibirte en una proxima oportunidad. Tu experiencia nuestro motor! BRANCH`;
-    default:
-      `Hola 
+  default:
+    `Hola 
       ${cita.vehiculo?.usuarios?.firstName}! Su cita quedo asignada el 
-      ${moment(cita.fechaCita).format("D [de] MMMM YYYY")} a las ${
-        cita.horaCita
-      } con tu 
+      ${moment(cita.fechaCita).format("D [de] MMMM YYYY")} a las ${cita.horaCita
+} con tu 
       ${cita.vehiculo?.tipoVehiculo} ${cita.vehiculo?.placa},
-      ${
-        cita.mecanico?.firstName
-      } de BRANCH tendra el gusto de recibirte. Tu experiencia nuestro motor! BRANCH`;
+      ${cita.mecanico?.firstName
+} de BRANCH tendra el gusto de recibirte. Tu experiencia nuestro motor! BRANCH`;
   }
 };
