@@ -45,13 +45,13 @@ watch(() => state.open, (stateValue) => {
 
 watch(() => props.show, (modelValue) => {
   if (modelValue) {
-    show();
+    showModal();
   } else {
     hide();
   }
 })
 
-const show = ()=> {
+const showModal = ()=> {
   state.open = true;
 }
 
@@ -61,7 +61,7 @@ const hide = ()=> {
 }
 
 defineExpose({
-  show,
+  show: showModal,
   hide,
 });
 

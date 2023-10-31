@@ -1,13 +1,13 @@
 import HttpStatus from "http-status-codes";
-import userAdapater from "../adapter/userAdapter";
+import userAdapter from "../adapter/userAdapter";
 import { Request, Response } from "express";
 import Debug from "debug";
 import { UserCreationAttributes } from "../types";
 import { ValidationError } from "sequelize";
 const debug = Debug("branch:server");
 
-const getAllUsuarios = (req: Request, res: Response): void => {
-  userAdapater
+const getAllUsers = (req: Request, res: Response): void => {
+  userAdapter
     .findAllUsers()
     .then((users) => {
       res.status(HttpStatus.OK).json(users);
@@ -19,63 +19,42 @@ const getAllUsuarios = (req: Request, res: Response): void => {
     });
 };
 
-const findUserByEmail = (req: Request, res: Response): void => {
+const findUserByEmail = async (req: Request, res: Response) => {
   try {
     const email = req.params.email;
 
-    userAdapater
-      .findOneUserByFilter({ email })
-      ?.then((usuario) => {
-        if (usuario) {
-          res.status(HttpStatus.OK).json(usuario);
-        } else {
-          res.status(HttpStatus.OK).json({});
-        }
-      })
-      .catch((error) => {
-        if (error) {
-          debug("Error al buscar usuario por email ::>", error.message);
-          if (error.errors) {
-            res
-              .status(HttpStatus.INTERNAL_SERVER_ERROR)
-              .json({ error: error.errors[0] });
-          } else {
-            res
-              .status(HttpStatus.INTERNAL_SERVER_ERROR)
-              .json({ error: error.message });
-          }
-        }
-      });
+    const user = await userAdapter
+      .findOneUserByFilter({ email });
+
+    if(user) {
+      return res.status(HttpStatus.OK).json(user);
+    }
+    
+    return res.status(HttpStatus.NOT_FOUND).end();
+    
   } catch (error) {
-    debug("Error al buscar usuario By Email ", error);
+    debug("Error searching user By Email ", error);
     if (error instanceof Error) {
-      res
+      return res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ error: error.message });
     }
+    throw error;
   }
 };
 
-const findUsuarioById = (req: Request, res: Response): void => {
+const findUserById = async (req: Request, res: Response) => {
   try {
     const Idusuario = req.params.Id;
     debug("Parametro de Idusuario recibido :::::>", req.params);
-    userAdapater
-      .getById(Idusuario)
-      ?.then((usuario) => {
-        if (usuario) {
-          res.status(HttpStatus.OK).json(usuario);
-        } else {
-          res.status(HttpStatus.OK).json({});
-        }
-      })
-      .catch((error) => {
-        if (error) {
-          res
-            .status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .json({ error: error.errors[0] });
-        }
-      });
+    const user = await userAdapter.getById(Idusuario);
+
+    if(user) {
+      return res.status(HttpStatus.OK).json(user);
+    }
+
+    return res.status(HttpStatus.NOT_FOUND).end();
+
   } catch (error) {
     debug("Error al buscar Usuario By Id ", error);
     if (error instanceof Error) {
@@ -83,6 +62,7 @@ const findUsuarioById = (req: Request, res: Response): void => {
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ error: error.message });
     }
+    throw error;
   }
 };
 
@@ -90,7 +70,7 @@ const loginUserTallerByUID = (req: Request, res: Response): void => {
   try {
     const uid = req.params.uid;
 
-    userAdapater
+    userAdapter
       .findOneUserByFilter({ uid })
       ?.then((usuario) => {
         if (usuario) {
@@ -137,7 +117,7 @@ const loginUserTallerByUID = (req: Request, res: Response): void => {
 const countUsuariosByIdTaller = (req: Request, res: Response): void => {
   try {
     const IdTaller = req.params.Id;
-    userAdapater
+    userAdapter
       .countUsuariosByIdTaller({ IdTaller })
       ?.then((count) => {
         res.status(HttpStatus.OK).json(count);
@@ -174,7 +154,7 @@ const deleteUsuarioById = (req: Request, res: Response): void => {
   try {
     const Idusuario = req.params.Id;
     debug("Parametro de Idusuario recibido :::::>", Idusuario);
-    userAdapater
+    userAdapter
       .deleteById(Idusuario)
       ?.then((result) => {
         if (result) {
@@ -222,7 +202,7 @@ const createFireBaseUsuario = (req: Request, res: Response): void => {
       estado: "Registrado" as const,
     };
 
-    userAdapater
+    userAdapter
       .createUsuario(usuarioDB)
       ?.then((usuarioResult) => {
         if (usuarioResult) {
@@ -310,7 +290,7 @@ const updateUsuarioByUid = (req: Request, res: Response): void => {
       };
     }
 
-    userAdapater
+    userAdapter
       .updateUsuario(usuarioDB)
       ?.then(() => {
         res.status(HttpStatus.ACCEPTED).json({
@@ -377,7 +357,7 @@ const updateUsuarioByIdUsuario = (req: Request, res: Response): void => {
       email: usuario.email,
     };
 
-    userAdapater
+    userAdapter
       .updateUsuarioByIdUsuario(id, usuarioDB)
       ?.then((usuarioRes) => {
         if (usuarioRes) {
@@ -408,8 +388,8 @@ const updateUsuarioByIdUsuario = (req: Request, res: Response): void => {
 };
 
 export default {
-  findUsuarioById,
-  getAllUsuarios,
+  findUserById,
+  getAllUsers,
   findUserByEmail,
   loginUserTallerByUID,
   countUsuariosByIdTaller,
