@@ -114,4 +114,4 @@ export default {
   deleteById,
   findAllByFilter,
   count
-}
+};

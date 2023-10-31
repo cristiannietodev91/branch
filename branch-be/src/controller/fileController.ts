@@ -53,7 +53,7 @@ const signedURL = (req: Request, res: Response) => {
   //let paramsss = req.params;
   console.log("Peticion recibida ::::>", req.body);
   //console.log('Peticion recibida 2::::>', paramsss);
-  let unicocode = moment().format("MMDDYYYYHHMMSS");
+  const unicocode = moment().format("MMDDYYYYHHMMSS");
   const key = unicocode + req.body.fileName;
   const bucket = bucketName;
   const params = {

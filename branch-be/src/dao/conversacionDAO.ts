@@ -10,8 +10,7 @@ import {
 const findAll = (): Promise<ConversationInstance[]> =>
   ConversacionModel.findAll();
 
-const create = (conversacion: ConversationCreationAttributes
-  ) => {
+const create = (conversacion: ConversationCreationAttributes) => {
   return ConversacionModel.sequelize?.transaction((t1) => {
     return ConversacionModel.create(conversacion);
   });

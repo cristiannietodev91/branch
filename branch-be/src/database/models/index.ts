@@ -341,7 +341,6 @@ const MecanicoModel = sequelize.define<MecanicoInstance>("mecanico", {
     get() {
       return `${this.firstName} ${this.lastName}`;
     },
-    // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
     set() {
       throw new Error("Do not try to set the `fullName` value!");
     },

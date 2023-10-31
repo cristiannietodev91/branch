@@ -560,6 +560,7 @@ describe("cita Adapter unit testing", () => {
       it("Create cita must not be called when vehicle result is undefined", async () => {
         try {
           await citaAdapter.createCita(cita);
+        // eslint-disable-next-line no-empty
         } catch {}
         expect(createCitaStub.called).equal(false);
       });
@@ -611,6 +612,7 @@ describe("cita Adapter unit testing", () => {
       it("Create cita must not be called when vehicle result is undefined", async () => {
         try {
           await citaAdapter.createCita(cita);
+        // eslint-disable-next-line no-empty
         } catch {}
         expect(createCitaStub.called).equal(false);
       });
@@ -662,6 +664,7 @@ describe("cita Adapter unit testing", () => {
       it("Create cita must not be called when vehicle result is not success", async () => {
         try {
           await citaAdapter.createCita(cita);
+        // eslint-disable-next-line no-empty
         } catch {}
         expect(createCitaStub.called).equal(false);
       });
