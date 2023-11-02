@@ -46,7 +46,7 @@ const count = (
           where: {
             ...filterVehiculo,
           },
-          required: false
+          required: true
         },
       ],
       where: filterUsuario,

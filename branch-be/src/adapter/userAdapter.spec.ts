@@ -84,7 +84,7 @@ describe("user adapter testing", () => {
     before(() => {
       countUserByStub = sinon.stub(usersDAO, "count");
 
-      userAdapter.countUsuariosByIdTaller({ IdTaller: "1" });
+      userAdapter.countUsersByIdWorkshop({ IdTaller: "1" });
     });
 
     after(() => {
