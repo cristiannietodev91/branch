@@ -30,7 +30,7 @@ const findUserByEmail = async (req: Request, res: Response) => {
       return res.status(HttpStatus.OK).json(user);
     }
     
-    return res.status(HttpStatus.NOT_FOUND).end();
+    return res.status(HttpStatus.NOT_FOUND).json({ error: "User not found" });
     
   } catch (error) {
     debug("Error searching user By Email ", error);
@@ -53,12 +53,12 @@ const findUserById = async (req: Request, res: Response) => {
       return res.status(HttpStatus.OK).json(user);
     }
 
-    return res.status(HttpStatus.NOT_FOUND).end();
+    return res.status(HttpStatus.NOT_FOUND).json({ error: "User not found" });
 
   } catch (error) {
     debug("Error al buscar Usuario By Id ", error);
     if (error instanceof Error) {
-      res
+      return res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ error: error.message });
     }
@@ -66,119 +66,79 @@ const findUserById = async (req: Request, res: Response) => {
   }
 };
 
-const loginUserTallerByUID = (req: Request, res: Response): void => {
+const getUserByUID = async (req: Request, res: Response) => {
   try {
     const uid = req.params.uid;
 
-    userAdapter
-      .findOneUserByFilter({ uid })
-      ?.then((usuario) => {
-        if (usuario) {
-          if (usuario.IdTaller) {
-            res.status(HttpStatus.OK).json(usuario);
-          } else {
-            res
-              .status(HttpStatus.PRECONDITION_FAILED)
-              .json({ error: "Usuario no tiene acceso a ningun taller" });
-          }
-        } else {
-          res
-            .status(HttpStatus.PRECONDITION_FAILED)
-            .json({ error: "No se encontro el usuario" });
-        }
-      })
-      .catch((error) => {
-        if (error) {
-          debug(
-            "Error al realizar la transaccion de buscar usuario por UID error ::>",
-            error.message
-          );
-          if (error.errors) {
-            res
-              .status(HttpStatus.INTERNAL_SERVER_ERROR)
-              .json({ error: error.errors[0] });
-          } else {
-            res
-              .status(HttpStatus.INTERNAL_SERVER_ERROR)
-              .json({ error: error.message });
-          }
-        }
-      });
+    const user = await userAdapter.findOneUserByFilter({ uid });
+
+    if(user) {
+      if (user.IdTaller) {
+        return res.status(HttpStatus.OK).json(user);
+      } else {
+        return res
+          .status(HttpStatus.FORBIDDEN)
+          .json({ error: "User does not have access to the workshop" });
+      }
+    }
+
+    return res.status(HttpStatus.NOT_FOUND).json({ error: "User not found" });
   } catch (error) {
     debug("Error al buscar usuario By UID ", error);
     if (error instanceof Error) {
-      res
+      return res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ error: error.message });
     }
+    throw error;
   }
 };
 
-const countUsuariosByIdTaller = (req: Request, res: Response): void => {
+const countUsersByIdWorkshop = async (req: Request, res: Response) => {
   try {
-    const IdTaller = req.params.Id;
-    userAdapter
-      .countUsuariosByIdTaller({ IdTaller })
-      ?.then((count) => {
-        res.status(HttpStatus.OK).json(count);
-      })
-      .catch((error) => {
-        if (error) {
-          debug(
-            "Error al realizar la transaccion de contar usuarios by idTaller:::>",
-            "error ::>",
-            error.message
-          );
-          if (error.errors) {
-            res
-              .status(HttpStatus.INTERNAL_SERVER_ERROR)
-              .json({ error: error.errors[0] });
-          } else {
-            res
-              .status(HttpStatus.INTERNAL_SERVER_ERROR)
-              .json({ error: error.message });
-          }
-        }
-      });
+    const IdWorkshop = req.params.IdWorkshop;
+
+    const count = await userAdapter.countUsersByIdWorkshop({ IdTaller: IdWorkshop });
+
+    return res.status(HttpStatus.OK).json(count);
+      
   } catch (error) {
-    debug("Error al contar  usuario ", error);
+    debug("Error counting user", error);
     if (error instanceof Error) {
-      res
+      return res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ error: error.message });
     }
+    throw error;
   }
 };
 
-const deleteUsuarioById = (req: Request, res: Response): void => {
+const deleteUserById = async (req: Request, res: Response) => {
   try {
-    const Idusuario = req.params.Id;
-    debug("Parametro de Idusuario recibido :::::>", Idusuario);
-    userAdapter
-      .deleteById(Idusuario)
-      ?.then((result) => {
-        if (result) {
-          res.status(HttpStatus.ACCEPTED).json({
-            message: "Se elimino el IdUsuario " + Idusuario + " correctamente",
-          });
-        } else {
-          res.status(HttpStatus.OK).json({ message: "Id no encontrado" });
-        }
-      })
-      .catch((error) => {
-        if (error) {
-          res
-            .status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .json({ error: error.errors[0] });
-        }
+    const IdUser = parseInt(req.params.Id, 10);
+    debug(`UserId param received ${IdUser}`);
+
+    if (isNaN(IdUser)) {
+      return res.status(HttpStatus.BAD_REQUEST).send({ error: "Param IdUser must be a number."});
+    }
+
+    const result = await userAdapter.deleteById(IdUser);
+
+    if (result) {
+      return res.status(HttpStatus.OK).json({
+        message: `The userId [${IdUser}] was deleted.`,
       });
+    } else {
+      return res.status(HttpStatus.OK).json({ message: "User id not found" });
+    }
   } catch (error) {
-    debug("Error al borrar Usuario By Id ", error);
+    debug("Error deleting user by id", error);
     if (error instanceof Error) {
-      res
+      return res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ error: error.message });
     }
+    throw error;
   }
 };
 
@@ -391,9 +351,9 @@ export default {
   findUserById,
   getAllUsers,
   findUserByEmail,
-  loginUserTallerByUID,
-  countUsuariosByIdTaller,
-  deleteUsuarioById,
+  getUserByUID,
+  countUsersByIdWorkshop,
+  deleteUserById,
   createFireBaseUsuario,
   updateUsuarioByUid,
   updateUsuarioByIdUsuario,

@@ -31,7 +31,7 @@ const findOneUserByFilter = (
   filter: WhereOptions<UserAttributes> | undefined
 ): Promise<UserInstance | null> | undefined => usersDAO.findOneByFilter(filter);
 
-const countUsuariosByIdTaller = (
+const countUsersByIdWorkshop = (
   filter: VehiculoFilter
 ): Promise<number> | undefined => usersDAO.count({}, filter);
 
@@ -240,7 +240,7 @@ export default {
   getById,
   findAllUsers,
   findOneUserByFilter,
-  countUsuariosByIdTaller,
+  countUsersByIdWorkshop,
   deleteById,
   updateUsuarioByIdUsuario,
   createUsuario,

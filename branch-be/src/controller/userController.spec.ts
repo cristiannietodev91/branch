@@ -4,7 +4,7 @@ import app from "../app";
 import userAdapter from "../adapter/userAdapter";
 import * as supertest from "supertest";
 import { WhereOptions } from "sequelize";
-import { UserAttributes, UserInstance } from "../types";
+import { UserAttributes, UserInstance, VehiculoFilter } from "../types";
 
 describe("user controller", ()=> {
   let request: supertest.SuperAgentTest;
@@ -13,11 +13,51 @@ describe("user controller", ()=> {
     request = await supertest.agent(app);
   });
 
+  describe("get all users", ()=> {
+    let findAllUsersStub: sinon.SinonStub<[], Promise<UserInstance[]>>;
+
+    before(()=> {
+      findAllUsersStub = sinon.stub(userAdapter, "findAllUsers");
+    });
+
+    after(()=> {
+      findAllUsersStub.restore();
+    });
+
+    it("must return empty list when does not find users", async ()=> {
+
+      findAllUsersStub.resolves([]);
+
+      const response = await request
+        .get("/usuario/getAll");
+
+      expect(response.status).to.equal(200);
+      expect(response.body).to.be.empty;
+      expect(findAllUsersStub.called).to.be.true;
+    });
+
+    it("must return error when counts user by Id workshop fail", async ()=> {
+      const errorMsg = "Error getting users";
+
+      findAllUsersStub.rejects(new Error(errorMsg));
+
+      const response = await request.get("/usuario/getAll");
+
+      expect(response.status).to.equal(500);
+      expect(response.body).to.deep.equal({ error: errorMsg });
+      expect(findAllUsersStub.called).to.be.true;
+    });
+  });
+
   describe("find user by email", ()=> {
     let findOneUserByFilterStub: sinon.SinonStub<[filter: WhereOptions<UserAttributes> | undefined], Promise<UserInstance | null> | undefined>;
 
     before(()=> {
       findOneUserByFilterStub = sinon.stub(userAdapter, "findOneUserByFilter");
+    });
+
+    after(()=> {
+      findOneUserByFilterStub.restore();
     });
 
     it("must return success when a user is found", async ()=> {
@@ -49,7 +89,7 @@ describe("user controller", ()=> {
         .get(`/usuario/getByEmail/${email}`);
 
       expect(response.status).to.equal(404);
-      expect(response.body).to.deep.equal({});
+      expect(response.body).to.deep.equal({ error: "User not found" });
       expect(findOneUserByFilterStub.calledWith({ email })).to.be.true;
     });
 
@@ -75,6 +115,10 @@ describe("user controller", ()=> {
 
     before(()=> {
       findOneUserByIdStub = sinon.stub(userAdapter, "getById");
+    });
+
+    after(()=> {
+      findOneUserByIdStub.restore();
     });
 
     it("must return success when a user is found", async ()=> {
@@ -103,22 +147,191 @@ describe("user controller", ()=> {
         .get(`/usuario/getById/${userId}`);
 
       expect(response.status).to.equal(404);
-      expect(response.body).to.deep.equal({});
+      expect(response.body).to.deep.equal({ error: "User not found" });
       expect(findOneUserByIdStub.calledWith(userId)).to.be.true;
     });
 
-    it("must return error when search user by email fail", async ()=> {
-      const email = "test@test.com";
+    it("must return error when search user by id fail", async ()=> {
       const errorMsg = "Error searching user";
 
       findOneUserByIdStub.rejects(new Error(errorMsg));
 
       const response = await request
-        .get(`/usuario/getByEmail/${email}`);
+        .get(`/usuario/getById/${userId}`);
 
       expect(response.status).to.equal(500);
       expect(response.body).to.deep.equal({ error: errorMsg });
       expect(findOneUserByIdStub.calledWith(userId)).to.be.true;
+    });
+  });
+
+  describe("find user by uid", ()=> {
+    let findOneUserByFilterStub: sinon.SinonStub<[filter: WhereOptions<UserAttributes> | undefined], Promise<UserInstance | null> | undefined>;
+
+    before(()=> {
+      findOneUserByFilterStub = sinon.stub(userAdapter, "findOneUserByFilter");
+    });
+
+    after(()=> {
+      findOneUserByFilterStub.restore();
+    });
+
+    it("must return success when a user is found and it has an IdTaller attr related", async ()=> {
+
+      const uid = "uuid";
+
+      const userResult = {
+        id: "userId1",
+        name: "user name",
+        IdTaller: 1, 
+        uid
+      };
+
+      findOneUserByFilterStub.resolves(userResult);
+
+      const response = await request
+        .get(`/usuario/loginUsuario/${uid}`);
+
+      expect(response.status).to.equal(200);
+      expect(response.body).to.deep.equal(userResult);
+      expect(findOneUserByFilterStub.calledWith({ uid })).to.be.true;
+    });
+
+    it("must return forbidden when the user does not have access to a workshop", async ()=> {
+
+      const uid = "uuid";
+
+      const userResult = {
+        id: "userId1",
+        name: "user name",
+        uid
+      };
+
+      findOneUserByFilterStub.resolves(userResult);
+
+      const response = await request
+        .get(`/usuario/loginUsuario/${uid}`);
+
+      expect(response.status).to.equal(403);
+      expect(response.body.error).to.deep.equal("User does not have access to the workshop");
+      expect(findOneUserByFilterStub.calledWith({ uid })).to.be.true;
+    });
+
+    it("must return not found when user does not exist", async () => {
+      const uid = "uuid";
+
+      findOneUserByFilterStub.resolves(null);
+
+      const response = await request
+        .get(`/usuario/loginUsuario/${uid}`);
+
+      expect(response.status).to.equal(404);
+      expect(response.body).to.deep.equal({ error: "User not found" });
+      expect(findOneUserByFilterStub.calledWith({ uid })).to.be.true;
+    });
+
+    it("must return error when search user by uid fail", async ()=> {
+      const uid = "uuid";
+      const errorMsg = "Error searching user";
+
+      findOneUserByFilterStub.rejects(new Error(errorMsg));
+
+      const response = await request
+        .get(`/usuario/loginUsuario/${uid}`);
+
+      expect(response.status).to.equal(500);
+      expect(response.body).to.deep.equal({ error: errorMsg });
+      expect(findOneUserByFilterStub.calledWith({ uid })).to.be.true;
+    });
+  });
+
+  describe("count user by IdWorkshop", ()=> {
+    let countUserByFilterStub: sinon.SinonStub<[filter: VehiculoFilter], Promise<number> | undefined>;
+
+    before(()=> {
+      countUserByFilterStub = sinon.stub(userAdapter, "countUsersByIdWorkshop");
+    });
+
+    after(()=> {
+      countUserByFilterStub.restore();
+    });
+
+    it("must return number of users found", async ()=> {
+
+      const IdWorkshop = "1";
+
+      countUserByFilterStub.resolves(2);
+
+      const response = await request
+        .get(`/usuario/countByIdTaller/${IdWorkshop}`);
+
+      expect(response.status).to.equal(200);
+      expect(response.body).to.deep.equal(2);
+      expect(countUserByFilterStub.calledWith({ IdTaller: IdWorkshop })).to.be.true;
+    });
+
+    it("must return error when counts user by Id workshop fail", async ()=> {
+      const IdWorkshop = "1";
+      const errorMsg = "Error searching user";
+
+      countUserByFilterStub.rejects(new Error(errorMsg));
+
+      const response = await request
+        .get(`/usuario/countByIdTaller/${IdWorkshop}`);
+
+      expect(response.status).to.equal(500);
+      expect(response.body).to.deep.equal({ error: errorMsg });
+      expect(countUserByFilterStub.calledWith({ IdTaller: IdWorkshop })).to.be.true;
+    });
+  });
+
+  describe("Delete user by id", ()=> {
+    let deleteUserByIdStub: sinon.SinonStub<[userId: string | number], Promise<number> | undefined>;
+
+    beforeEach(()=> {
+      deleteUserByIdStub = sinon.stub(userAdapter, "deleteById");
+    });
+
+    afterEach(()=> {
+      deleteUserByIdStub.restore();
+    });
+
+    it("must return success message when the user is deleted", async ()=> {
+
+      const IdUser = 1;
+
+      deleteUserByIdStub.resolves(1);
+
+      const response = await request.delete(`/usuario/deleteById/${IdUser}`);
+
+      expect(response.status).to.equal(200);
+      expect(response.body).to.deep.equal({
+        message: `The userId [${IdUser}] was deleted.`,
+      });
+      expect(deleteUserByIdStub.calledWith(IdUser)).to.be.true;
+    });
+
+    it("must return error message when the userId received is not a number", async ()=> {
+
+      const IdUser = "a";
+
+      const response = await request.delete(`/usuario/deleteById/${IdUser}`);
+
+      expect(response.status).to.equal(400);
+      expect(response.body).to.deep.equal({ error: "Param IdUser must be a number."});
+      expect(deleteUserByIdStub.notCalled).to.be.true;
+    });
+
+    it("must return user not found when the user is not deleted", async ()=> {
+      const IdUser = 1;
+
+      deleteUserByIdStub.resolves(0);
+
+      const response = await request.delete(`/usuario/deleteById/${IdUser}`);
+
+      expect(response.status).to.equal(200);
+      expect(response.body).to.deep.equal({ message: "User id not found" });
+      expect(deleteUserByIdStub.calledWith(IdUser)).to.be.true;
     });
   });
 
