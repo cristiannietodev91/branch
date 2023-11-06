@@ -83,8 +83,6 @@ app.use(
 app.component("v-breadcrumb", Breadcrumb);
 app.component("v-select", vSelect);
 
-
-
 firebase.initializeApp(
   {
     apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
@@ -97,9 +95,7 @@ firebase.initializeApp(
   }
 );
 
-
-
-
+firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
 
 // Vue.notification.requestPermission().then(console.log);
 

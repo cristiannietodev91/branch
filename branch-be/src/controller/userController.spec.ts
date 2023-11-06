@@ -1,16 +1,34 @@
+import sessionMiddleware from  "../middleware/session";
+import csrfMiddleware from "../utils/csrf";
+
 import sinon from "sinon";
 import { expect } from "chai";
-import app from "../app";
 import userAdapter from "../adapter/userAdapter";
 import * as supertest from "supertest";
 import { WhereOptions } from "sequelize";
 import { UserAttributes, UserInstance, VehiculoFilter } from "../types";
 
+
 describe("user controller", ()=> {
   let request: supertest.SuperAgentTest;
+  let session;
+  let csrf;
+  
+  before(() => {
 
-  before(async () => {
-    request = await supertest.agent(app);
+    session = sinon.stub(sessionMiddleware, "validSession");
+    session.callsFake(async (_req, _res, next)=> next());
+
+    csrf = sinon.stub(csrfMiddleware, "csrfSynchronisedProtection");
+    csrf.callsFake(async (_req, _res, next)=> next());
+
+    import("../app").then(async app => {
+      request = await supertest.agent(app.default);
+    });
+  });
+
+  after(()=> {
+    sinon.verifyAndRestore();
   });
 
   describe("get all users", ()=> {

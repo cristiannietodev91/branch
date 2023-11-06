@@ -9,6 +9,7 @@
 
 - Mysql client must be running
 - a database called ``branch`` must exist to execute migrations
+- A Firebase project used to handle web and mobile app users
 
 ### Generate the service key to access Firebase services
 
@@ -31,12 +32,13 @@ $env:GOOGLE_APPLICATION_CREDENTIALS="C:\Users\username\Downloads\service-account
 - Set SSH Key in git for your user
 - Download the project from the repo
 - Set .env file with the next properties to local development
-    ``DBNAME=branch
+    ```
+    DBNAME=branch
     DBHOST=localhost
     DBPASSWORD=root
     DBUSER=root
     FIREBASE_PROJECT_NAME=firebaseproject
-    ``
+    ```
 - run ``yarn install`` command to install all project necessary dependencies
 - create an database called ``branch``
 
@@ -57,6 +59,38 @@ you should execute the next command to run the server and enable all the logs us
 
 ``DEBUG=branch:* yarn dev``
 
+
+### Security
+
+The app secured the endpoints using user session. The secured endpoints validate a valid firebase user sessions. That means that to consume the app endpoints you must have an user with permissions in Firebase. 
+
+#### CSRF (Cross-site request forgery)
+
+The endpoints that make changes in the data state of the app use CSRF protection. Those endpoints require a valid token sent (x-csrf-token="valid token") in the headers of each request.
+
+ex. 
+```javascript
+curl --location --request POST 'http://localhost:3005/session/login' \
+--header 'x-csrf-token: csrf token value' \
+--header 'Content-Type: application/json' \
+--data '{
+    "uid": "user uid"
+}'
+```
+
+#### Secured endpoints
+
+To consume secured endpoints a valid cookie session must exist in the request. To get a cookie session you must log in to the app with a valid firebase user using the next endpoint.
+
+```javascript
+curl --location --request POST 'http://localhost:3005/session/login' \
+--header 'x-csrf-token: valid csrf token' \
+--header 'Content-Type: application/json' \
+--data '{
+    "idToken": "firebase user token",
+    "uid": "firebase user id"
+}'
+```
 
 ### Test
 

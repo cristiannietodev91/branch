@@ -1,16 +1,33 @@
+import sessionMiddleware from  "../middleware/session";
+import csrfMiddleware from "../utils/csrf";
+
 import sinon, { SinonStub } from "sinon";
-import * as request from "supertest";
-import app from "../app";
+import * as supertest from "supertest";
 import messageAdapter from "../adapter/messageAdapter";
 import { WhereOptions, OrderItem } from "sequelize";
 import { ConversationAttributes, MessageInstance } from "../types";
 import { expect } from "chai";
 
 describe("message controller", ()=> {
-  let response: request.SuperAgentTest;
+  let request: supertest.SuperAgentTest;
+  let session;
+  let csrf;
 
-  before(async ()=> {
-    response = await request.agent(app);
+  before(() => {
+
+    session = sinon.stub(sessionMiddleware, "validSession");
+    session.callsFake(async (_req, _res, next)=> next());
+
+    csrf = sinon.stub(csrfMiddleware, "csrfSynchronisedProtection");
+    csrf.callsFake(async (_req, _res, next)=> next());
+
+    import("../app").then(async app => {
+      request = await supertest.agent(app.default);
+    });
+  });
+  
+  after(()=> {
+    sinon.verifyAndRestore();
   });
 
   describe("getMessagesByConversacion", ()=> {
@@ -26,7 +43,7 @@ describe("message controller", ()=> {
     });
 
     it("must validate IdConversacionUser required parameter", () => {
-      return response.get("/message/getMessagesByConversacion")
+      return request.get("/message/getMessagesByConversacion")
         .expect("Content-Type", /json/)
         .expect(500)
         .then(value => {

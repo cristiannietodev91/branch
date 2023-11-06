@@ -6,20 +6,12 @@ import {
   UserCreationAttributes,
   UserAttributes,
 } from "../types";
-import admin from "firebase-admin";
+
 import Debug from "debug";
 const debug = Debug("branch:server");
-
+import admin from "../utils/firebase";
 import { WhereOptions } from "sequelize";
 
-admin.initializeApp(
-  {
-    credential: process.env.FIREBASE_ACCOUNT_KEY ? 
-      admin.credential.cert(JSON.parse(process.env.FIREBASE_ACCOUNT_KEY || "")) :
-      admin.credential.applicationDefault(),
-    projectId: process.env.FIREBASE_PROJECT_NAME,
-  }
-);
 
 const getById = (
   IdUsuario: string | number

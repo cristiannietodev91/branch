@@ -1,15 +1,35 @@
+import sessionMiddleware from  "../middleware/session";
+import csrfMiddleware from "../utils/csrf";
+
 import sinon from "sinon";
-import app from "../app";
-import * as request from "supertest";
+import * as supertest from "supertest";
 import citaAdapter from "../adapter/citaAdapter";
 import citaDAO from "../dao/citaDAO";
 import { CitaRequestAttributes, CitaInstance } from "../types";
 
+
 describe("cita controller", () => {
-  let response: request.SuperAgentTest;
-  before(async () => {
-    response = await request.agent(app);
+  let request: supertest.SuperAgentTest;
+  let session;
+  let csrf;
+
+  before(() => {
+
+    session = sinon.stub(sessionMiddleware, "validSession");
+    session.callsFake(async (_, __, next)=> next());
+
+    csrf = sinon.stub(csrfMiddleware, "csrfSynchronisedProtection");
+    csrf.callsFake(async (_, __, next)=> next());
+
+    import("../app").then(async app => {
+      request = await supertest.agent(app.default);
+    });
   });
+
+  after(()=> {
+    sinon.verifyAndRestore();
+  });
+
   describe("list All citas available", () => {
     let findAllStub: sinon.SinonStub<[]>;
 
@@ -24,7 +44,7 @@ describe("cita controller", () => {
     });
 
     it("return success when list of cita is returned", (done) => {
-      response
+      request
         .get("/cita/getAll")
         .expect("Content-Type", /json/)
         .expect(200)
@@ -65,7 +85,7 @@ describe("cita controller", () => {
     });
 
     it("return success when cita params are send", (done) => {
-      response
+      request
         .post("/cita/create")
         .send(citaRequest)
         .expect("Content-Type", /json/)

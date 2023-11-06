@@ -1,12 +1,16 @@
 import http from "../http-common";
 
 class ServiceCrm {
-  registrarUsuario(usuario) {
-    return http.post("/usuario/createFireBaseUser", usuario);
+  createSession(idToken, uid) {
+    return http.post("/session/login", { idToken, uid });
   }
 
-  loginUserTaller(uid) {
-    return http.get("/usuario/loginUsuario/" + uid);
+  closeSession() {
+    return http.post("/session/logout");
+  }
+
+  registrarUsuario(usuario) {
+    return http.post("/usuario/createFireBaseUser", usuario);
   }
 
   getAllTalleres() {
