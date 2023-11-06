@@ -206,7 +206,6 @@ export default {
         }
       })
       .catch(error => {
-        console.error(error);
         this.$notify({
           title: "ERROR",
           type: "error",

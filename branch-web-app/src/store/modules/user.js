@@ -64,51 +64,23 @@ export default {
         .auth()
         .signInWithEmailAndPassword(payload.email, payload.password)
         .then(
-          user => {
-            ServicesCore.loginUserTaller(user.user.uid)
-              .then(response => {
-                if (response.status == 200) {
-                  const { data: usuario } = response;
-                  if (usuario) {
-                    const newUser = {
-                      uid: usuario.uid,
-                      displayName: usuario.firstName,
-                      email: usuario.email,
-                      celular: usuario.celular,
-                      identificacion: usuario.identificacion,
-                      IdTaller: usuario.IdTaller
-                    };
+          async ({ user }) => {
+            const idToken = await user.getIdToken();
 
-                    const item = { uid: newUser.uid, ...newUser };
-                    localStorage.setItem("user", JSON.stringify(item));
-                    commit("setUser", { uid: newUser.uid, ...newUser });
-                  } else {
-                    localStorage.removeItem("user");
-                    commit("setError", "No se encontro el usuario");
-                    setTimeout(() => {
-                      commit("clearError");
-                    }, 3000);
-                  }
-                }
-              })
-              .catch(error => {
-                const { response } = error;
-                if (response) {
-                  const { data } = response;
+            const { data: { user: userDb } } = await ServicesCore.createSession(idToken, user.uid);
 
-                  localStorage.removeItem("user");
-                  commit("setError", data.error);
-                  setTimeout(() => {
-                    commit("clearError");
-                  }, 3000);
-                } else {
-                  localStorage.removeItem("user");
-                  commit("setError", error.message);
-                  setTimeout(() => {
-                    commit("clearError");
-                  }, 3000);
-                }
-              });
+            const newUser = {
+              uid: userDb.uid,
+              displayName: userDb.firstName,
+              email: userDb.email,
+              celular: userDb.celular,
+              identificacion: userDb.identificacion,
+              IdTaller: userDb.IdTaller
+            };
+
+            const item = { uid: newUser.uid, ...newUser };
+            localStorage.setItem("user", JSON.stringify(item));
+            commit("setUser", { uid: newUser.uid, ...newUser });
           },
           err => {
             localStorage.removeItem("user");
@@ -118,7 +90,11 @@ export default {
             }, 3000);
           }
         ).catch(error=> {
+          localStorage.removeItem("user");
           commit("setError", error.message);
+          setTimeout(() => {
+            commit("clearError");
+          }, 3000);
         });
     },
     forgotPassword({ commit }, payload) {
@@ -186,12 +162,19 @@ export default {
         .auth()
         .signOut()
         .then(
-          () => {
-            localStorage.removeItem("user");
-            commit("setLogout");
+          async () => {
+            await ServicesCore.closeSession();
           },
           () => {}
-        );
+        ).catch(error => {
+          commit("setError", error.message);
+          setTimeout(() => {
+            commit("clearError");
+          }, 3000);
+        }).finally(()=> {
+          localStorage.removeItem("user");
+          commit("setLogout");
+        });
     }
   }
 };

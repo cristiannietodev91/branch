@@ -7,8 +7,17 @@
 
 <script>
 import { getDirection } from "./utils";
+import { fetchCSRFToken } from "./http-common";
 
 export default {
+  async created(){
+    const csrfToken = await fetchCSRFToken();
+
+    const metaTag = document.querySelector('meta[name="csrf-token"]');
+    if (metaTag) {
+      metaTag.setAttribute('content', csrfToken);
+    }
+  },
   beforeMount() {
     const direction = getDirection();
     if (direction.isRtl) {

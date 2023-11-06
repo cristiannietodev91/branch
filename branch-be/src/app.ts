@@ -1,11 +1,14 @@
-import express from "express";
+import express, { ErrorRequestHandler } from "express";
 import cors from "cors";
 import path from "path";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
+import session from "express-session";
+import csrf from "./utils/csrf";
 // import * as helmet from "helmet";
 
 import * as indexRouter from "./routes/index";
+import * as sessionRouter from "./routes/sessionRoute";
 import * as usersRouter from "./routes/usersRoute";
 import * as tallerRouter from "./routes/tallerRoute";
 import * as vehiculoRouter from "./routes/vehiculoRoute";
@@ -19,21 +22,41 @@ import * as servicioRouter from "./routes/serviciosRoute";
 import * as conversacionRouter from "./routes/conversacionRoute";
 import * as notificacionRouter from "./routes/notificacionRouter";
 
+import sessionMiddleware from  "./middleware/session";
+
 const app = express();
 
-app.use(cors());
+app.use(cors({ origin: true , credentials: true }));
 
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use(session({
+  secret: process.env.SESSION_KEY_SECRET || "nonSecure key",
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 1000 * 60 * 30, // 30 min
+    secure: false,
+  }
+}));
+
 // app.use(helmet());
 
 //Secure
 app.disable("x-powered-by");
 
 indexRouter.register(app);
+
+app.use(csrf.csrfSynchronisedProtection);
+
+sessionRouter.register(app);
+
+app.use(sessionMiddleware);
+
 usersRouter.register(app);
 tallerRouter.register(app);
 vehiculoRouter.register(app);
@@ -47,34 +70,19 @@ servicioRouter.register(app);
 conversacionRouter.register(app);
 notificacionRouter.register(app);
 
-const logErrors = (
-  err: { stack: any },
-  req: any,
-  res: any,
-  next: (arg0: any) => void
-) => {
-  next(err);
-};
-
-const errorHandler = (
-  err: { status: any; message: any },
-  req: any,
-  res: {
-    status: (arg0: any) => void;
-    json: (arg0: { message: any; error: any }) => void;
-  },
-  next: any
+const errorHandler: ErrorRequestHandler = (
+  err,
+  _,
+  res,
+  next
 ) => {
   res.status(err.status || 500);
   res.json({
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    message: err.message,
-    error: err,
+    error: err.message,
   });
+  next();
 };
 
-app.use(logErrors);
-// app.use(clientErrorHandler);
 app.use(errorHandler);
 
 export default app;
