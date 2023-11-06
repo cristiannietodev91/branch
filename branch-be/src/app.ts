@@ -55,7 +55,7 @@ app.use(csrf.csrfSynchronisedProtection);
 
 sessionRouter.register(app);
 
-app.use(sessionMiddleware);
+app.use(sessionMiddleware.validSession);
 
 usersRouter.register(app);
 tallerRouter.register(app);

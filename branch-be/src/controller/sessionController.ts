@@ -20,7 +20,7 @@ const logIn = async (req: Request, res: Response) => {
 
   } catch (error) {
     if(error instanceof Error) {
-      res.status(HttpStatus.UNAUTHORIZED).send({ error: error.message });
+      return res.status(HttpStatus.UNAUTHORIZED).send({ error: error.message });
     }
     throw error;
   }

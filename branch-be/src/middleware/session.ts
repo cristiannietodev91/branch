@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import HttpStatus from "http-status-codes";
 import admin from "../utils/firebase";
 
-export default async function validSession(req: Request, res: Response, next: NextFunction) {
+async function validSession(req: Request, res: Response, next: NextFunction) {
   try {
     const sessionCookie = req.cookies.session || "";
 
@@ -24,3 +24,7 @@ export default async function validSession(req: Request, res: Response, next: Ne
     throw error;
   }
 }
+
+export default {
+  validSession
+};
