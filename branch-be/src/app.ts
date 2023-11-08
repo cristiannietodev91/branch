@@ -82,7 +82,6 @@ const errorHandler: ErrorRequestHandler = (
       error: err.error.toString(),
     });
   } else {
-    // pass on to another error handler
     res.status(err.status || 500);
     res.json({
       error: err.message,
