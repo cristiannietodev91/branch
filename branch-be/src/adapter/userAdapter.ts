@@ -30,10 +30,9 @@ const countUsersByIdWorkshop = (
 const deleteById = (userId: string | number): Promise<number> | undefined =>
   usersDAO.deleteById(userId);
 
-const createUsuario = (
+const createUser = (
   usuario: UserCreationAttributes
 ): Promise<UserInstance> | undefined => {
-  // Busca si ya existe el usuario en firebase
   return new Promise<UserInstance>((resolve, reject) => {
     if (usuario.uid) {
       const usuarioDb = {
@@ -67,71 +66,67 @@ const createUsuario = (
                 )
               );
             } else {
-              // Si no existe el usuario en firebase lo crea
-              try {
-                admin
-                  .auth()
-                  .createUser({
-                    email: usuario.email,
-                    emailVerified: false,
-                    phoneNumber: usuario.celular,
-                    password: usuario.password,
-                    displayName: usuario.firstName,
-                    disabled: false,
-                  })
-                  .then((userRecord) => {
-                    // Busca si existe ya el usuario en la BD de usuarios
-                    usersDAO
-                      .findOneByFilter({ email: usuario.email })
-                      ?.then((usuarioemail) => {
-                        if (usuarioemail) {
-                          // Se obtiene el id usuario del usuario ya existente para actualizarle los datos
-                          const { IdUsuario } = usuarioemail;
-                          const usuarioToUdp = {
-                            firstName: userRecord.displayName,
-                            email: userRecord.email,
-                            uid: userRecord.uid,
-                            celular: userRecord.phoneNumber,
-                            identificacion: usuario.identificacion,
-                            tipoUsuario: usuario.tipoUsuario,
-                            typeDevice: usuario.typeDevice,
-                          };
+              // If the user does not exist in firebase it creates it
+              admin
+                .auth()
+                .createUser({
+                  email: usuario.email,
+                  emailVerified: false,
+                  phoneNumber: usuario.celular,
+                  password: usuario.password,
+                  displayName: usuario.firstName,
+                  disabled: false,
+                })
+                .then((userRecord) => {
+                  // Search user by email in the users table
+                  usersDAO
+                    .findOneByFilter({ email: usuario.email })
+                    ?.then((usuarioemail) => {
+                      if (usuarioemail) {
+                        // Se obtiene el id usuario del usuario ya existente para actualizarle los datos
+                        const { IdUsuario } = usuarioemail;
+                        const usuarioToUdp = {
+                          firstName: userRecord.displayName,
+                          email: userRecord.email,
+                          uid: userRecord.uid,
+                          celular: userRecord.phoneNumber,
+                          identificacion: usuario.identificacion,
+                          tipoUsuario: usuario.tipoUsuario,
+                          typeDevice: usuario.typeDevice,
+                        };
 
-                          updateUsuarioByIdUsuario(IdUsuario, usuarioToUdp);
+                        updateUsuarioByIdUsuario(IdUsuario, usuarioToUdp);
 
-                          resolve(usuarioemail);
-                        } else {
-                          const usuarioDb = {
-                            firstName: userRecord.displayName || "Not defined",
-                            email: userRecord.email || "Not defined",
-                            uid: userRecord.uid,
-                            celular: userRecord.phoneNumber,
-                            identificacion: usuario.identificacion,
-                            tipoUsuario: usuario.tipoUsuario,
-                            estado: "Pendiente" as const,
-                            typeDevice: usuario.typeDevice,
-                          };
+                        resolve(usuarioemail);
+                      } else {
+                        const usuarioDb = {
+                          firstName: userRecord.displayName || "Not defined",
+                          email: userRecord.email || "Not defined",
+                          uid: userRecord.uid,
+                          celular: userRecord.phoneNumber,
+                          identificacion: usuario.identificacion,
+                          tipoUsuario: usuario.tipoUsuario,
+                          estado: "Pendiente" as const,
+                          typeDevice: usuario.typeDevice,
+                        };
 
-                          usersDAO
-                            .create(usuarioDb)
-                            ?.then((user) => {
-                              resolve(user);
-                            })
-                            .catch((error) => {
-                              reject(error);
-                            });
-                        }
-                      })
-                      .catch((error) => {
-                        reject(error);
-                      });
-                  })
-                  .catch((error) => {
-                    reject(error);
-                  });
-              } catch (error) {
-                reject(error);
-              }
+                        usersDAO
+                          .create(usuarioDb)
+                          ?.then((user) => {
+                            resolve(user);
+                          })
+                          .catch((error) => {
+                            reject(error);
+                          });
+                      }
+                    })
+                    .catch((error) => {
+                      reject(error);
+                    });
+                })
+                .catch((error) => {
+                  reject(error);
+                });
             }
           });
       } else {
@@ -235,6 +230,6 @@ export default {
   countUsersByIdWorkshop,
   deleteById,
   updateUsuarioByIdUsuario,
-  createUsuario,
+  createUser,
   updateUsuario,
 };

@@ -1,4 +1,10 @@
 import * as express from "express";
+import { createFirebaseUserSchema } from "../schema/schemaValidation";
+import {
+  createValidator
+} from "express-joi-validation";
+
+const validator = createValidator({ passError: true });
 
 import userController from "../controller/userController";
 
@@ -20,7 +26,7 @@ export const register = (app: express.Application): void => {
 
   app.delete("/usuario/:Id", userController.deleteUserById);
 
-  app.post("/usuario/createFireBaseUser", userController.createFireBaseUsuario);
+  app.post("/usuario/createFireBaseUser", validator.body(createFirebaseUserSchema), userController.createFireBaseUser);
 
   app.put("/usuario/update/:uid", userController.updateUsuarioByUid);
 

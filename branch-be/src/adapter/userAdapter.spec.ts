@@ -5,11 +5,13 @@ import {
   UserAttributes,
   UserCreationAttributes,
   UserInstance,
+  VehiculoAttributes,
   VehiculoFilter,
 } from "../types";
 import userAdapter from "./userAdapter";
 import { WhereOptions } from "sequelize/types";
 import admin from "firebase-admin";
+import vehiculoDAO from "../dao/vehiculoDAO";
 
 describe("user adapter testing", () => {
   describe("must get an user by Id", () => {
@@ -120,8 +122,19 @@ describe("user adapter testing", () => {
   describe("create user functionality", () => {
     let createUserStub: sinon.SinonStub<
       [usuario: UserCreationAttributes],
-      Promise<UserInstance> | undefined
-    >;
+      Promise<UserInstance> | undefined>;
+
+    let findOneUserByFilterStub: sinon.SinonStub<[
+      filter: WhereOptions<UserAttributes> | undefined
+    ], Promise<UserInstance | null> | undefined>;
+
+    let updateVehiculoStub: sinon.SinonStub<[
+      filterVehiculo: WhereOptions<VehiculoAttributes>, vehiculo: Partial<VehiculoAttributes>
+    ], Promise<[affectedCount: number]> | undefined>;
+
+    let updateUserStub: sinon.SinonStub<[
+      filter: WhereOptions<UserAttributes>, usuario: Partial<UserCreationAttributes>
+    ], Promise<[affectedCount: number]> | undefined>;
 
     const mockUser: UserCreationAttributes = {
       tipoUsuario: "Cliente" as const,
@@ -134,11 +147,6 @@ describe("user adapter testing", () => {
       IdUsuario: 1,
       ...mockUser,
     };
-
-    let adminInitStub: sinon.SinonStub<
-      [options?: admin.AppOptions | undefined, name?: string | undefined],
-      admin.app.App
-    >;
 
     const userFirebaseMock: admin.auth.UserRecord = {
       uid: "123132123",
@@ -159,73 +167,50 @@ describe("user adapter testing", () => {
     const createUserFirebaseMockFunction =
       sinon.fake.resolves(userFirebaseMock);
 
-    before(() => {
+    beforeEach(() => {
       createUserStub = sinon.stub(usersDAO, "create");
+      findOneUserByFilterStub = sinon.stub(usersDAO, "findOneByFilter");
+      updateVehiculoStub = sinon.stub(vehiculoDAO, "update");
+      updateUserStub = sinon.stub(usersDAO, "update");
 
-      adminInitStub = sinon.stub(admin, "initializeApp");
+      sinon.stub(admin, "initializeApp");
 
       sinon.stub(admin, "auth").get(() => () => ({
         createUser: createUserFirebaseMockFunction,
       }));
     });
 
-    after(() => {
-      adminInitStub.restore();
-
+    afterEach(() => {
       sinon.restore();
     });
 
-    describe("when user is registered at firebase the user must be registered at the database", () => {
+    it("when user is already registered at firebase the user must be registered at the database", async () => {
       const mockUserWithUid: UserCreationAttributes = {
         ...mockUser,
         uid: "ASDSAD454564",
       };
 
-      let result: UserInstance | undefined;
-
-      before(async () => {
-        sinon.reset();
-
-        createUserStub.resolves(mockUserResult);
-        result = await userAdapter.createUsuario(mockUserWithUid);
-      });
-
-      it("create user dao must be called once", () => {
-        expect(createUserStub.calledOnce).to.be.true;
-      });
-
-      it("result must be equal to createUser mock", () => {
-        expect(result).to.be.deep.equal(mockUserResult);
-      });
+      createUserStub.resolves(mockUserResult);
+      const result = await userAdapter.createUser(mockUserWithUid);
+      
+      expect(createUserStub.calledOnce).to.be.true;
+      expect(findOneUserByFilterStub.notCalled).to.be.true;
+      expect(result).to.be.deep.equal(mockUserResult);
     });
 
-    describe("registering user by email", () => {
-      let result: UserInstance | undefined;
+    it("registering user by email", async () => {
 
-      before(async () => {
-        sinon.reset();
+      createUserStub.resolves(mockUserResult);
+      const result = await userAdapter.createUser(mockUser);
 
-        createUserStub.resolves(mockUserResult);
-        result = await userAdapter.createUsuario(mockUser);
-      });
 
-      it("create user dao must be called once", () => {
-        expect(createUserStub.calledOnce).to.be.true;
-      });
-
-      it("result must be equal to createUser mock", () => {
-        expect(result).to.be.deep.equal(mockUserResult);
-      });
+      expect(createUserStub.calledOnce).to.be.true;
+      expect(result).to.be.deep.equal(mockUserResult);
+      expect(findOneUserByFilterStub.notCalled).to.be.true;
     });
 
-    describe("registering user using identification", () => {
-      let getUserByStub: sinon.SinonStub<
-        [filter: WhereOptions<UserAttributes> | undefined],
-        Promise<UserInstance | null> | undefined
-      >;
-
-      let result: UserInstance | undefined;
-
+    it("registering user using identification - user by email does not exist", async () => {
+      
       const mockUserWithIdentification: UserCreationAttributes = {
         ...mockUser,
         identificacion: "111111111",
@@ -236,36 +221,43 @@ describe("user adapter testing", () => {
         ...mockUserWithIdentification,
       };
 
-      before(async () => {
-        sinon.reset();
+      findOneUserByFilterStub.resolves(null);
 
-        getUserByStub = sinon.stub(usersDAO, "findOneByFilter");
+      createUserStub.resolves(userResultMock);
+      const result = await userAdapter.createUser(mockUserWithIdentification);
+      
+      expect(createUserStub.calledOnce).to.be.true;
+      expect(findOneUserByFilterStub.firstCall.calledWith({ identificacion: mockUserWithIdentification.identificacion })).to.be.true;
+      expect(findOneUserByFilterStub.secondCall.calledWith({ email: mockUserWithIdentification.email })).to.be.true;
+      expect(updateVehiculoStub.notCalled).to.be.true;
+      expect(createUserFirebaseMockFunction.calledOnce).to.be.true;
+      expect(result).to.be.deep.equal(userResultMock);
+    });
 
-        getUserByStub.resolves(null);
+    it("registering user using identification - user by email does exist", async () => {
+      
+      const mockUserWithIdentification: UserCreationAttributes = {
+        ...mockUser,
+        identificacion: "111111111",
+      };
 
-        createUserStub.resolves(userResultMock);
-        result = await userAdapter.createUsuario(mockUserWithIdentification);
-      });
+      const userResultMock = {
+        IdUsuario: 1,
+        ...mockUserWithIdentification,
+      };
 
-      after(() => {
-        getUserByStub.restore();
-      });
-
-      it("create user dao must be called once", () => {
-        expect(createUserStub.calledOnce).to.be.true;
-      });
-
-      it("after create user in firebase must serach the user in the database", () => {
-        expect(getUserByStub.calledTwice).to.be.true;
-      });
-
-      it("must create user in firebase", () => {
-        expect(createUserFirebaseMockFunction.calledOnce).to.be.true;
-      });
-
-      it("result must be equal to createUser mock", () => {
-        expect(result).equal(userResultMock);
-      });
+      findOneUserByFilterStub.onCall(0).resolves(null);
+      findOneUserByFilterStub.onCall(1).resolves(userResultMock);
+      
+      const result = await userAdapter.createUser(mockUserWithIdentification);
+      
+      expect(createUserStub.notCalled).to.be.true;
+      expect(findOneUserByFilterStub.firstCall.calledWith({ identificacion: mockUserWithIdentification.identificacion })).to.be.true;
+      expect(findOneUserByFilterStub.secondCall.calledWith({ email: mockUserWithIdentification.email })).to.be.true;
+      expect(createUserFirebaseMockFunction.called).to.be.true;
+      expect(updateVehiculoStub.calledOnceWith({ IdUsuario: userFirebaseMock.email }, { IdUsuario: undefined })).to.be.true;
+      expect(updateUserStub.called).to.be.true;
+      expect(result).to.be.deep.equal(userResultMock);
     });
   });
 });

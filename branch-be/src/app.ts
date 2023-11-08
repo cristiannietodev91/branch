@@ -76,10 +76,17 @@ const errorHandler: ErrorRequestHandler = (
   res,
   next
 ) => {
-  res.status(err.status || 500);
-  res.json({
-    error: err.message,
-  });
+  if (err && err.error && err.error.isJoi) {
+    res.status(400).json({
+      type: err.type, 
+      error: err.error.toString(),
+    });
+  } else {
+    res.status(err.status || 500);
+    res.json({
+      error: err.message,
+    });
+  }
   next();
 };
 

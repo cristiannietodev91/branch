@@ -10,8 +10,8 @@ import { expect } from "chai";
 
 describe("message controller", ()=> {
   let request: supertest.SuperAgentTest;
-  let session;
-  let csrf;
+  let session: sinon.SinonStub;
+  let csrf: sinon.SinonStub;
 
   before(() => {
 
