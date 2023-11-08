@@ -142,10 +142,10 @@ const deleteUserById = async (req: Request, res: Response) => {
   }
 };
 
-const createFireBaseUsuario = (req: Request, res: Response): void => {
+const createFireBaseUser = async (req: Request, res: Response) => {
   try {
     const usuario = req.body as UserCreationAttributes;
-    debug("Parametro de usuario recibido :::::>", usuario);
+    debug(`User to create :::::> ${JSON.stringify(usuario)}`, );
 
     const usuarioDB = {
       email: usuario.email,
@@ -162,54 +162,33 @@ const createFireBaseUsuario = (req: Request, res: Response): void => {
       estado: "Registrado" as const,
     };
 
-    userAdapter
-      .createUsuario(usuarioDB)
-      ?.then((usuarioResult) => {
-        if (usuarioResult) {
-          res.status(HttpStatus.OK).json(usuarioResult);
-        }
-      })
-      .catch((error) => {
-        if (error) {
-          const { errorInfo } = error;
-          debug("Error generado al crear el usuario", error);
-          if (errorInfo) {
-            const { code } = errorInfo;
-            switch (code) {
-            case "auth/invalid-phone-number":
-              res
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .json({ error: "Error en el formato del telefono" });
-              break;
+    const userResult = await userAdapter.createUser(usuarioDB);
 
-            case "auth/email-already-exists":
-              res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                error: "Ya existe usuario registrado con ese email",
-              });
-              break;
-            case "auth/phone-number-already-exists":
-              res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                error: "Ya exite un usuario registrado con ese celular",
-              });
-              break;
-            default:
-              res
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .json({ error: "Error al actualizar el usuario" });
-              break;
-            }
-          } else {
-            res
-              .status(HttpStatus.METHOD_FAILURE)
-              .send({ error: error.message });
-          }
-        }
+    if(userResult) {
+      return res.status(HttpStatus.OK).json(userResult);
+    }
+
+    return res.status(HttpStatus.BAD_REQUEST).json({ error: "Error creating user."});
+  } catch (error: any) {
+    const { code } = error;
+    
+    switch (code) {
+    case "auth/invalid-phone-number":
+      return res
+        .status(HttpStatus.BAD_REQUEST)
+        .json({ error: "Error phone number is not a valid." });
+
+    case "auth/email-already-exists":
+      return res.status(HttpStatus.BAD_REQUEST).json({
+        error: "User already registered with that email.",
       });
-  } catch (error) {
-    debug("Error al crear usuario ", error);
-    if (error instanceof Error) {
-      res
-        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+    case "auth/phone-number-already-exists":
+      return res.status(HttpStatus.BAD_REQUEST).json({
+        error: "User already registered with that phone number.",
+      });
+    default:
+      return res
+        .status(HttpStatus.BAD_REQUEST)
         .json({ error: error.message });
     }
   }
@@ -354,7 +333,7 @@ export default {
   getUserByUID,
   countUsersByIdWorkshop,
   deleteUserById,
-  createFireBaseUsuario,
+  createFireBaseUser,
   updateUsuarioByUid,
   updateUsuarioByIdUsuario,
 };
