@@ -9,36 +9,32 @@ import {
 
 const getById = (
   IdUsuario: string | number
-): Promise<UserInstance | null> | undefined => {
-  return UserModel.sequelize?.transaction(() => UserModel.findByPk(IdUsuario));
+): Promise<UserInstance | null> => {
+  return UserModel.findByPk(IdUsuario);
 };
 
 const findAll = (): Promise<UserInstance[]> => UserModel.findAll();
 
 const create = (
   usuario: UserCreationAttributes
-): Promise<UserInstance> | undefined => {
-  // Find all users
-  return UserModel.sequelize?.transaction(() => UserModel.create(usuario));
+): Promise<UserInstance> => {
+  return UserModel.create(usuario);
 };
 
 const findOneByFilter = (
   filter: WhereOptions<UserAttributes> | undefined
-): Promise<UserInstance | null> | undefined => {
-  // Find all users
-  return UserModel.sequelize?.transaction(() => {
-    return UserModel.findOne({
-      where: filter,
-    });
+): Promise<UserInstance | null> => {
+  return UserModel.findOne({
+    where: filter,
   });
 };
 
 const count = (
-  filterUsuario: WhereOptions<UserAttributes>,
-  filterVehiculo: VehiculoFilter
-): Promise<number> | undefined => {
-  return UserModel.sequelize?.transaction(() => {
-    return UserModel.count({
+  filterUsuario: WhereOptions<UserAttributes> = {},
+  filterVehiculo?: VehiculoFilter
+): Promise<number> => {
+  return UserModel.count({
+    ...(filterVehiculo && {
       include: [
         {
           model: VehiculoModel,
@@ -48,33 +44,36 @@ const count = (
           },
           required: true
         },
-      ],
-      where: filterUsuario,
-      distinct: true,
-    });
+      ]
+    }),
+    where: filterUsuario,
+    distinct: true,
   });
 };
 
 const deleteById = (
   IdUsuario: number | string
-): Promise<number> | undefined => {
-  return UserModel.sequelize?.transaction(() => {
-    return UserModel.destroy({
-      where: { IdUsuario },
-    });
+): Promise<number> => {
+  return UserModel.destroy({
+    where: { IdUsuario },
   });
 };
 
 const update = (
   filter: WhereOptions<UserAttributes>,
-  usuario: Partial<UserCreationAttributes>
+  user: Partial<UserCreationAttributes>
 ): Promise<[affectedCount: number]> | undefined => {
-  // Find all users
-  return UserModel.sequelize?.transaction(() => {
-    return UserModel.update(usuario, {
-      where: filter,
-    });
+  return UserModel.update(user, {
+    where: filter,
   });
+};
+
+const syncModel = async () => {
+  await UserModel.sync({ force: true });
+};
+
+const dropModel = async () => {
+  await UserModel.drop();
 };
 
 export default {
@@ -85,6 +84,8 @@ export default {
   count,
   deleteById,
   update,
+  syncModel,
+  dropModel,
 };
 
 

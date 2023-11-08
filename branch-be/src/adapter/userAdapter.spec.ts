@@ -75,13 +75,10 @@ describe("user adapter testing", () => {
   });
 
   describe("must count user by Id Taller", () => {
-    let countUserByStub: sinon.SinonStub<
-      [
-        filterUsuario: WhereOptions<UserAttributes>,
-        filterVehiculo: VehiculoFilter
-      ],
-      Promise<number> | undefined
-    >;
+    let countUserByStub: sinon.SinonStub<[
+      filterUsuario?: WhereOptions<UserAttributes> | undefined, 
+      filterVehiculo?: VehiculoFilter | undefined
+    ], Promise<number>>;
 
     before(() => {
       countUserByStub = sinon.stub(usersDAO, "count");

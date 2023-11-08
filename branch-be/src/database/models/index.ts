@@ -138,6 +138,8 @@ const TallerModel = sequelize.define<TallerInstance>("taller", {
     type: DataTypes.ENUM("Registrado", "Pendiente"),
     allowNull: false,
   },
+}, {
+  freezeTableName: true
 });
 
 const VehiculoModel = sequelize.define<VehiculoInstance>("vehiculo", {
@@ -203,6 +205,8 @@ const VehiculoModel = sequelize.define<VehiculoInstance>("vehiculo", {
     type: DataTypes.ENUM("Registrado", "Pendiente"),
     allowNull: false,
   },
+}, {
+  freezeTableName: true
 });
 
 const CitaModel = sequelize.define<CitaInstance>("cita", {
@@ -283,7 +287,7 @@ const UserModel = sequelize.define<UserInstance>("usuarios", {
     },
   },
   uid: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(150),
     allowNull: true,
   },
   celular: {

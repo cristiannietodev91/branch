@@ -27,11 +27,8 @@ const update = (
 
 const create = (
   vehiculo: VehiculoCreationAttributes
-): Promise<VehiculoInstance> | undefined => {
-  // Find all users
-  return VehiculoModel.sequelize?.transaction(() => {
-    return VehiculoModel.create(vehiculo);
-  });
+): Promise<VehiculoInstance> => {
+  return VehiculoModel.create(vehiculo);
 };
 
 const findOneByFilter = (
@@ -136,6 +133,10 @@ const findPaginateByFilter = (
   });
 };
 
+const syncModel = async () => {
+  await VehiculoModel.sync({ force: true });
+};
+
 export default {
   create,
   update,
@@ -146,4 +147,5 @@ export default {
   getById,
   findAllByFilter,
   findPaginateByFilter,
+  syncModel,
 };

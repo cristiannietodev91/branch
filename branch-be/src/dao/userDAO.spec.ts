@@ -1,240 +1,186 @@
-import { expect } from "chai";
-import sinon from "sinon";
+import * as chai from "chai";
+import { faker } from "@faker-js/faker";
+import chaiAsPromised from "chai-as-promised";
+chai.use(chaiAsPromised);
+
+const expect = chai.expect;
+
 import usersDAO from "./usersDAO";
-import { UserModel } from "../database/models";
 import {
-  CountOptions,
-  CreateOptions,
-  DestroyOptions,
-  FindOptions,
-  Model,
-  Optional,
-  UpdateOptions,
-  WhereOptions,
+  Op,
 } from "sequelize";
-import { UserAttributes, UserCreationAttributes } from "../types";
+import { TallerCreationAttributes, UserCreationAttributes, VehiculoCreationAttributes } from "../types";
+import vehiculoDAO from "./vehiculoDAO";
+import tallerDAO from "./tallerDAO";
 
-describe.skip("user DAO unit testing", () => {
-  describe("list Users functionality", () => {
-    let findAllUserStub: sinon.SinonStub<
-      [options?: FindOptions<any> | undefined],
-      Promise<Model<any, any>[]>
-    >;
-    beforeEach(() => {
-      findAllUserStub = sinon.stub(UserModel, "findAll");
-    });
+describe("user DAO unit testing", () => {
 
-    afterEach(() => {
-      findAllUserStub.restore();
-    });
+  const userMock: UserCreationAttributes = {
+    tipoUsuario: "Cliente" as const,
+    firstName: faker.person.firstName(),
+    email: faker.internet.email(),
+    estado: "Pendiente" as const,
+    celular: faker.phone.number(),
+    uid: faker.string.uuid()
+  };
 
-    it("user model findAll result must be equal to findAll function", async () => {
-      const mockUsers = [{ id: 1 }, { id: 1 }, { id: 1 }];
-      findAllUserStub.resolves(mockUsers as any);
-      const users = await usersDAO.findAll();
+  const userMock2: UserCreationAttributes = {
+    tipoUsuario: "Cliente" as const,
+    firstName: faker.person.firstName(),
+    email: faker.internet.email(),
+    estado: "Pendiente" as const,
+    celular: faker.phone.number(),
+    uid: faker.string.uuid()
+  };
 
-      expect(users).to.have.lengthOf(mockUsers.length);
-    });
-
-    it("user model findAll function must be called", async () => {
-      findAllUserStub.resolves([]);
-      await usersDAO.findAll();
-
-      expect(findAllUserStub.called).to.equal(true);
-      expect(findAllUserStub.callCount).to.equal(1);
-    });
-
-    it("when user mode findAll function fails usersDao function is called", async () => {
-      findAllUserStub.rejects(new Error("Error getting list of users"));
-      const stubCatch = sinon.spy();
-      const stubThen = sinon.spy();
-      await usersDAO.findAll().then(stubThen).catch(stubCatch);
-
-      expect(stubCatch.called).to.equal(true);
-      expect(stubThen.called).to.equal(false);
-    });
+  before(async () => {
+    await usersDAO.syncModel();
   });
 
   describe("create user functionality", () => {
-    let createUserStub: sinon.SinonStub<
-      [
-        values?: Optional<any, string> | undefined,
-        options?: CreateOptions<any> | undefined
-      ],
-      Promise<Model<any, any>>
-    >;
 
-    const userMock: UserCreationAttributes = {
-      tipoUsuario: "Cliente" as const,
-      firstName: "Test",
-      email: "xxxx@xxxx.com",
-      estado: "Pendiente" as const,
-    };
-
-    const userResult = {
-      ...userMock,
-      IdUsuario: 1,
-    };
-
-    before(() => {
-      createUserStub = sinon.stub(UserModel, "create");
-    });
-
-    after(() => {
-      createUserStub.restore();
+    it("can not create an user without the minimum fields", async () => {
+      const user: any = {
+        IdUsuario: 1,
+        firstName: "test",
+      };
+      await expect(usersDAO.create(user)).to.eventually.be.rejectedWith("cannot be null");
     });
 
     it("user model create function must be called when user is created", async () => {
-      createUserStub.resolves(userResult as any);
 
-      const user = await usersDAO.create(userMock);
+      const [user, user2] = await Promise.all([
+        usersDAO.create(userMock),
+        usersDAO.create(userMock2)
+      ]);
 
-      expect(createUserStub.called).to.equal(true);
-      expect(createUserStub.callCount).to.equal(1);
-
-      expect(user).to.equal(userResult);
-    });
-
-    it("user model create function must be called with specific params", async () => {
-      createUserStub.resolves(userResult as any);
-
-      await usersDAO.create(userMock);
-
-      expect(createUserStub.calledWith(userMock)).to.equal(true);
+      expect(user).to.have.property("IdUsuario");
+      expect(user2).to.have.property("IdUsuario");
     });
   });
 
-  describe("count users functionality", () => {
-    let countUsersStub: sinon.SinonStub<
-      [options?: Omit<CountOptions<any>, "group"> | undefined],
-      Promise<number>
-    >;
+  describe("get by id", () => {
+    it("must return user by integer id", async () => {
+      const user = await usersDAO.getById(1);
 
-    const filterUsers: WhereOptions<UserAttributes> = {
-      IdUsuario: 10,
-      identificacion: "1",
-    };
-
-    beforeEach(() => {
-      countUsersStub = sinon.stub(UserModel, "count");
+      expect(user).to.have.property("IdUsuario");
+      expect(user?.IdUsuario).to.equal(1);
     });
 
-    afterEach(() => {
-      countUsersStub.restore();
+    it("must return user by string id", async () => {
+      const user = await usersDAO.getById("2");
+
+      expect(user).to.have.property("IdUsuario");
+      expect(user?.IdUsuario).to.equal(2);
     });
 
-    it("user model count function must be called when empty filters", async () => {
-      countUsersStub.resolves(undefined);
+    it("must search an user by an nonexisting id", async () => {
+      const user = await usersDAO.getById(-1);
 
-      const result = await usersDAO.count({}, {});
+      expect(user).to.be.null;
+    });
+  });
 
-      expect(countUsersStub.called).to.equal(true);
-      expect(countUsersStub.callCount).to.equal(1);
+  describe("list Users functionality", () => {
+    it("user return list of user", async () => {
 
-      expect(result).to.equal(undefined);
+      const users = await usersDAO.findAll();
+      expect(users).to.have.lengthOf(2);
+
+    });
+  });
+
+  describe("find one by filter", () => {
+    it("must return one user by filter", async () => {
+      const user = await usersDAO.findOneByFilter({ email: userMock.email });
+
+      expect(user).to.have.property("IdUsuario");
+      expect(user?.IdUsuario).to.equal(1);
     });
 
-    it("user model count function must be called when filter are set", async () => {
-      countUsersStub.resolves(undefined);
+    it("must return one user by filter - 2", async () => {
+      const user = await usersDAO.findOneByFilter({
+        firstName: {
+          [Op.like]: `%${userMock2.firstName}%`
+        }
+      });
 
-      const result = await usersDAO.count(
-        { identificacion: "1" },
-        { IdVehiculo: 1 }
+      expect(user).to.have.property("IdUsuario");
+      expect(user?.IdUsuario).to.equal(2);
+    });
+  });
+
+  describe("count users related", () => {
+
+    it("must count all the users in the table", async () => {
+      const numberOfUser = await usersDAO.count();
+      expect(numberOfUser).to.equal(2);
+    });
+
+    it("must count users by filter", async () => {
+      const result = await Promise.all([
+        usersDAO.count({
+          firstName: {
+            [Op.like]: `%${userMock.firstName}%`
+          }
+        }),
+        usersDAO.count({
+          tipoUsuario: "Cliente"
+        })
+      ]);
+      expect(result).to.deep.equal([1, 2]);
+    });
+
+    it("must count number of user related to a workshop", async () => {
+
+      const workshop: TallerCreationAttributes = {
+        nombre: faker.company.name(),
+        identificacion: faker.string.numeric(10),
+        email: faker.internet.email(),
+        celular: faker.phone.number(),
+        estado: "active",
+        direccion: faker.location.streetAddress(),
+        latitude: faker.location.latitude(),
+        longitud: faker.location.longitude(),
+        telefono: faker.phone.number(),
+        logo: faker.image.url(),
+      };
+
+      const workshopResult = await tallerDAO.create(workshop);
+
+      const createVehiculo: VehiculoCreationAttributes = {
+        IdTaller: workshopResult.IdTaller,
+        IdUsuario: userMock.uid || "",
+        IdMarca: 1,
+        estado: faker.helpers.arrayElement(["Registrado", "Pendiente"]),
+        placa: faker.vehicle.vrm(),
+        tipoVehiculo: faker.helpers.arrayElement(["Moto", "Carro"])
+      };
+
+      const createVehiculo2: VehiculoCreationAttributes = {
+        IdUsuario: userMock2.uid || "",
+        IdMarca: 1,
+        estado: faker.helpers.arrayElement(["Registrado", "Pendiente"]),
+        placa: faker.vehicle.vrm(),
+        tipoVehiculo: faker.helpers.arrayElement(["Moto", "Carro"])
+      };
+
+      await Promise.all(
+        [vehiculoDAO.create(createVehiculo), vehiculoDAO.create(createVehiculo2)]
       );
 
-      expect(countUsersStub.called).to.equal(true);
-      expect(countUsersStub.callCount).to.equal(1);
+      const numberOfUsers = await usersDAO.count({}, { IdTaller: workshopResult.IdTaller });
 
-      expect(result).to.equal(undefined);
+      expect(numberOfUsers).to.equal(1);
     });
 
-    it("user model resolve function must be equal to userDAO count result", async () => {
-      countUsersStub.resolves(3);
-      const result = await usersDAO.count({}, {});
-      expect(result).to.equal(3);
-    });
+    it("must return 0 when the search does not match with any record", async () => {
+      const result = await Promise.all([
+        usersDAO.count({}, { IdTaller: 2 }),
+        usersDAO.count({ identificacion: "does not exists" })
+      ]);
 
-    it("user model resolve function must be equal to userDAO count result when filters are set", async () => {
-      countUsersStub.resolves(1);
-
-      const result = await usersDAO.count(filterUsers, {});
-
-      expect(countUsersStub.called).to.equal(true);
-      expect(result).to.equal(1);
-    });
-  });
-
-  describe("delete user functionality", () => {
-    let destroyUsersStub: sinon.SinonStub<
-      [options?: DestroyOptions<any> | undefined],
-      Promise<number>
-    >;
-
-    beforeEach(() => {
-      destroyUsersStub = sinon.stub(UserModel, "destroy");
-    });
-
-    afterEach(() => {
-      destroyUsersStub.restore();
-    });
-
-    it("userModel destroy function result must be equal to deleteBy function", async () => {
-      destroyUsersStub.resolves(1);
-      const result = await usersDAO.deleteById(1);
-      expect(result).to.equal(1);
-    });
-
-    it("userModel destroy function must be called when params is a number", async () => {
-      destroyUsersStub.resolves(1);
-      await usersDAO.deleteById(1);
-      expect(destroyUsersStub.called).to.equal(true);
-      expect(destroyUsersStub.callCount).to.equal(1);
-    });
-
-    it("userModel destroy function must called once when param is an string", async () => {
-      destroyUsersStub.resolves(1);
-      await usersDAO.deleteById("1");
-      expect(destroyUsersStub.callCount).to.equal(1);
-    });
-  });
-
-  describe("update user functionality", () => {
-    let updateUsersStub: sinon.SinonStub<
-      [values: { [x: string]: any }, options: UpdateOptions<any>],
-      Promise<[affectedCount: number]>
-    >;
-
-    const filterToUpdate = { IdUsuario: 1 };
-    const userToUpdate = { identificacion: "1111111" };
-
-    const resultMock: [affectedCount: number] = [1];
-
-    beforeEach(() => {
-      updateUsersStub = sinon.stub(UserModel, "update");
-    });
-
-    afterEach(() => {
-      updateUsersStub.restore();
-    });
-
-    it("userModel update function result must be equal to userDao update", async () => {
-      updateUsersStub.resolves(resultMock);
-      const result = await usersDAO.update(filterToUpdate, userToUpdate);
-
-      expect(result).to.equal(resultMock);
-    });
-
-    it("userModel update function must be called when params is a number", async () => {
-      updateUsersStub.resolves(resultMock);
-      await usersDAO.update(filterToUpdate, userToUpdate);
-      expect(updateUsersStub.called).to.equal(true);
-      expect(updateUsersStub.callCount).to.equal(1);
-    });
-
-    it("userModel update function must called once when param is an string", async () => {
-      updateUsersStub.resolves(resultMock);
-      await usersDAO.update(filterToUpdate, userToUpdate);
-      expect(updateUsersStub.callCount).to.equal(1);
+      expect(result).to.deep.equal([0, 0]);
     });
   });
 });
