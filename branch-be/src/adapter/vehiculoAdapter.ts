@@ -344,7 +344,7 @@ const findPaginateByFilter = (
   filterVehiculo: WhereOptions<VehiculoAttributes>,
   filterUsuario: WhereOptions<UserCreationAttributes>
 ): Promise<{ rows: VehiculoInstance[]; count: number }> | undefined =>
-  vehiculoDAO.findPaginateByFilter(page, limit, filterVehiculo, filterUsuario);
+  vehiculoDAO.findPaginateByFilter(limit, page, filterVehiculo, filterUsuario);
 
 export default {
   crearVehiculo,

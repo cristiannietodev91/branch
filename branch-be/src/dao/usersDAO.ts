@@ -68,14 +68,6 @@ const update = (
   });
 };
 
-const syncModel = async () => {
-  await UserModel.sync({ force: true });
-};
-
-const dropModel = async () => {
-  await UserModel.drop();
-};
-
 export default {
   getById,
   findAll,
@@ -84,8 +76,6 @@ export default {
   count,
   deleteById,
   update,
-  syncModel,
-  dropModel,
 };
 
 

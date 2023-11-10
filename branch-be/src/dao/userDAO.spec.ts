@@ -32,11 +32,8 @@ describe("user DAO unit testing", () => {
     celular: faker.phone.number(),
     uid: faker.string.uuid()
   };
-
-  before(async () => {
-    await usersDAO.syncModel();
-  });
-
+  
+  
   describe("create user functionality", () => {
 
     it("can not create an user without the minimum fields", async () => {
@@ -47,13 +44,11 @@ describe("user DAO unit testing", () => {
       await expect(usersDAO.create(user)).to.eventually.be.rejectedWith("cannot be null");
     });
 
-    it("user model create function must be called when user is created", async () => {
+    it("must create the users in the database", async () => {
 
-      const [user, user2] = await Promise.all([
-        usersDAO.create(userMock),
-        usersDAO.create(userMock2)
-      ]);
-
+      const user = await usersDAO.create(userMock);
+      const user2 = await usersDAO.create(userMock2);
+      
       expect(user).to.have.property("IdUsuario");
       expect(user2).to.have.property("IdUsuario");
     });
@@ -138,7 +133,7 @@ describe("user DAO unit testing", () => {
         identificacion: faker.string.numeric(10),
         email: faker.internet.email(),
         celular: faker.phone.number(),
-        estado: "active",
+        estado: faker.helpers.arrayElement(["Registrado", "Pendiente"]),
         direccion: faker.location.streetAddress(),
         latitude: faker.location.latitude(),
         longitud: faker.location.longitude(),

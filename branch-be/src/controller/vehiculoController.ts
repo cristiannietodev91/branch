@@ -307,7 +307,7 @@ const getAllPaginateFilterVehiculosByIdTaller = (
 ): void => {
   try {
     const page = Number(req.query.page) - 1;
-    const perpage = Number(req.query.perPage);
+    const perPage = Number(req.query.perPage);
     const columnFilter = req.query.columnFilter;
     const valueSearch = req.query.filter;
     const IdTaller = req.params.Id;
@@ -348,7 +348,7 @@ const getAllPaginateFilterVehiculosByIdTaller = (
     debug("Parametro taller recibido :::::>", req.query);
 
     vehiculoAdapter
-      .findPaginateByFilter(page, perpage, filterVehiculo, filterUsuario)
+      .findPaginateByFilter(page, perPage, filterVehiculo, filterUsuario)
       ?.then((result) => {
         res.status(HttpStatus.OK).json(result);
       })

@@ -42,15 +42,10 @@ const deleteById = (IdTaller: number): Promise<number> | undefined => {
   });
 };
 
-const syncModel = async () => {
-  await TallerModel.sync({ force: true });
-};
-
 export default {
   getById,
   findAll,
   create,
   update,
   deleteById,
-  syncModel,
 };

@@ -150,7 +150,7 @@ export interface VehiculoUpdate {
 export interface VehiculoAttributes {
   IdVehiculo: number;
   IdMarca: number;
-  IdUsuario: string | number;
+  IdUsuario: string;
   IdTaller?: number | string;
   tipoVehiculo: string;
   placa: string;

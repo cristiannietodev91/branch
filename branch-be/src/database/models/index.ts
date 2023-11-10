@@ -82,6 +82,7 @@ const MarcaModel = sequelize.define<MarcaInstance>(
     },
   },
   {
+    freezeTableName: true,
     timestamps: false,
   }
 );
@@ -647,7 +648,7 @@ VehiculoModel.hasMany(CitaModel, {
 });
 
 VehiculoModel.belongsTo(UserModel, {
-  foreignKey: "IdUsuario",
+  foreignKey:  "IdUsuario",
   targetKey: "uid",
 });
 

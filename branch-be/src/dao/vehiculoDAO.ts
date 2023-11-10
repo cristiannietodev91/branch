@@ -1,4 +1,4 @@
-import { WhereOptions } from "sequelize";
+import { FindAndCountOptions, WhereOptions } from "sequelize";
 import {
   MarcaModel,
   TallerModel,
@@ -17,11 +17,9 @@ const findAll = (): Promise<VehiculoInstance[]> => VehiculoModel.findAll();
 const update = (
   filterVehiculo: WhereOptions<VehiculoAttributes>,
   vehiculo: Partial<VehiculoAttributes>
-): Promise<[affectedCount: number]> | undefined => {
-  return VehiculoModel.sequelize?.transaction(() => {
-    return VehiculoModel.update(vehiculo, {
-      where: filterVehiculo,
-    });
+): Promise<[affectedCount: number]> => {
+  return VehiculoModel.update(vehiculo, {
+    where: filterVehiculo,
   });
 };
 
@@ -33,93 +31,79 @@ const create = (
 
 const findOneByFilter = (
   filter: WhereOptions<VehiculoAttributes>
-): Promise<VehiculoInstance | null> | undefined => {
-  // Find all users
-  return VehiculoModel.sequelize?.transaction((t1) => {
-    return VehiculoModel.findOne({
-      include: [
-        {
-          model: MarcaModel,
-        },
-        {
-          model: UserModel,
-        },
-        {
-          model: TallerModel,
-        },
-      ],
-      where: filter,
-    });
+): Promise<VehiculoInstance | null> => {
+  return VehiculoModel.findOne({
+    include: [
+      {
+        model: MarcaModel,
+        required: true
+      },
+      {
+        model: UserModel,
+        required: true
+      },
+      {
+        model: TallerModel,
+      },
+    ],
+    where: filter,
   });
 };
 
 const count = (
   filter: WhereOptions<VehiculoAttributes>
-): Promise<number> | undefined => {
-  return VehiculoModel.sequelize?.transaction(() => {
-    return VehiculoModel.count({
-      where: filter,
-    });
+): Promise<number> => {
+  return VehiculoModel.count({
+    where: filter,
   });
 };
 
-const deleteById = (IdVehiculo: number): Promise<number> | undefined => {
-  // Find all users
-  return VehiculoModel.sequelize?.transaction((t1) => {
-    return VehiculoModel.destroy({
-      where: { IdVehiculo },
-    });
+const deleteById = (IdVehiculo: number): Promise<number> => {
+  return VehiculoModel.destroy({
+    where: { IdVehiculo },
   });
 };
 
 const getById = (
   IdVehiculo: number
-): Promise<VehiculoInstance | null> | undefined => {
-  // Find all vehiculos
-  return VehiculoModel.sequelize?.transaction((t1) => {
-    return VehiculoModel.findByPk(IdVehiculo);
-  });
+): Promise<VehiculoInstance | null> => {
+  return VehiculoModel.findByPk(IdVehiculo);
 };
 
 const findAllByFilter = (
   filter: WhereOptions<VehiculoAttributes>
-): Promise<VehiculoInstance[]> | undefined => {
-  // Find all users
-  return VehiculoModel.sequelize?.transaction(() => {
-    return VehiculoModel.findAll({
-      include: [
-        {
-          model: MarcaModel,
-        },
-        {
-          model: UserModel,
-        },
-        {
-          model: TallerModel,
-        },
-      ],
-      where: filter,
-    });
+): Promise<VehiculoInstance[]> => {
+  return VehiculoModel.findAll({
+    include: [
+      {
+        model: MarcaModel,
+        required: true
+      },
+      {
+        model: UserModel,
+        required: true
+      },
+      {
+        model: TallerModel,
+      },
+    ],
+    where: filter,
   });
 };
 
 const findPaginateByFilter = (
-  page: number,
-  limit: number,
-  filterVehiculo: WhereOptions<VehiculoAttributes> | undefined,
-  filterUsuario: WhereOptions<UserCreationAttributes>
-): Promise<{ rows: VehiculoInstance[]; count: number }> | undefined => {
-  const options = {
+  limit?: number,
+  page = 1,
+  filterVehiculo?: WhereOptions<VehiculoAttributes>,
+  filterUsuario?: WhereOptions<UserCreationAttributes>
+): Promise<{ rows: VehiculoInstance[]; count: number }> => {
+  const options: Omit<FindAndCountOptions<VehiculoAttributes>, "group"> = {
     limit,
-    offset: page,
+    ...(page && {offset: (page - 1) * (limit || 0)}),
     include: [
       {
         model: MarcaModel,
-      },
-      {
-        model: UserModel,
-        required: true,
-        where: filterUsuario,
+        required: true
       },
       {
         model: TallerModel,
@@ -127,14 +111,15 @@ const findPaginateByFilter = (
     ],
     where: filterVehiculo
   };
-  // Find all users
-  return VehiculoModel.sequelize?.transaction((t1) => {
-    return VehiculoModel.findAndCountAll(options);
-  });
-};
-
-const syncModel = async () => {
-  await VehiculoModel.sync({ force: true });
+  
+  if(filterUsuario && Array.isArray(options.include)) {
+    options.include.push({
+      model: UserModel,
+      required: true,
+      where: filterUsuario,
+    });
+  }
+  return VehiculoModel.findAndCountAll(options);
 };
 
 export default {
@@ -147,5 +132,4 @@ export default {
   getById,
   findAllByFilter,
   findPaginateByFilter,
-  syncModel,
 };

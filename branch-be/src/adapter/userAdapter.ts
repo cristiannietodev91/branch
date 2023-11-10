@@ -159,7 +159,7 @@ const updateUsuarioByIdUsuario = (
 ): Promise<[affectedCount: number]> | undefined => {
   if (IdUsuario) {
     vehiculoDAO
-      .update({ IdUsuario: usuario.email }, { IdUsuario: usuario.IdUsuario })
+      .update({ IdUsuario: usuario.email }, { IdUsuario: usuario.uid })
       ?.then(() => {
         debug("Se actualizaron los vehiculos");
       })

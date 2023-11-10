@@ -20,6 +20,12 @@ module.exports = {
       IdUsuario: {
         type: Sequelize.STRING(150),
         allowNull: false,
+        references: {
+          model: {
+            tableName: "usuarios"
+          },
+          key: "uid",
+        }
       },
       IdTaller: {
         type: Sequelize.INTEGER,
