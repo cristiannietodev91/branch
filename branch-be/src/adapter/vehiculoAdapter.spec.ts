@@ -16,6 +16,7 @@ import * as sms from "../utils/sendSms";
 import tallerDAO from "../dao/tallerDAO";
 import { WhereOptions } from "sequelize/types";
 import usersDAO from "../dao/usersDAO";
+import { faker } from "@faker-js/faker";
 
 describe("vehicle Adapter", () => {
   describe("find Vehicles functionality", () => {
@@ -96,7 +97,7 @@ describe("vehicle Adapter", () => {
 
     const vehicleMock: VehiculoCreationAttributes = {
       IdMarca: 1,
-      IdUsuario: 1,
+      IdUsuario: faker.string.uuid(),
       IdTaller: 1,
       tipoVehiculo: "carro",
       placa: "XXX111",

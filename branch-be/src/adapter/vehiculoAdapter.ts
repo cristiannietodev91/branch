@@ -55,7 +55,7 @@ const crearVehiculo = (
               ?.then(([resultUpdatevehiculo]) => {
                 if (resultUpdatevehiculo > 0) {
                   const { usuarios } = vehiculoResult;
-                  if (usuarios) {
+                  if (usuarios && IdTaller) {
                     sendNotification(usuarios, IdTaller, vehiculoResult);
                   }
 
@@ -122,7 +122,7 @@ const crearVehiculo = (
                         if (vehiculoCreated) {
                           const { usuarios } = vehiculoCreated;
                           const { IdTaller } = vehiculoCreated;
-                          if (usuarios) {
+                          if (usuarios && IdTaller) {
                             sendNotification(
                               usuarios,
                               IdTaller,
@@ -175,7 +175,7 @@ const crearVehiculo = (
                               if (vehiculoCreated) {
                                 const { usuarios } = vehiculoCreated;
                                 const { IdTaller } = vehiculoCreated;
-                                if (usuarios) {
+                                if (usuarios && IdTaller) {
                                   sendNotification(
                                     usuarios,
                                     IdTaller,
@@ -344,7 +344,7 @@ const findPaginateByFilter = (
   filterVehiculo: WhereOptions<VehiculoAttributes>,
   filterUsuario: WhereOptions<UserCreationAttributes>
 ): Promise<{ rows: VehiculoInstance[]; count: number }> | undefined =>
-  vehiculoDAO.findPaginateByFilter(page, limit, filterVehiculo, filterUsuario);
+  vehiculoDAO.findPaginateByFilter(limit, page, filterVehiculo, filterUsuario);
 
 export default {
   crearVehiculo,

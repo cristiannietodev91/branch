@@ -150,8 +150,8 @@ export interface VehiculoUpdate {
 export interface VehiculoAttributes {
   IdVehiculo: number;
   IdMarca: number;
-  IdUsuario: string | number;
-  IdTaller: number | string;
+  IdUsuario: string;
+  IdTaller?: number | string;
   tipoVehiculo: string;
   placa: string;
   kilometraje?: number;
@@ -180,14 +180,14 @@ export interface VehiculoPreCreationAttributes {
   modelo?: number;
   placa: string;
   tipoVehiculo: string;
-  IdTaller: string | number;
+  IdTaller?: string | number;
 }
 
 export type VehiculoCreationAttributes = Optional<VehiculoAttributes, "IdVehiculo">
 
 export interface VehiculoCreationRequest {
   celular: string;
-  IdTaller: string | number;
+  IdTaller?: string | number;
   placa: string;
   usuario: {
     email: string;

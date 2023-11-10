@@ -75,13 +75,10 @@ describe("user adapter testing", () => {
   });
 
   describe("must count user by Id Taller", () => {
-    let countUserByStub: sinon.SinonStub<
-      [
-        filterUsuario: WhereOptions<UserAttributes>,
-        filterVehiculo: VehiculoFilter
-      ],
-      Promise<number> | undefined
-    >;
+    let countUserByStub: sinon.SinonStub<[
+      filterUsuario?: WhereOptions<UserAttributes> | undefined, 
+      filterVehiculo?: VehiculoFilter | undefined
+    ], Promise<number>>;
 
     before(() => {
       countUserByStub = sinon.stub(usersDAO, "count");
@@ -255,7 +252,7 @@ describe("user adapter testing", () => {
       expect(findOneUserByFilterStub.firstCall.calledWith({ identificacion: mockUserWithIdentification.identificacion })).to.be.true;
       expect(findOneUserByFilterStub.secondCall.calledWith({ email: mockUserWithIdentification.email })).to.be.true;
       expect(createUserFirebaseMockFunction.called).to.be.true;
-      expect(updateVehiculoStub.calledOnceWith({ IdUsuario: userFirebaseMock.email }, { IdUsuario: undefined })).to.be.true;
+      expect(updateVehiculoStub.calledOnceWith({ IdUsuario: userFirebaseMock.email }, { IdUsuario: userFirebaseMock.uid })).to.be.true;
       expect(updateUserStub.called).to.be.true;
       expect(result).to.be.deep.equal(userResultMock);
     });

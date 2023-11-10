@@ -17,11 +17,8 @@ const findAll = (): Promise<TallerInstance[]> => TallerModel.findAll();
 
 const create = (
   taller: TallerCreationAttributes
-): Promise<TallerInstance> | undefined => {
-  // Find all users
-  return TallerModel.sequelize?.transaction((t1) => {
-    return TallerModel.create(taller);
-  });
+): Promise<TallerInstance> => {
+  return TallerModel.create(taller);
 };
 
 const update = (

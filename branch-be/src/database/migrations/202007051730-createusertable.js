@@ -30,6 +30,7 @@ module.exports = {
       uid: {
         type: Sequelize.STRING,
         allowNull: true,
+        unique: true,
       },
       celular: {
         type: Sequelize.STRING,

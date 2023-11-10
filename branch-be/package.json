@@ -8,6 +8,7 @@
     "start": "node ./dist/index",
     "dev": "nodemon",
     "build": "tsc",
+    "pretest": "npx rimraf database.sqlite3 && cross-env NODE_ENV=test npx sequelize-cli db:migrate && cross-env NODE_ENV=test npx sequelize-cli db:seed:all",
     "test": "npm run build && cross-env NODE_ENV=test nyc mocha",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "lint": "eslint ."
@@ -53,8 +54,10 @@
     "twilio": "^3.39.3"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.2.0",
     "@istanbuljs/nyc-config-typescript": "^1.0.2",
     "@types/chai": "^4.3.0",
+    "@types/chai-as-promised": "^7.1.8",
     "@types/cls-hooked": "^4.3.3",
     "@types/cookie-parser": "^1.4.5",
     "@types/cors": "^2.8.10",
@@ -72,6 +75,7 @@
     "@typescript-eslint/eslint-plugin": "^5.21.0",
     "@typescript-eslint/parser": "^5.21.0",
     "chai": "^4.3.6",
+    "chai-as-promised": "^7.1.1",
     "coveralls": "^3.1.1",
     "cross-env": "^7.0.3",
     "eslint": "^7.30.0",

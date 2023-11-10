@@ -11,16 +11,15 @@
     "**/*.test.ts",
     "**/*.test.js",
     "**/*.spec.ts",
-    "**/src/database/**",
-    "**/src/dao"
+    "**/src/database/**"
   ],
   "reporter": [
     "text",
     "clover"
   ],
-  "branches": 5,
-  "lines": 10,
-  "functions": 5,
-  "statements": 5,
+  "branches": 16,
+  "lines": 40,
+  "functions": 20,
+  "statements": 40,
   "report-dir" : "./test-reports"
 }

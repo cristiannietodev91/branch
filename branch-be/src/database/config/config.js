@@ -18,7 +18,7 @@ module.exports = {
   },
   test: {
     dialect: "sqlite",
-    storage: ":memory:",
+    storage: "database.sqlite3",
   },
   production: {
     username: process.env.DBUSER,
