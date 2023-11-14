@@ -72,3 +72,4 @@ typings/
 # ts files
 /dist
 
+database.sqlite3

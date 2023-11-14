@@ -1,4 +1,4 @@
-import { Model, Optional } from "sequelize";
+import { CreationAttributes, CreationOptional, InferAttributes, InferCreationAttributes, Model, NonAttribute, Optional } from "sequelize";
 
 /** ****************
  Marca types
@@ -59,7 +59,7 @@ export interface UserFilter {
 }
 
 export interface UserAttributes {
-  IdUsuario: number;
+  IdUsuario: CreationOptional<number>;
   firstName: string;
   lastName?: string;
   identificacion?: string | null;
@@ -74,11 +74,11 @@ export interface UserAttributes {
   password?: string;
 }
 
-export type UserCreationAttributes = Optional<UserAttributes, "IdUsuario">
-
 export interface UserInstance
-  extends Model<UserAttributes, UserCreationAttributes>,
+  extends Model<InferAttributes<UserInstance>, InferCreationAttributes<UserInstance>>,
     UserAttributes {}
+
+export type UserCreationAttributes =  CreationAttributes<UserInstance> 
 
 /** ****************
  Cita types
@@ -86,11 +86,11 @@ export interface UserInstance
 export interface CitaAttributes {
   IdCita: number;
   IdTaller: number;
-  IdMecanico?: number;
+  IdMecanico?: number | null;
   IdVehiculo: number;
   fechaCita: Date;
   horaCita: number;
-  servicio?: string;
+  servicio?: string | null;
   estado: string;
   calificacion?: number;
   calificacionUsuario?: number;
@@ -99,7 +99,7 @@ export interface CitaAttributes {
   mecanico?: MecanicoAttributes;
 }
 
-export type CitaCreationAttributes = Optional<CitaAttributes, "IdCita">
+export type CitaCreationAttributes = Optional<CitaAttributes, "IdCita" | "vehiculo" | "taller" | "mecanico">
 
 export interface CitaRequestAttributes {
   IdTaller: number;
@@ -112,7 +112,7 @@ export interface CitaRequestAttributes {
 }
 
 export interface CalificaCitaRequest {
-  IdCita: string | number; //TODO: change function for one param with type
+  IdCita: number; //TODO: change function for one param with type
   calificacion?: number;
   calificacionUsuario?: number;
 }

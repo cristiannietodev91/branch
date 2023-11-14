@@ -46,7 +46,7 @@ interface ClientToServerEvents {
     callback: (result: { status: string; message: string }) => void
   ) => void;
   messaggetosomeone: (id: string, msg: InitialMessage) => void;
-  newcita: (data: { IdTaller: string; IdCita: string }) => void;
+  newcita: (data: { IdTaller: string; IdCita: number }) => void;
 }
 
 interface ServerToClientEvents {

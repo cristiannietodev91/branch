@@ -23,111 +23,101 @@ import {
 
 const findAll = (): Promise<CitaInstance[]> => CitaModel.findAll();
 
-const create = (cita: CitaCreationAttributes): Promise<CitaInstance> | undefined => {
-  // Find all users
-  return CitaModel.sequelize?.transaction(() => {
-    return CitaModel.create(cita).then((cita) => {
-      return cita;
-    });
+const create = (cita: CitaCreationAttributes): Promise<CitaInstance> => {
+  return CitaModel.create(cita).then((cita) => {
+    return cita;
   });
 };
 
 const update = (
-  IdCita: string | number,
+  IdCita: number,
   cita: Partial<CitaCreationAttributes>
-): Promise<[affectedCount: number]> | undefined => {
-  // Find all users
-  return CitaModel.sequelize?.transaction((t1) => {
-    return CitaModel.update(cita, {
-      where: { IdCita: IdCita },
-    });
+): Promise<[affectedCount: number]> => {
+  return CitaModel.update(cita, {
+    where: { IdCita: IdCita },
   });
 };
 
-const getById = (IdCita: string | number): Promise<CitaInstance | null> | undefined => {
-  // Find all users
-  return CitaModel.sequelize?.transaction((t1) => {
-    return CitaModel.findByPk(IdCita, {
-      include: [
-        {
-          model: VehiculoModel,
-          include: [
-            {
-              model: MarcaModel,
-            },
-            {
-              model: UserModel,
-            },
-          ],
-        },
-        {
-          model: TallerModel,
-        },
-        {
-          model: MecanicoModel,
-        },
-      ],
-    });
+const getById = (IdCita: number): Promise<CitaInstance | null> => {
+  return CitaModel.findByPk(IdCita, {
+    include: [
+      {
+        model: VehiculoModel,
+        include: [
+          {
+            model: MarcaModel,
+            required: true
+          },
+          {
+            model: UserModel,
+            required: true
+          },
+        ],
+      },
+      {
+        model: TallerModel,
+        required: true,
+      },
+      {
+        model: MecanicoModel,
+      },
+    ],
   });
 };
 
-const deleteById = (IdCita: string | number): Promise<number> | undefined => {
-  // Find all users
-  return CitaModel.sequelize?.transaction((t1) => {
-    return CitaModel.destroy({
-      where: { IdCita: IdCita },
-    }).then((deleted) => {
-      return deleted;
-    });
+const deleteById = (IdCita: number): Promise<number> => {
+  return CitaModel.destroy({
+    where: { IdCita: IdCita },
   });
 };
 
 const findAllByFilter = (
-  filterCita: WhereOptions<CitaAttributes>,
-  filterVehiculo: WhereOptions<VehiculoAttributes>,
-  filterOrden: WhereOptions<OrdenAttributes>
-): Promise<CitaInstance[]> | undefined => {
-  // Find all users
-  return CitaModel.sequelize?.transaction((t1) => {
-    return CitaModel.findAll({
-      include: [
-        {
-          model: VehiculoModel,
-          where: filterVehiculo,
-          include: [
-            {
-              model: MarcaModel,
-            },
-            {
-              model: UserModel,
-            },
-          ],
-        },
-        {
-          model: TallerModel,
-        },
-        {
-          model: MecanicoModel,
-        },
-        {
-          model: OrdenModel,
-          where: filterOrden,
-          include: [
-            {
-              model: MecanicoModel,
-              required: false,
-            },
-          ],
-          required: false,
-        },
-      ],
-      where: filterCita,
-      order: [
-        ["fechaCita", "DESC"],
-        ["horaCita", "DESC"],
-        [OrdenModel, "IdEtapa"],
-      ],
-    });
+  filterCita: WhereOptions<CitaAttributes> = {},
+  filterVehiculo: WhereOptions<VehiculoAttributes> = {},
+  filterOrden: WhereOptions<OrdenAttributes> = {}
+): Promise<CitaInstance[]> => {
+  return CitaModel.findAll({
+    include: [
+      {
+        model: VehiculoModel,
+        required: true,
+        where: filterVehiculo,
+        include: [
+          {
+            model: MarcaModel,
+            required: true
+          },
+          {
+            model: UserModel,
+            required: true
+          },
+        ],
+      },
+      {
+        model: TallerModel,
+        required: true
+      },
+      {
+        model: MecanicoModel,
+      },
+      {
+        model: OrdenModel,
+        where: filterOrden,
+        include: [
+          {
+            model: MecanicoModel,
+            required: false,
+          },
+        ],
+        required: false,
+      },
+    ],
+    where: filterCita,
+    order: [
+      ["fechaCita", "DESC"],
+      ["horaCita", "DESC"],
+      [OrdenModel, "IdEtapa"],
+    ],
   });
 };
 
@@ -135,23 +125,22 @@ const count = (
   filter?: WhereOptions<CitaAttributes>,
   groupBy?: GroupOption,
   attributes?: FindAttributeOptions
-): Promise<GroupedCountResultItem[]> | Promise<number> | undefined => {
-  // Find all users
+): Promise<GroupedCountResultItem[]> | Promise<number> => {
   if (groupBy) {
-    return CitaModel.sequelize?.transaction((t1) => {
-      return CitaModel.count({
-        group: groupBy,
-        attributes: attributes,
-        where: filter,
-      });
+    return CitaModel.count({
+      group: groupBy,
+      attributes: attributes,
+      where: filter,
     });
   } else {
-    return CitaModel.sequelize?.transaction((t1) => {
-      return CitaModel.count({
-        where: filter,
-      });
+    return CitaModel.count({
+      where: filter,
     });
   }
+};
+
+const truncate = async (): Promise<void> => {
+  await CitaModel.truncate({ restartIdentity: true });
 };
 
 export default {
@@ -161,5 +150,6 @@ export default {
   deleteById,
   findAllByFilter,
   getById,
-  count
+  count,
+  truncate,
 };

@@ -1,12 +1,6 @@
-// import fs from 'fs';
-// import path from 'path';
-import cls from "cls-hooked";
-import { Sequelize, Options, DataTypes } from "sequelize";
+import { DataTypes } from "sequelize";
+import sequelize from "./sequelize";
 
-// const basename = path.basename(__filename);
-const namespace = cls.createNamespace("my-very-own-namespace");
-const env: string = process.env.NODE_ENV || "development";
-import dbConfig from "../config/config";
 import {
   UserInstance,
   MarcaInstance,
@@ -24,27 +18,8 @@ import {
   ServicioVehiculoInstance,
 } from "../../types";
 // import { String } from "aws-sdk/clients/batch";
-import Debug from "debug";
+
 import moment from "moment";
-const debug = Debug("branch:server");
-
-const myConfig: Options = (dbConfig as any)[env];
-
-Sequelize.useCLS(namespace);
-
-debug("Connecting to dialect ::> ", myConfig.dialect);
-const sequelize = new Sequelize(myConfig);
-
-const testConnection = async () => {
-  try {
-    await sequelize.authenticate();
-    console.log("Connection has been established successfully.");
-  } catch (error) {
-    console.error("Unable to connect to the database:", error);
-  }
-};
-
-testConnection();
 
 const MarcaModel = sequelize.define<MarcaInstance>(
   "marca",
@@ -141,6 +116,59 @@ const TallerModel = sequelize.define<TallerInstance>("taller", {
   },
 }, {
   freezeTableName: true
+});
+
+const UserModel = sequelize.define<UserInstance>("usuarios", {
+  IdUsuario: {
+    type: DataTypes.INTEGER.UNSIGNED,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  firstName: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  lastName: {
+    type: DataTypes.STRING,
+    // allowNull defaults to true
+  },
+  identificacion: {
+    type: DataTypes.STRING,
+    unique: true,
+    // allowNull defaults to true
+  },
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      isEmail: true,
+    },
+  },
+  uid: {
+    type: DataTypes.STRING(150),
+    allowNull: true,
+    unique: true,
+  },
+  celular: {
+    type: DataTypes.STRING,
+  },
+  tipoUsuario: {
+    type: DataTypes.ENUM("Cliente", "AdminTaller"),
+    allowNull: false,
+  },
+  estado: {
+    type: DataTypes.ENUM("Registrado", "Pendiente"),
+    allowNull: false,
+  },
+  IdTaller: {
+    type: DataTypes.INTEGER,
+  },
+  tokenCM: {
+    type: DataTypes.STRING,
+  },
+  typeDevice: {
+    type: DataTypes.STRING,
+  },
 });
 
 const VehiculoModel = sequelize.define<VehiculoInstance>("vehiculo", {
@@ -261,58 +289,6 @@ const CitaModel = sequelize.define<CitaInstance>("cita", {
   },
 });
 
-const UserModel = sequelize.define<UserInstance>("usuarios", {
-  IdUsuario: {
-    type: DataTypes.INTEGER.UNSIGNED,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  firstName: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  lastName: {
-    type: DataTypes.STRING,
-    // allowNull defaults to true
-  },
-  identificacion: {
-    type: DataTypes.STRING,
-    unique: true,
-    // allowNull defaults to true
-  },
-  email: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      isEmail: true,
-    },
-  },
-  uid: {
-    type: DataTypes.STRING(150),
-    allowNull: true,
-  },
-  celular: {
-    type: DataTypes.STRING,
-  },
-  tipoUsuario: {
-    type: DataTypes.ENUM("Cliente", "AdminTaller"),
-    allowNull: false,
-  },
-  estado: {
-    type: DataTypes.ENUM("Registrado", "Pendiente"),
-    allowNull: false,
-  },
-  IdTaller: {
-    type: DataTypes.INTEGER,
-  },
-  tokenCM: {
-    type: DataTypes.STRING,
-  },
-  typeDevice: {
-    type: DataTypes.STRING,
-  },
-});
-
 const MecanicoModel = sequelize.define<MecanicoInstance>("mecanico", {
   IdMecanico: {
     type: DataTypes.INTEGER,
@@ -350,6 +326,8 @@ const MecanicoModel = sequelize.define<MecanicoInstance>("mecanico", {
       throw new Error("Do not try to set the `fullName` value!");
     },
   },
+}, {
+  freezeTableName: true
 });
 
 const MecanicoTallerModel = sequelize.define<MecanicoTallerInstance>(
@@ -368,7 +346,7 @@ const MecanicoTallerModel = sequelize.define<MecanicoTallerInstance>(
       },
     },
   },
-  { timestamps: false }
+  { timestamps: false, freezeTableName: true }
 );
 
 const OrdenModel = sequelize.define<OrdenInstance>("ordentrabajo", {
@@ -648,7 +626,7 @@ VehiculoModel.hasMany(CitaModel, {
 });
 
 VehiculoModel.belongsTo(UserModel, {
-  foreignKey:  "IdUsuario",
+  foreignKey: "IdUsuario",
   targetKey: "uid",
 });
 

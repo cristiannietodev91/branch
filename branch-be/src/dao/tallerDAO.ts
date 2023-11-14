@@ -3,13 +3,11 @@ import { TallerInstance, TallerCreationAttributes } from "../types";
 
 const getById = (
   IdTaller: number | string
-): Promise<TallerInstance | null> | undefined => {
-  return TallerModel.sequelize?.transaction(() => {
-    return TallerModel.findByPk(IdTaller, {
-      include: {
-        model: MecanicoModel,
-      },
-    });
+): Promise<TallerInstance | null> => {
+  return TallerModel.findByPk(IdTaller, {
+    include: {
+      model: MecanicoModel,
+    },
   });
 };
 
@@ -24,21 +22,15 @@ const create = (
 const update = (
   IdTaller: number,
   taller: Partial<TallerCreationAttributes>
-): Promise<[affectedCount: number]> | undefined => {
-  // Find all users
-  return TallerModel.sequelize?.transaction((t1) => {
-    return TallerModel.update(taller, {
-      where: { IdTaller },
-    });
+): Promise<[affectedCount: number]> => {
+  return TallerModel.update(taller, {
+    where: { IdTaller },
   });
 };
 
-const deleteById = (IdTaller: number): Promise<number> | undefined => {
-  // Find all users
-  return TallerModel.sequelize?.transaction(() => {
-    return TallerModel.destroy({
-      where: { IdTaller },
-    });
+const deleteById = (IdTaller: number): Promise<number> => {
+  return TallerModel.destroy({
+    where: { IdTaller },
   });
 };
 
