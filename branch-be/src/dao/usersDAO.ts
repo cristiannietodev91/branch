@@ -68,6 +68,10 @@ const update = (
   });
 };
 
+const truncate = async(): Promise<void> => {
+  await UserModel.truncate({ restartIdentity: true });
+};
+
 export default {
   getById,
   findAll,
@@ -76,6 +80,7 @@ export default {
   count,
   deleteById,
   update,
+  truncate,
 };
 
 

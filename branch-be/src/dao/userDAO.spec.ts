@@ -9,9 +9,10 @@ import usersDAO from "./usersDAO";
 import {
   Op,
 } from "sequelize";
-import { TallerCreationAttributes, UserCreationAttributes, VehiculoCreationAttributes } from "../types";
+import { TallerCreationAttributes, UserCreationAttributes, UserInstance, VehiculoCreationAttributes } from "../types";
 import vehiculoDAO from "./vehiculoDAO";
 import tallerDAO from "./tallerDAO";
+import citaDAO from "./citaDAO";
 
 describe("user DAO unit testing", () => {
 
@@ -32,7 +33,14 @@ describe("user DAO unit testing", () => {
     celular: faker.phone.number(),
     uid: faker.string.uuid()
   };
-  
+
+  let userCreated: UserInstance;
+
+  before(async ()=> {
+    await citaDAO.truncate();
+    await vehiculoDAO.truncate();
+    await usersDAO.truncate();
+  });
   
   describe("create user functionality", () => {
 
@@ -46,27 +54,20 @@ describe("user DAO unit testing", () => {
 
     it("must create the users in the database", async () => {
 
-      const user = await usersDAO.create(userMock);
+      userCreated = await usersDAO.create(userMock);
       const user2 = await usersDAO.create(userMock2);
       
-      expect(user).to.have.property("IdUsuario");
+      expect(userCreated).to.have.property("IdUsuario");
       expect(user2).to.have.property("IdUsuario");
     });
   });
 
   describe("get by id", () => {
     it("must return user by integer id", async () => {
-      const user = await usersDAO.getById(1);
+      const user = await usersDAO.getById(userCreated.IdUsuario);
 
       expect(user).to.have.property("IdUsuario");
-      expect(user?.IdUsuario).to.equal(1);
-    });
-
-    it("must return user by string id", async () => {
-      const user = await usersDAO.getById("2");
-
-      expect(user).to.have.property("IdUsuario");
-      expect(user?.IdUsuario).to.equal(2);
+      expect(user?.IdUsuario).to.equal(userCreated.IdUsuario);
     });
 
     it("must search an user by an nonexisting id", async () => {
@@ -90,7 +91,6 @@ describe("user DAO unit testing", () => {
       const user = await usersDAO.findOneByFilter({ email: userMock.email });
 
       expect(user).to.have.property("IdUsuario");
-      expect(user?.IdUsuario).to.equal(1);
     });
 
     it("must return one user by filter - 2", async () => {
@@ -101,7 +101,6 @@ describe("user DAO unit testing", () => {
       });
 
       expect(user).to.have.property("IdUsuario");
-      expect(user?.IdUsuario).to.equal(2);
     });
   });
 

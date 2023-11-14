@@ -19,6 +19,10 @@ module.exports = {
   test: {
     dialect: "sqlite",
     storage: "database.sqlite3",
+    define: {
+      underscored: false,
+      freezeTableName: true,
+    },
   },
   production: {
     username: process.env.DBUSER,

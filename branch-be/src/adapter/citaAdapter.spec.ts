@@ -497,8 +497,6 @@ describe("cita Adapter unit testing", () => {
         IdMecanico: 1,
       };
 
-      let result: any;
-
       before(async () => {
         getVehicleStub = sinon.stub(vehiculoDAO, "findOneByFilter");
         createCitaStub = sinon.stub(citaDAO, "create");
@@ -704,15 +702,9 @@ describe("cita Adapter unit testing", () => {
     });
 
     describe("cita update flow finishes succesfully", () => {
-      let updateStub: sinon.SinonStub<
-        [IdCita: string | number, cita: Partial<CitaCreationAttributes>],
-        Promise<[affectedCount: number]> | undefined
-      >;
+      let updateStub: sinon.SinonStub<[IdCita: number, cita: Partial<CitaCreationAttributes>], Promise<[affectedCount: number]>>;
 
-      let getCitaStub: sinon.SinonStub<
-        [IdCita: string | number],
-        Promise<CitaInstance | null> | undefined
-      >;
+      let getCitaStub: sinon.SinonStub<[IdCita: number], Promise<CitaInstance | null>>;
 
       let result: CitaInstance | null;
 
@@ -725,7 +717,7 @@ describe("cita Adapter unit testing", () => {
 
         updateStub.resolves([1]);
 
-        getCitaStub.resolves(mockGetById);
+        getCitaStub.resolves(mockGetById as CitaInstance);
 
         result = await citaAdapter.updateCitaByIdCita(1, citaUpdateMock);
       });
@@ -749,15 +741,9 @@ describe("cita Adapter unit testing", () => {
     });
 
     describe("cita state cancelled must not be update when fechaCita is less than 24h", () => {
-      let updateStub: sinon.SinonStub<
-        [IdCita: string | number, cita: Partial<CitaCreationAttributes>],
-        Promise<[affectedCount: number]> | undefined
-      >;
+      let updateStub: sinon.SinonStub<[IdCita: number, cita: Partial<CitaCreationAttributes>], Promise<[affectedCount: number]>>;
 
-      let getCitaStub: sinon.SinonStub<
-        [IdCita: string | number],
-        Promise<CitaInstance | null> | undefined
-      >;
+      let getCitaStub: sinon.SinonStub<[IdCita: number], Promise<CitaInstance | null>>;
 
       let result: any;
 
@@ -770,7 +756,7 @@ describe("cita Adapter unit testing", () => {
 
         updateStub.resolves([1]);
 
-        getCitaStub.resolves(mockGetById);
+        getCitaStub.resolves(mockGetById as CitaInstance);
 
         citaAdapter
           .updateCitaByIdCita(1, {
@@ -806,15 +792,9 @@ describe("cita Adapter unit testing", () => {
     });
 
     describe("must return error when getById cita is null", () => {
-      let updateStub: sinon.SinonStub<
-        [IdCita: string | number, cita: Partial<CitaCreationAttributes>],
-        Promise<[affectedCount: number]> | undefined
-      >;
+      let updateStub: sinon.SinonStub<[IdCita: number, cita: Partial<CitaCreationAttributes>], Promise<[affectedCount: number]>>;
 
-      let getCitaStub: sinon.SinonStub<
-        [IdCita: string | number],
-        Promise<CitaInstance | null> | undefined
-      >;
+      let getCitaStub: sinon.SinonStub<[IdCita: number], Promise<CitaInstance | null>>;
 
       let result: any;
 
@@ -861,15 +841,9 @@ describe("cita Adapter unit testing", () => {
     };
 
     describe("calification workshop is sent must update appointment succesfully", () => {
-      let updateStub: sinon.SinonStub<
-        [IdCita: string | number, cita: Partial<CitaCreationAttributes>],
-        Promise<[affectedCount: number]> | undefined
-      >;
+      let updateStub: sinon.SinonStub<[IdCita: number, cita: Partial<CitaCreationAttributes>], Promise<[affectedCount: number]>>;
 
-      let getCitaStub: sinon.SinonStub<
-        [IdCita: string | number],
-        Promise<CitaInstance | null> | undefined
-      >;
+      let getCitaStub: sinon.SinonStub<[IdCita: number], Promise<CitaInstance | null>>;
 
       let result: any;
 
@@ -882,7 +856,7 @@ describe("cita Adapter unit testing", () => {
 
         updateStub.resolves([1]);
 
-        getCitaStub.resolves(mockGetById);
+        getCitaStub.resolves(mockGetById as CitaInstance);
 
         result = await citaAdapter.calificaCitaByIdCita({
           IdCita: 1,
@@ -913,10 +887,7 @@ describe("cita Adapter unit testing", () => {
     });
 
     describe("must return error when any rate param are sent", () => {
-      let updateStub: sinon.SinonStub<
-        [IdCita: string | number, cita: Partial<CitaCreationAttributes>],
-        Promise<[affectedCount: number]> | undefined
-      >;
+      let updateStub: sinon.SinonStub<[IdCita: number, cita: Partial<CitaCreationAttributes>], Promise<[affectedCount: number]>>;
       let result: any;
 
       before(() => {
@@ -946,15 +917,9 @@ describe("cita Adapter unit testing", () => {
     });
 
     describe("update appointment database process fails exception must be returned", () => {
-      let updateStub: sinon.SinonStub<
-        [IdCita: string | number, cita: Partial<CitaCreationAttributes>],
-        Promise<[affectedCount: number]> | undefined
-      >;
+      let updateStub: sinon.SinonStub<[IdCita: number, cita: Partial<CitaCreationAttributes>], Promise<[affectedCount: number]>>;
 
-      let getCitaStub: sinon.SinonStub<
-        [IdCita: string | number],
-        Promise<CitaInstance | null> | undefined
-      >;
+      let getCitaStub: sinon.SinonStub<[IdCita: number], Promise<CitaInstance | null>>;
 
       let result: any;
 
@@ -967,7 +932,7 @@ describe("cita Adapter unit testing", () => {
 
         updateStub.rejects(new Error("Update appointment was not success"));
 
-        getCitaStub.resolves(mockGetById);
+        getCitaStub.resolves(mockGetById as CitaInstance);
 
         citaAdapter
           .calificaCitaByIdCita({ IdCita: 1, calificacion: 5 })
@@ -1001,14 +966,11 @@ describe("cita Adapter unit testing", () => {
   });
 
   describe("find By Filter functions", () => {
-    let findAllCitasByStub: sinon.SinonStub<
-      [
-        filterCita: WhereOptions<CitaAttributes>,
-        filterVehiculo: WhereOptions<VehiculoAttributes>,
-        filterOrden: WhereOptions<OrdenAttributes>
-      ],
-      Promise<CitaInstance[]> | undefined
-    >;
+    let findAllCitasByStub: sinon.SinonStub<[
+      filterCita?: WhereOptions<CitaAttributes> | undefined, 
+      filterVehiculo?: WhereOptions<VehiculoAttributes> | undefined, 
+      filterOrden?: WhereOptions<OrdenAttributes> | undefined], 
+    Promise<CitaInstance[]>>;
 
     const mockListAppointment = [
       {
@@ -1023,7 +985,7 @@ describe("cita Adapter unit testing", () => {
         estado: "Cancelada",
         fechaCita: new Date(),
       },
-    ];
+    ] as CitaInstance[];
 
     let result: CitaInstance[] | undefined;
 

@@ -33,7 +33,7 @@ const findAll = () => citaDAO.findAll();
  * @param {*} IdCita
  * @param {*} cb
  */
-const findCitaByIdCita = (IdCita: string) => citaDAO.getById(IdCita);
+const findCitaByIdCita = (IdCita: number) => citaDAO.getById(IdCita);
 
 /**
  *
@@ -134,7 +134,7 @@ const createCita = (cita: CitaRequestAttributes) => {
 };
 
 const updateCitaByIdCita = (
-  IdCita: string | number,
+  IdCita: number,
   cita: CitaUpdateAttributes
 ) => {
   return new Promise<CitaInstance | null>((resolve, reject) => {
@@ -331,7 +331,7 @@ const countCitasByDateAndIdTaller = (IdTaller: string | number) => {
   );
 };
 
-const deleteById = (IdCita: string): Promise<number> | undefined =>
+const deleteById = (IdCita: number): Promise<number> =>
   citaDAO.deleteById(IdCita);
 
 export default {

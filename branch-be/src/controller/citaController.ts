@@ -130,7 +130,7 @@ const updateCita = (req: Request, res: Response) => {
     delete cita.IdCita;
 
     citaAdapter
-      .updateCitaByIdCita(IdCita, cita)
+      .updateCitaByIdCita(parseInt(IdCita), cita)
       .then((cita) => {
         if (cita) {
           return res.status(HttpStatus.ACCEPTED).json({
@@ -164,7 +164,7 @@ const calificaCita = (req: Request, res: Response) => {
     const IdCita = req.params.Id;
     const { calificacion, calificacionUsuario } = req.body;
     citaAdapter
-      .calificaCitaByIdCita({ IdCita, calificacion, calificacionUsuario })
+      .calificaCitaByIdCita({ IdCita: parseInt(IdCita), calificacion, calificacionUsuario })
       .then((result) => {
         if (result) {
           return res.status(HttpStatus.ACCEPTED).json({
@@ -194,7 +194,7 @@ const deleteCitaById = (req: Request, res: Response) => {
     const IdCita = req.params.Id;
     console.debug("Parametro de IdCita recibido :::::>", IdCita);
     citaAdapter
-      .deleteById(IdCita)
+      .deleteById(parseInt(IdCita))
       ?.then((result) => {
         if (result) {
           return res.status(HttpStatus.ACCEPTED).json({
@@ -228,7 +228,7 @@ const findCitaById = (req: Request, res: Response) => {
     const IdCita = req.params.Id;
     //console.debug('Parametro de Idusuario recibido :::::>', req.params);
     citaAdapter
-      .findCitaByIdCita(IdCita)
+      .findCitaByIdCita(parseInt(IdCita))
       ?.then((cita) => {
         if (cita) {
           return res.status(HttpStatus.OK).json(cita);

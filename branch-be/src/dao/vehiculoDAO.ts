@@ -122,6 +122,10 @@ const findPaginateByFilter = (
   return VehiculoModel.findAndCountAll(options);
 };
 
+const truncate = async(): Promise<void> => {
+  await VehiculoModel.truncate({ restartIdentity: true });
+};
+
 export default {
   create,
   update,
@@ -132,4 +136,5 @@ export default {
   getById,
   findAllByFilter,
   findPaginateByFilter,
+  truncate,
 };

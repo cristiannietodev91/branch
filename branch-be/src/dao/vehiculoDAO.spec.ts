@@ -12,7 +12,8 @@ import {
   TallerInstance, 
   UserCreationAttributes, 
   UserInstance, 
-  VehiculoCreationAttributes 
+  VehiculoCreationAttributes, 
+  VehiculoInstance
 } from "../types";
 import tallerDAO from "./tallerDAO";
 import usersDAO from "./usersDAO";
@@ -32,7 +33,16 @@ describe("vehiculo DAO unit testing", () => {
     logo: faker.image.url(),
   };
 
-  const userMock: UserCreationAttributes = {
+  const user: UserCreationAttributes = {
+    tipoUsuario: "Cliente" as const,
+    firstName: faker.person.firstName(),
+    email: faker.internet.email(),
+    estado: "Pendiente" as const,
+    celular: faker.phone.number(),
+    uid: faker.string.uuid()
+  };
+
+  const user2: UserCreationAttributes = {
     tipoUsuario: "Cliente" as const,
     firstName: faker.person.firstName(),
     email: faker.internet.email(),
@@ -43,11 +53,15 @@ describe("vehiculo DAO unit testing", () => {
 
   let workshopResult: TallerInstance;
   let userResult: UserInstance;
+  let userResult2: UserInstance;
+  let vehicleCreated: VehiculoInstance;
 
   before(async () => {
-    [workshopResult, userResult ] = await Promise.all([
+    await vehiculoDAO.truncate();
+    [workshopResult, userResult, userResult2 ] = await Promise.all([
       tallerDAO.create(workshop),
-      usersDAO.create(userMock)
+      usersDAO.create(user),
+      usersDAO.create(user2)
     ]);
   });
 
@@ -73,7 +87,19 @@ describe("vehiculo DAO unit testing", () => {
         tipoVehiculo: faker.helpers.arrayElement(["Moto", "Carro"])
       };
 
-      await expect(vehiculoDAO.create(createVehiculo)).to.eventually.have.property("IdVehiculo");
+      const createVehiculo2: VehiculoCreationAttributes = {
+        IdTaller: workshopResult.IdTaller,
+        IdUsuario: userResult2.uid || "",
+        IdMarca: 1,
+        estado: faker.helpers.arrayElement(["Registrado", "Pendiente"]),
+        placa: faker.vehicle.vrm(),
+        tipoVehiculo: faker.helpers.arrayElement(["Moto", "Carro"])
+      };
+
+      vehicleCreated = await vehiculoDAO.create(createVehiculo);
+
+      expect(vehicleCreated).to.have.property("IdVehiculo");
+      await expect(vehiculoDAO.create(createVehiculo2)).to.eventually.have.property("IdVehiculo");
     });
 
     it("must create the vehicle in the database without workshop related", async () => {
@@ -85,7 +111,16 @@ describe("vehiculo DAO unit testing", () => {
         tipoVehiculo: faker.helpers.arrayElement(["Moto", "Carro"])
       };
 
+      const createVehiculo2: VehiculoCreationAttributes = {
+        IdUsuario: userResult2.uid || "",
+        IdMarca: 1,
+        estado: faker.helpers.arrayElement(["Registrado", "Pendiente"]),
+        placa: faker.vehicle.vrm(),
+        tipoVehiculo: faker.helpers.arrayElement(["Moto", "Carro"])
+      };
+
       await expect(vehiculoDAO.create(createVehiculo)).to.eventually.have.property("IdVehiculo");
+      await expect(vehiculoDAO.create(createVehiculo2)).to.eventually.have.property("IdVehiculo");
     });
 
   });
@@ -131,9 +166,9 @@ describe("vehiculo DAO unit testing", () => {
     it("must return number of vehicle found by filter received", async ()=> {
       const [count1, count2] = await Promise.all([
         vehiculoDAO.count({ IdTaller: workshopResult.IdTaller }),
-        vehiculoDAO.count({ IdUsuario: userMock.uid }),
+        vehiculoDAO.count({ IdUsuario: user.uid }),
       ]);
-      expect(count1).to.be.equal(1);
+      expect(count1).to.be.equal(2);
       expect(count2).to.be.equal(2);
     });
   });
@@ -145,9 +180,9 @@ describe("vehiculo DAO unit testing", () => {
     });
 
     it("must return vehicle when the id does exist", async ()=> {
-      const vehicle = await vehiculoDAO.getById(1);
+      const vehicle = await vehiculoDAO.getById(vehicleCreated.IdVehiculo);
       expect(vehicle).to.have.property("IdVehiculo");
-      expect(vehicle?.IdVehiculo).to.equal(1);
+      expect(vehicle?.IdVehiculo).to.equal(vehicleCreated.IdVehiculo);
     });
   });
 
@@ -160,11 +195,11 @@ describe("vehiculo DAO unit testing", () => {
     it("must return vehicles by filter", async()=> {
       const [vehicles1, vehicles2, vehicles3] = await Promise.all([
         vehiculoDAO.findAllByFilter({ IdTaller: workshopResult.IdTaller }),
-        vehiculoDAO.findAllByFilter({ IdTaller: workshopResult.IdTaller, IdUsuario: userMock.uid }),
-        vehiculoDAO.findAllByFilter({ IdUsuario: userMock.uid })
+        vehiculoDAO.findAllByFilter({ IdTaller: workshopResult.IdTaller, IdUsuario: user.uid }),
+        vehiculoDAO.findAllByFilter({ IdUsuario: user.uid })
       ]);
        
-      expect(vehicles1).to.have.length(1);
+      expect(vehicles1).to.have.length(2);
       expect(vehicles2).to.have.length(1);
       expect(vehicles3).to.have.length(2);
     });
@@ -211,7 +246,7 @@ describe("vehiculo DAO unit testing", () => {
         vehiculoDAO.findPaginateByFilter(undefined, undefined, { IdMarca: 1 }),
         vehiculoDAO.findPaginateByFilter(1, undefined, { IdMarca: 1 }),
         vehiculoDAO.findPaginateByFilter(2, 2, { IdMarca: 1 }),
-        vehiculoDAO.findPaginateByFilter(3, 1, { IdMarca: 1, IdUsuario: userMock.uid })
+        vehiculoDAO.findPaginateByFilter(3, 1, { IdMarca: 1, IdUsuario: user.uid })
       ]);
        
       expect(vehiclesPaginated1.rows).to.have.length(4);
@@ -226,7 +261,7 @@ describe("vehiculo DAO unit testing", () => {
 
     it("must return vehicles paginating and filtering with user data", async ()=> {
       const [vehiclesPaginated1, vehiclesPaginated2, vehiclesPaginated3, vehiclesPaginated4] = await Promise.all([
-        vehiculoDAO.findPaginateByFilter(undefined, undefined, { IdMarca: 1 }, { uid: userMock.uid}),
+        vehiculoDAO.findPaginateByFilter(undefined, undefined, { IdMarca: 1 }, { uid: user.uid}),
         vehiculoDAO.findPaginateByFilter(undefined, undefined, {}, {}),
         vehiculoDAO.findPaginateByFilter(2, 2, {}, { tipoUsuario: "Cliente" }),
         vehiculoDAO.findPaginateByFilter(3, 1, { IdMarca: -1 })
