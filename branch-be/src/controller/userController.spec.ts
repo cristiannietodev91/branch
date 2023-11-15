@@ -8,7 +8,7 @@ import * as supertest from "supertest";
 import { WhereOptions } from "sequelize";
 // eslint-disable-next-line node/no-extraneous-import
 import { FirebaseError } from "@firebase/util";
-import { UserAttributes, UserCreationAttributes, UserInstance, VehiculoFilter } from "../types";
+import { UserAttributes, UserCreationRequest, UserInstance, VehiculoFilter } from "../types";
 
 
 describe("user controller", () => {
@@ -370,7 +370,7 @@ describe("user controller", () => {
   });
 
   describe("create user", () => {
-    let createUserStub: sinon.SinonStub<[usuario: UserCreationAttributes], Promise<UserInstance> | undefined>;
+    let createUserStub: sinon.SinonStub<[usuario: UserCreationRequest], Promise<UserInstance>>;
 
     beforeEach(() => {
       createUserStub = sinon.stub(userAdapter, "createUser");
@@ -385,7 +385,8 @@ describe("user controller", () => {
         email: "xxxx@xxx.com",
         password: "123456",
         celular: "3105202566",
-        tipoUsuario: "Cliente"
+        tipoUsuario: "Cliente",
+        identificacion: "11111"
       };
 
       const userResponse = {
@@ -393,7 +394,7 @@ describe("user controller", () => {
         ...userRequest
       };
 
-      createUserStub.resolves(userResponse);
+      createUserStub.resolves(userResponse as UserInstance);
 
       const response = await request.post("/usuario/createFireBaseUser").send(userRequest);
 
@@ -407,10 +408,11 @@ describe("user controller", () => {
         email: "xxxx@xxx.com",
         password: "123456",
         celular: "3105202566",
-        tipoUsuario: "Cliente"
+        tipoUsuario: "Cliente",
+        identificacion: "11111"
       };
 
-      createUserStub.resolves(null);
+      createUserStub.resolves(undefined);
 
       const response = await request.post("/usuario/createFireBaseUser").send(userRequest);
 
@@ -439,6 +441,7 @@ describe("user controller", () => {
           password: "123456",
           celular: "3105202566",
           tipoUsuario: "Cliente",
+          identificacion: "11111"
         };
 
         createUserStub.rejects(new FirebaseError(errorCode, "Error firebase."));

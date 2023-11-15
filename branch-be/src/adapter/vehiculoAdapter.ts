@@ -26,12 +26,12 @@ moment.locale("es");
 const findAllVehiculos = (): Promise<VehiculoInstance[]> =>
   vehiculoDAO.findAll();
 
-const deleteById = (IdVehiculo: number): Promise<number> | undefined =>
+const deleteById = (IdVehiculo: number): Promise<number> =>
   vehiculoDAO.deleteById(IdVehiculo);
 
 const getById = (
   IdVehiculo: number
-): Promise<VehiculoInstance | null> | undefined =>
+): Promise<VehiculoInstance | null> =>
   vehiculoDAO.getById(IdVehiculo);
 
 const crearVehiculo = async (
@@ -241,7 +241,7 @@ const sendNotification = (
 
 const countVehiculosByIdTaller = (
   IdTaller: number
-): Promise<number> | undefined => vehiculoDAO.count({ IdTaller });
+): Promise<number> => vehiculoDAO.count({ IdTaller });
 
 const findOneByFilter = (
   filter: WhereOptions<VehiculoAttributes>

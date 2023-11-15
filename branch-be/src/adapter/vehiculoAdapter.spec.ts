@@ -11,7 +11,6 @@ import {
   MarcaInstance,
   TallerInstance,
   UserAttributes,
-  UserCreationAttributes,
   UserInstance,
   VehiculoAttributes,
   VehiculoCreationAttributes,
@@ -28,6 +27,51 @@ import marcaDAO from "../dao/marcaDAO";
 import { NullishPropertiesOf } from "sequelize/types/utils";
 
 describe("vehicle Adapter", () => {
+
+  describe("find vehicle by id", ()=> {
+    let findVehicleByIdStub: sinon.SinonStub<[IdVehiculo: number], Promise<VehiculoInstance | null>>;
+
+    beforeEach(()=> {
+      findVehicleByIdStub = sinon.stub(vehiculoDAO, "getById");
+    });
+
+    afterEach(()=> {
+      findVehicleByIdStub.restore();
+    });
+
+    it("must return the vehicle found when exists", async()=> {
+      findVehicleByIdStub.resolves({ IdVehiculo: 1 } as VehiculoInstance);
+      await expect(vehiculoAdapter.getById(1)).to.eventually.have.property("IdVehiculo");
+    });
+
+    it("must return null when vehicle is not found", async()=> {
+      findVehicleByIdStub.resolves(null);
+      await expect(vehiculoAdapter.getById(1)).to.eventually.be.null;
+    });
+  });
+
+  describe("count vehicles by idWorkshop", ()=> {
+    let countVehicleByWorshopId: sinon.SinonStub<[filter: WhereOptions<VehiculoAttributes>], Promise<number>>;
+
+    beforeEach(()=> {
+      countVehicleByWorshopId = sinon.stub(vehiculoDAO, "count");
+    });
+
+    afterEach(()=> {
+      countVehicleByWorshopId.restore();
+    });
+
+    it("must return the vehicle found when exists", async()=> {
+      countVehicleByWorshopId.resolves(10);
+      await expect(vehiculoAdapter.countVehiculosByIdTaller(1)).to.eventually.be.equal(10);
+    });
+
+    it("must return null when vehicle is not found", async()=> {
+      countVehicleByWorshopId.resolves(0);
+      await expect(vehiculoAdapter.countVehiculosByIdTaller(1)).to.eventually.be.equal(0);
+    });
+  });
+
   describe("find Vehicles functionality", () => {
     let findStub: SinonStub<[], Promise<VehiculoInstance[]>>;
 

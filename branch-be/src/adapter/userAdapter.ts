@@ -5,6 +5,7 @@ import {
   VehiculoFilter,
   UserCreationAttributes,
   UserAttributes,
+  UserCreationRequest,
 } from "../types";
 
 import Debug from "debug";
@@ -30,127 +31,61 @@ const countUsersByIdWorkshop = (
 const deleteById = (userId: string | number): Promise<number> | undefined =>
   usersDAO.deleteById(userId);
 
-const createUser = (
-  usuario: UserCreationAttributes
-): Promise<UserInstance> | undefined => {
-  return new Promise<UserInstance>((resolve, reject) => {
-    if (usuario.uid) {
-      const usuarioDb = {
-        firstName: usuario.firstName,
-        email: usuario.email,
-        uid: usuario.uid,
-        celular: usuario.celular,
-        identificacion: usuario.identificacion ? usuario.identificacion : null,
-        tipoUsuario: usuario.tipoUsuario,
-        estado: "Pendiente" as const,
-        typeDevice: usuario.typeDevice,
-      };
-      debug("Usuario a registrar en la DB", usuarioDb);
-      usersDAO
-        .create(usuarioDb)
-        ?.then((user) => {
-          resolve(user);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    } else {
-      if (usuario.identificacion) {
-        usersDAO
-          .findOneByFilter({ identificacion: usuario.identificacion })
-          ?.then((userFound) => {
-            if (userFound) {
-              reject(
-                new Error(
-                  "Usuario con ese número de identificacion ya esta registrado"
-                )
-              );
-            } else {
-              // If the user does not exist in firebase it creates it
-              admin
-                .auth()
-                .createUser({
-                  email: usuario.email,
-                  emailVerified: false,
-                  phoneNumber: usuario.celular,
-                  password: usuario.password,
-                  displayName: usuario.firstName,
-                  disabled: false,
-                })
-                .then((userRecord) => {
-                  // Search user by email in the users table
-                  usersDAO
-                    .findOneByFilter({ email: usuario.email })
-                    ?.then((usuarioemail) => {
-                      if (usuarioemail) {
-                        // Se obtiene el id usuario del usuario ya existente para actualizarle los datos
-                        const { IdUsuario } = usuarioemail;
-                        const usuarioToUdp = {
-                          firstName: userRecord.displayName,
-                          email: userRecord.email,
-                          uid: userRecord.uid,
-                          celular: userRecord.phoneNumber,
-                          identificacion: usuario.identificacion,
-                          tipoUsuario: usuario.tipoUsuario,
-                          typeDevice: usuario.typeDevice,
-                        };
+const createUser = async (
+  usuario: UserCreationRequest
+): Promise<UserInstance> => {
+  const { identificacion } = usuario;
 
-                        updateUsuarioByIdUsuario(IdUsuario, usuarioToUdp);
+  if (!identificacion || identificacion.trim() === "") {
+    throw new Error("Identification is needed to create the user");
+  }
 
-                        resolve(usuarioemail);
-                      } else {
-                        const usuarioDb = {
-                          firstName: userRecord.displayName || "Not defined",
-                          email: userRecord.email || "Not defined",
-                          uid: userRecord.uid,
-                          celular: userRecord.phoneNumber,
-                          identificacion: usuario.identificacion,
-                          tipoUsuario: usuario.tipoUsuario,
-                          estado: "Pendiente" as const,
-                          typeDevice: usuario.typeDevice,
-                        };
+  const userFound = await usersDAO.findOneByFilter({ identificacion: usuario.identificacion });
 
-                        usersDAO
-                          .create(usuarioDb)
-                          ?.then((user) => {
-                            resolve(user);
-                          })
-                          .catch((error) => {
-                            reject(error);
-                          });
-                      }
-                    })
-                    .catch((error) => {
-                      reject(error);
-                    });
-                })
-                .catch((error) => {
-                  reject(error);
-                });
-            }
-          });
-      } else {
-        const usuarioDb = {
-          firstName: usuario.firstName,
-          email: usuario.email,
-          uid: usuario.email, // Se deja el email de UID mientras el usuario no este registrado en la APP
-          celular: usuario.celular,
-          tipoUsuario: usuario.tipoUsuario,
-          estado: "Pendiente" as const,
-          typeDevice: usuario.typeDevice,
-        };
-        debug("Usuario a registrar en la DB", usuarioDb);
-        usersDAO
-          .create(usuarioDb)
-          ?.then((user) => {
-            resolve(user);
-          })
-          .catch((error) => {
-            reject(error);
-          });
-      }
-    }
+  if (userFound) {
+    throw new Error(`User with the identification ${usuario.identificacion} already exits.`);
+  }
+
+  const userFirebase = await admin.auth().createUser({
+    email: usuario.email,
+    emailVerified: false,
+    phoneNumber: usuario.celular,
+    password: usuario.password,
+    displayName: usuario.firstName,
+    disabled: false,
   });
+
+  const userByEmail = await usersDAO.findOneByFilter({ email: usuario.email });
+
+  if (userByEmail) {
+    const { IdUsuario } = userByEmail;
+    const usuarioToUdp = {
+      firstName: userFirebase.displayName,
+      email: userFirebase.email,
+      uid: userFirebase.uid,
+      celular: userFirebase.phoneNumber,
+      identificacion: usuario.identificacion,
+      tipoUsuario: usuario.tipoUsuario,
+    };
+
+    updateUsuarioByIdUsuario(IdUsuario, usuarioToUdp);
+
+    return userByEmail;
+  }
+
+  const usuarioDb = {
+    firstName: userFirebase.displayName || "Not defined",
+    email: userFirebase.email || "Not defined",
+    uid: userFirebase.uid,
+    celular: userFirebase.phoneNumber,
+    identificacion: usuario.identificacion,
+    tipoUsuario: usuario.tipoUsuario,
+    estado: "Pendiente" as const,
+  };
+
+  const userCreated = await usersDAO.create(usuarioDb);
+
+  return userCreated;
 };
 
 const updateUsuarioByIdUsuario = (
