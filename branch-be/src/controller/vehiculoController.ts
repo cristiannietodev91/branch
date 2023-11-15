@@ -45,11 +45,11 @@ const createVehiculo = (req: Request, res: Response): void => {
       .catch((error) => {
         debug("Error al crear vehiculo ", error);
         res
-          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .status(HttpStatus.BAD_REQUEST)
           .json({ message: error.message });
       });
   } catch (error) {
-    debug("Error unhandle creating vehicle", error);
+    debug("Error unhandled creating vehicle", error);
     if (error instanceof Error) {
       res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)

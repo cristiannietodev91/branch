@@ -200,6 +200,10 @@ export interface VehiculoCreationRequest {
   kilometraje?: number;
   modelo?: number;
   tipoVehiculo: string;
+  marca?: {
+    marca: string;
+    referencia: string;
+  }
 }
 
 export interface VehiculoInstance

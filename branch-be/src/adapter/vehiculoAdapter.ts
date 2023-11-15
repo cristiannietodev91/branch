@@ -34,186 +34,150 @@ const getById = (
 ): Promise<VehiculoInstance | null> | undefined =>
   vehiculoDAO.getById(IdVehiculo);
 
-const crearVehiculo = (
+const crearVehiculo = async (
   vehiculo: VehiculoCreationRequest
-): Promise<VehiculoInstance | undefined> | undefined => {
-  return new Promise((resolve, reject) => {
-    vehiculoDAO
-      .findOneByFilter({ placa: vehiculo.placa })
-      ?.then(async (vehiculoResult) => {
-        if (vehiculoResult) {
-          if (vehiculoResult.taller) {
-            reject(new Error(ERROR_CREATEVEHICULOTALLERASIGNADO.message));
-          } else {
-            const { IdTaller } = vehiculo;
+): Promise<VehiculoInstance | undefined> => {
 
-            vehiculoDAO
-              .update(
-                { IdVehiculo: vehiculoResult.IdVehiculo },
-                { IdTaller: IdTaller }
-              )
-              ?.then(([resultUpdatevehiculo]) => {
-                if (resultUpdatevehiculo > 0) {
-                  const { usuarios } = vehiculoResult;
-                  if (usuarios && IdTaller) {
-                    sendNotification(usuarios, IdTaller, vehiculoResult);
-                  }
+  const vehiculoResult = await vehiculoDAO.findOneByFilter({ placa: vehiculo.placa });
 
-                  resolve(vehiculoResult);
-                }
-                reject(new Error("Any user was updated"));
-              })
-              .catch((error) => {
-                reject(error);
-              });
-          }
+  if(vehiculoResult) {
+    if(vehiculoResult.taller) {
+      throw new Error(ERROR_CREATEVEHICULOTALLERASIGNADO.message);
+    }
+    const { IdTaller } = vehiculo;
+
+    const [resultUpdatevehiculo] = await vehiculoDAO.update(
+      { IdVehiculo: vehiculoResult.IdVehiculo },
+      { IdTaller: IdTaller }
+    );
+    
+    if (resultUpdatevehiculo > 0) {
+      const { usuarios } = vehiculoResult;
+      if (usuarios && IdTaller) {
+        sendNotification(usuarios, IdTaller, vehiculoResult);
+      }
+
+      return vehiculoResult;
+    }
+
+    throw new Error("Vehicle was not assigned to the workshop.");
+  }
+
+  const idMarca = await (async () => {
+    try {
+      if (vehiculo.marca) {
+        const marca = await marcaDAO.findOneByFilter({
+          marca: vehiculo.marca.marca,
+          referencia: vehiculo.marca.referencia,
+        });
+        if (marca) {
+          return marca.IdMarca;
         } else {
-          const idMarca = await (async () => {
-            try {
-              /*if (vehiculo.marca) {
-                const marca = await marcaDAO.findOneByFilter({
-                  marca: vehiculo.marca.marca,
-                  referencia: vehiculo.marca.referencia,
-                });
-                if (marca) {
-                  return marca.IdMarca;
-                } else {
-                  return 1;
-                }
-              } else {
-                return 1;
-              }*/
-              return 1;
-            } catch (error) {
-              return 1;
-            }
-          })();
-
-          const fechaCompraBD = vehiculo.fechaCompra
-            ? moment(vehiculo.fechaCompra, "DD/MM/YYYY").toDate()
-            : undefined;
-
-          debug(
-            "Fecha compra valor para BD ",
-            vehiculo.fechaCompra,
-            " Valor ::>",
-            fechaCompraBD
-          );
-
-          if (vehiculo.usuario && vehiculo.usuario.email) {
-            usersDAO
-              .findOneByFilter({ email: vehiculo.usuario.email })
-              ?.then((usuario) => {
-                if (usuario) {
-                  const vehiculoDB = {
-                    alias: vehiculo.alias,
-                    color: vehiculo.color,
-                    fechaCompra: fechaCompraBD,
-                    fotos: vehiculo.fotos,
-                    kilometraje: vehiculo.kilometraje,
-                    modelo: vehiculo.modelo,
-                    placa: vehiculo.placa,
-                    tipoVehiculo: vehiculo.tipoVehiculo,
-                    IdTaller: vehiculo.IdTaller,
-                  };
-                  if (usuario.uid) {
-                    crearVehiculoDB(vehiculoDB, usuario.uid, idMarca)
-                      .then((vehiculoCreated) => {
-                        if (vehiculoCreated) {
-                          const { usuarios } = vehiculoCreated;
-                          const { IdTaller } = vehiculoCreated;
-                          if (usuarios && IdTaller) {
-                            sendNotification(
-                              usuarios,
-                              IdTaller,
-                              vehiculoCreated
-                            );
-                          }
-
-                          resolve(vehiculoCreated);
-                        }
-                      })
-                      .catch((error) => {
-                        reject(error);
-                      });
-                  }
-                } else {
-                  // No Encontro usuario lo va a crear
-                  if (vehiculo.usuario && vehiculo.usuario.email) {
-                    const usuarioDB = {
-                      email: vehiculo.usuario?.email,
-                      celular: `+57${vehiculo.celular}`, // TODO Add celular en el cuerpo de la peticion:
-                      password: "123456",
-                      firstName: "Sin nombre",
-                      tipoUsuario: "Cliente" as const,
-                      estado: "Pendiente" as const,
-                      uid: vehiculo.usuario.uid,
-                    };
-
-                    userDAO
-                      .create(usuarioDB)
-                      ?.then((userCreate) => {
-                        if (userCreate) {
-                          const vehiculoDB = {
-                            alias: vehiculo.alias,
-                            color: vehiculo.color,
-                            fechaCompra: fechaCompraBD,
-                            fotos: vehiculo.fotos,
-                            kilometraje: vehiculo.kilometraje,
-                            modelo: vehiculo.modelo,
-                            placa: vehiculo.placa,
-                            tipoVehiculo: vehiculo.tipoVehiculo,
-                            IdTaller: vehiculo.IdTaller,
-                          };
-                          // Se coloca Id de la tabla usuarios como UID mientras el usuario no este registrado en la BD
-                          crearVehiculoDB(
-                            vehiculoDB,
-                            userCreate.uid || userCreate.IdUsuario.toString(),
-                            idMarca
-                          )
-                            .then((vehiculoCreated) => {
-                              if (vehiculoCreated) {
-                                const { usuarios } = vehiculoCreated;
-                                const { IdTaller } = vehiculoCreated;
-                                if (usuarios && IdTaller) {
-                                  sendNotification(
-                                    usuarios,
-                                    IdTaller,
-                                    vehiculoCreated
-                                  );
-                                }
-
-                                resolve(vehiculoCreated);
-                              }
-                            })
-                            .catch((error) => {
-                              reject(error);
-                            });
-                        } else {
-                          reject(
-                            new Error("User created but it returned undefined")
-                          );
-                        }
-                      })
-                      .catch((error) => {
-                        debug("Error creating user", error);
-                        reject(error);
-                      });
-                  }
-                }
-              })
-              .catch((error) => {
-                reject(error);
-              });
-          } else {
-            reject(new Error("User email is required to create a vehicle"));
-          }
+          return 1;
         }
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
+      } 
+      return 1;
+    } catch (error) {
+      return 1;
+    }
+  })();
+
+  const fechaCompraBD = vehiculo.fechaCompra
+    ? moment(vehiculo.fechaCompra, "DD/MM/YYYY").toDate()
+    : undefined;
+
+  debug("Fecha compra valor para BD ",vehiculo.fechaCompra," Valor ::>", fechaCompraBD);
+
+  if(!vehiculo.usuario || !vehiculo.usuario.email) {
+    throw new Error("User email is required to create a vehicle");
+  }
+
+  const usuario = await usersDAO.findOneByFilter({ email: vehiculo.usuario.email });
+
+  if(usuario) {
+    const vehiculoDB = {
+      alias: vehiculo.alias,
+      color: vehiculo.color,
+      fechaCompra: fechaCompraBD,
+      fotos: vehiculo.fotos,
+      kilometraje: vehiculo.kilometraje,
+      modelo: vehiculo.modelo,
+      placa: vehiculo.placa,
+      tipoVehiculo: vehiculo.tipoVehiculo,
+      IdTaller: vehiculo.IdTaller,
+    };
+    if (usuario.uid) {
+      const vehicleCreated = await crearVehiculoDB(vehiculoDB, usuario.uid, idMarca);
+
+      if(vehicleCreated) {
+        const { usuarios } = vehicleCreated;
+        const { IdTaller } = vehicleCreated;
+        if (usuarios && IdTaller) {
+          sendNotification(
+            usuarios,
+            IdTaller,
+            vehicleCreated
+          );
+        }
+
+        return vehicleCreated;
+      }
+
+      throw new Error("Error creating vehicle for existing user");
+    }
+
+    throw new Error("Error creating vehicle for existing user, it does not have uid assigned");
+  }
+
+  const usuarioDB = {
+    email: vehiculo.usuario.email,
+    celular: `+57${vehiculo.celular}`, // TODO Add phone in the body request
+    password: "123456",
+    firstName: "Sin nombre",
+    tipoUsuario: "Cliente" as const,
+    estado: "Pendiente" as const,
+    uid: vehiculo.usuario.uid || vehiculo.usuario.email,
+  };
+
+  const userCreated = await userDAO.create(usuarioDB);
+
+  if(userCreated) {
+    const vehiculoDB = {
+      alias: vehiculo.alias,
+      color: vehiculo.color,
+      fechaCompra: fechaCompraBD,
+      fotos: vehiculo.fotos,
+      kilometraje: vehiculo.kilometraje,
+      modelo: vehiculo.modelo,
+      placa: vehiculo.placa,
+      tipoVehiculo: vehiculo.tipoVehiculo,
+      IdTaller: vehiculo.IdTaller,
+    };
+    // Se coloca Id de la tabla usuarios como UID mientras el usuario no este registrado en la BD
+    const vehiculoCreated = await crearVehiculoDB(
+      vehiculoDB,
+      userCreated.uid || userCreated.email,
+      idMarca
+    );
+
+    if(vehiculoCreated) {
+      const { usuarios } = vehiculoCreated;
+      const { IdTaller } = vehiculoCreated;
+      if (usuarios && IdTaller) {
+        sendNotification(
+          usuarios,
+          IdTaller,
+          vehiculoCreated
+        );
+      }
+
+      return vehiculoCreated;
+    }
+
+    throw new Error("Error registering vehicle to the new user");
+  }
+
+  throw new Error("Error creating user.");
 };
 
 const crearVehiculoDB = (
