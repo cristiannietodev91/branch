@@ -45,7 +45,7 @@ export default function AgregarVehiculo(
     formState: { errors },
   } = useForm<FormData>();
   const [showCalendar, setShowCalendar] = useState(false);
-  const [fechaCompra, setFechaCompra] = useState(new Date(1598051730000));
+  const [fechaCompra, setFechaCompra] = useState(new Date());
   const [referencia, setReferencia] = useState("");
   const [marca, setMarca] = useState("");
   const [urlFoto] = useState();

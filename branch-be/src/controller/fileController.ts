@@ -13,10 +13,7 @@ const bucketName = process.env.BUCKET_MEDIA_NAME || "branchmedia2";
 const s3 = new AWS.S3(awsConfig);
 
 const signedS3 = (req: Request, res: Response) => {
-  //let file = req.body;
-  //let paramsss = req.params;
   console.log("Peticion recibida ::::>", req.query);
-  //console.log('Peticion recibida 2::::>', paramsss);
   const unicocode = moment().format("MMDDYYYYHHMMSS");
   const key = unicocode + req.query.filename;
   const bucket = bucketName;
