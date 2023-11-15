@@ -74,6 +74,15 @@ export interface UserAttributes {
   password?: string;
 }
 
+export interface UserCreationRequest {
+  firstName: string;
+  identificacion: string;
+  email: string;
+  celular?: string;
+  tipoUsuario: "Cliente" | "AdminTaller";
+  password: string;
+}
+
 export interface UserInstance
   extends Model<InferAttributes<UserInstance>, InferCreationAttributes<UserInstance>>,
     UserAttributes {}

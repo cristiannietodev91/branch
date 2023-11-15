@@ -2,7 +2,7 @@ import HttpStatus from "http-status-codes";
 import userAdapter from "../adapter/userAdapter";
 import { Request, Response } from "express";
 import Debug from "debug";
-import { UserCreationAttributes } from "../types";
+import { UserCreationAttributes, UserCreationRequest } from "../types";
 import { ValidationError } from "sequelize";
 const debug = Debug("branch:server");
 
@@ -144,7 +144,7 @@ const deleteUserById = async (req: Request, res: Response) => {
 
 const createFireBaseUser = async (req: Request, res: Response) => {
   try {
-    const usuario = req.body as UserCreationAttributes;
+    const usuario = req.body as UserCreationRequest;
     debug(`User to create :::::> ${JSON.stringify(usuario)}`, );
 
     const usuarioDB = {
@@ -157,8 +157,6 @@ const createFireBaseUser = async (req: Request, res: Response) => {
           : usuario.celular,
       identificacion: usuario.identificacion,
       tipoUsuario: usuario.tipoUsuario,
-      uid: usuario.uid,
-      typeDevice: usuario.typeDevice,
       estado: "Registrado" as const,
     };
 

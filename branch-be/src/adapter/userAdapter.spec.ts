@@ -1,9 +1,14 @@
+import * as chai from "chai";
 import sinon from "sinon";
-import { expect } from "chai";
+
+import chaiAsPromised from "chai-as-promised";
+chai.use(chaiAsPromised);
+const expect = chai.expect;
 import usersDAO from "../dao/usersDAO";
 import {
   UserAttributes,
   UserCreationAttributes,
+  UserCreationRequest,
   UserInstance,
   VehiculoAttributes,
   VehiculoFilter,
@@ -133,16 +138,17 @@ describe("user adapter testing", () => {
       filter: WhereOptions<UserAttributes>, usuario: Partial<UserCreationAttributes>
     ], Promise<[affectedCount: number]> | undefined>;
 
-    const mockUser: UserCreationAttributes = {
+    const userToCreate: UserCreationRequest = {
       tipoUsuario: "Cliente" as const,
       email: "xxx@xxxx.com",
       firstName: "Test",
-      estado: "Pendiente" as const,
+      identificacion: "111111",
+      password: "secure password"
     };
 
     const mockUserResult = {
       IdUsuario: 1,
-      ...mockUser,
+      ...userToCreate,
     };
 
     const userFirebaseMock: admin.auth.UserRecord = {
@@ -181,80 +187,66 @@ describe("user adapter testing", () => {
       sinon.restore();
     });
 
-    it("when user is already registered at firebase the user must be registered at the database", async () => {
-      const mockUserWithUid: UserCreationAttributes = {
-        ...mockUser,
-        uid: "ASDSAD454564",
-      };
+    ["", "   ", undefined].forEach((identification) => {
+      it("must return error when identification prop is not received", async ()=> {
+        const userToCreateWithoutIdentification = {
+          tipoUsuario: "Cliente" as const,
+          email: "xxx@xxxx.com",
+          firstName: "Test",
+          identificacion: identification,
+          password: "secure password"
+        };
 
-      createUserStub.resolves(mockUserResult);
-      const result = await userAdapter.createUser(mockUserWithUid);
-      
-      expect(createUserStub.calledOnce).to.be.true;
-      expect(findOneUserByFilterStub.notCalled).to.be.true;
-      expect(result).to.be.deep.equal(mockUserResult);
+        await expect(userAdapter.createUser(userToCreateWithoutIdentification as UserCreationRequest))
+          .to.eventually.rejectedWith("Identification is needed to create the user");
+        expect(findOneUserByFilterStub.notCalled).to.be.true;
+      });
     });
 
-    it("registering user by email", async () => {
+    it("must validate that the user does not exist in the db before creating it", async ()=> {
+      const existingUser = {
+        IdUsuario: 1,
+        firstName: "existing user"
+      };
+
+      findOneUserByFilterStub.resolves(existingUser);
 
       createUserStub.resolves(mockUserResult);
-      const result = await userAdapter.createUser(mockUser);
-
-
-      expect(createUserStub.calledOnce).to.be.true;
-      expect(result).to.be.deep.equal(mockUserResult);
-      expect(findOneUserByFilterStub.notCalled).to.be.true;
+      await expect(userAdapter.createUser(userToCreate)).to.eventually.rejectedWith("User with the identification");
+      
+      expect(findOneUserByFilterStub.calledWith({ identificacion: userToCreate.identificacion })).to.be.true;
+      expect(createUserFirebaseMockFunction.notCalled).to.be.true;
     });
 
     it("registering user using identification - user by email does not exist", async () => {
       
-      const mockUserWithIdentification: UserCreationAttributes = {
-        ...mockUser,
-        identificacion: "111111111",
-      };
-
-      const userResultMock = {
-        IdUsuario: 1,
-        ...mockUserWithIdentification,
-      };
-
       findOneUserByFilterStub.resolves(null);
 
-      createUserStub.resolves(userResultMock);
-      const result = await userAdapter.createUser(mockUserWithIdentification);
+      createUserStub.resolves(mockUserResult);
+      const result = await userAdapter.createUser(userToCreate);
       
+      expect(findOneUserByFilterStub.firstCall.calledWith({ identificacion: userToCreate.identificacion })).to.be.true;
+      expect(findOneUserByFilterStub.secondCall.calledWith({ email: userFirebaseMock.email })).to.be.true;
       expect(createUserStub.calledOnce).to.be.true;
-      expect(findOneUserByFilterStub.firstCall.calledWith({ identificacion: mockUserWithIdentification.identificacion })).to.be.true;
-      expect(findOneUserByFilterStub.secondCall.calledWith({ email: mockUserWithIdentification.email })).to.be.true;
       expect(updateVehiculoStub.notCalled).to.be.true;
       expect(createUserFirebaseMockFunction.calledOnce).to.be.true;
-      expect(result).to.be.deep.equal(userResultMock);
+      expect(result).to.be.deep.equal(mockUserResult);
     });
 
     it("registering user using identification - user by email does exist", async () => {
       
-      const mockUserWithIdentification: UserCreationAttributes = {
-        ...mockUser,
-        identificacion: "111111111",
-      };
-
-      const userResultMock = {
-        IdUsuario: 1,
-        ...mockUserWithIdentification,
-      };
-
       findOneUserByFilterStub.onCall(0).resolves(null);
-      findOneUserByFilterStub.onCall(1).resolves(userResultMock);
+      findOneUserByFilterStub.onCall(1).resolves(mockUserResult);
       
-      const result = await userAdapter.createUser(mockUserWithIdentification);
+      const result = await userAdapter.createUser(userToCreate);
       
-      expect(createUserStub.notCalled).to.be.true;
-      expect(findOneUserByFilterStub.firstCall.calledWith({ identificacion: mockUserWithIdentification.identificacion })).to.be.true;
-      expect(findOneUserByFilterStub.secondCall.calledWith({ email: mockUserWithIdentification.email })).to.be.true;
+      expect(findOneUserByFilterStub.firstCall.calledWith({ identificacion: userToCreate.identificacion })).to.be.true;
+      expect(findOneUserByFilterStub.secondCall.calledWith({ email: userFirebaseMock.email })).to.be.true;
       expect(createUserFirebaseMockFunction.called).to.be.true;
       expect(updateVehiculoStub.calledOnceWith({ IdUsuario: userFirebaseMock.email }, { IdUsuario: userFirebaseMock.uid })).to.be.true;
       expect(updateUserStub.called).to.be.true;
-      expect(result).to.be.deep.equal(userResultMock);
+      expect(createUserStub.notCalled).to.be.true;
+      expect(result).to.be.deep.equal(mockUserResult);
     });
   });
 });
