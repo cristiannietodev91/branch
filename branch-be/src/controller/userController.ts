@@ -39,7 +39,6 @@ const findUserByEmail = async (req: Request, res: Response) => {
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ error: error.message });
     }
-    throw error;
   }
 };
 
@@ -62,7 +61,6 @@ const findUserById = async (req: Request, res: Response) => {
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ error: error.message });
     }
-    throw error;
   }
 };
 
@@ -90,7 +88,6 @@ const getUserByUID = async (req: Request, res: Response) => {
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ error: error.message });
     }
-    throw error;
   }
 };
 
@@ -109,7 +106,6 @@ const countUsersByIdWorkshop = async (req: Request, res: Response) => {
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ error: error.message });
     }
-    throw error;
   }
 };
 
@@ -138,7 +134,6 @@ const deleteUserById = async (req: Request, res: Response) => {
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .json({ error: error.message });
     }
-    throw error;
   }
 };
 
@@ -246,29 +241,6 @@ const updateUsuarioByUid = (req: Request, res: Response): void => {
               .json({ error: "Error al actualizar el usuario" });
           }
         }
-        /* if (error) {
-        console.error(
-          "Error al actualizar el usuario ::>",
-          error.message
-        );
-        if (error.errors) {
-          if (error.errors[0].message.includes("must be unique")) {
-            cb({
-              error:
-                "Ya existe un usuario con ese número de identificacion",
-            });
-          } else {
-            cb(error, null);
-          }
-        } else {
-          cb(error, null);
-        }
-      }
-      if (error.error) {
-        return res
-          .status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .json({ error: error.error });
-      } */
       });
   } catch (error) {
     debug("Error al actualizar usuario ", error);
