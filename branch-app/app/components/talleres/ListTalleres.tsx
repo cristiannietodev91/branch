@@ -131,7 +131,6 @@ function Taller(props: any) {
           size="large"
           source={{
             uri: taller.logo,
-            // "https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg",
           }}
         />
       </View>

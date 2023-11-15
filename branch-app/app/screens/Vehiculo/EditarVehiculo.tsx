@@ -28,7 +28,9 @@ export default function EditarVehiculo(
   const [marcas, setMarcas] = useState([]);
   const [showCalendar, setShowCalendar] = useState(false);
   const [fechaCompra, setFechaCompra] = useState(
-    vehiculo.fechaCompra ? vehiculo.fechaCompra : null
+    vehiculo.fechaCompra
+      ? Moment(vehiculo.fechaCompra, "YYYY-MM-DD").toDate()
+      : new Date()
   );
   const [referencias, setReferencias] = useState([]);
   const {
@@ -111,8 +113,7 @@ export default function EditarVehiculo(
       tipoVehiculo: vehiculo.tipoVehiculo,
       fotos: urlFoto ? [urlFoto] : [],
       color: data.color,
-      fechacompra: data.fechacompra,
-      fechaCompraText: Moment(data.fechacompra).format("d/MM/YYYY"),
+      fechaCompra: data.fechacompra,
       modelo: data.modelo,
     };
     fetch(URL_SERVICES + "vehiculo/update/" + vehiculo.IdVehiculo, {
@@ -306,7 +307,6 @@ export default function EditarVehiculo(
           keyboardType="number-pad"
           value={vehiculo.placa}
           containerStyle={styles.inputContainer}
-          disabled={true}
         />
 
         <Input
@@ -314,11 +314,12 @@ export default function EditarVehiculo(
           inputStyle={styles.input}
           label="Fecha compra"
           placeholder="Fecha compra"
-          editable={vehiculo.fechaCompra ? false : true}
+          editable={vehiculo.fechaCompra === null}
           containerStyle={styles.inputContainer}
-          disabled={vehiculo.fechaCompra ? true : false}
           onFocus={() => {
-            setShowCalendar(true);
+            if (vehiculo.fechaCompra === null) {
+              setShowCalendar(true);
+            }
           }}
           value={fechaCompra ? Moment(fechaCompra).format("DD/MM/YYYY") : ""}
         />
@@ -337,8 +338,10 @@ export default function EditarVehiculo(
             locale="es-ES"
             onChange={(event, selectedDate) => {
               setShowCalendar(Platform.OS === "ios" ? true : false);
-              setValue("fechacompra", selectedDate);
-              setFechaCompra(selectedDate!);
+              if (selectedDate) {
+                setValue("fechacompra", selectedDate);
+                setFechaCompra(selectedDate);
+              }
             }}
           />
         )}
