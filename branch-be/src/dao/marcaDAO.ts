@@ -17,12 +17,10 @@ const create = (marca: MarcaCreationAttributes): Promise<MarcaInstance> | undefi
 };
 
 const findOneByFilter = (
-  filterMarca: WhereOptions<MarcaAttributes> | undefined
-): Promise<MarcaInstance | null> | undefined => {
-  return MarcaModel.sequelize?.transaction(() => {
-    return MarcaModel.findOne({
-      where: filterMarca,
-    });
+  filterMarca: WhereOptions<MarcaAttributes> = {}
+): Promise<MarcaInstance | null>=> {
+  return MarcaModel.findOne({
+    where: filterMarca,
   });
 };
 

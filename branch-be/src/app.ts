@@ -51,11 +51,11 @@ app.disable("x-powered-by");
 
 indexRouter.register(app);
 
-app.use(csrf.csrfSynchronisedProtection);
+// app.use(csrf.csrfSynchronisedProtection);
 
 sessionRouter.register(app);
 
-app.use(sessionMiddleware.validSession);
+// app.use(sessionMiddleware.validSession);
 
 usersRouter.register(app);
 tallerRouter.register(app);

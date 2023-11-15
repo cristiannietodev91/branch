@@ -1,7 +1,14 @@
+import * as chai from "chai";
+import chaiAsPromised from "chai-as-promised";
+chai.use(chaiAsPromised);
+
+const expect = chai.expect;
+
 import sinon, { SinonStub } from "sinon";
-import { expect } from "chai";
 import vehiculoDAO from "../dao/vehiculoDAO";
 import {
+  MarcaAttributes,
+  MarcaInstance,
   TallerInstance,
   UserAttributes,
   UserCreationAttributes,
@@ -14,9 +21,11 @@ import {
 import vehiculoAdapter from "./vehiculoAdapter";
 import * as sms from "../utils/sendSms";
 import tallerDAO from "../dao/tallerDAO";
-import { WhereOptions } from "sequelize/types";
+import { InferCreationAttributes, Optional, WhereOptions } from "sequelize/types";
 import usersDAO from "../dao/usersDAO";
 import { faker } from "@faker-js/faker";
+import marcaDAO from "../dao/marcaDAO";
+import { NullishPropertiesOf } from "sequelize/types/utils";
 
 describe("vehicle Adapter", () => {
   describe("find Vehicles functionality", () => {
@@ -95,13 +104,33 @@ describe("vehicle Adapter", () => {
       Promise<TallerInstance | null> | undefined
     >;
 
-    const vehicleMock: VehiculoCreationAttributes = {
-      IdMarca: 1,
-      IdUsuario: faker.string.uuid(),
+    let findMarcaStub: sinon.SinonStub<[
+      filterMarca?: WhereOptions<MarcaAttributes> | undefined
+    ], Promise<MarcaInstance | null>>;
+
+    let updateVehicleStub: sinon.SinonStub<[
+      filterVehiculo: WhereOptions<VehiculoAttributes>, 
+      vehiculo: Partial<VehiculoAttributes>
+    ], Promise<[affectedCount: number]>>;
+
+    let findUserStub: sinon.SinonStub<[
+      filter: WhereOptions<UserAttributes> | undefined
+    ], Promise<UserInstance | null>>;
+
+    let createUserStub: sinon.SinonStub<[
+      usuario: Optional<InferCreationAttributes<UserInstance, { omit: never; }>, 
+      NullishPropertiesOf<InferCreationAttributes<UserInstance, { omit: never; }>>>
+    ], Promise<UserInstance>>;
+
+    const vehicleToCreate: VehiculoCreationRequest = {
       IdTaller: 1,
       tipoVehiculo: "carro",
       placa: "XXX111",
-      estado: "Activo",
+      celular: "3100000000",
+      usuario: {
+        email: "xxx@xxx.com",
+        uid: "SASAS123213FFDS",
+      },
     };
 
     const mockVehicleResult = {
@@ -109,7 +138,7 @@ describe("vehicle Adapter", () => {
       usuarios: {
         tokenCM: "SADDASDSA2321321",
       },
-      ...vehicleMock,
+      ...vehicleToCreate,
     };
 
     const tallerMockResult = {
@@ -118,216 +147,195 @@ describe("vehicle Adapter", () => {
 
     const notification = sinon.fake();
 
-    before(() => {
+    beforeEach(() => {
+
+      notification.resetHistory();
+
       findVehicleStub = sinon.stub(vehiculoDAO, "findOneByFilter");
 
       createVehicleStub = sinon.stub(vehiculoDAO, "create");
 
       findTallerStub = sinon.stub(tallerDAO, "getById");
 
+      findMarcaStub = sinon.stub(marcaDAO, "findOneByFilter");
+
+      updateVehicleStub = sinon.stub(vehiculoDAO, "update");
+
+      findUserStub = sinon.stub(usersDAO, "findOneByFilter");
+
+      createUserStub = sinon.stub(usersDAO, "create");
+
       sinon.replace(sms, "sendNotificacionToUser", notification);
     });
 
-    after(() => {
+    afterEach(() => {
       sinon.restore();
     });
 
-    describe("vehicle is trying to create already exists but it does not have a taller assigned", () => {
-      let updateVehicleStub: sinon.SinonStub<
-        [
-          filterVehiculo: WhereOptions<VehiculoAttributes>,
-          vehiculo: Partial<VehiculoAttributes>
-        ],
-        Promise<[affectedCount: number]> | undefined
-      >;
+    it("must create the vehicle when the vehicle exists and does not have a workshop assigned", async () => {
+      
+      findVehicleStub.resolves(mockVehicleResult);
 
-      const vehicleMock: VehiculoCreationRequest = {
-        IdTaller: 1,
-        tipoVehiculo: "carro",
-        placa: "XXX111",
-        celular: "3100000000",
-        usuario: {
-          email: "xxx@xxx.com",
-          uid: "SASAS123213FFDS",
-        },
-      };
+      updateVehicleStub.resolves([1]);
+
+      findTallerStub.resolves(tallerMockResult);
+
+      const vehicleResult = await vehiculoAdapter.crearVehiculo(vehicleToCreate);
+
+      expect(findVehicleStub.calledOnceWith({ placa: vehicleToCreate.placa })).to.be.true;
+      expect(updateVehicleStub.calledOnceWith({ IdVehiculo: mockVehicleResult.IdVehiculo }, { IdTaller: vehicleToCreate.IdTaller })).to.be.true;
+      expect(findTallerStub.calledOnce).to.be.true;
+      expect(notification.calledOnce).to.be.true;
+      expect(vehicleResult).to.deep.equal(mockVehicleResult);
+      
+    });
+
+    it("must return error when vehicle is already assigned to a workshop", async () => {
 
       const mockVehicleResult = {
         IdVehiculo: 1,
         usuarios: {
           tokenCM: "SADDASDSA2321321",
         },
-        ...vehicleMock,
+        taller: {
+          IdTaller: 2
+        },
+        ...vehicleToCreate,
       };
 
-      before(() => {
-        //findVehicleStub.reset();
-        updateVehicleStub = sinon.stub(vehiculoDAO, "update");
+      findVehicleStub.resolves(mockVehicleResult);
 
-        findVehicleStub.resolves(mockVehicleResult);
+      updateVehicleStub.resolves([1]);
 
-        updateVehicleStub.resolves([1]);
+      findTallerStub.resolves(tallerMockResult);
 
-        findTallerStub.resolves(tallerMockResult);
+      await expect(vehiculoAdapter.crearVehiculo(vehicleToCreate)).to.eventually.rejectedWith("vehiculo ya esta creado");
 
-        vehiculoAdapter.crearVehiculo(vehicleMock);
-      });
-
-      after(() => {
-        updateVehicleStub.restore();
-      });
-
-      it("find existing vehicle function must be called once", () => {
-        expect(findVehicleStub.calledOnce).to.be.true;
-      });
-
-      it("Update vehicle function must be called once", () => {
-        expect(updateVehicleStub.calledOnce).to.be.true;
-      });
-
-      it("find taller to send notification to user must be called once", () => {
-        expect(findTallerStub.calledOnce).to.be.true;
-      });
-
-      it("It must send a user notification once", () => {
-        expect(notification.calledOnce).to.be.true;
-      });
+      expect(findVehicleStub.calledOnceWith({ placa: vehicleToCreate.placa })).to.be.true;
+      expect(updateVehicleStub.notCalled).to.be.true;
+      expect(findTallerStub.notCalled).to.be.true;
+      expect(notification.notCalled).to.be.true;
     });
 
-    describe("creating an not existing vehicle", () => {
-      let findUserStub: sinon.SinonStub<
-        [filter: WhereOptions<UserAttributes> | undefined],
-        Promise<UserInstance | null> | undefined
-      >;
+    it("must return error when vehicle is not updated", async () => {
 
+      const mockVehicleResult = {
+        IdVehiculo: 1,
+        usuarios: {
+          tokenCM: "SADDASDSA2321321",
+        },
+        ...vehicleToCreate,
+      };
+
+      findVehicleStub.resolves(mockVehicleResult);
+
+      updateVehicleStub.resolves([0]);
+
+      await expect(vehiculoAdapter.crearVehiculo(vehicleToCreate)).to.eventually.rejectedWith("Vehicle was not assigned to the workshop.");
+
+      expect(findVehicleStub.calledOnceWith({ placa: vehicleToCreate.placa })).to.be.true;
+      expect(updateVehicleStub.calledOnceWith({ IdVehiculo: mockVehicleResult.IdVehiculo }, { IdTaller: vehicleToCreate.IdTaller })).to.be.true;
+      expect(findTallerStub.notCalled).to.be.true;
+      expect(notification.notCalled).to.be.true;
+    });
+
+    it("creating an not existing vehicle without brand assigned", async () => {
       const userMockResult = {
         IdUsuario: 1,
         uid: "ERADL8789798",
       };
 
-      const notExistingVehicleMock: VehiculoCreationRequest = {
-        ...vehicleMock,
-        celular: "3001000000",
-        usuario: {
-          email: "xxxx@xxxx.com",
-          uid: "ERADL8789798",
-        },
-      };
+      findVehicleStub.resolves(null);
 
-      before(() => {
-        sinon.reset();
+      findUserStub.resolves(userMockResult as UserInstance);
 
-        notification.resetHistory();
+      createVehicleStub.resolves(mockVehicleResult);
 
-        findUserStub = sinon.stub(usersDAO, "findOneByFilter");
+      findTallerStub.resolves(tallerMockResult);
 
-        findVehicleStub.resolves(null);
+      const vehicleResult = await vehiculoAdapter.crearVehiculo(vehicleToCreate);
 
-        findUserStub.resolves(userMockResult);
-
-        createVehicleStub.resolves(mockVehicleResult);
-
-        findTallerStub.resolves(tallerMockResult);
-
-        vehiculoAdapter.crearVehiculo(notExistingVehicleMock);
-      });
-
-      after(() => {
-        findUserStub.restore();
-      });
-
-      it("find existing vehicle function must be called once", () => {
-        expect(findVehicleStub.calledOnce).to.be.true;
-      });
-
-      it("find user by email must be called once", () => {
-        expect(findUserStub.calledOnce).to.be.true;
-      });
-
-      it("create vehicle function must be called once", () => {
-        expect(createVehicleStub.calledOnce).to.be.true;
-      });
-
-      it("it must call findTaller once to send a notification to the user", () => {
-        expect(findTallerStub.calledOnce).to.be.true;
-      });
-
-      it("It must send a user notification once", () => {
-        expect(notification.calledOnce).to.be.true;
-      });
+      expect(findVehicleStub.calledOnceWith({placa: vehicleToCreate.placa })).to.be.true;
+      expect(findMarcaStub.notCalled).to.be.true;
+      expect(findUserStub.calledOnceWith({ email: vehicleToCreate.usuario.email })).to.be.true;
+      expect(createVehicleStub.calledOnce).to.be.true;
+      expect(findTallerStub.calledOnce).to.be.true;
+      expect(notification.calledOnce).to.be.true;
+      expect(vehicleResult).to.be.deep.equal(mockVehicleResult);
     });
 
-    describe("creating an not existing vehicle when user does not exists ", () => {
-      let findUserStub: sinon.SinonStub<
-        [filter: WhereOptions<UserAttributes> | undefined],
-        Promise<UserInstance | null> | undefined
-      >;
+    it("creating an not existing vehicle when user does not exists ", async () => {
+      
 
-      let createUserStub: sinon.SinonStub<
-        [usuario: UserCreationAttributes],
-        Promise<UserInstance> | undefined
-      >;
-
-      const notExistingVehicleMock: VehiculoCreationRequest = {
-        ...vehicleMock,
-        celular: "3001000000",
-        usuario: {
-          email: "xxxx@xxxx.com",
-          uid: "2434DSFSDF",
-        },
+      const vehicleWithBrand: VehiculoCreationRequest = {
+        ...vehicleToCreate,
+        marca: {
+          marca: "test",
+          referencia: "000"
+        }
       };
 
-      before(() => {
-        sinon.reset();
+      findVehicleStub.resolves(null);
 
-        notification.resetHistory();
+      findMarcaStub.resolves({ IdMarca: 2 } as MarcaInstance);
 
-        findUserStub = sinon.stub(usersDAO, "findOneByFilter");
+      findUserStub.resolves(null);
 
-        createUserStub = sinon.stub(usersDAO, "create");
+      createUserStub.resolves({ IdUsuario: 1, uid: faker.string.uuid() } as UserInstance);
 
-        findVehicleStub.resolves(null);
+      createVehicleStub.resolves(mockVehicleResult);
 
-        findUserStub.resolves(null);
+      findTallerStub.resolves(tallerMockResult);
 
-        createUserStub.resolves({ IdUsuario: 1 });
+      const vehicleCreated = await vehiculoAdapter.crearVehiculo(vehicleWithBrand);
+      
+      expect(findVehicleStub.calledOnceWith({ placa: vehicleWithBrand.placa })).to.be.true;
+      expect(findMarcaStub.calledWith({ 
+        marca: vehicleWithBrand.marca?.marca, 
+        referencia: vehicleWithBrand.marca?.referencia 
+      })).to.be.true;
+      expect(findUserStub.calledOnceWith({ email: vehicleWithBrand.usuario.email })).to.be.true;
+      expect(createUserStub.calledOnce).to.be.true;
+      expect(createVehicleStub.calledOnce).to.be.true;
+      expect(findTallerStub.calledOnce).to.be.true;
+      expect(notification.calledOnce).to.be.true;
+      expect(vehicleCreated).to.be.deep.equal(mockVehicleResult);
+    });
 
-        createVehicleStub.resolves(mockVehicleResult);
+    it("creating an not existing vehicle when user does not exists - brand not found", async () => {
+      const vehicleWithBrand: VehiculoCreationRequest = {
+        ...vehicleToCreate,
+        marca: {
+          marca: "test",
+          referencia: "000"
+        }
+      };
 
-        findTallerStub.resolves(tallerMockResult);
+      findVehicleStub.resolves(null);
 
-        vehiculoAdapter.crearVehiculo(notExistingVehicleMock);
-      });
+      findMarcaStub.resolves(null);
 
-      after(() => {
-        createUserStub.restore();
+      findUserStub.resolves(null);
 
-        findUserStub.restore();
-      });
+      createUserStub.resolves({ IdUsuario: 1, uid: faker.string.uuid() } as UserInstance);
 
-      it("find existing vehicle function must be called once", () => {
-        expect(findVehicleStub.calledOnce).to.be.true;
-      });
+      createVehicleStub.resolves(mockVehicleResult);
 
-      it("find user by email must be called once", () => {
-        expect(findUserStub.calledOnce).to.be.true;
-      });
+      findTallerStub.resolves(tallerMockResult);
 
-      it("create user function must be called once", () => {
-        expect(createUserStub.calledOnce).to.be.true;
-      });
-
-      it("create vehicle function must be called once", () => {
-        expect(createVehicleStub.calledOnce).to.be.true;
-      });
-
-      it("it must call findTaller once to send a notification to the user", () => {
-        expect(findTallerStub.calledOnce).to.be.true;
-      });
-
-      it("It must send a user notification once", () => {
-        expect(notification.calledOnce).to.be.true;
-      });
+      const vehicleCreated = await vehiculoAdapter.crearVehiculo(vehicleWithBrand);
+      
+      expect(findVehicleStub.calledOnceWith({ placa: vehicleWithBrand.placa })).to.be.true;
+      expect(findMarcaStub.calledWith({ 
+        marca: vehicleWithBrand.marca?.marca, 
+        referencia: vehicleWithBrand.marca?.referencia 
+      })).to.be.true;
+      expect(findUserStub.calledOnceWith({ email: vehicleWithBrand.usuario.email })).to.be.true;
+      expect(createUserStub.calledOnce).to.be.true;
+      expect(createVehicleStub.calledOnce).to.be.true;
+      expect(findTallerStub.calledOnce).to.be.true;
+      expect(notification.calledOnce).to.be.true;
+      expect(vehicleCreated).to.be.deep.equal(mockVehicleResult);
     });
   });
 });

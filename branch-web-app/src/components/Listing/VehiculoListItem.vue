@@ -1,9 +1,6 @@
 <template>
   <div
     class="card d-flex flex-row"
-    :class="{
-      active: selectedItems.includes(data.IdVehiculo)
-    }"
     @click.prevent="toggleItem($event, data.IdVehiculo)"
   >
     <div class="img-moto">
@@ -95,7 +92,7 @@
 
 <script>
 export default {
-  props: ["data", "selectedItems"],
+  props: ["data"],
   data() {
     return {};
   },
