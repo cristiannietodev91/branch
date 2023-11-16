@@ -2,6 +2,7 @@
 
 #import <React/RCTBundleURLProvider.h>
 #import <Firebase.h>
+#import <GoogleMaps/GoogleMaps.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 @implementation AppDelegate
@@ -9,6 +10,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   [FIRApp configure];
+  [GMSServices provideAPIKey:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"MAPS_API_KEY"]];
   [[FBSDKApplicationDelegate sharedInstance] application:application
                        didFinishLaunchingWithOptions:launchOptions];
   self.moduleName = @"branchapp";

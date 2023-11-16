@@ -15,18 +15,30 @@ react-native app which connects to `branch-be` node app
 
 ``yarn install``
 
-## run ios
+###  IOS setup
 
 Install cocoapods
 
-``sudo gem install cocoapods``
-``brew install watchman``
+```
+sudo gem install cocoapods
+brew install watchman
+```
 
-``remove ios/Podfile.lock``
+POD Install
 
-``cd ios``
+```
+cd ios
+remove ios/Podfile.lock``
+pod install
+```
 
-``pod install``
+Config google maps API key
+
+Create a file called `Config.xcconfig` within the `/ios` and set the `MAPS_API_KEY` value.
+
+```
+MAPS_API_KEY=google maps api key
+```
 
 In a terminal run 
 
