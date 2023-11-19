@@ -2,8 +2,9 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import TalleresScreen from "../screens/Talleres/Talleres";
 import ChatScreen from "../screens/Talleres/Chat";
+import { WorkShopStackParamList } from "../../types/types";
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<WorkShopStackParamList>();
 
 const TalleresStacks = () => {
   return (
@@ -18,7 +19,7 @@ const TalleresStacks = () => {
       <Stack.Screen
         name="Main"
         component={TalleresScreen}
-        options={{ title: " Talleres" }}
+        options={{ title: "Talleres" }}
       />
       <Stack.Screen
         name="Chat"

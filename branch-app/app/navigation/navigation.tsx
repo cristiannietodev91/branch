@@ -23,7 +23,7 @@ const NavigationStacks = () => {
           borderRadius: 35,
           marginLeft: 10,
           marginRight: 10,
-          marginBottom: 3,
+          marginBottom: 10,
           position: "absolute",
           borderColor: "#5be5e5",
           borderStyle: "solid",

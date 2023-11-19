@@ -56,7 +56,9 @@ export type VehiclesStackScreenProps<T extends keyof VehicleStackParamList> =
 
 export type WorkShopStackParamList = {
   Main: undefined;
-  Chat: undefined;
+  Chat: {
+    IdTaller: number;
+  };
 };
 
 export type WorkShopStackScreenProps<T extends keyof WorkShopStackParamList> =

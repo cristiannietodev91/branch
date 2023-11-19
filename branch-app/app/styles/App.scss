@@ -86,7 +86,7 @@ $standardSpace: 10px;
   height: 20%;
 }
 .scrollContainer{
-  flex-grow: 1;
+  flex: 1;
   justify-content: flex-start;
   padding-top: $standardSpace;
   padding-bottom: $standardSpace*7;
@@ -179,9 +179,7 @@ $standardSpace: 10px;
 .logoLogin{
   @extend %absoluteCenter;
 }
-.iconButton{
-  // background-color: $alert;
-}
+
 .iconButtonIcon {
   width: 30px;
   height: 30px;
@@ -498,20 +496,15 @@ $standardSpace: 10px;
   padding: 0 $standardSpace*2 0 0;
 }
 .chatToolbarContainer{
-  background-color: $primary_light;  
-  // padding-top: $standardSpace;
+  background-color: $primary_light;
 }
+
 .chatUploadContainer{
-  width: 75px;
+  width: 15%;
 }
 .chatInput{
   @extend %light;
-  width: 100px;
   background-color: $disable;
-  border-radius: 25px;
-  padding: $standardSpace;
-  margin-bottom: calc($standardSpace/2);
-  
 }
 .chatScrollTo{
   background-color: $contrast;
