@@ -5,13 +5,12 @@ import { SafeAreaView } from "react-native";
 import Loading from "../../components/Loading";
 import ListTalleres from "../../components/talleres/ListTalleres";
 import { URL_SERVICES } from "@env";
+import { WorkShopStackScreenProps } from "../../../types/types";
 
-export default function Talleres(props: any) {
+export default function Talleres(props: WorkShopStackScreenProps<"Main">) {
   const { navigation } = props;
   const [isLoading, setLoading] = useState(true);
   const [vehiculos, setLisVehiculo] = useState([]);
-
-  console.log("Url services ::>", URL_SERVICES);
 
   const user = auth().currentUser;
 

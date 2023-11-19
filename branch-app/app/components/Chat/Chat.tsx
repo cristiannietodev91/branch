@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
+/* eslint-disable react-native/no-inline-styles */
+import React, { useState, useEffect, useCallback } from "react";
 import { View, Platform } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Image, Icon } from "@rneui/themed";
 import {
   GiftedChat,
@@ -9,6 +11,7 @@ import {
   Time,
   IMessage,
 } from "react-native-gifted-chat";
+import { BottomTabBarHeightContext } from "@react-navigation/bottom-tabs";
 import CustomActions from "./CustomActions";
 import auth from "@react-native-firebase/auth";
 import { URL_SERVICES } from "@env";
@@ -26,7 +29,7 @@ interface ChatComponentProps {
 export default function Chat(props: ChatComponentProps) {
   const { IdTaller } = props;
 
-  const [messages, setMessages] = useState<never[]>([]);
+  const [messages, setMessages] = useState<IMessage[]>([]);
 
   const user = () => {
     return {
@@ -76,14 +79,15 @@ export default function Chat(props: ChatComponentProps) {
     });
   }, [messages]);
 
-  const onSend = (newmessage: never[]) => {
-    setMessages(GiftedChat.append(messages, newmessage));
+  const onSend = useCallback((newMessage: IMessage[]) => {
+    setMessages(GiftedChat.append(messages, newMessage));
     socket.emit(
       "messaggetosomeone",
       auth().currentUser?.uid,
-      parseMessage(newmessage[0])
+      parseMessage(newMessage[0])
     );
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const parseMessage = (newmessage: any) => {
     let message = {
@@ -117,46 +121,52 @@ export default function Chat(props: ChatComponentProps) {
   };
 
   return (
-    <View style={styles.scrollContainer}>
-      <GiftedChat
-        messages={messages}
-        onSend={(newMessage) => onSend(newMessage)}
-        user={user()}
-        placeholder="Escriba un mensaje"
-        alwaysShowSend={true}
-        renderUsernameOnMessage={true}
-        renderBubble={renderBuble}
-        scrollToBottom={true}
-        scrollToBottomStyle={styles.chatScrollTo}
-        renderTime={renderTime}
-        renderInputToolbar={renderInputToolbar}
-        textInputProps={styles.chatInput}
-        renderActions={() => {
-          return Platform.OS === "web" ? null : (
-            <CustomActions onSend={onSendFromUser} />
-          );
-        }}
-        renderSend={(sendProps: IMessage) => {
-          return (
-            <Send {...sendProps} containerStyle={styles.chatSendContainer}>
-              <View style={styles.iconButton}>
-                <Image
-                  source={require("./../../../assets/drawable-xxxhdpi/button.png")}
-                  style={styles.iconButtonImage}
-                />
-                <Icon
-                  containerStyle={styles.iconButtonIcon}
-                  name="send"
-                  type="material-community"
-                  color="#0396c8"
-                  size={25}
-                />
-              </View>
-            </Send>
-          );
-        }}
-      />
-    </View>
+    <BottomTabBarHeightContext.Consumer>
+      {(tabBarHeight) => (
+        <SafeAreaView style={{ flex: 1, marginBottom: tabBarHeight }}>
+          <GiftedChat
+            bottomOffset={tabBarHeight}
+            messages={messages}
+            onSend={(newMessages) => onSend(newMessages)}
+            user={user()}
+            placeholder="Escriba un mensaje"
+            alwaysShowSend={true}
+            renderUsernameOnMessage={true}
+            renderBubble={renderBuble}
+            scrollToBottom
+            infiniteScroll
+            scrollToBottomStyle={styles.chatScrollTo}
+            renderTime={renderTime}
+            renderInputToolbar={renderInputToolbar}
+            textInputProps={styles.chatInput}
+            renderActions={() => {
+              return Platform.OS === "web" ? null : (
+                <CustomActions onSend={onSendFromUser} />
+              );
+            }}
+            renderSend={(sendProps: IMessage) => {
+              return (
+                <Send {...sendProps} containerStyle={styles.chatSendContainer}>
+                  <View style={styles.iconButton}>
+                    <Image
+                      source={require("./../../../assets/drawable-xxxhdpi/button.png")}
+                      style={styles.iconButtonImage}
+                    />
+                    <Icon
+                      containerStyle={styles.iconButtonIcon}
+                      name="send"
+                      type="material-community"
+                      color="#0396c8"
+                      size={25}
+                    />
+                  </View>
+                </Send>
+              );
+            }}
+          />
+        </SafeAreaView>
+      )}
+    </BottomTabBarHeightContext.Consumer>
   );
 }
 

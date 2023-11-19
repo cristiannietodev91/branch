@@ -16,8 +16,19 @@ import { EmptyGarage } from "./../../../assets/svg/EmptyGarage";
 import ButtonBranch from "../../components/branch/button";
 import { NotificationContext } from "../ContextNotifications";
 import ActionButton from "react-native-action-button";
+import { WorkShopStackScreenProps } from "../../../types/types";
 
-export default function ListTalleres(props: any) {
+interface ListWorkshopProps
+  extends Pick<WorkShopStackScreenProps<"Main">, "navigation"> {
+  vehiculos: any;
+}
+
+interface WorkshopComponentProps
+  extends Pick<WorkShopStackScreenProps<"Main">, "navigation"> {
+  taller: any;
+}
+
+export default function ListTalleres(props: ListWorkshopProps) {
   const useHandleScroll = () => {
     const [showButton, setShowButton] = useState(true);
 
@@ -109,11 +120,10 @@ export default function ListTalleres(props: any) {
   );
 }
 
-function Taller(props: any) {
+function Taller(props: WorkshopComponentProps) {
   const { taller, navigation } = props;
 
-  const { value: NumberNotificacions, resetNotificaciones } =
-    useContext(NotificationContext);
+  const { resetNotificaciones } = useContext(NotificationContext);
 
   const openAppMap = () => {
     OpenMap({
@@ -195,12 +205,10 @@ function Taller(props: any) {
             iconName="chat-processing"
             onPress={() => {
               resetNotificaciones();
-              console.log("click", navigation.navigate);
-              navigation.navigate("chat", {
+              navigation.navigate("Chat", {
                 IdTaller: taller.IdTaller,
               });
             }}
-            numberNotificaciones={NumberNotificacions}
           />
         </View>
       </View>
