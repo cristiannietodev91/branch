@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 // ====== COLORS ====== //
 $primary: #5be5e5;
 $primary_light: #d7f8f8;
@@ -495,21 +499,20 @@ $standardSpace: 10px;
 .chatSendContainer{
   padding: 0 $standardSpace*2 0 0;
 }
+
 .chatToolbarContainer{
   background-color: $primary_light;
 }
 
-.chatUploadContainer{
-  width: 15%;
-}
 .chatInput{
   @extend %light;
   background-color: $disable;
+  padding-left: 5px;
+  border-radius: 8px;
 }
+
 .chatScrollTo{
   background-color: $contrast;
   color: $white;
   @extend %bold;
 }
-
-// ====== TEMPORALES ====== //

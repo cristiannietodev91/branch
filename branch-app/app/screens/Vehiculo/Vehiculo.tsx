@@ -19,8 +19,8 @@ export default function Vehiculo({
   const [vehiculos, setListVehiculos] = useState([]);
 
   const user = auth().currentUser;
-
-  useEffect(() => {
+  // TODO: Fix error updating message token
+  /*useEffect(() => {
     messaging()
       .getToken()
       .then((token) => {
@@ -53,7 +53,7 @@ export default function Vehiculo({
     return messaging().onTokenRefresh((token) => {
       console.log("Token renovado :::>", token);
     });
-  }, [user]);
+  }, [user]);*/
 
   useFocusEffect(
     useCallback(() => {

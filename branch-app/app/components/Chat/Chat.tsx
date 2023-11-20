@@ -10,6 +10,9 @@ import {
   Bubble,
   Time,
   IMessage,
+  InputToolbarProps,
+  ComposerProps,
+  Composer,
 } from "react-native-gifted-chat";
 import { BottomTabBarHeightContext } from "@react-navigation/bottom-tabs";
 import CustomActions from "./CustomActions";
@@ -138,20 +141,16 @@ export default function Chat(props: ChatComponentProps) {
             scrollToBottomStyle={styles.chatScrollTo}
             renderTime={renderTime}
             renderInputToolbar={renderInputToolbar}
-            textInputProps={styles.chatInput}
             renderActions={() => {
               return Platform.OS === "web" ? null : (
                 <CustomActions onSend={onSendFromUser} />
               );
             }}
+            renderComposer={renderInputComposer}
             renderSend={(sendProps: IMessage) => {
               return (
                 <Send {...sendProps} containerStyle={styles.chatSendContainer}>
                   <View style={styles.iconButton}>
-                    <Image
-                      source={require("./../../../assets/drawable-xxxhdpi/button.png")}
-                      style={styles.iconButtonImage}
-                    />
                     <Icon
                       containerStyle={styles.iconButtonIcon}
                       name="send"
@@ -170,13 +169,13 @@ export default function Chat(props: ChatComponentProps) {
   );
 }
 
-function renderInputToolbar(props: any) {
+function renderInputComposer(props: ComposerProps) {
+  return <Composer {...props} textInputStyle={styles.chatInput} />;
+}
+
+function renderInputToolbar(props: InputToolbarProps<IMessage>) {
   return (
-    <InputToolbar
-      {...props}
-      containerStyle={styles.chatToolbarContainer}
-      placeholderTextColor={"#0396c8"}
-    />
+    <InputToolbar {...props} containerStyle={styles.chatToolbarContainer} />
   );
 }
 
