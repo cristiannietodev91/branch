@@ -7,11 +7,11 @@ import { URL_SERVICES } from "@env";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import styles from "../../styles/App.scss";
 import ButtonBranch from "../../components/branch/button";
-import { VehiclesStackScreenProps } from "../../../types/types";
+import { Vehicle, VehiclesStackScreenProps } from "../../../types/types";
 
 interface DocumentProps
   extends Pick<VehiclesStackScreenProps<"Documents">, "navigation"> {
-  vehiculo: any;
+  vehiculo: Vehicle;
   titleDocumento: string;
   tipoDocumento: string;
   documento: any;
@@ -216,10 +216,10 @@ export default function Documento(props: DocumentProps) {
             setShowCalendar(true);
           }}
         />
-        <ButtonBranch
+        {/* <ButtonBranch
           iconName="arrow-right"
           // onPress={uploadImage}
-        />
+        /> */}
         {showCalendar && (
           <DateTimePicker
             testID="datePicker"

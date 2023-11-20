@@ -1,8 +1,8 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Image, Icon } from "@rneui/themed";
+import { Icon } from "@rneui/themed";
 import {
   GiftedChat,
   Send,
@@ -42,10 +42,6 @@ export default function Chat(props: ChatComponentProps) {
   };
 
   useEffect(() => {
-    socket.on("connect", () => {
-      console.log("Connection");
-    });
-
     socket.emit(
       "joinroom",
       { room: auth().currentUser?.uid, IdTaller: IdTaller },
@@ -82,15 +78,17 @@ export default function Chat(props: ChatComponentProps) {
     });
   }, [messages]);
 
-  const onSend = useCallback((newMessage: IMessage[]) => {
-    setMessages(GiftedChat.append(messages, newMessage));
+  const onSend = (newMessage: IMessage[]) => {
+    const sentMessages = [{ ...newMessage[0], sent: true, received: true }];
+    setMessages(
+      GiftedChat.append(messages, sentMessages, Platform.OS !== "web")
+    );
     socket.emit(
       "messaggetosomeone",
       auth().currentUser?.uid,
       parseMessage(newMessage[0])
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  };
 
   const parseMessage = (newmessage: any) => {
     let message = {

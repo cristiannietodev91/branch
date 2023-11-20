@@ -46,7 +46,7 @@ export default function AgregarCita({
   const user = auth().currentUser;
 
   useEffect(() => {
-    fetch(URL_SERVICES + "vehiculo/getByIdUsuario/" + user?.uid)
+    fetch(URL_SERVICES + "/vehiculo/getByIdUsuario/" + user?.uid)
       .then((response) => response.json())
       .then((json) => {
         //console.log("Respuesta motos ::>", json);
@@ -91,7 +91,7 @@ export default function AgregarCita({
 
     console.log("Data cita :::>", citaCreate);
 
-    fetch(URL_SERVICES + "cita/create", {
+    fetch(URL_SERVICES + "/cita/create", {
       method: "POST",
       headers: {
         Accept: "application/json",

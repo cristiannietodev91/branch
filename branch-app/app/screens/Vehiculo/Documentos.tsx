@@ -8,31 +8,31 @@ export default function Documentos(
   props: VehiclesStackScreenProps<"Documents">
 ) {
   const { navigation, route } = props;
-  const { vehiculo } = route.params;
+  const { vehicle } = route.params;
 
   return (
     <ScrollView>
       <View style={styles.scrollContainer}>
         <Documento
-          vehiculo={vehiculo}
+          vehiculo={vehicle}
           navigation={navigation}
           titleDocumento="SOAT"
           tipoDocumento="soat"
-          documento={vehiculo.soat}
+          documento={vehicle.soat}
         />
         <Documento
-          vehiculo={vehiculo}
+          vehiculo={vehicle}
           navigation={navigation}
           titleDocumento="TECNO MECANICA"
           tipoDocumento="tecnomecanica"
-          documento={vehiculo.tecnomecanica}
+          documento={vehicle.tecnomecanica}
         />
         <Documento
-          vehiculo={vehiculo}
+          vehiculo={vehicle}
           navigation={navigation}
           titleDocumento="TARJETA PROPIEDAD"
           tipoDocumento="tarjetapropiedad"
-          documento={vehiculo.tarjetapropiedad}
+          documento={vehicle.tarjetapropiedad}
         />
       </View>
     </ScrollView>

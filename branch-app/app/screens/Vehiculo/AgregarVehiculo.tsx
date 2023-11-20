@@ -53,7 +53,7 @@ export default function AgregarVehiculo(
   const user = auth().currentUser;
 
   useEffect(() => {
-    fetch(URL_SERVICES + "marca/getAllUnique")
+    fetch(URL_SERVICES + "/marca/getAllUnique")
       .then((response) => response.json())
       .then((json) => {
         //console.log("Respuesta motos ::>", json);
@@ -104,7 +104,7 @@ export default function AgregarVehiculo(
   //console.log("Vehiculo ::::>", vehiculo.kilometraje);
 
   const loadReferencias = (marca: string) => {
-    fetch(URL_SERVICES + "marca/getAllByMarca/" + marca)
+    fetch(URL_SERVICES + "/marca/getAllByMarca/" + marca)
       .then((response) => response.json())
       .then((json) => {
         //console.log("Respuesta motos ::>", json);
@@ -130,7 +130,7 @@ export default function AgregarVehiculo(
       } else if (response.assets) {
         const { uri, fileName, type } = response.assets[0];
 
-        fetch(URL_SERVICES + "file/signedURL", {
+        fetch(URL_SERVICES + "/file/signedURL", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -201,7 +201,7 @@ export default function AgregarVehiculo(
 
     console.log("Vehiculo to create :::>", vehiculoCreate);
 
-    fetch(URL_SERVICES + "vehiculo/create", {
+    fetch(URL_SERVICES + "/vehiculo/create", {
       method: "POST",
       headers: {
         Accept: "application/json",

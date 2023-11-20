@@ -14,27 +14,23 @@ import { EmptyMoto } from "./../../../assets/svg/EmptyMoto";
 import { SwipeListView } from "react-native-swipe-list-view";
 import ButtonBranch from "../../components/branch/button";
 import ActionButton from "react-native-action-button";
-import { VehiclesStackScreenProps } from "../../../types/types";
+import {
+  ListVehicles,
+  Vehicle,
+  VehicleScreenNavigationProp,
+} from "../../../types/types";
+import { useNavigation } from "@react-navigation/native";
 
-interface ListVehiculosProps
-  extends Pick<VehiclesStackScreenProps<"Main">, "navigation"> {
+interface ListVehiculosProps {
   user: any;
-  vehiculos: any;
+  vehicles: ListVehicles;
 }
 
-interface VehicleComponentProps
-  extends Pick<VehiclesStackScreenProps<"Main">, "navigation"> {
-  vehiculo: any;
+interface VehicleComponentProps {
+  vehicle: Vehicle;
 }
 
-interface AddVehicleButtonProps
-  extends Pick<VehiclesStackScreenProps<"Main">, "navigation"> {}
-
-export default function ListVehiculos({
-  vehiculos,
-  navigation,
-  user,
-}: ListVehiculosProps) {
+export default function ListVehiculos({ vehicles, user }: ListVehiculosProps) {
   const useHandleScroll = () => {
     const [showButton, setShowButton] = useState(true);
 
@@ -96,13 +92,11 @@ export default function ListVehiculos({
         </ImageBackground>
       </View>
 
-      <SwipeListView
+      <SwipeListView<Vehicle>
         contentContainerStyle={styles.scrollContainer}
         onScroll={handleScroll}
-        data={vehiculos}
-        renderItem={(vehiculo) => (
-          <Vehiculo vehiculo={vehiculo.item} navigation={navigation} />
-        )}
+        data={vehicles}
+        renderItem={(vehiculo) => <Vehiculo vehicle={vehiculo.item} />}
         renderHiddenItem={() => (
           <View style={styles.motoDeleteContainer}>
             <TouchableOpacity>
@@ -119,17 +113,18 @@ export default function ListVehiculos({
         keyExtractor={(item, index) => index.toString()}
         ListEmptyComponent={EmptyList}
       />
-      {showButton && <AddVehiculoButton navigation={navigation} />}
+      {showButton && <AddVehiculoButton />}
     </View>
   );
 }
 
 function Vehiculo(props: VehicleComponentProps) {
-  const { vehiculo, navigation } = props;
+  const navigation = useNavigation<VehicleScreenNavigationProp>();
+  const { vehicle } = props;
 
   return (
     <View style={styles.cardMoto}>
-      {!(vehiculo.fotos && vehiculo.fotos[0] && vehiculo.fotos.length > 0) ? (
+      {!(vehicle.fotos && vehicle.fotos[0] && vehicle.fotos.length > 0) ? (
         <View style={styles.cardMotoImageContainer}>
           <Image
             style={styles.cardMotoImage}
@@ -140,24 +135,24 @@ function Vehiculo(props: VehicleComponentProps) {
         <View style={styles.cardMotoImageContainer}>
           <Image
             style={styles.cardMotoImage}
-            source={{ uri: vehiculo.fotos[0].url }}
+            source={{ uri: vehicle.fotos[0].url }}
           />
         </View>
       )}
       <View style={styles.cardMotoInfo}>
         <Text style={styles.headingSecondary}>
-          {vehiculo.marca.marca} {vehiculo.marca.referencia}
+          {vehicle.marca.marca} {vehicle.marca.referencia}
         </Text>
-        <Text style={styles.bodyText}>{vehiculo.alias}</Text>
-        <Text style={styles.bodyText}>{vehiculo.placa}</Text>
-        <Text style={styles.bodyText}>{vehiculo.kilometraje} Km</Text>
+        <Text style={styles.bodyText}>{vehicle.alias}</Text>
+        <Text style={styles.bodyText}>{vehicle.placa}</Text>
+        <Text style={styles.bodyText}>{vehicle.kilometraje} Km</Text>
       </View>
       <View style={styles.cardMotoButtons}>
         <ButtonBranch
           iconName="file-document-outline"
           onPress={() => {
             navigation.navigate("Documents", {
-              vehiculo,
+              vehicle,
             });
           }}
         />
@@ -165,7 +160,7 @@ function Vehiculo(props: VehicleComponentProps) {
           iconName="pencil-outline"
           onPress={() => {
             navigation.navigate("Edit", {
-              vehiculo,
+              vehicle,
             });
           }}
         />
@@ -173,7 +168,7 @@ function Vehiculo(props: VehicleComponentProps) {
           iconName="currency-usd"
           onPress={() => {
             navigation.navigate("Services", {
-              vehiculo,
+              vehicle,
             });
           }}
         />
@@ -190,8 +185,8 @@ function EmptyList() {
   );
 }
 
-function AddVehiculoButton(props: AddVehicleButtonProps) {
-  const { navigation } = props;
+function AddVehiculoButton() {
+  const navigation = useNavigation<VehicleScreenNavigationProp>();
   return (
     <ActionButton
       buttonTextStyle={styles.actionButton}

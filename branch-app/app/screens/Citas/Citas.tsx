@@ -16,22 +16,18 @@ const CitasScreen = ({
   const [isLoading, setLoading] = useState(true);
   const [citas, setListCitas] = useState([]);
 
-  console.log("Navigation ", route.params);
-
-  console.log("Url services :::>", URL_SERVICES);
-
   const user = auth().currentUser;
 
   const urlws = useCallback(() => {
     switch (etapa) {
       case "Pasadas":
-        return URL_SERVICES + "cita/getPasadasByIdUsuario/" + user?.uid;
+        return URL_SERVICES + "/cita/getPasadasByIdUsuario/" + user?.uid;
       case "Activas":
-        return URL_SERVICES + "cita/getActivasByIdUsuario/" + user?.uid;
+        return URL_SERVICES + "/cita/getActivasByIdUsuario/" + user?.uid;
       case "Futuras":
-        return URL_SERVICES + "cita/getFuturasByIdUsuario/" + user?.uid;
+        return URL_SERVICES + "/cita/getFuturasByIdUsuario/" + user?.uid;
       default:
-        return URL_SERVICES + "cita/getFuturasByIdUsuario/" + user?.uid;
+        return URL_SERVICES + "/cita/getFuturasByIdUsuario/" + user?.uid;
     }
   }, [etapa, user]);
 

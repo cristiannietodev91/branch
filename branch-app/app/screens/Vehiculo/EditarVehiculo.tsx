@@ -19,17 +19,15 @@ import Snackbar from "react-native-snackbar";
 import Moment from "moment";
 import { VehiclesStackScreenProps } from "../../../types/types";
 
-export default function EditarVehiculo(
-  props: VehiclesStackScreenProps<"Edit">
-) {
+export default function EditVehicle(props: VehiclesStackScreenProps<"Edit">) {
   const { navigation, route } = props;
-  const { vehiculo } = route.params;
+  const { vehicle } = route.params;
   const [isLoading, setLoading] = useState(true);
   const [marcas, setMarcas] = useState([]);
   const [showCalendar, setShowCalendar] = useState(false);
   const [fechaCompra, setFechaCompra] = useState(
-    vehiculo.fechaCompra
-      ? Moment(vehiculo.fechaCompra, "YYYY-MM-DD").toDate()
+    vehicle.fechaCompra
+      ? Moment(vehicle.fechaCompra, "YYYY-MM-DD").toDate()
       : new Date()
   );
   const [referencias, setReferencias] = useState([]);
@@ -40,20 +38,20 @@ export default function EditarVehiculo(
     formState: { errors },
   } = useForm({
     defaultValues: {
-      kilometraje: vehiculo.kilometraje ? vehiculo.kilometraje : "",
-      alias: vehiculo.alias ? vehiculo.alias : "",
-      modelo: vehiculo.modelo,
-      fechacompra: vehiculo.fechaCompra ? vehiculo.fechaCompra : null,
-      marca: vehiculo.marca ? vehiculo.marca.marca : null,
-      referencia: vehiculo.marca ? vehiculo.marca.referencia : null,
-      color: vehiculo.color ? vehiculo.color : null,
+      kilometraje: vehicle.kilometraje,
+      alias: vehicle.alias ? vehicle.alias : "",
+      modelo: vehicle.modelo,
+      fechacompra: vehicle.fechaCompra ? vehicle.fechaCompra : null,
+      marca: vehicle.marca ? vehicle.marca.marca : null,
+      referencia: vehicle.marca ? vehicle.marca.referencia : null,
+      color: vehicle.color ? vehicle.color : null,
     },
   });
   const [referencia, setReferencia] = useState(
-    vehiculo.marca ? vehiculo.marca.referencia : ""
+    vehicle.marca ? vehicle.marca.referencia : ""
   );
   const [marca, setMarca] = useState("");
-  const [urlFoto, setUrlFoto] = useState();
+  const [urlFoto, setUrlFoto] = useState<string | null>();
 
   useEffect(() => {
     fetch(URL_SERVICES + "marca/getAllUnique")
@@ -74,7 +72,7 @@ export default function EditarVehiculo(
         message: "Debe ingresar un valor valido",
       },
       validate: {
-        positive: (value) => parseInt(value) > 0,
+        positive: (value) => value > 0,
       },
     });
     register("alias", {
@@ -109,14 +107,14 @@ export default function EditarVehiculo(
         marca: data.marca,
         referencia: data.referencia,
       },
-      usuarios: vehiculo.usuario,
-      tipoVehiculo: vehiculo.tipoVehiculo,
+      usuarios: vehicle.usuario,
+      tipoVehiculo: vehicle.tipoVehiculo,
       fotos: urlFoto ? [urlFoto] : [],
       color: data.color,
       fechaCompra: data.fechacompra,
       modelo: data.modelo,
     };
-    fetch(URL_SERVICES + "vehiculo/update/" + vehiculo.IdVehiculo, {
+    fetch(URL_SERVICES + "vehiculo/update/" + vehicle.IdVehiculo, {
       method: "PUT",
       headers: {
         Accept: "application/json",
@@ -221,15 +219,15 @@ export default function EditarVehiculo(
 
   //Set Url Foto
   useEffect(() => {
-    let MyurlFoto = !(
-      vehiculo.fotos &&
-      vehiculo.fotos[0] &&
-      vehiculo.fotos.length > 0
+    let photoURL = !(
+      vehicle.fotos &&
+      vehicle.fotos[0] &&
+      vehicle.fotos.length > 0
     )
       ? null
-      : vehiculo.fotos[0].url;
-    setUrlFoto(MyurlFoto ? { url: MyurlFoto } : MyurlFoto);
-  }, [vehiculo]);
+      : vehicle.fotos[0].url;
+    setUrlFoto(photoURL);
+  }, [vehicle]);
 
   return (
     <SafeAreaView style={styles.scrollContainer}>
@@ -265,9 +263,9 @@ export default function EditarVehiculo(
           label="Kilometraje"
           placeholder="Kilometraje"
           textContentType="telephoneNumber"
-          onChangeText={(text) => setValue("kilometraje", text)}
+          onChangeText={(text) => setValue("kilometraje", parseInt(text, 10))}
           keyboardType="number-pad"
-          defaultValue={vehiculo.kilometraje ? vehiculo.kilometraje + "" : ""}
+          defaultValue={vehicle.kilometraje ? vehicle.kilometraje + "" : ""}
         />
         {errors.kilometraje && (
           <Text style={styles.inputError}>{errors.kilometraje.message}</Text>
@@ -278,7 +276,7 @@ export default function EditarVehiculo(
           inputStyle={styles.input}
           label="Color"
           placeholder="Color"
-          defaultValue={vehiculo.color}
+          defaultValue={vehicle.color}
           containerStyle={styles.inputContainer}
           keyboardType="ascii-capable"
           onChangeText={(text) => setValue("color", text)}
@@ -291,7 +289,7 @@ export default function EditarVehiculo(
           inputStyle={styles.input}
           label="Nombre"
           placeholder="Nombre de tu moto"
-          defaultValue={vehiculo.alias}
+          defaultValue={vehicle.alias}
           containerStyle={styles.inputContainer}
           onChangeText={(text) => setValue("alias", text)}
         />
@@ -305,7 +303,7 @@ export default function EditarVehiculo(
           placeholder="Placa"
           editable={false}
           keyboardType="number-pad"
-          value={vehiculo.placa}
+          value={vehicle.placa}
           containerStyle={styles.inputContainer}
         />
 
@@ -314,10 +312,10 @@ export default function EditarVehiculo(
           inputStyle={styles.input}
           label="Fecha compra"
           placeholder="Fecha compra"
-          editable={vehiculo.fechaCompra === null}
+          editable={vehicle.fechaCompra === null}
           containerStyle={styles.inputContainer}
           onFocus={() => {
-            if (vehiculo.fechaCompra === null) {
+            if (vehicle.fechaCompra === null) {
               setShowCalendar(true);
             }
           }}
@@ -339,7 +337,10 @@ export default function EditarVehiculo(
             onChange={(event, selectedDate) => {
               setShowCalendar(Platform.OS === "ios" ? true : false);
               if (selectedDate) {
-                setValue("fechacompra", selectedDate);
+                setValue(
+                  "fechacompra",
+                  Moment(selectedDate).format("DD/MM/YYYY")
+                );
                 setFechaCompra(selectedDate);
               }
             }}
@@ -356,10 +357,8 @@ export default function EditarVehiculo(
           valueExtractor={(value: any) => {
             return value.marca;
           }}
-          value={vehiculo.marca.marca}
-          data={
-            vehiculo.marca.IdMarca !== 1 ? new Array(vehiculo.marca) : marcas
-          }
+          value={vehicle.marca.marca}
+          data={vehicle.marca.IdMarca !== 1 ? new Array(vehicle.marca) : marcas}
           onChangeText={(text: any) => {
             if (marca !== text) {
               setValue("marca", text);
@@ -368,7 +367,7 @@ export default function EditarVehiculo(
               loadReferencias(text);
             }
           }}
-          disabled={vehiculo.marca.IdMarca !== 1 ? true : false}
+          disabled={vehicle.marca.IdMarca !== 1 ? true : false}
         />
         {errors.marca && (
           <Text style={styles.inputError}>{errors.marca.message}</Text>
@@ -386,15 +385,13 @@ export default function EditarVehiculo(
           }}
           value={referencia}
           data={
-            vehiculo.marca.IdMarca !== 1
-              ? new Array(vehiculo.marca)
-              : referencias
+            vehicle.marca.IdMarca !== 1 ? new Array(vehicle.marca) : referencias
           }
           onChangeText={(text: any) => {
             setValue("referencia", text);
             setReferencia(text);
           }}
-          disabled={vehiculo.marca.IdMarca !== 1 ? true : false}
+          disabled={vehicle.marca.IdMarca !== 1 ? true : false}
         />
         {errors.referencia && (
           <Text style={styles.inputError}>{errors.referencia.message}</Text>
@@ -403,9 +400,9 @@ export default function EditarVehiculo(
           textColor="#0396c8"
           containerStyle={[styles.input, styles.dropdown]}
           label="Modelo "
-          value={vehiculo.modelo ? vehiculo.modelo + "" : ""}
+          value={vehicle.modelo ? vehicle.modelo + "" : ""}
           data={years}
-          disabled={vehiculo.modelo ? true : false}
+          disabled={vehicle.modelo ? true : false}
           onChangeText={(text: any) => {
             setValue("modelo", text);
           }}
@@ -422,7 +419,7 @@ export default function EditarVehiculo(
         <Button
           title="Cancelar"
           onPress={() => {
-            navigation.navigate("Vehiculo");
+            navigation.goBack();
           }}
           buttonStyle={styles.buttonSecondary}
           titleStyle={styles.buttonText}

@@ -15,7 +15,7 @@ export default function Talleres(props: WorkShopStackScreenProps<"Main">) {
   const user = auth().currentUser;
 
   useEffect(() => {
-    fetch(URL_SERVICES + "vehiculo/getByIdUsuario/" + user?.uid)
+    fetch(URL_SERVICES + "/vehiculo/getByIdUsuario/" + user?.uid)
       .then((response) => {
         return response.json();
       })

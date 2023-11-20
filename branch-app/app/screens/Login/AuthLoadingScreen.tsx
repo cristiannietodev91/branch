@@ -1,10 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 
-import { useNavigation } from "@react-navigation/native";
 import auth from "@react-native-firebase/auth";
 
 export default function AuthLoadingScreen() {
-  const navigation = useNavigation();
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();

@@ -53,7 +53,7 @@ export default function DetailCita({
       " " +
       data.comentario;
 
-    fetch(URL_SERVICES + "orden/update/" + ordenToUpdate.IdOrdenTrabajo, {
+    fetch(URL_SERVICES + "/orden/update/" + ordenToUpdate.IdOrdenTrabajo, {
       method: "PUT",
       headers: {
         Accept: "application/json",
@@ -78,7 +78,7 @@ export default function DetailCita({
       estado: "Aceptado",
     };
 
-    fetch(URL_SERVICES + "orden/create", {
+    fetch(URL_SERVICES + "/orden/create", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -106,7 +106,7 @@ export default function DetailCita({
       " " +
       data.comentario;
 
-    fetch(URL_SERVICES + "orden/update/" + ordenToUpdate.IdOrdenTrabajo, {
+    fetch(URL_SERVICES + "/orden/update/" + ordenToUpdate.IdOrdenTrabajo, {
       method: "PUT",
       headers: {
         Accept: "application/json",

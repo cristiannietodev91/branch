@@ -1,10 +1,89 @@
-import type { StackScreenProps } from "@react-navigation/stack";
+import type {
+  StackNavigationProp,
+  StackScreenProps,
+} from "@react-navigation/stack";
 import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import type {
   CompositeScreenProps,
   NavigatorScreenParams,
 } from "@react-navigation/native";
 import { FirebaseAuthTypes } from "@react-native-firebase/auth";
+
+export interface Taller {
+  IdTaller: number;
+  nombre: string;
+  identificacion: string;
+  direccion: string;
+  latitude: number;
+  longitud: number;
+  celular: string;
+  telefono: any;
+  email: string;
+  logo: any;
+  estado: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface User {
+  IdUsuario: number;
+  firstName: string;
+  lastName: string;
+  identificacion: string;
+  email: string;
+  uid: string;
+  celular: string;
+  tipoUsuario: string;
+  estado: string;
+  IdTaller: number;
+  tokenCM: string;
+  typeDevice: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Brand {
+  IdMarca: number;
+  marca: string;
+  referencia: string;
+  categoria: string;
+  tipo: string;
+  descripcion: string;
+  tipoVehiculo: string;
+  urllogo: string;
+}
+
+export interface Vehicle {
+  IdVehiculo: number;
+  IdMarca: number;
+  IdUsuario: string;
+  IdTaller?: number;
+  tipoVehiculo: string;
+  placa: string;
+  kilometraje: number;
+  modelo: number;
+  color: string;
+  fechaCompra: string;
+  alias: string;
+  fotos: Array<{ url: string }>;
+  tarjetapropiedad: any;
+  tecnomecanica: any;
+  soat: any;
+  fvtecnomecanica: any;
+  fvsoat: any;
+  estado: string;
+  createdAt: string;
+  updatedAt: string;
+  marca: Brand;
+  usuario: User;
+  taller?: Taller;
+}
+
+export type ListVehicles = Vehicle[];
+
+/***********************************************
+ * React navigation types
+ **********************************************/
 
 export type InternalAppointmentStackParamList = {
   NavigateAppointment: { etapa: string };
@@ -39,14 +118,14 @@ export type AppoinmentScreenNavigationProp = CompositeScreenProps<
 export type VehicleStackParamList = {
   Main: undefined;
   Edit: {
-    vehiculo: any;
+    vehicle: Vehicle;
   };
   Add: undefined;
   Documents: {
-    vehiculo: any;
+    vehicle: Vehicle;
   };
   Services: {
-    vehiculo: any;
+    vehicle: Vehicle;
   };
   AddServices: undefined;
 };
@@ -81,6 +160,9 @@ export type HomeBottomTabParamList = {
   Users: StackScreenProps<UserStackParamList>;
   Citas: StackScreenProps<AppoinmentMainStackParamList>;
 };
+
+export type VehicleScreenNavigationProp =
+  StackNavigationProp<VehicleStackParamList>;
 
 export type LoginStackParamsList = {
   MainLogin: undefined;

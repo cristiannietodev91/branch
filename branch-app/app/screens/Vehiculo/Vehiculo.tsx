@@ -10,15 +10,34 @@ import ListVehiculos from "../../components/Vehiculos/ListVehiculo";
 import Loading from "../../components/Loading";
 import { URL_SERVICES } from "@env";
 
-import { VehiclesStackScreenProps } from "../../../types/types";
+import { ListVehicles, VehiclesStackScreenProps } from "../../../types/types";
+import useFetch from "../../hooks/useFetch";
 
 export default function Vehiculo({
   navigation,
 }: VehiclesStackScreenProps<"Main">) {
-  const [isLoading, setLoading] = useState(true);
-  const [vehiculos, setListVehiculos] = useState([]);
-
   const user = auth().currentUser;
+
+  const {
+    data: listVehicles,
+    loading,
+    error,
+  } = useFetch<ListVehicles>(
+    `vehiculo/getByIdUsuario/${user?.uid}`,
+    {
+      method: "GET",
+    },
+    undefined,
+    [user?.uid]
+  );
+
+  if (error) {
+    Snackbar.show({
+      text: error.message,
+      duration: Snackbar.LENGTH_LONG,
+    });
+  }
+
   // TODO: Fix error updating message token
   /*useEffect(() => {
     messaging()
@@ -55,44 +74,13 @@ export default function Vehiculo({
     });
   }, [user]);*/
 
-  useFocusEffect(
-    useCallback(() => {
-      fetch(URL_SERVICES + "vehiculo/getByIdUsuario/" + user?.uid, {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      })
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            return response.json().then((err) => Promise.reject(err));
-          }
-        })
-        .then((json) => {
-          setListVehiculos(json);
-          setLoading(false);
-        })
-        .catch((error) => {
-          if (error.message) {
-            Snackbar.show({
-              text: error.message,
-              duration: Snackbar.LENGTH_SHORT,
-            });
-          }
-        });
-    }, [user])
-  );
-
   return (
     <SafeAreaView style={styles.container}>
-      {isLoading ? (
-        <Loading isVisible={true} text="Cargando" />
+      {loading || listVehicles === null ? (
+        <Loading isVisible={true} text="Loading" />
       ) : (
         <ListVehiculos
-          vehiculos={vehiculos}
+          vehicles={listVehicles}
           navigation={navigation}
           user={user}
         />

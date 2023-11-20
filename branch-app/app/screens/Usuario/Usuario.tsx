@@ -44,7 +44,7 @@ export default function Usuario(props: UserStackScreenProps<"User">) {
 
   useFocusEffect(
     useCallback(() => {
-      fetch(URL_SERVICES + "usuario/getByEmail/" + userLogged?.email, {
+      fetch(URL_SERVICES + "/usuario/getByEmail/" + userLogged?.email, {
         method: "GET",
         headers: {
           Accept: "application/json",
@@ -112,7 +112,7 @@ export default function Usuario(props: UserStackScreenProps<"User">) {
       } else if (response.assets) {
         const { uri, fileName, type } = response.assets[0];
 
-        fetch(URL_SERVICES + "file/signedURL", {
+        fetch(URL_SERVICES + "/file/signedURL", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
