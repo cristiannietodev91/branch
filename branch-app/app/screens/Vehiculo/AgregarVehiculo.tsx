@@ -13,7 +13,6 @@ import { launchImageLibrary } from "react-native-image-picker";
 import Moment from "moment";
 import auth from "@react-native-firebase/auth";
 import { Dropdown } from "react-native-material-dropdown-v2";
-import { URL_SERVICES } from "@env";
 import { useForm } from "react-hook-form";
 import Snackbar from "react-native-snackbar";
 import { years } from "../../../data/data";
@@ -53,6 +52,10 @@ export default function AgregarVehiculo(
   const [marca, setMarca] = useState<string>("");
   const [urlFoto] = useState();
   const { mutate: createVehicle } = useMutation<Vehicle>("vehiculo/create");
+  const { mutate: signFile } = useMutation<string>("file/signedURL");
+  const { mutate: putFile, setUrl: setUrlToPutFile } = useMutation<{
+    url: string;
+  }>(undefined, undefined, "PUT");
 
   const { data: marcas, getData: getBrands } =
     useFetch<ListBrand>("marca/getAllUnique");
@@ -121,7 +124,7 @@ export default function AgregarVehiculo(
       maxHeight: 500,
     };
 
-    launchImageLibrary(options, (response) => {
+    launchImageLibrary(options, async (response) => {
       if (response.didCancel) {
         console.log("User cancelled photo picker");
       } else if (response.errorMessage) {
@@ -129,49 +132,17 @@ export default function AgregarVehiculo(
       } else if (response.assets) {
         const { uri, fileName, type } = response.assets[0];
 
-        fetch(URL_SERVICES + "/file/signedURL", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            fileName: fileName,
-          }),
-        })
-          .then((response) => {
-            response.json().then((url) => {
-              fetch(url, {
-                method: "PUT",
-                headers: {
-                  "Content-Type": type || "",
-                },
-                body: {
-                  uri: uri || "",
-                  type: type,
-                  name: fileName,
-                },
-              })
-                .then(() => {
-                  /*let url: string = response.url.substring(
-                    0,
-                    response.url.indexOf("?")
-                  );
-                  let key = url.substring(url.lastIndexOf("/") + 1, url.length);
-                  setUrlFoto({
-                    url: response.url.substring(0, response.url.indexOf("?")),
-                    date: new Date().toString(),
-                    size: fileSize,
-                    type: type,
-                    selected: false,
-                    validate: false,
-                    keynameFile: key,
-                    nombreArchivo: fileName,
-                  });*/
-                })
-                .catch((error) => console.error(error));
-            });
-          })
-          .catch((error) => console.error(error));
+        const { isSuccess, data: url } = await signFile({ fileName: fileName });
+
+        if (isSuccess && url && type && uri) {
+          setUrlToPutFile(url);
+
+          await putFile({
+            uri: uri,
+            type: type,
+            name: fileName,
+          });
+        }
       }
     });
   };

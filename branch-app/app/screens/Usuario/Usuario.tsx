@@ -10,6 +10,7 @@ import { launchImageLibrary } from "react-native-image-picker";
 import ButtonBranch from "../../components/branch/button";
 import { UserStackScreenProps } from "../../../types/types";
 import { useFocusEffect } from "@react-navigation/native";
+import useMutation from "../../hooks/useMutation";
 
 export default function Usuario(props: UserStackScreenProps<"User">) {
   const { navigation } = props;
@@ -18,6 +19,10 @@ export default function Usuario(props: UserStackScreenProps<"User">) {
   const [facebookUser, setFacebookUser] =
     useState<FirebaseAuthTypes.UserInfo>();
   const [urlFoto] = useState();
+  const { mutate: signFile } = useMutation<string>("file/signedURL");
+  const { mutate: putFile, setUrl: setUrlToPutFile } = useMutation<{
+    url: string;
+  }>(undefined, undefined, "PUT");
 
   let userLogged = auth().currentUser;
 
@@ -104,7 +109,7 @@ export default function Usuario(props: UserStackScreenProps<"User">) {
       maxHeight: 500,
     };
 
-    launchImageLibrary(options, (response) => {
+    launchImageLibrary(options, async (response) => {
       if (response.didCancel) {
         console.log("User cancelled photo picker");
       } else if (response.errorMessage) {
@@ -112,50 +117,17 @@ export default function Usuario(props: UserStackScreenProps<"User">) {
       } else if (response.assets) {
         const { uri, fileName, type } = response.assets[0];
 
-        fetch(URL_SERVICES + "/file/signedURL", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            fileName: fileName,
-          }),
-        })
-          .then((response) => {
-            response.json().then((url) => {
-              fetch(url, {
-                method: "PUT",
-                headers: {
-                  "Content-Type": type || "",
-                },
-                body: {
-                  uri: uri || "",
-                  type: type,
-                  name: fileName,
-                },
-              })
-                .then(() => {
-                  /*let url: string = response.url.substring(
-                    0,
-                    response.url.indexOf("?")
-                  );
+        const { isSuccess, data: url } = await signFile({ fileName: fileName });
 
-                  let key = url.substring(url.lastIndexOf("/") + 1, url.length);
-                   setUrlFoto({
-                    url: response.url.substring(0, response.url.indexOf("?")),
-                    date: new Date().toString(),
-                    size: fileSize,
-                    type: type,
-                    selected: false,
-                    validate: false,
-                    keynameFile: key,
-                    nombreArchivo: fileName,
-                  }); */
-                })
-                .catch((error) => console.error(error));
-            });
-          })
-          .catch((error) => console.error(error));
+        if (isSuccess && url && type && uri) {
+          setUrlToPutFile(url);
+
+          await putFile({
+            uri: uri,
+            type: type,
+            name: fileName,
+          });
+        }
       }
     });
   };

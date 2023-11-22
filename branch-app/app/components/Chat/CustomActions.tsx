@@ -1,6 +1,5 @@
 import React from "react";
 import { View, TouchableOpacity } from "react-native";
-import { URL_SERVICES } from "@env";
 import { launchImageLibrary } from "react-native-image-picker";
 import { Icon, Image } from "@rneui/themed";
 import styles from "../../styles/App.scss";
@@ -13,6 +12,9 @@ type CustomActionsProps = {
 export default function CustomActions(props: CustomActionsProps) {
   const { onSend } = props;
   const { mutate: signFile } = useMutation<string>("file/signedURL");
+  const { mutate: putFile, setUrl: setUrlToPutFile } = useMutation<{
+    url: string;
+  }>(undefined, undefined, "PUT");
   const onActionsPress = () => {
     const options = {
       mediaType: "photo" as const,
@@ -31,28 +33,20 @@ export default function CustomActions(props: CustomActionsProps) {
 
         const { isSuccess, data: url } = await signFile({ fileName: fileName });
 
-        if (isSuccess && url && type) {
-          fetch(url, {
-            method: "PUT",
-            headers: {
-              "Content-Type": type,
-            },
-            body: {
-              uri: uri,
-              type: type,
-              name: fileName,
-            },
-          })
-            .then((response: any) => {
-              console.log("Response :::>", response);
-              let urlFile: string = response.url.substring(
-                0,
-                response.url.indexOf("?")
-              );
+        if (isSuccess && url && type && uri) {
+          setUrlToPutFile(url);
 
-              onSend([{ image: urlFile }]);
-            })
-            .catch((error: any) => console.error(error));
+          const { isSuccess: isSuccessSendingFile, data } = await putFile({
+            uri: uri,
+            type: type,
+            name: fileName,
+          });
+
+          if (isSuccessSendingFile && data) {
+            let urlFile: string = data.url.substring(0, data.url.indexOf("?"));
+
+            onSend([{ image: urlFile }]);
+          }
         }
       }
     });

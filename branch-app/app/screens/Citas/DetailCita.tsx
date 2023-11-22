@@ -6,7 +6,6 @@ import ReactSteps, { Step } from "../../components/steeper/steeper";
 import GalleryList from "../../components/GalleryList";
 
 import ActionButton from "react-native-action-button";
-import { URL_SERVICES } from "@env";
 import { useForm } from "react-hook-form";
 import styles from "../../styles/App.scss";
 import {
@@ -24,6 +23,7 @@ export default function DetailCita({
   route,
 }: ActiveAppointmentStackScreenProps<"Detail">) {
   const { cita } = route.params;
+  const orden = cita.ordentrabajos[2];
   const [currentPosition, setCurrentPosition] = useState(0);
   const {
     register,
@@ -33,6 +33,9 @@ export default function DetailCita({
   } = useForm<FormData>();
   const [, setReload] = useState(false);
   const { mutate: orderCreate } = useMutation<OrdenTrabajo>("orden/create");
+  const { mutate: orderUpdate } = useMutation(
+    `/orden/update/${orden.IdOrdenTrabajo}`
+  );
 
   const handleChanged = (value: number) => {
     setCurrentPosition(value);
@@ -48,7 +51,6 @@ export default function DetailCita({
   }, [register]);
 
   const aprobarCotizacion = async (data: any) => {
-    let orden = cita.ordentrabajos[2];
     let ordenToUpdate = orden;
     ordenToUpdate.estado = "Aceptado";
     ordenToUpdate.Observaciones =
@@ -58,19 +60,7 @@ export default function DetailCita({
       " " +
       data.comentario;
 
-    fetch(URL_SERVICES + "/orden/update/" + ordenToUpdate.IdOrdenTrabajo, {
-      method: "PUT",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(ordenToUpdate),
-    })
-      .then((response) => response.json())
-      .then((json) => {
-        console.log("Respuesta actualizar estado orden::>", json);
-      })
-      .catch((error) => console.error(error));
+    await orderUpdate(ordenToUpdate);
 
     const ordenCreate = {
       IdTaller: orden.IdTaller,
@@ -91,8 +81,7 @@ export default function DetailCita({
     }
   };
 
-  const rechazarCotizacion = (data: any) => {
-    let orden = cita.ordentrabajos[2];
+  const rechazarCotizacion = async (data: any) => {
     let ordenToUpdate = orden;
     ordenToUpdate.estado = "Rechazado";
     ordenToUpdate.Observaciones =
@@ -102,20 +91,11 @@ export default function DetailCita({
       " " +
       data.comentario;
 
-    fetch(URL_SERVICES + "/orden/update/" + ordenToUpdate.IdOrdenTrabajo, {
-      method: "PUT",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(ordenToUpdate),
-    })
-      .then((response) => response.json())
-      .then((json) => {
-        console.log("Respuesta actualizar estado orden::>", json);
-        setReload(true);
-      })
-      .catch((error) => console.error(error));
+    const { isSuccess } = await orderUpdate(ordenToUpdate);
+
+    if (isSuccess) {
+      setReload(true);
+    }
   };
 
   let PhotosDiagnostico: Array<any>;

@@ -3,7 +3,6 @@ import { View, TouchableOpacity, Platform } from "react-native";
 import { Text, Image } from "@rneui/themed";
 import Moment from "moment";
 import { launchImageLibrary } from "react-native-image-picker";
-import { URL_SERVICES } from "@env";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import styles from "../../styles/App.scss";
 import ButtonBranch from "../../components/branch/button";
@@ -36,6 +35,11 @@ export default function Documento(props: DocumentProps) {
     "PUT"
   );
 
+  const { mutate: signFile } = useMutation<string>("file/signedURL");
+  const { mutate: putFile, setUrl: setUrlToPutFile } = useMutation<{
+    url: string;
+  }>(undefined, undefined, "PUT");
+
   useEffect(() => {
     switch (tipoDocumento) {
       case "soat":
@@ -63,7 +67,7 @@ export default function Documento(props: DocumentProps) {
       maxHeight: 500,
     };
 
-    launchImageLibrary(options, (response: any) => {
+    launchImageLibrary(options, async (response: any) => {
       if (response.didCancel) {
         console.log("User cancelled photo picker");
       } else if (response.error) {
@@ -73,66 +77,50 @@ export default function Documento(props: DocumentProps) {
       } else {
         const { uri, fileName, fileSize, type } = response;
 
-        fetch(URL_SERVICES + "file/signedURL", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            fileName: fileName,
-          }),
-        })
-          .then((response) => {
-            return response.json();
-          })
-          .then((url) => {
-            console.log("Url to load :::>", url);
-            fetch(url, {
-              method: "PUT",
-              headers: {
-                "Content-Type": type,
-              },
-              body: {
-                uri: uri,
-                type: type,
-                name: fileName,
-              },
-            })
-              .then(async (response: any) => {
-                console.log("Response :::>", response);
-                let url: string = response.url.substring(
-                  0,
-                  response.url.indexOf("?")
-                );
-                let key = url.substring(url.lastIndexOf("/") + 1, url.length);
+        const { isSuccess, data: url } = await signFile({ fileName: fileName });
 
-                let newDocumento = {
-                  url: response.url.substring(0, response.url.indexOf("?")),
-                  date: new Date().toString(),
-                  size: fileSize,
-                  type: type,
-                  selected: false,
-                  validate: false,
-                  keynameFile: key,
-                  nombreArchivo: fileName,
-                };
+        if (isSuccess && url && type && uri) {
+          setUrlToPutFile(url);
 
-                setShowDocument(newDocumento);
+          const { isSuccess: isSuccessSendingFile, data } = await putFile({
+            uri: uri,
+            type: type,
+            name: fileName,
+          });
 
-                switch (tipoDocumento) {
-                  case "soat":
-                    vehiculo.soat = newDocumento;
-                    break;
-                  case "tecnomecanica":
-                    vehiculo.tecnomecanica = newDocumento;
-                    break;
-                }
+          if (isSuccessSendingFile && data) {
+            let urlFile: string = data.url.substring(0, data.url.indexOf("?"));
 
-                await updateVehicle(vehiculo);
-              })
-              .catch((error: any) => console.error(error));
-          })
-          .catch((error) => console.error(error));
+            let key = urlFile.substring(
+              urlFile.lastIndexOf("/") + 1,
+              urlFile.length
+            );
+
+            const newDocumento = {
+              url: urlFile,
+              date: new Date().toString(),
+              size: fileSize,
+              type: type,
+              selected: false,
+              validate: false,
+              keynameFile: key,
+              nombreArchivo: fileName,
+            };
+
+            setShowDocument(newDocumento);
+
+            switch (tipoDocumento) {
+              case "soat":
+                vehiculo.soat = newDocumento;
+                break;
+              case "tecnomecanica":
+                vehiculo.tecnomecanica = newDocumento;
+                break;
+            }
+
+            await updateVehicle(vehiculo);
+          }
+        }
       }
     });
   };

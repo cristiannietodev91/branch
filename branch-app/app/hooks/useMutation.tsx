@@ -7,13 +7,15 @@ interface FetchState<T, P> {
   mutate: (
     bodyRequest: P
   ) => Promise<{ data?: Awaited<T>; isSuccess: boolean; error?: Error }>;
+  setUrl: React.Dispatch<React.SetStateAction<string>>;
 }
 
 function useMutation<T, P = object>(
-  url: string,
+  initialUrl: string = "",
   queryParams?: object,
   method: HttpMethod = "POST"
 ): FetchState<T, P> {
+  const [url, setUrl] = useState(initialUrl);
   const [loading, setLoading] = useState<boolean>(true);
 
   const mutateDate = useCallback(
@@ -38,6 +40,7 @@ function useMutation<T, P = object>(
   return {
     loading,
     mutate: mutateDate,
+    setUrl,
   };
 }
 
