@@ -147,7 +147,7 @@ function Vehiculo(props: VehicleComponentProps) {
         <Text style={styles.bodyText}>{vehicle.placa}</Text>
         <Text style={styles.bodyText}>{vehicle.kilometraje} Km</Text>
       </View>
-      <View style={styles.cardMotoButtons}>
+      <View>
         <ButtonBranch
           iconName="file-document-outline"
           onPress={() => {

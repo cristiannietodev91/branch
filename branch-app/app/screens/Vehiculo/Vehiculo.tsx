@@ -10,6 +10,7 @@ import Loading from "../../components/Loading";
 
 import { ListVehicles } from "../../../types/types";
 import useFetch from "../../hooks/useFetch";
+import useMutation from "../../hooks/useMutation";
 
 export default function Vehiculo() {
   const user = auth().currentUser;
@@ -17,56 +18,67 @@ export default function Vehiculo() {
   const {
     data: listVehicles,
     loading,
-    error,
+    error: errorGettingVehicles,
     getData: getVehicles,
   } = useFetch<ListVehicles>(`vehiculo/getByIdUsuario/${user?.uid}`);
+
+  const { mutate: updateUser } = useMutation(`usuario/update/${user?.uid}`);
 
   useEffect(() => {
     getVehicles();
   }, [getVehicles]);
 
-  if (error) {
+  if (errorGettingVehicles) {
     Snackbar.show({
-      text: error.message,
+      text: errorGettingVehicles.message,
       duration: Snackbar.LENGTH_LONG,
     });
   }
 
-  // TODO: Fix error updating message token
-  /*useEffect(() => {
+  useEffect(() => {
     messaging()
       .getToken()
-      .then((token) => {
+      .then(async (token) => {
+        console.log(token);
         let usuario = {
           tokenCM: token,
           celular: user?.phoneNumber,
         };
-        fetch(URL_SERVICES + "usuario/update/" + user?.uid, {
-          method: "PUT",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(usuario),
-        })
-          .then((response) => {
-            if (response.status === 202) {
-              return response.json();
-            } else {
-              Snackbar.show({
-                text: "Ocurrio un error al actualizar el token",
-                duration: Snackbar.LENGTH_SHORT,
-              });
-            }
-            setLoading(false);
-          })
-          .catch((error) => console.error(error));
+
+        const { error: errorUpdateUser } = await updateUser(usuario);
+
+        if (errorUpdateUser) {
+          Snackbar.show({
+            text: "Ocurrio un error al actualizar el token",
+            duration: Snackbar.LENGTH_SHORT,
+          });
+        }
+      })
+      .catch((error) => {
+        if (error instanceof Error) {
+          Snackbar.show({
+            text: error?.message,
+            duration: Snackbar.LENGTH_LONG,
+          });
+        }
       });
     // Listen to whether the token changes
-    return messaging().onTokenRefresh((token) => {
-      console.log("Token renovado :::>", token);
+    return messaging().onTokenRefresh(async (token) => {
+      const usuario = {
+        tokenCM: token,
+        celular: user?.phoneNumber,
+      };
+
+      const { error: errorUpdateUser } = await updateUser(usuario);
+
+      if (errorUpdateUser) {
+        Snackbar.show({
+          text: "Ocurrio un error al actualizar el token",
+          duration: Snackbar.LENGTH_SHORT,
+        });
+      }
     });
-  }, [user]);*/
+  }, [updateUser, user]);
 
   return (
     <SafeAreaView style={styles.container}>

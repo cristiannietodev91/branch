@@ -68,7 +68,7 @@ function RenderIcon(props: any) {
     return renderIcon;
   } else {
     return (
-      <View style={styles.iconButton}>
+      <View>
         <Image
           source={require("./../../../assets/drawable-xxxhdpi/button.png")}
           style={styles.iconButtonImage}

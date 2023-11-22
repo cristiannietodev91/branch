@@ -155,6 +155,7 @@ export type ListVehicles = Vehicle[];
 export type ListBrand = Brand[];
 export type ListMessage = Message[];
 export type ListAppointment = Appointment[];
+export type ListTalleres = Taller[];
 
 /***********************************************
  * React navigation types

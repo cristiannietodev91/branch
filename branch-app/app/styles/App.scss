@@ -30,7 +30,6 @@ $standardSpace: 10px;
 // ====== COMMON STYLES ====== //
 .container, .bgSelectLogin, .logoLogin, .HeaderMoto, .registerContainer{
   flex: 1;
-  flex-grow: 1;
 }
 .darkContainer{
   background-color: $dark;
@@ -92,7 +91,7 @@ $standardSpace: 10px;
 .scrollContainer{
   flex-grow: 1;
   justify-content: flex-start;
-  padding-top: $standardSpace;
+  padding-top: 2px;
   padding-bottom: $standardSpace*7;
   background-color: $primary_light;
 }
@@ -263,7 +262,7 @@ $standardSpace: 10px;
   flex-direction: row;
 }
 .cardMotoInfo{
-  width: 215px;
+  width: 54%;
 }
 .cardMotoImageContainer{
   background-color: $disable;
@@ -320,11 +319,12 @@ $standardSpace: 10px;
 }
 .garageCard{
   width: 100%;
-  margin: $standardSpace*6 0 $standardSpace; 
+  margin: 10px 0 $standardSpace; 
   // border-radius: $standardSpace;
-  padding-bottom: $standardSpace;
+  padding: $standardSpace;
   border-bottom-width: 1px;
   border-bottom-color: #bde1e1;
+  align-items: center;
 }
 .garageCardImage{
   width: 100%;
@@ -334,11 +334,12 @@ $standardSpace: 10px;
   top: -50px;
 }
 .garageCardMapContainer{
-  width: 95%;
-  height: 130px;
-  border-radius: 10px;
+  width: 100%;
+  height: 65%;
+  border-radius: 15px;
   overflow: hidden;
   margin: auto;
+  border: 1px solid $contrast;
 }
 .garageCardMap{
   width: 100%;
@@ -350,15 +351,12 @@ $standardSpace: 10px;
   // background-color: $alert;
 }
 .garageCardText{
-  width: 325px;
+  flex: 1;
   padding-top: $standardSpace;
   // background-color: $contrast;
 }
 .headingGarageCard{
   color: $contrast;
-}
-.garageCardButtons{
-  // background-color: $primary_light;
 }
 
 // ====== PROFILE ====== //

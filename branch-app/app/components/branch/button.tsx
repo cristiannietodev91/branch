@@ -16,7 +16,7 @@ type ButtonBranch = {
 export default function buttonBranch(props: ButtonBranch) {
   const { iconName, onPress } = props;
   return (
-    <View style={styles.iconButton}>
+    <View>
       <Image
         source={require("./../../../assets/drawable-xxxhdpi/button.png")}
         style={styles.iconButtonImage}

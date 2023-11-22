@@ -27,7 +27,7 @@ export default function Talleres(props: WorkShopStackScreenProps<"Main">) {
       {loading || !vehicles ? (
         <Loading isVisible={true} text="Cargando" />
       ) : (
-        <ListTalleres vehiculos={vehicles} navigation={navigation} />
+        <ListTalleres vehicles={vehicles} navigation={navigation} />
       )}
     </SafeAreaView>
   );

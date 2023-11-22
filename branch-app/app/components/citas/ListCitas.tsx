@@ -166,7 +166,7 @@ function Cita(props: CitaProps) {
         </Text>
       </View>
       {cita.estado === "Cumplida" && (
-        <View style={styles.cardMotoButtons}>
+        <View>
           <ButtonBranch
             iconName="chevron-right"
             onPress={() => {

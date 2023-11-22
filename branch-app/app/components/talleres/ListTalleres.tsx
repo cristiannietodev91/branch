@@ -16,19 +16,27 @@ import { EmptyGarage } from "./../../../assets/svg/EmptyGarage";
 import ButtonBranch from "../../components/branch/button";
 import { NotificationContext } from "../ContextNotifications";
 import ActionButton from "react-native-action-button";
-import { WorkShopStackScreenProps } from "../../../types/types";
+import type {
+  ListTalleres,
+  ListVehicles,
+  Taller,
+  WorkShopStackScreenProps,
+} from "../../../types/types";
 
 interface ListWorkshopProps
   extends Pick<WorkShopStackScreenProps<"Main">, "navigation"> {
-  vehiculos: any;
+  vehicles: ListVehicles;
 }
 
 interface WorkshopComponentProps
   extends Pick<WorkShopStackScreenProps<"Main">, "navigation"> {
-  taller: any;
+  taller: Taller;
 }
 
-export default function ListTalleres(props: ListWorkshopProps) {
+export default function ListTalleres({
+  vehicles = [],
+  navigation,
+}: ListWorkshopProps) {
   const useHandleScroll = () => {
     const [showButton, setShowButton] = useState(true);
 
@@ -74,17 +82,17 @@ export default function ListTalleres(props: ListWorkshopProps) {
 
   const { handleScroll, showButton } = useHandleScroll();
 
-  const { vehiculos, navigation } = props;
-  let listTalleres = [] as any;
+  let listTalleres: ListTalleres = [];
+  if (vehicles) {
+    const uniqueTallerIds = new Set();
 
-  if (vehiculos) {
-    vehiculos.map((vehiculo: any) => {
-      if (vehiculo.taller) {
-        const found = listTalleres.some(
-          (taller: any) => taller.IdTaller === vehiculo.taller.IdTaller
-        );
-        if (!found) {
-          listTalleres.push(vehiculo.taller);
+    vehicles.forEach((vehicle) => {
+      const { taller } = vehicle;
+      if (taller) {
+        const { IdTaller } = taller;
+        if (!uniqueTallerIds.has(IdTaller)) {
+          uniqueTallerIds.add(IdTaller);
+          listTalleres.push(taller);
         }
       }
     });
@@ -112,7 +120,7 @@ export default function ListTalleres(props: ListWorkshopProps) {
         renderItem={(taller) => (
           <Taller taller={taller.item} navigation={navigation} />
         )}
-        keyExtractor={(item) => item.IdTaller}
+        keyExtractor={(item) => item.IdTaller.toString()}
         ListEmptyComponent={EmptyList}
       />
       {showButton && <AddCitaButton />}

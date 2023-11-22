@@ -34,7 +34,7 @@ export default function DetailCita({
   const [, setReload] = useState(false);
   const { mutate: orderCreate } = useMutation<OrdenTrabajo>("orden/create");
   const { mutate: orderUpdate } = useMutation(
-    `/orden/update/${orden.IdOrdenTrabajo}`
+    `/orden/update/${orden?.IdOrdenTrabajo}`
   );
 
   const handleChanged = (value: number) => {
