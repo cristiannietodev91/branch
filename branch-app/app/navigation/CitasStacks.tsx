@@ -5,11 +5,11 @@ import CitasPasadasStacks from "./CitasPasadasStacks";
 import CitasActivasStacks from "./CitasActivasStacks";
 import CitasFuturasStacks from "./CitasFuturasStacks";
 import {
-  AppoinmentMainStackParamList,
+  AppointmentMainStackParamList,
   AppointmentStackParamList,
 } from "../../types/types";
 
-const Stack = createStackNavigator<AppoinmentMainStackParamList>();
+const Stack = createStackNavigator<AppointmentMainStackParamList>();
 const Tab = createMaterialTopTabNavigator<AppointmentStackParamList>();
 
 const CitasStacks = () => {

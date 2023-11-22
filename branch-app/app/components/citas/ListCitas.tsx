@@ -16,16 +16,18 @@ import { EmptyDate } from "./../../../assets/svg/EmptyDate";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { NotificationContext } from "../ContextNotifications";
 import ActionButton from "react-native-action-button";
-import { ActiveAppointmentStackScreenProps } from "../../../types/types";
+import {
+  ActiveAppointmentStackScreenProps,
+  ListAppointment,
+} from "../../../types/types";
 
 interface ListCitasProps
   extends Pick<
     ActiveAppointmentStackScreenProps<"NavigateAppointment">,
     "navigation"
   > {
-  citas: any[];
+  citas: ListAppointment;
   etapa?: string;
-  taller?: any;
 }
 
 interface AddCitaButtonProps
@@ -40,10 +42,9 @@ interface CitaProps
     "navigation"
   > {
   cita: any;
-  taller: any;
 }
 
-export default function ListCitas(props: ListCitasProps) {
+export default function ListCitas({ citas, navigation }: ListCitasProps) {
   const useHandleScroll = () => {
     const [showButton, setShowButton] = useState(true);
 
@@ -89,9 +90,8 @@ export default function ListCitas(props: ListCitasProps) {
 
   const { handleScroll, showButton } = useHandleScroll();
 
-  const { citas, taller, navigation } = props;
   return (
-    <View style={[styles.container, { padding: 1 }]}>
+    <View style={styles.container}>
       <View style={styles.headerDates}>
         <ImageBackground
           source={require("../../../assets/drawable-xxxhdpi/header_date.png")}
@@ -106,9 +106,7 @@ export default function ListCitas(props: ListCitasProps) {
         contentContainerStyle={styles.scrollContainer}
         onScroll={handleScroll}
         data={citas}
-        renderItem={(cita) => (
-          <Cita cita={cita.item} navigation={navigation} taller={taller} />
-        )}
+        renderItem={(cita) => <Cita cita={cita.item} navigation={navigation} />}
         renderHiddenItem={() => (
           <View style={styles.motoDeleteContainer}>
             <TouchableOpacity>
@@ -207,7 +205,7 @@ function AddCitaButton(props: AddCitaButtonProps) {
       degrees={0}
       offsetY={Platform.OS === "ios" ? 100 : 70}
       onPress={() => {
-        navigation.navigate("Addappoinment");
+        navigation.navigate("AddAppointment");
       }}
       renderIcon={() => <Icon name="add-box" />}
     >

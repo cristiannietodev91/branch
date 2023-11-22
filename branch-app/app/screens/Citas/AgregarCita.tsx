@@ -5,13 +5,12 @@ import { Input, Button, Image } from "@rneui/base";
 import auth from "@react-native-firebase/auth";
 import { Dropdown } from "react-native-material-dropdown-v2";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { URL_SERVICES } from "@env";
 import { useForm } from "react-hook-form";
 import Moment from "moment";
 import { services } from "../../../data/data";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
-  AppoinmentScreenNavigationProp,
+  AppointmentScreenNavigationProp,
   ListVehicles,
   Vehicle,
 } from "../../../types/types";
@@ -28,7 +27,7 @@ type FormData = {
 
 export default function AgregarCita({
   navigation,
-}: AppoinmentScreenNavigationProp) {
+}: AppointmentScreenNavigationProp) {
   const {
     register,
     handleSubmit,

@@ -166,7 +166,7 @@ export type InternalAppointmentStackParamList = {
   Detail: { cita: any };
   Pdfdetail: { pdf: any; orden?: any; cita?: any };
   Chat: { IdTaller: number };
-  Addappoinment: undefined;
+  AddAppointment: undefined;
 };
 
 export type ActiveAppointmentStackScreenProps<
@@ -179,12 +179,12 @@ export type AppointmentStackParamList = {
   Future: undefined;
 };
 
-export type AppoinmentMainStackParamList = {
+export type AppointmentMainStackParamList = {
   Citas: undefined;
 };
 
-export type AppoinmentScreenNavigationProp = CompositeScreenProps<
-  StackScreenProps<AppoinmentMainStackParamList, "Citas">,
+export type AppointmentScreenNavigationProp = CompositeScreenProps<
+  StackScreenProps<AppointmentMainStackParamList, "Citas">,
   CompositeScreenProps<
     BottomTabScreenProps<AppointmentStackParamList>,
     ActiveAppointmentStackScreenProps<keyof InternalAppointmentStackParamList>
@@ -234,7 +234,7 @@ export type HomeBottomTabParamList = {
   Motos: StackScreenProps<VehicleStackParamList>;
   WorkShop: StackScreenProps<WorkShopStackParamList>;
   Users: StackScreenProps<UserStackParamList>;
-  Citas: StackScreenProps<AppoinmentMainStackParamList>;
+  Citas: StackScreenProps<AppointmentMainStackParamList>;
 };
 
 export type VehicleScreenNavigationProp =

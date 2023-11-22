@@ -1,10 +1,8 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import auth from "@react-native-firebase/auth";
 import ListCitas from "../../components/citas/ListCitas";
 import Loading from "../../components/Loading";
-import { URL_SERVICES } from "@env";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useFocusEffect } from "@react-navigation/native";
 import styles from "./../../styles/App.scss";
 import {
   ActiveAppointmentStackScreenProps,
@@ -44,9 +42,7 @@ const CitasScreen = ({
   }, [getAppointments]);
 
   return (
-    <SafeAreaView
-      style={[styles.container, styles.datesContainer, { paddingTop: 1 }]}
-    >
+    <SafeAreaView style={[styles.container, styles.datesContainer]}>
       {loading || !appointments ? (
         <Loading isVisible={true} text="Cargando" />
       ) : (

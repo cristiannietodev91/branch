@@ -24,7 +24,7 @@ const CitasActivasStacks = () => {
         options={{ title: "Cotizacion" }}
       />
       <Stack.Screen name="Chat" component={ChatScreen} />
-      <Stack.Screen name="Addappoinment" component={AgregarCitaScreen} />
+      <Stack.Screen name="AddAppointment" component={AgregarCitaScreen} />
     </Stack.Navigator>
   );
 };
