@@ -17,20 +17,19 @@ import { years } from "../../../data/data";
 import { launchImageLibrary } from "react-native-image-picker";
 import Snackbar from "react-native-snackbar";
 import Moment from "moment";
-import { VehiclesStackScreenProps } from "../../../types/types";
+import { ListBrand, VehiclesStackScreenProps } from "../../../types/types";
+import useFetch from "../../hooks/useFetch";
+import useMutation from "../../hooks/useMutation";
 
 export default function EditVehicle(props: VehiclesStackScreenProps<"Edit">) {
   const { navigation, route } = props;
   const { vehicle } = route.params;
-  const [isLoading, setLoading] = useState(true);
-  const [marcas, setMarcas] = useState([]);
   const [showCalendar, setShowCalendar] = useState(false);
   const [fechaCompra, setFechaCompra] = useState(
     vehicle.fechaCompra
       ? Moment(vehicle.fechaCompra, "YYYY-MM-DD").toDate()
       : new Date()
   );
-  const [referencias, setReferencias] = useState([]);
   const {
     register,
     handleSubmit,
@@ -53,16 +52,28 @@ export default function EditVehicle(props: VehiclesStackScreenProps<"Edit">) {
   const [marca, setMarca] = useState("");
   const [urlFoto, setUrlFoto] = useState<string | null>();
 
+  const { mutate: updateVehicle } = useMutation<{
+    message: string;
+  }>(`vehiculo/update/${vehicle.IdVehiculo}`, {}, "PUT");
+
+  const { data: marcas, getData: getBrands } =
+    useFetch<ListBrand>("marca/getAllUnique");
+
+  const { data: referencias, getData: getReferences } = useFetch<ListBrand>(
+    `marca/getAllByMarca/${marca}`
+  );
+
   useEffect(() => {
-    fetch(URL_SERVICES + "marca/getAllUnique")
-      .then((response) => response.json())
-      .then((json) => {
-        //console.log("Respuesta motos ::>", json);
-        setMarcas(json);
-        setLoading(false);
-      })
-      .catch((error) => console.error(error));
-  }, [isLoading]);
+    if (!vehicle.marca) {
+      getBrands();
+    }
+  }, [getBrands, vehicle.marca]);
+
+  useEffect(() => {
+    if (marca !== null && marca.trim() !== "") {
+      getReferences();
+    }
+  }, [getReferences, marca]);
 
   useEffect(() => {
     register("kilometraje", {
@@ -99,8 +110,7 @@ export default function EditVehicle(props: VehiclesStackScreenProps<"Edit">) {
 
   const updateVehiculo = async (data: any) => {
     //console.log("User logged");
-    console.log("Data to send :::>", data);
-    let vehiculoToUdp = {
+    const vehiculoToUdp = {
       alias: data.alias,
       kilometraje: data.kilometraje,
       marca: {
@@ -114,44 +124,19 @@ export default function EditVehicle(props: VehiclesStackScreenProps<"Edit">) {
       fechaCompra: data.fechacompra,
       modelo: data.modelo,
     };
-    fetch(URL_SERVICES + "vehiculo/update/" + vehicle.IdVehiculo, {
-      method: "PUT",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(vehiculoToUdp),
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          return response.json().then((err) => Promise.reject(err));
-        }
-      })
-      .then((json) => {
-        console.log("Respuesta de actualizar la moto ::>", json);
-        navigation.navigate("Main");
-      })
-      .catch((error) => {
-        if (error.message) {
-          Snackbar.show({
-            text: error.message,
-            duration: Snackbar.LENGTH_SHORT,
-          });
-        }
-      });
-  };
 
-  const loadReferencias = (marca: string) => {
-    fetch(URL_SERVICES + "marca/getAllByMarca/" + marca)
-      .then((response) => response.json())
-      .then((json) => {
-        //console.log("Respuesta motos ::>", json);
-        setReferencias(json);
-        setLoading(false);
-      })
-      .catch((error) => console.error(error));
+    const { isSuccess, error } = await updateVehicle(vehiculoToUdp);
+
+    if (isSuccess) {
+      navigation.navigate("Main");
+    }
+
+    if (error) {
+      Snackbar.show({
+        text: error.message,
+        duration: Snackbar.LENGTH_LONG,
+      });
+    }
   };
 
   const uploadImage = async () => {
@@ -364,7 +349,6 @@ export default function EditVehicle(props: VehiclesStackScreenProps<"Edit">) {
               setValue("marca", text);
               setMarca(text);
               setReferencia("");
-              loadReferencias(text);
             }
           }}
           disabled={vehicle.marca.IdMarca !== 1 ? true : false}

@@ -17,8 +17,14 @@ import { URL_SERVICES } from "@env";
 import { useForm } from "react-hook-form";
 import Snackbar from "react-native-snackbar";
 import { years } from "../../../data/data";
-import { VehiclesStackScreenProps } from "../../../types/types";
+import {
+  ListBrand,
+  Vehicle,
+  VehiclesStackScreenProps,
+} from "../../../types/types";
 import styles from "../../styles/App.scss";
+import useFetch from "../../hooks/useFetch";
+import useMutation from "../../hooks/useMutation";
 
 type FormData = {
   marca: string;
@@ -35,9 +41,6 @@ export default function AgregarVehiculo(
   props: VehiclesStackScreenProps<"Add">
 ) {
   const { navigation } = props;
-  const [isLoading, setLoading] = useState(true);
-  const [marcas, setMarcas] = useState([]);
-  const [referencias, setReferencias] = useState([]);
   const {
     register,
     handleSubmit,
@@ -47,21 +50,28 @@ export default function AgregarVehiculo(
   const [showCalendar, setShowCalendar] = useState(false);
   const [fechaCompra, setFechaCompra] = useState(new Date());
   const [referencia, setReferencia] = useState("");
-  const [marca, setMarca] = useState("");
+  const [marca, setMarca] = useState<string>("");
   const [urlFoto] = useState();
+  const { mutate: createVehicle } = useMutation<Vehicle>("vehiculo/create");
+
+  const { data: marcas, getData: getBrands } =
+    useFetch<ListBrand>("marca/getAllUnique");
+
+  const { data: referencias, getData: getReferences } = useFetch<ListBrand>(
+    `marca/getAllByMarca/${marca}`
+  );
 
   const user = auth().currentUser;
 
   useEffect(() => {
-    fetch(URL_SERVICES + "/marca/getAllUnique")
-      .then((response) => response.json())
-      .then((json) => {
-        //console.log("Respuesta motos ::>", json);
-        setMarcas(json);
-        setLoading(false);
-      })
-      .catch((error) => console.error(error));
-  }, [isLoading]);
+    getBrands();
+  }, [getBrands]);
+
+  useEffect(() => {
+    if (marca !== null && marca.trim() !== "") {
+      getReferences();
+    }
+  }, [getReferences, marca]);
 
   useEffect(() => {
     register("marca", {
@@ -102,17 +112,6 @@ export default function AgregarVehiculo(
   }, [register]);
 
   //console.log("Vehiculo ::::>", vehiculo.kilometraje);
-
-  const loadReferencias = (marca: string) => {
-    fetch(URL_SERVICES + "/marca/getAllByMarca/" + marca)
-      .then((response) => response.json())
-      .then((json) => {
-        //console.log("Respuesta motos ::>", json);
-        setReferencias(json);
-        setLoading(false);
-      })
-      .catch((error) => console.error(error));
-  };
 
   const uploadImage = async () => {
     const options = {
@@ -178,9 +177,7 @@ export default function AgregarVehiculo(
   };
 
   const createVehiculo = async (data: any) => {
-    //console.log("User logged");
-
-    let vehiculoCreate = {
+    const vehicleToCreate = {
       placa: data.placa.toUpperCase(),
       alias: data.alias,
       color: data.color,
@@ -199,35 +196,17 @@ export default function AgregarVehiculo(
       fotos: urlFoto ? [urlFoto] : [],
     };
 
-    console.log("Vehiculo to create :::>", vehiculoCreate);
+    const { isSuccess, error } = await createVehicle(vehicleToCreate);
+    if (isSuccess) {
+      navigation.navigate("Main");
+    }
 
-    fetch(URL_SERVICES + "/vehiculo/create", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(vehiculoCreate),
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          return response.json().then((err) => Promise.reject(err));
-        }
-      })
-      .then((json) => {
-        console.log("Respuesta de crear el vehiculo ::>", json);
-        navigation.navigate("Main");
-      })
-      .catch((error) => {
-        if (error.message) {
-          Snackbar.show({
-            text: error.message,
-            duration: Snackbar.LENGTH_SHORT,
-          });
-        }
+    if (error) {
+      Snackbar.show({
+        text: error.message,
+        duration: Snackbar.LENGTH_LONG,
       });
+    }
   };
 
   return (
@@ -292,7 +271,6 @@ export default function AgregarVehiculo(
               setValue("marca", text);
               setMarca(text);
               setReferencia("");
-              loadReferencias(text);
             }
           }}
         />

@@ -1,35 +1,29 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useEffect } from "react";
 import { SafeAreaView } from "react-native";
 import Snackbar from "react-native-snackbar";
 import messaging from "@react-native-firebase/messaging";
 import auth from "@react-native-firebase/auth";
-import { useFocusEffect } from "@react-navigation/native";
 import styles from "../../styles/App.scss";
 
 import ListVehiculos from "../../components/Vehiculos/ListVehiculo";
 import Loading from "../../components/Loading";
-import { URL_SERVICES } from "@env";
 
-import { ListVehicles, VehiclesStackScreenProps } from "../../../types/types";
+import { ListVehicles } from "../../../types/types";
 import useFetch from "../../hooks/useFetch";
 
-export default function Vehiculo({
-  navigation,
-}: VehiclesStackScreenProps<"Main">) {
+export default function Vehiculo() {
   const user = auth().currentUser;
 
   const {
     data: listVehicles,
     loading,
     error,
-  } = useFetch<ListVehicles>(
-    `vehiculo/getByIdUsuario/${user?.uid}`,
-    {
-      method: "GET",
-    },
-    undefined,
-    [user?.uid]
-  );
+    getData: getVehicles,
+  } = useFetch<ListVehicles>(`vehiculo/getByIdUsuario/${user?.uid}`);
+
+  useEffect(() => {
+    getVehicles();
+  }, [getVehicles]);
 
   if (error) {
     Snackbar.show({
@@ -79,11 +73,7 @@ export default function Vehiculo({
       {loading || listVehicles === null ? (
         <Loading isVisible={true} text="Loading" />
       ) : (
-        <ListVehiculos
-          vehicles={listVehicles}
-          navigation={navigation}
-          user={user}
-        />
+        <ListVehiculos vehicles={listVehicles} user={user} />
       )}
     </SafeAreaView>
   );

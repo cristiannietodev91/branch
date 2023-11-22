@@ -1,52 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { View, SafeAreaView, Text } from "react-native";
 import { Card, Icon } from "@rneui/themed";
-import { URL_SERVICES } from "@env";
 import ListServicios from "../../components/servicios/ListServicios";
 import Loading from "../../components/Loading";
 import { VehiclesStackScreenProps } from "../../../types/types";
+import useFetch from "../../hooks/useFetch";
 
 export default function Servicios(props: VehiclesStackScreenProps<"Services">) {
   const { navigation, route } = props;
-  const { vehiculo } = route.params;
-  const [isLoading, setLoading] = useState(true);
-  const [servicios, setListServicios] = useState([]);
-  const [, setListServiciosVehiculo] = useState([]);
-  const [gastosTotal, setGastosTotal] = useState(0);
+  const { vehicle } = route.params;
+  const { data: servicios, getData: getServices } =
+    useFetch("servicios/getAll");
+  const { getData: getServicesByVehicle, loading } = useFetch(
+    `servicios/getByVehiculo/${vehicle.IdVehiculo}`
+  );
 
   useEffect(() => {
-    fetch(URL_SERVICES + "servicios/getAll")
-      .then((response) => response.json())
-      .then((json) => {
-        //console.log("Respuesta motos ::>", json);
-        setListServicios(json);
-      })
-      .catch((error) => console.error(error));
-
-    fetch(URL_SERVICES + "servicios/getByVehiculo/" + vehiculo.IdVehiculo, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((json) => {
-        //console.log("Respuesta motos ::>", json);
-        if (Array.isArray(json)) {
-          let gastos = 0;
-          json.map((element) => {
-            gastos += element.valor;
-          });
-          setGastosTotal(gastos);
-        }
-        setListServiciosVehiculo(json);
-        setLoading(false);
-      })
-      .catch((error) => console.error(error));
-  }, [vehiculo]);
+    getServices();
+    getServicesByVehicle();
+  }, [getServices, getServicesByVehicle, vehicle]);
 
   const currencyFormat = (num: Number) => {
     return "$" + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
@@ -54,7 +26,7 @@ export default function Servicios(props: VehiclesStackScreenProps<"Services">) {
 
   return (
     <SafeAreaView>
-      {isLoading ? (
+      {loading ? (
         <Loading isVisible={true} text="Cargando" />
       ) : (
         <View>
@@ -93,13 +65,13 @@ export default function Servicios(props: VehiclesStackScreenProps<"Services">) {
                     alignContent: "flex-end",
                   }}
                 >
-                  {currencyFormat(gastosTotal)}
+                  {currencyFormat(0)}
                 </Text>
               </View>
             </View>
           </Card>
           <ListServicios
-            vehiculo={vehiculo}
+            vehiculo={vehicle}
             servicios={servicios}
             navigation={navigation}
           />

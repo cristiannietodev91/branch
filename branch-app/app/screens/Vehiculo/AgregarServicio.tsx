@@ -3,8 +3,8 @@ import styles from "../../styles/App.scss";
 import { Text, ScrollView, SafeAreaView, View } from "react-native";
 import { Input, Button } from "@rneui/base";
 import Snackbar from "react-native-snackbar";
-import { URL_SERVICES } from "@env";
 import { useForm } from "react-hook-form";
+import useMutation from "../../hooks/useMutation";
 
 type FormData = {
   valor: string;
@@ -19,6 +19,7 @@ export default function AgregarServicio(props: any) {
     setValue,
     formState: { errors },
   } = useForm<FormData>();
+  const { mutate: createService } = useMutation("servicios/create");
 
   useEffect(() => {
     register("valor", {
@@ -37,32 +38,23 @@ export default function AgregarServicio(props: any) {
 
     console.log("Servicio to create :::>", servicioCreate);
 
-    fetch(URL_SERVICES + "servicios/create", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(servicioCreate),
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((json) => {
-        if (json.error) {
-          Snackbar.show({
-            text: "Ocurrio un error al registrar el servicio",
-            duration: Snackbar.LENGTH_LONG,
-          });
-        } else {
-          Snackbar.show({
-            text: "Se registro el servicio correctamente",
-            duration: Snackbar.LENGTH_LONG,
-          });
-        }
-        navigation.navigate("Vehiculo");
-      })
-      .catch((error) => console.error(error));
+    const { isSuccess, error } = await createService(servicioCreate);
+
+    if (isSuccess) {
+      Snackbar.show({
+        text: "Se registro el servicio correctamente",
+        duration: Snackbar.LENGTH_LONG,
+      });
+      navigation.navigate("Vehiculo");
+      return;
+    }
+
+    if (error) {
+      Snackbar.show({
+        text: "Ocurrio un error al registrar el servicio",
+        duration: Snackbar.LENGTH_LONG,
+      });
+    }
   };
 
   return (

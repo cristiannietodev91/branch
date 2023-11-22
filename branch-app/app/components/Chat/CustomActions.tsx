@@ -4,6 +4,7 @@ import { URL_SERVICES } from "@env";
 import { launchImageLibrary } from "react-native-image-picker";
 import { Icon, Image } from "@rneui/themed";
 import styles from "../../styles/App.scss";
+import useMutation from "../../hooks/useMutation";
 
 type CustomActionsProps = {
   onSend: (list: any[]) => void;
@@ -11,6 +12,7 @@ type CustomActionsProps = {
 
 export default function CustomActions(props: CustomActionsProps) {
   const { onSend } = props;
+  const { mutate: signFile } = useMutation<string>("file/signedURL");
   const onActionsPress = () => {
     const options = {
       mediaType: "photo" as const,
@@ -19,7 +21,7 @@ export default function CustomActions(props: CustomActionsProps) {
       maxHeight: 500,
     };
 
-    launchImageLibrary(options, (response) => {
+    launchImageLibrary(options, async (response) => {
       if (response.didCancel) {
         console.log("User cancelled photo picker");
       } else if (response.errorMessage) {
@@ -27,43 +29,31 @@ export default function CustomActions(props: CustomActionsProps) {
       } else if (response.assets) {
         const { uri, fileName, type } = response.assets[0];
 
-        fetch(URL_SERVICES + "file/signedURL", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            fileName: fileName,
-          }),
-        })
-          .then((response) => {
-            return response.json();
-          })
-          .then((url) => {
-            console.log("Url to load :::>", url);
-            fetch(url, {
-              method: "PUT",
-              headers: {
-                "Content-Type": type,
-              },
-              body: {
-                uri: uri,
-                type: type,
-                name: fileName,
-              },
-            })
-              .then((response: any) => {
-                console.log("Response :::>", response);
-                let url: string = response.url.substring(
-                  0,
-                  response.url.indexOf("?")
-                );
+        const { isSuccess, data: url } = await signFile({ fileName: fileName });
 
-                onSend([{ image: url }]);
-              })
-              .catch((error: any) => console.error(error));
+        if (isSuccess && url && type) {
+          fetch(url, {
+            method: "PUT",
+            headers: {
+              "Content-Type": type,
+            },
+            body: {
+              uri: uri,
+              type: type,
+              name: fileName,
+            },
           })
-          .catch((error) => console.error(error));
+            .then((response: any) => {
+              console.log("Response :::>", response);
+              let urlFile: string = response.url.substring(
+                0,
+                response.url.indexOf("?")
+              );
+
+              onSend([{ image: urlFile }]);
+            })
+            .catch((error: any) => console.error(error));
+        }
       }
     });
   };

@@ -3,9 +3,9 @@ import { View, Image, SafeAreaView } from "react-native";
 import { Input, Button, Text } from "@rneui/base";
 import { useForm } from "react-hook-form";
 import Snackbar from "react-native-snackbar";
-import { URL_SERVICES } from "@env";
 import styles from "../../styles/App.scss";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import useMutation from "../../hooks/useMutation";
 
 type FormData = {
   nombre: string;
@@ -15,7 +15,7 @@ type FormData = {
 
 export default function EditarUsuario(props: any) {
   const { navigation } = props;
-  const { usuario, usuarioFacebook, setReloadData } = navigation.state.params;
+  const { usuario, usuarioFacebook } = navigation.state.params;
   const {
     register,
     handleSubmit,
@@ -23,7 +23,7 @@ export default function EditarUsuario(props: any) {
     formState: { errors },
   } = useForm<FormData>();
 
-  console.log("usuario facebook ::>", usuarioFacebook);
+  const { mutate: updateUser } = useMutation(`usuario/update/${usuario.uid}`);
 
   useEffect(() => {
     register("nombre", {
@@ -56,34 +56,23 @@ export default function EditarUsuario(props: any) {
       firstName: data.nombre,
     };
 
-    fetch(URL_SERVICES + "usuario/update/" + usuario.uid, {
-      method: "PUT",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(usuarioUpdate),
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((json) => {
-        console.log(json);
-        if (json.error) {
-          Snackbar.show({
-            text: json.error,
-            duration: Snackbar.LENGTH_SHORT,
-          });
-        } else {
-          navigation.navigate("Usuario");
-          Snackbar.show({
-            text: "Se actualizo el usuario correctamente",
-            duration: Snackbar.LENGTH_SHORT,
-          });
-        }
-        setReloadData(true);
-      })
-      .catch((error) => console.error(error));
+    const { isSuccess, error } = await updateUser(usuarioUpdate);
+
+    if (isSuccess) {
+      navigation.navigate("Usuario");
+      Snackbar.show({
+        text: "Se actualizo el usuario correctamente",
+        duration: Snackbar.LENGTH_SHORT,
+      });
+      return;
+    }
+
+    if (error) {
+      Snackbar.show({
+        text: error.message,
+        duration: Snackbar.LENGTH_SHORT,
+      });
+    }
   };
 
   return (

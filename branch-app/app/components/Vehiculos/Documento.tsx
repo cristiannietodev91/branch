@@ -8,6 +8,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import styles from "../../styles/App.scss";
 import ButtonBranch from "../../components/branch/button";
 import { Vehicle, VehiclesStackScreenProps } from "../../../types/types";
+import useMutation from "../../hooks/useMutation";
 
 interface DocumentProps
   extends Pick<VehiclesStackScreenProps<"Documents">, "navigation"> {
@@ -24,6 +25,16 @@ export default function Documento(props: DocumentProps) {
   const [showCalendar, setShowCalendar] = useState<boolean>(false);
   const [showDocument, setShowDocument] = useState(documento);
   const [fechaVencimiento, setFechaVencimiento] = useState("");
+  const { mutate: updateVehicle } = useMutation(
+    `vehiculo/update/${vehiculo.IdVehiculo}`,
+    {},
+    "PUT"
+  );
+  const { mutate: updateFechaVencimiento } = useMutation<string>(
+    `vehiculo/updateFechavencimiento/${vehiculo.IdVehiculo}`,
+    {},
+    "PUT"
+  );
 
   useEffect(() => {
     switch (tipoDocumento) {
@@ -87,7 +98,7 @@ export default function Documento(props: DocumentProps) {
                 name: fileName,
               },
             })
-              .then((response: any) => {
+              .then(async (response: any) => {
                 console.log("Response :::>", response);
                 let url: string = response.url.substring(
                   0,
@@ -117,22 +128,7 @@ export default function Documento(props: DocumentProps) {
                     break;
                 }
 
-                fetch(URL_SERVICES + "vehiculo/update/" + vehiculo.IdVehiculo, {
-                  method: "PUT",
-                  headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify(vehiculo),
-                })
-                  .then((response) => {
-                    if (response.ok) {
-                      return response.json();
-                    } else {
-                      return response.json().then((err) => Promise.reject(err));
-                    }
-                  })
-                  .catch((error) => console.error(error));
+                await updateVehicle(vehiculo);
               })
               .catch((error: any) => console.error(error));
           })
@@ -141,7 +137,7 @@ export default function Documento(props: DocumentProps) {
     });
   };
 
-  const uploadFechaVencimiento = (fechaVencimiento: Date) => {
+  const uploadFechaVencimiento = async (fechaVencimiento: Date) => {
     let vehiculoToUpdate = {
       fvsoat: vehiculo.fvsoat,
       fvtecnomecanica: vehiculo.fvtecnomecanica,
@@ -160,24 +156,13 @@ export default function Documento(props: DocumentProps) {
         break;
     }
 
-    fetch(
-      URL_SERVICES + "vehiculo/updateFechavencimiento/" + vehiculo.IdVehiculo,
-      {
-        method: "PUT",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(vehiculoToUpdate),
-      }
-    )
-      .then((response) => {
-        return response.json();
-      })
-      .then(() => {
-        setFechaVencimiento(fechaVence);
-      })
-      .catch((error) => console.error(error));
+    const { isSuccess, data: resultUpdate } = await updateFechaVencimiento(
+      vehiculoToUpdate
+    );
+
+    if (isSuccess && resultUpdate) {
+      setFechaVencimiento(resultUpdate);
+    }
   };
 
   return (

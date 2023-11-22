@@ -4,10 +4,10 @@ import { View, Text, SafeAreaView } from "react-native";
 import { useForm } from "react-hook-form";
 import { Input, Button, Image, Icon } from "@rneui/base";
 import auth from "@react-native-firebase/auth";
-import { URL_SERVICES } from "@env";
 import Snackbar from "react-native-snackbar";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useNavigation } from "@react-navigation/native";
+import useMutation from "../../hooks/useMutation";
 
 type FormData = {
   email: string;
@@ -27,6 +27,7 @@ export default function Register() {
   } = useForm<FormData>();
   const [, setUser] = useState();
   const [togglePassword, passwordState] = useState(true);
+  const { mutate: createUser } = useMutation("usuario/createFireBaseUser");
 
   // Handle user state changes
   async function onAuthStateChanged(user: any) {
@@ -75,54 +76,27 @@ export default function Register() {
       password: data.password,
     };
 
-    console.log("URL ::>", URL_SERVICES);
-    fetch(URL_SERVICES + "usuario/createFireBaseUser", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(usuarioToCreate),
-    })
-      .then((response) => {
-        console.log("Response :::>", response);
-        return response.json();
-      })
-      .then(async (json) => {
-        console.log("Error al logear :::>", json);
-        const { error } = json;
-        if (error) {
+    const { isSuccess } = await createUser(usuarioToCreate);
+
+    if (isSuccess) {
+      try {
+        await auth().signInWithEmailAndPassword(data.email, data.password);
+        navigation.navigate("Home");
+      } catch (error: any) {
+        const errorCode = error.code;
+        if (errorCode === "auth/wrong-password") {
           Snackbar.show({
-            text: error,
+            text: "Wrong Password",
             duration: Snackbar.LENGTH_SHORT,
           });
         } else {
-          await auth()
-            .signInWithEmailAndPassword(data.email, data.password)
-            .then((result) => {
-              console.log("Resultado de autenticacion exitoso", result);
-              navigation.navigate("Home");
-            })
-            .catch((error) => {
-              var errorCode = error.code;
-              var errorMessage = error.message;
-              if (errorCode === "auth/wrong-password") {
-                Snackbar.show({
-                  text: "Wrong Password",
-                  duration: Snackbar.LENGTH_SHORT,
-                });
-              } else {
-                console.log("Error al registrar el usuario", errorMessage);
-                Snackbar.show({
-                  text: "Ocurrio un error al actualizar el usario",
-                  duration: Snackbar.LENGTH_SHORT,
-                });
-              }
-              console.log(error);
-            });
+          Snackbar.show({
+            text: "Ocurrio un error al actualizar el usario",
+            duration: Snackbar.LENGTH_SHORT,
+          });
         }
-      })
-      .catch((error) => console.error(error));
+      }
+    }
   };
 
   return (

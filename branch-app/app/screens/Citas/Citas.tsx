@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import auth from "@react-native-firebase/auth";
 import ListCitas from "../../components/citas/ListCitas";
 import Loading from "../../components/Loading";
@@ -6,55 +6,51 @@ import { URL_SERVICES } from "@env";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
 import styles from "./../../styles/App.scss";
-import { ActiveAppointmentStackScreenProps } from "../../../types/types";
+import {
+  ActiveAppointmentStackScreenProps,
+  ListAppointment,
+} from "../../../types/types";
+import useFetch from "../../hooks/useFetch";
 
 const CitasScreen = ({
   navigation,
   route,
 }: ActiveAppointmentStackScreenProps<"NavigateAppointment">) => {
   const { etapa } = route.params;
-  const [isLoading, setLoading] = useState(true);
-  const [citas, setListCitas] = useState([]);
 
   const user = auth().currentUser;
 
-  const urlws = useCallback(() => {
+  const urlAppointments = useCallback(() => {
     switch (etapa) {
       case "Pasadas":
-        return URL_SERVICES + "/cita/getPasadasByIdUsuario/" + user?.uid;
+        return `cita/getPasadasByIdUsuario/${user?.uid}`;
       case "Activas":
-        return URL_SERVICES + "/cita/getActivasByIdUsuario/" + user?.uid;
+        return `cita/getActivasByIdUsuario/${user?.uid}`;
       case "Futuras":
-        return URL_SERVICES + "/cita/getFuturasByIdUsuario/" + user?.uid;
+        return `cita/getFuturasByIdUsuario/${user?.uid}`;
       default:
-        return URL_SERVICES + "/cita/getFuturasByIdUsuario/" + user?.uid;
+        return `cita/getFuturasByIdUsuario/${user?.uid}`;
     }
   }, [etapa, user]);
 
-  useFocusEffect(
-    useCallback(() => {
-      fetch(urlws())
-        .then((response) => response.json())
-        .then((json) => {
-          //console.log("Respuesta motos ::>", json);
-          setListCitas(json);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.error(error);
-          setLoading(false);
-        });
-    }, [urlws])
-  );
+  const {
+    data: appointments,
+    getData: getAppointments,
+    loading,
+  } = useFetch<ListAppointment>(urlAppointments());
+
+  useEffect(() => {
+    getAppointments();
+  }, [getAppointments]);
 
   return (
     <SafeAreaView
       style={[styles.container, styles.datesContainer, { paddingTop: 1 }]}
     >
-      {isLoading ? (
+      {loading || !appointments ? (
         <Loading isVisible={true} text="Cargando" />
       ) : (
-        <ListCitas citas={citas} navigation={navigation} etapa={etapa} />
+        <ListCitas citas={appointments} navigation={navigation} etapa={etapa} />
       )}
     </SafeAreaView>
   );

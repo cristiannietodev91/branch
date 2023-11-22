@@ -79,7 +79,82 @@ export interface Vehicle {
   taller?: Taller;
 }
 
+interface UserMessage {
+  _id: string;
+  name: string;
+}
+
+export interface Message {
+  IdMessage: number;
+  _id: string;
+  IdConversacion: number;
+  text: string;
+  image: any;
+  IdCita: any;
+  delivered: boolean;
+  read: boolean;
+  typeusuario: string;
+  user: UserMessage;
+  IdEtapa: any;
+  IdOrdenTrabajo: any;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Mecanico {
+  fullName: string;
+  IdMecanico: number;
+  identificacion: string;
+  firstName: string;
+  lastName: string;
+  skills: string;
+  costos: any;
+  estado: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface OrdenTrabajo {
+  IdOrdenTrabajo: number;
+  IdTaller: number;
+  CodigoOrden: string;
+  IdEtapa: number;
+  IdCita: number;
+  IdMecanico: number;
+  IdVehiculo: number;
+  kilometraje: number;
+  DocumentosDeja: string;
+  Observaciones: any;
+  documentos: any;
+  estado: string;
+  createdAt: string;
+  updatedAt: string;
+  mecanico: Mecanico;
+}
+
+export interface Appointment {
+  fechaCita: string;
+  IdCita: number;
+  IdTaller: number;
+  IdMecanico?: number;
+  IdVehiculo: number;
+  horaCita: string;
+  servicio: string;
+  estado: string;
+  calificacion: any;
+  calificacionUsuario: any;
+  createdAt: string;
+  updatedAt: string;
+  vehiculo: Vehicle;
+  taller: Taller;
+  mecanico?: Mecanico;
+  ordentrabajos: OrdenTrabajo[];
+}
+
 export type ListVehicles = Vehicle[];
+export type ListBrand = Brand[];
+export type ListMessage = Message[];
+export type ListAppointment = Appointment[];
 
 /***********************************************
  * React navigation types

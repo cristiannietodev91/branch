@@ -90,7 +90,7 @@ $standardSpace: 10px;
   height: 20%;
 }
 .scrollContainer{
-  flex: 1;
+  flex-grow: 1;
   justify-content: flex-start;
   padding-top: $standardSpace;
   padding-bottom: $standardSpace*7;

@@ -10,7 +10,14 @@ import { useForm } from "react-hook-form";
 import Moment from "moment";
 import { services } from "../../../data/data";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { AppoinmentScreenNavigationProp } from "../../../types/types";
+import {
+  AppoinmentScreenNavigationProp,
+  ListVehicles,
+  Vehicle,
+} from "../../../types/types";
+import useFetch from "../../hooks/useFetch";
+import useMutation from "../../hooks/useMutation";
+import Snackbar from "react-native-snackbar";
 
 type FormData = {
   placa: string;
@@ -19,18 +26,9 @@ type FormData = {
   servicio: string;
 };
 
-type Vehiculo = {
-  placa: string;
-  taller: {
-    IdTaller: number;
-  };
-};
-
 export default function AgregarCita({
   navigation,
 }: AppoinmentScreenNavigationProp) {
-  const [vehiculos, setVehiculos] = useState<Vehiculo[]>([]);
-  const [, setLoading] = useState(true);
   const {
     register,
     handleSubmit,
@@ -41,23 +39,19 @@ export default function AgregarCita({
   const [showTime, setShowTimeCalendar] = useState(false);
   const [fechaCita, setFechaCita] = useState(new Date());
   const [horaCita, setHoraCita] = useState(new Date());
-  const [vehiculoSelect, setVehiculoSelect] = useState<Vehiculo>();
+  const [vehiculoSelect, setVehiculoSelect] = useState<Vehicle>();
 
   const user = auth().currentUser;
 
+  const { data: vehicles, getData: getVehicles } = useFetch<ListVehicles>(
+    `vehiculo/getByIdUsuario/${user?.uid}`
+  );
+
+  const { mutate: createAppointment } = useMutation("cita/create");
+
   useEffect(() => {
-    fetch(URL_SERVICES + "/vehiculo/getByIdUsuario/" + user?.uid)
-      .then((response) => response.json())
-      .then((json) => {
-        //console.log("Respuesta motos ::>", json);
-        setVehiculos(json);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error(error);
-        setLoading(false);
-      });
-  }, [user]);
+    getVehicles();
+  }, [getVehicles]);
 
   useEffect(() => {
     register("placa", {
@@ -75,46 +69,47 @@ export default function AgregarCita({
   }, [register]);
 
   const createCita = async (data: any) => {
-    let vehiculo = vehiculos.find((vehiculo) => {
-      if (vehiculo.placa === data.placa) {
-        return vehiculo;
+    if (vehicles) {
+      let vehiculo = vehicles.find((vehiculo) => {
+        if (vehiculo.placa === data.placa) {
+          return vehiculo;
+        }
+      });
+      if (vehiculo && vehiculo.taller) {
+        const citaCreate = {
+          placa: data.placa,
+          taller: vehiculo.taller.IdTaller,
+          fechaCita: Moment(data.fechacita).format("YYYY/MM/DD"),
+          horaCita: Moment(data.horacita).format("HH:mm"),
+          servicio: data.servicio,
+          estado: "Solicitada",
+        };
+
+        const { isSuccess, error } = await createAppointment(citaCreate);
+
+        if (isSuccess) {
+          navigation.goBack();
+        }
+
+        if (error) {
+          Snackbar.show({
+            text: error.message,
+            duration: Snackbar.LENGTH_LONG,
+          });
+        }
       }
-    });
-    const citaCreate = {
-      placa: data.placa,
-      taller: vehiculo?.taller.IdTaller,
-      fechaCita: Moment(data.fechacita).format("YYYY/MM/DD"),
-      horaCita: Moment(data.horacita).format("HH:mm"),
-      servicio: data.servicio,
-      estado: "Solicitada",
-    };
-
-    console.log("Data cita :::>", citaCreate);
-
-    fetch(URL_SERVICES + "/cita/create", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(citaCreate),
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((json) => {
-        navigation.goBack();
-      })
-      .catch((error) => console.error(error));
+    }
   };
 
   const selectVehiculo = (placa: String) => {
-    let vehiculo = vehiculos.find((vehiculo) => {
-      if (vehiculo.placa === placa) {
-        return vehiculo;
-      }
-    });
-    setVehiculoSelect(vehiculo);
+    if (vehicles) {
+      const vehiculo = vehicles.find((vehiculo) => {
+        if (vehiculo.placa === placa) {
+          return vehiculo;
+        }
+      });
+      setVehiculoSelect(vehiculo);
+    }
   };
 
   return (
@@ -152,7 +147,7 @@ export default function AgregarCita({
           valueExtractor={(value: any) => {
             return value.placa;
           }}
-          data={vehiculos || []} //TODO: Send an array value
+          data={vehicles || []} //TODO: Send an array value
           onChangeText={(text: any) => {
             selectVehiculo(text);
             setValue("placa", text);

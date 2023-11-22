@@ -20,6 +20,9 @@ import auth from "@react-native-firebase/auth";
 import { URL_SERVICES } from "@env";
 import SocketIOClient from "socket.io-client";
 import styles from "../../styles/App.scss";
+import { ListMessage } from "../../../types/types";
+import useFetch from "../../hooks/useFetch";
+import { parseServerMessagesToIMessages } from "../../utils/parse";
 
 const socket = SocketIOClient(URL_SERVICES, {
   transports: ["websocket"],
@@ -31,8 +34,15 @@ interface ChatComponentProps {
 
 export default function Chat(props: ChatComponentProps) {
   const { IdTaller } = props;
-
-  const [messages, setMessages] = useState<IMessage[]>([]);
+  const [chatMessages, setChatMessages] = useState<IMessage[]>([]);
+  const { getData: getMessages } = useFetch<ListMessage>(
+    "message/getMessagesByConversacion",
+    {
+      IdConversacionUser: auth().currentUser?.uid,
+      IdTaller: IdTaller,
+      order: "DESC",
+    }
+  );
 
   const user = () => {
     return {
@@ -52,36 +62,32 @@ export default function Chat(props: ChatComponentProps) {
   }, [IdTaller]);
 
   useEffect(() => {
-    fetch(
-      URL_SERVICES +
-        `message/getMessagesByConversacion?IdConversacionUser=${
-          auth().currentUser?.uid
-        }&IdTaller=${IdTaller}&order=DESC`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
+    async function fetchData() {
+      const response = await getMessages();
+      if (response) {
+        setChatMessages(
+          GiftedChat.append(
+            chatMessages,
+            parseServerMessagesToIMessages(response)
+          )
+        );
       }
-    )
-      .then((response) => response.json())
-      .then((json) => {
-        setMessages(GiftedChat.append(messages, json));
-      })
-      .catch((error) => console.error(error));
+    }
+
+    fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [IdTaller]);
+  }, [getMessages]);
 
   useEffect(() => {
     socket.on("sendmessage", (message: any) => {
-      setMessages(GiftedChat.append(messages, message));
+      setChatMessages(GiftedChat.append(chatMessages, message));
     });
-  }, [messages]);
+  }, [chatMessages]);
 
   const onSend = (newMessage: IMessage[]) => {
     const sentMessages = [{ ...newMessage[0], sent: true, received: true }];
-    setMessages(
-      GiftedChat.append(messages, sentMessages, Platform.OS !== "web")
+    setChatMessages(
+      GiftedChat.append(chatMessages, sentMessages, Platform.OS !== "web")
     );
     socket.emit(
       "messaggetosomeone",
@@ -127,7 +133,7 @@ export default function Chat(props: ChatComponentProps) {
         <SafeAreaView style={{ flex: 1, marginBottom: tabBarHeight }}>
           <GiftedChat
             bottomOffset={tabBarHeight}
-            messages={messages}
+            messages={chatMessages}
             onSend={(newMessages) => onSend(newMessages)}
             user={user()}
             placeholder="Escriba un mensaje"

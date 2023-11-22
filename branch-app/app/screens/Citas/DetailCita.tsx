@@ -9,7 +9,11 @@ import ActionButton from "react-native-action-button";
 import { URL_SERVICES } from "@env";
 import { useForm } from "react-hook-form";
 import styles from "../../styles/App.scss";
-import { ActiveAppointmentStackScreenProps } from "../../../types/types";
+import {
+  ActiveAppointmentStackScreenProps,
+  OrdenTrabajo,
+} from "../../../types/types";
+import useMutation from "../../hooks/useMutation";
 
 type FormData = {
   comentario: string;
@@ -28,6 +32,7 @@ export default function DetailCita({
     formState: { errors },
   } = useForm<FormData>();
   const [, setReload] = useState(false);
+  const { mutate: orderCreate } = useMutation<OrdenTrabajo>("orden/create");
 
   const handleChanged = (value: number) => {
     setCurrentPosition(value);
@@ -42,7 +47,7 @@ export default function DetailCita({
     });
   }, [register]);
 
-  const aprobarCotizacion = (data: any) => {
+  const aprobarCotizacion = async (data: any) => {
     let orden = cita.ordentrabajos[2];
     let ordenToUpdate = orden;
     ordenToUpdate.estado = "Aceptado";
@@ -78,21 +83,12 @@ export default function DetailCita({
       estado: "Aceptado",
     };
 
-    fetch(URL_SERVICES + "/orden/create", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(ordenCreate),
-    })
-      .then((response) => response.json())
-      .then((json) => {
-        console.log("Respuesta crear orden de aprobacion::>", json);
-        cita.ordentrabajos.push(json.orden);
-        setReload(true);
-      })
-      .catch((error) => console.error(error));
+    const { isSuccess, data: order } = await orderCreate(ordenCreate);
+
+    if (isSuccess) {
+      cita.ordentrabajos.push(order);
+      setReload(true);
+    }
   };
 
   const rechazarCotizacion = (data: any) => {
