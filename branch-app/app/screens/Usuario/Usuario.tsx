@@ -27,8 +27,10 @@ export default function Usuario(props: UserStackScreenProps<"User">) {
   let userLogged = auth().currentUser;
 
   // Handle user state changes
-  async function onAuthStateChanged(user: FirebaseAuthTypes.User | null) {
-    setUser(user);
+  async function onAuthStateChanged(
+    userFirebase: FirebaseAuthTypes.User | null
+  ) {
+    setUser(userFirebase);
   }
 
   const LoadfacebookUser = useCallback(() => {
