@@ -243,7 +243,7 @@ export default function DetailCita({
                   });
                 }}
               />
-              {cita.ordentrabajos[2].estado == "Pendiente" && (
+              {cita.ordentrabajos[2].estado === "Pendiente" && (
                 <View style={{ flexDirection: "column" }}>
                   <Input
                     labelStyle={styles.label}
@@ -341,7 +341,7 @@ export default function DetailCita({
             </Step>
           )}
         </ReactSteps>
-        {cita.estado == "Cumplida" && (
+        {cita.estado === "Cumplida" && (
           <OpenChatButton cita={cita} navigation={navigation} />
         )}
       </View>

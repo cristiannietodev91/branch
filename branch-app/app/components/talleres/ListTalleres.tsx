@@ -243,7 +243,8 @@ function AddCitaButton() {
           query: "Talleres",
         });
       }}
-      offsetY={Platform.OS === "ios" ? 100 : 70}
+      offsetX={15}
+      offsetY={Platform.OS === "ios" ? 80 : 70}
       renderIcon={() => <Icon name="add-location" />}
     >
       {">"}

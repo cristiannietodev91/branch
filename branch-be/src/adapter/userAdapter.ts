@@ -16,17 +16,17 @@ import { WhereOptions } from "sequelize";
 
 const getById = (
   IdUsuario: string | number
-): Promise<UserInstance | null> | undefined => usersDAO.getById(IdUsuario);
+): Promise<UserInstance | null> => usersDAO.getById(IdUsuario);
 
 const findAllUsers = (): Promise<UserInstance[]> => usersDAO.findAll();
 
 const findOneUserByFilter = (
   filter: WhereOptions<UserAttributes> | undefined
-): Promise<UserInstance | null> | undefined => usersDAO.findOneByFilter(filter);
+): Promise<UserInstance | null> => usersDAO.findOneByFilter(filter);
 
 const countUsersByIdWorkshop = (
   filter: VehiculoFilter
-): Promise<number> | undefined => usersDAO.count({}, filter);
+): Promise<number> => usersDAO.count({}, filter);
 
 const deleteById = (userId: string | number): Promise<number> | undefined =>
   usersDAO.deleteById(userId);

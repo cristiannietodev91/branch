@@ -39,7 +39,7 @@ $standardSpace: 10px;
 }
 .emptySection{
   width: 100%;
-  height: 340px;
+  height: 100%;
   // background-color: $alert;
 }
 .bgLogin{
@@ -242,8 +242,10 @@ $standardSpace: 10px;
 
 // ====== MOTORCYCLES ====== //
 .emptyMoto{
-  padding: $standardSpace 30%;
+  padding: $standardSpace 0;
+  flex: 1;
 }
+
 .headerMotos{
   width: 100%;
   height: 155px;

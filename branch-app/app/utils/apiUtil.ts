@@ -30,7 +30,8 @@ export async function fetchData<T, P = object>(
     });
 
     if (!response.ok) {
-      throw new Error("Network response was not ok");
+      const errorResponse: { error: string } = await response.json();
+      throw new Error(errorResponse.error);
     }
 
     const data: T = await response.json();

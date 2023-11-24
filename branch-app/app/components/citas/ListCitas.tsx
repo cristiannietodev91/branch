@@ -203,7 +203,8 @@ function AddCitaButton(props: AddCitaButtonProps) {
       buttonTextStyle={styles.actionButton}
       buttonColor="#0396c8"
       degrees={0}
-      offsetY={Platform.OS === "ios" ? 100 : 70}
+      offsetX={15}
+      offsetY={Platform.OS === "ios" ? 80 : 70}
       onPress={() => {
         navigation.navigate("AddAppointment");
       }}

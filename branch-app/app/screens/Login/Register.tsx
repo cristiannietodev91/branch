@@ -76,12 +76,13 @@ export default function Register() {
       password: data.password,
     };
 
-    const { isSuccess } = await createUser(usuarioToCreate);
+    const { isSuccess, error: errorCreatingUser } = await createUser(
+      usuarioToCreate
+    );
 
     if (isSuccess) {
       try {
         await auth().signInWithEmailAndPassword(data.email, data.password);
-        navigation.navigate("Home");
       } catch (error: any) {
         const errorCode = error.code;
         if (errorCode === "auth/wrong-password") {
@@ -96,6 +97,13 @@ export default function Register() {
           });
         }
       }
+    }
+
+    if (errorCreatingUser) {
+      Snackbar.show({
+        text: errorCreatingUser.message,
+        duration: Snackbar.LENGTH_SHORT,
+      });
     }
   };
 
