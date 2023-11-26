@@ -8,6 +8,8 @@ import styles from "../../styles/App.scss";
 import ButtonBranch from "../../components/branch/button";
 import { Vehicle, VehiclesStackScreenProps } from "../../../types/types";
 import useMutation from "../../hooks/useMutation";
+import Snackbar from "react-native-snackbar";
+import { URL_SERVICES } from "@env";
 
 interface DocumentProps
   extends Pick<VehiclesStackScreenProps<"Documents">, "navigation"> {
@@ -25,18 +27,20 @@ export default function Documento(props: DocumentProps) {
   const [showDocument, setShowDocument] = useState(documento);
   const [fechaVencimiento, setFechaVencimiento] = useState("");
   const { mutate: updateVehicle } = useMutation(
-    `vehiculo/update/${vehiculo.IdVehiculo}`,
+    `${URL_SERVICES}/vehiculo/update/${vehiculo.IdVehiculo}`,
     {},
     "PUT"
   );
   const { mutate: updateFechaVencimiento } = useMutation<string>(
-    `vehiculo/updateFechavencimiento/${vehiculo.IdVehiculo}`,
+    `${URL_SERVICES}/vehiculo/updateFechavencimiento/${vehiculo.IdVehiculo}`,
     {},
     "PUT"
   );
 
-  const { mutate: signFile } = useMutation<string>("file/signedURL");
-  const { mutate: putFile, setUrl: setUrlToPutFile } = useMutation<{
+  const { mutate: signFile } = useMutation<string>(
+    `${URL_SERVICES}/file/signedURL`
+  );
+  const { mutate: putFile, url: urlMutation } = useMutation<{
     url: string;
   }>(undefined, undefined, "PUT");
 
@@ -60,69 +64,99 @@ export default function Documento(props: DocumentProps) {
   }, [tipoDocumento, vehiculo]);
 
   const uploadImage = async () => {
-    const options = {
-      mediaType: "photo" as const,
-      quality: 1 as const,
-      maxWidth: 500,
-      maxHeight: 500,
-    };
+    try {
+      const options = {
+        mediaType: "photo" as const,
+        quality: 1 as const,
+        maxWidth: 500,
+        maxHeight: 500,
+      };
 
-    launchImageLibrary(options, async (response: any) => {
-      if (response.didCancel) {
-        console.log("User cancelled photo picker");
-      } else if (response.error) {
-        console.log("ImagePicker Error: ", response.error);
-      } else if (response.customButton) {
-        console.log("User tapped custom button: ", response.customButton);
-      } else {
-        const { uri, fileName, fileSize, type } = response;
+      const responsePickImage = await launchImageLibrary(options);
 
-        const { isSuccess, data: url } = await signFile({ fileName: fileName });
+      if (responsePickImage.assets) {
+        responsePickImage.assets.forEach(async (asset) => {
+          const { uri, fileName, fileSize, type } = asset;
 
-        if (isSuccess && url && type && uri) {
-          setUrlToPutFile(url);
+          const {
+            isSuccess,
+            data: url,
+            error: errorSigningFile,
+          } = await signFile({ fileName: fileName });
 
-          const { isSuccess: isSuccessSendingFile, data } = await putFile({
-            uri: uri,
-            type: type,
-            name: fileName,
-          });
+          if (errorSigningFile) {
+            Snackbar.show({
+              text: errorSigningFile.message,
+              duration: Snackbar.LENGTH_LONG,
+            });
+          }
 
-          if (isSuccessSendingFile && data) {
-            let urlFile: string = data.url.substring(0, data.url.indexOf("?"));
+          if (isSuccess && url && type && uri) {
+            urlMutation.current = url;
 
-            let key = urlFile.substring(
-              urlFile.lastIndexOf("/") + 1,
-              urlFile.length
-            );
-
-            const newDocumento = {
-              url: urlFile,
-              date: new Date().toString(),
-              size: fileSize,
+            const {
+              isSuccess: isSuccessSendingFile,
+              data,
+              error,
+            } = await putFile({
+              uri: uri,
               type: type,
-              selected: false,
-              validate: false,
-              keynameFile: key,
-              nombreArchivo: fileName,
-            };
+              name: fileName,
+            });
 
-            setShowDocument(newDocumento);
-
-            switch (tipoDocumento) {
-              case "soat":
-                vehiculo.soat = newDocumento;
-                break;
-              case "tecnomecanica":
-                vehiculo.tecnomecanica = newDocumento;
-                break;
+            if (error) {
+              Snackbar.show({
+                text: error.message,
+                duration: Snackbar.LENGTH_LONG,
+              });
             }
 
-            await updateVehicle(vehiculo);
+            if (isSuccessSendingFile && data) {
+              let urlFile: string = data.url.substring(
+                0,
+                data.url.indexOf("?")
+              );
+
+              let key = urlFile.substring(
+                urlFile.lastIndexOf("/") + 1,
+                urlFile.length
+              );
+
+              const newDocumento = {
+                url: urlFile,
+                date: new Date().toString(),
+                size: fileSize,
+                type: type,
+                selected: false,
+                validate: false,
+                keynameFile: key,
+                nombreArchivo: fileName,
+              };
+
+              setShowDocument(newDocumento);
+
+              switch (tipoDocumento) {
+                case "soat":
+                  vehiculo.soat = newDocumento;
+                  break;
+                case "tecnomecanica":
+                  vehiculo.tecnomecanica = newDocumento;
+                  break;
+              }
+
+              await updateVehicle(vehiculo);
+            }
           }
-        }
+        });
       }
-    });
+    } catch (error) {
+      if (error instanceof Error) {
+        Snackbar.show({
+          text: error.message,
+          duration: Snackbar.LENGTH_LONG,
+        });
+      }
+    }
   };
 
   const uploadFechaVencimiento = async (fechaVencimiento: Date) => {

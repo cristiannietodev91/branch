@@ -1,4 +1,3 @@
-import { URL_SERVICES } from "@env";
 type HttpMethod = "GET" | "POST" | "PUT" | "DELETE"; // Add other methods as needed
 
 interface RequestOptions<P> {
@@ -21,7 +20,7 @@ export async function fetchData<T, P = object>(
           .join("&")}`
       : "";
 
-    const response = await fetch(`${URL_SERVICES}/${url}${queryString}`, {
+    const response = await fetch(`${url}${queryString}`, {
       method: options?.method || "GET",
       headers: {
         "Content-Type": "application/json", // Adjust headers as needed
@@ -30,8 +29,12 @@ export async function fetchData<T, P = object>(
     });
 
     if (!response.ok) {
-      const errorResponse: { error: string } = await response.json();
-      throw new Error(errorResponse.error);
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        const errorResponse: { error: string } = await response.json();
+        throw new Error(errorResponse.error);
+      }
+      throw new Error("Contact to support.");
     }
 
     const data: T = await response.json();
@@ -39,8 +42,8 @@ export async function fetchData<T, P = object>(
     return data;
   } catch (error) {
     if (error instanceof Error) {
-      throw new Error(`Error fetching data: ${error.message}`);
+      throw new Error(`Error making request: ${error.message}`);
     }
-    throw new Error("Error fetching data");
+    throw new Error("Error making request");
   }
 }

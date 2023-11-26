@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { fetchData } from "../utils/apiUtil";
 type HttpMethod = "POST" | "PUT";
 
@@ -7,7 +7,7 @@ interface FetchState<T, P> {
   mutate: (
     bodyRequest: P
   ) => Promise<{ data?: Awaited<T>; isSuccess: boolean; error?: Error }>;
-  setUrl: React.Dispatch<React.SetStateAction<string>>;
+  url: React.MutableRefObject<string>;
 }
 
 function useMutation<T, P = object>(
@@ -15,14 +15,14 @@ function useMutation<T, P = object>(
   queryParams?: object,
   method: HttpMethod = "POST"
 ): FetchState<T, P> {
-  const [url, setUrl] = useState(initialUrl);
+  const url = useRef(initialUrl);
   const [loading, setLoading] = useState<boolean>(true);
 
   const mutateDate = useCallback(
     async (bodyRequest: P) => {
       try {
         const result = await fetchData<T, P>(
-          url,
+          url.current,
           { method, body: bodyRequest },
           queryParams
         );
@@ -34,13 +34,13 @@ function useMutation<T, P = object>(
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [url]
+    [url.current]
   );
 
   return {
     loading,
     mutate: mutateDate,
-    setUrl,
+    url,
   };
 }
 
