@@ -2,14 +2,13 @@ import React, { useState, useEffect } from "react";
 import { View, TouchableOpacity, Platform } from "react-native";
 import { Text, Image } from "@rneui/themed";
 import Moment from "moment";
-import { launchImageLibrary } from "react-native-image-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import styles from "../../styles/App.scss";
 import ButtonBranch from "../../components/branch/button";
 import { Vehicle, VehiclesStackScreenProps } from "../../../types/types";
 import useMutation from "../../hooks/useMutation";
 import Snackbar from "react-native-snackbar";
-import { URL_SERVICES } from "@env";
+import UploadImageToS3 from "../../utils/UploadImageToS3";
 
 interface DocumentProps
   extends Pick<VehiclesStackScreenProps<"Documents">, "navigation"> {
@@ -27,22 +26,68 @@ export default function Documento(props: DocumentProps) {
   const [showDocument, setShowDocument] = useState(documento);
   const [fechaVencimiento, setFechaVencimiento] = useState("");
   const { mutate: updateVehicle } = useMutation(
-    `${URL_SERVICES}/vehiculo/update/${vehiculo.IdVehiculo}`,
+    `vehiculo/update/${vehiculo.IdVehiculo}`,
     {},
     "PUT"
   );
   const { mutate: updateFechaVencimiento } = useMutation<string>(
-    `${URL_SERVICES}/vehiculo/updateFechavencimiento/${vehiculo.IdVehiculo}`,
+    `vehiculo/updateFechavencimiento/${vehiculo.IdVehiculo}`,
     {},
     "PUT"
   );
 
-  const { mutate: signFile } = useMutation<string>(
-    `${URL_SERVICES}/file/signedURL`
-  );
-  const { mutate: putFile, url: urlMutation } = useMutation<{
-    url: string;
-  }>(undefined, undefined, "PUT");
+  const uploadImage = async () => {
+    try {
+      const { data } = await UploadImageToS3();
+      if (data) {
+        const { url, fileName, fileSize, type } = data;
+        let urlFile: string = url.substring(0, url.indexOf("?"));
+
+        let key = urlFile.substring(
+          urlFile.lastIndexOf("/") + 1,
+          urlFile.length
+        );
+
+        const newDocumento = {
+          url: urlFile,
+          date: new Date().toString(),
+          size: fileSize,
+          type: type,
+          selected: false,
+          validate: false,
+          keynameFile: key,
+          nombreArchivo: fileName,
+        };
+
+        setShowDocument(newDocumento);
+
+        switch (tipoDocumento) {
+          case "soat":
+            vehiculo.soat = newDocumento;
+            break;
+          case "tecnomecanica":
+            vehiculo.tecnomecanica = newDocumento;
+            break;
+        }
+
+        const { error } = await updateVehicle(vehiculo);
+
+        if (error) {
+          Snackbar.show({
+            text: error.message,
+            duration: Snackbar.LENGTH_LONG,
+          });
+        }
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        Snackbar.show({
+          text: error.message,
+          duration: Snackbar.LENGTH_LONG,
+        });
+      }
+    }
+  };
 
   useEffect(() => {
     switch (tipoDocumento) {
@@ -62,102 +107,6 @@ export default function Documento(props: DocumentProps) {
         break;
     }
   }, [tipoDocumento, vehiculo]);
-
-  const uploadImage = async () => {
-    try {
-      const options = {
-        mediaType: "photo" as const,
-        quality: 1 as const,
-        maxWidth: 500,
-        maxHeight: 500,
-      };
-
-      const responsePickImage = await launchImageLibrary(options);
-
-      if (responsePickImage.assets) {
-        responsePickImage.assets.forEach(async (asset) => {
-          const { uri, fileName, fileSize, type } = asset;
-
-          const {
-            isSuccess,
-            data: url,
-            error: errorSigningFile,
-          } = await signFile({ fileName: fileName });
-
-          if (errorSigningFile) {
-            Snackbar.show({
-              text: errorSigningFile.message,
-              duration: Snackbar.LENGTH_LONG,
-            });
-          }
-
-          if (isSuccess && url && type && uri) {
-            urlMutation.current = url;
-
-            const {
-              isSuccess: isSuccessSendingFile,
-              data,
-              error,
-            } = await putFile({
-              uri: uri,
-              type: type,
-              name: fileName,
-            });
-
-            if (error) {
-              Snackbar.show({
-                text: error.message,
-                duration: Snackbar.LENGTH_LONG,
-              });
-            }
-
-            if (isSuccessSendingFile && data) {
-              let urlFile: string = data.url.substring(
-                0,
-                data.url.indexOf("?")
-              );
-
-              let key = urlFile.substring(
-                urlFile.lastIndexOf("/") + 1,
-                urlFile.length
-              );
-
-              const newDocumento = {
-                url: urlFile,
-                date: new Date().toString(),
-                size: fileSize,
-                type: type,
-                selected: false,
-                validate: false,
-                keynameFile: key,
-                nombreArchivo: fileName,
-              };
-
-              setShowDocument(newDocumento);
-
-              switch (tipoDocumento) {
-                case "soat":
-                  vehiculo.soat = newDocumento;
-                  break;
-                case "tecnomecanica":
-                  vehiculo.tecnomecanica = newDocumento;
-                  break;
-              }
-
-              await updateVehicle(vehiculo);
-            }
-          }
-        });
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        Snackbar.show({
-          text: error.message,
-          duration: Snackbar.LENGTH_LONG,
-        });
-      }
-    }
-  };
 
   const uploadFechaVencimiento = async (fechaVencimiento: Date) => {
     let vehiculoToUpdate = {

@@ -3,6 +3,7 @@ type HttpMethod = "GET" | "POST" | "PUT" | "DELETE"; // Add other methods as nee
 interface RequestOptions<P> {
   method: HttpMethod;
   body?: P;
+  headers?: Record<string, string | number>;
 }
 
 export async function fetchData<T, P = object>(
@@ -23,7 +24,8 @@ export async function fetchData<T, P = object>(
     const response = await fetch(`${url}${queryString}`, {
       method: options?.method || "GET",
       headers: {
-        "Content-Type": "application/json", // Adjust headers as needed
+        "Content-Type": "application/json",
+        ...options?.headers,
       },
       body: options?.body ? JSON.stringify(options.body) : undefined,
     });
@@ -36,10 +38,16 @@ export async function fetchData<T, P = object>(
       }
       throw new Error("Contact to support.");
     }
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      const data: T = await response.json();
 
-    const data: T = await response.json();
+      return data;
+    }
 
-    return data;
+    const data = await response.text();
+
+    return data as T;
   } catch (error) {
     if (error instanceof Error) {
       throw new Error(`Error making request: ${error.message}`);

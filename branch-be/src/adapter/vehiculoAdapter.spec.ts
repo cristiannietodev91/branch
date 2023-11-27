@@ -179,10 +179,12 @@ describe("vehicle Adapter", () => {
 
     const mockVehicleResult = {
       IdVehiculo: 1,
-      usuarios: {
+      ...vehicleToCreate,
+      usuario: {
+        ...vehicleToCreate.usuario,
         tokenCM: "SADDASDSA2321321",
       },
-      ...vehicleToCreate,
+      
     };
 
     const tallerMockResult = {

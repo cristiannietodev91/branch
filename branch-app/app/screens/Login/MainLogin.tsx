@@ -108,7 +108,7 @@ export default function MainLogin() {
 
     //const { email, name } = profile;
 
-    console.log("Data auth :::>", email);
+    //console.log("Data auth :::>", email);
 
     // Sign-in the user with the credential
     auth()

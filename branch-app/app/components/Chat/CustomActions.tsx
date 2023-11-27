@@ -1,55 +1,34 @@
 import React from "react";
 import { View, TouchableOpacity } from "react-native";
-import { launchImageLibrary } from "react-native-image-picker";
 import { Icon, Image } from "@rneui/themed";
 import styles from "../../styles/App.scss";
-import useMutation from "../../hooks/useMutation";
+import UploadImageToS3 from "../../utils/UploadImageToS3";
+import Snackbar from "react-native-snackbar";
 
 type CustomActionsProps = {
-  onSend: (list: any[]) => void;
+  onSend: (imageUrl: string) => void;
 };
 
 export default function CustomActions(props: CustomActionsProps) {
   const { onSend } = props;
-  const { mutate: signFile } = useMutation<string>("file/signedURL");
-  const { mutate: putFile, setUrl: setUrlToPutFile } = useMutation<{
-    url: string;
-  }>(undefined, undefined, "PUT");
-  const onActionsPress = () => {
-    const options = {
-      mediaType: "photo" as const,
-      quality: 1 as const,
-      maxWidth: 500,
-      maxHeight: 500,
-    };
 
-    launchImageLibrary(options, async (response) => {
-      if (response.didCancel) {
-        console.log("User cancelled photo picker");
-      } else if (response.errorMessage) {
-        console.log("ImagePicker Error: ", response.errorMessage);
-      } else if (response.assets) {
-        const { uri, fileName, type } = response.assets[0];
+  const onActionsPress = async () => {
+    try {
+      const { data } = await UploadImageToS3();
+      if (data) {
+        const { url } = data;
 
-        const { isSuccess, data: url } = await signFile({ fileName: fileName });
-
-        if (isSuccess && url && type && uri) {
-          setUrlToPutFile(url);
-
-          const { isSuccess: isSuccessSendingFile, data } = await putFile({
-            uri: uri,
-            type: type,
-            name: fileName,
-          });
-
-          if (isSuccessSendingFile && data) {
-            let urlFile: string = data.url.substring(0, data.url.indexOf("?"));
-
-            onSend([{ image: urlFile }]);
-          }
-        }
+        let urlFile = url.substring(0, url.indexOf("?"));
+        onSend(urlFile);
       }
-    });
+    } catch (error) {
+      if (error instanceof Error) {
+        Snackbar.show({
+          text: error.message,
+          duration: Snackbar.LENGTH_LONG,
+        });
+      }
+    }
   };
 
   return (

@@ -17,7 +17,6 @@ import {
   ServicioInstance,
   ServicioVehiculoInstance,
 } from "../../types";
-// import { String } from "aws-sdk/clients/batch";
 
 import moment from "moment";
 

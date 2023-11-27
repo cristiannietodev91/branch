@@ -174,7 +174,7 @@ export const parseTextoSms = (
     //Texto de cita con mecanico
     return (
       "Hola " +
-      vehiculo.usuarios?.firstName +
+      vehiculo.usuario?.firstName +
       "! Te esperamos el " +
       moment(cita.fechaCita).format("D [de] MMMM YYYY") +
       " a las " +
@@ -191,7 +191,7 @@ export const parseTextoSms = (
     //Texto de cita sin mecanico
     return (
       "Hola " +
-      vehiculo.usuarios?.firstName +
+      vehiculo.usuario?.firstName +
       "! Te esperamos el " +
       moment(cita.fechaCita).format("D [de] MMMM YYYY") +
       " a las " +
@@ -215,7 +215,7 @@ export const parseTextByEstadoCita = (
   case "Cancelada":
     return (
       "Hola " +
-        cita.vehiculo?.usuarios?.firstName +
+        cita.vehiculo?.usuario?.firstName +
         "! Se cancelo la cita que tenias el " +
         moment(cita.fechaCita).format("D [de] MMMM YYYY") +
         " a las " +
@@ -228,7 +228,7 @@ export const parseTextByEstadoCita = (
     );
   case "Incumplida":
     return `Hola " +
-        ${cita.vehiculo?.usuarios?.firstName
+        ${cita.vehiculo?.usuario?.firstName
 }! Incumpliste la cita que tenias el 
         ${moment(cita.fechaCita).format("D [de] MMMM YYYY")} a las ${cita.horaCita
 } con tu 
@@ -237,7 +237,7 @@ export const parseTextByEstadoCita = (
         BRANCH tendra el gusto de recibirte en una proxima oportunidad. Tu experiencia nuestro motor! BRANCH`;
   default:
     `Hola 
-      ${cita.vehiculo?.usuarios?.firstName}! Su cita quedo asignada el 
+      ${cita.vehiculo?.usuario?.firstName}! Su cita quedo asignada el 
       ${moment(cita.fechaCita).format("D [de] MMMM YYYY")} a las ${cita.horaCita
 } con tu 
       ${cita.vehiculo?.tipoVehiculo} ${cita.vehiculo?.placa},

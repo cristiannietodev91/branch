@@ -1,16 +1,14 @@
 import React, { useState, useEffect, useCallback } from "react";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import styles from "../../styles/App.scss";
-import { ImageBackground, View, Text, TouchableOpacity } from "react-native";
+import { ImageBackground, View, Text } from "react-native";
 import { Button, Icon, Image } from "@rneui/base";
 import { URL_SERVICES } from "@env";
 import Loading from "../../components/Loading";
 import { LoginManager, AccessToken } from "react-native-fbsdk-next";
-import { launchImageLibrary } from "react-native-image-picker";
 import ButtonBranch from "../../components/branch/button";
 import { UserStackScreenProps } from "../../../types/types";
 import { useFocusEffect } from "@react-navigation/native";
-import useMutation from "../../hooks/useMutation";
 
 export default function Usuario(props: UserStackScreenProps<"User">) {
   const { navigation } = props;
@@ -18,11 +16,6 @@ export default function Usuario(props: UserStackScreenProps<"User">) {
   const [isLoading, setLoading] = useState(true);
   const [facebookUser, setFacebookUser] =
     useState<FirebaseAuthTypes.UserInfo>();
-  const [urlFoto] = useState();
-  const { mutate: signFile } = useMutation<string>("file/signedURL");
-  const { mutate: putFile, setUrl: setUrlToPutFile } = useMutation<{
-    url: string;
-  }>(undefined, undefined, "PUT");
 
   let userLogged = auth().currentUser;
 
@@ -103,40 +96,6 @@ export default function Usuario(props: UserStackScreenProps<"User">) {
       });
   };
 
-  const uploadImage = async () => {
-    const options = {
-      mediaType: "photo" as const,
-      quality: 1 as const,
-      maxWidth: 500,
-      maxHeight: 500,
-    };
-
-    launchImageLibrary(options, async (response) => {
-      if (response.didCancel) {
-        console.log("User cancelled photo picker");
-      } else if (response.errorMessage) {
-        console.log("ImagePicker Error: ", response.errorMessage);
-      } else if (response.assets) {
-        const { uri, fileName, type } = response.assets[0];
-
-        const { isSuccess, data: url } = await signFile({ fileName: fileName });
-
-        if (isSuccess && url && type && uri) {
-          setUrlToPutFile(url);
-
-          await putFile({
-            uri: uri,
-            type: type,
-            name: fileName,
-          });
-        }
-      }
-    });
-  };
-
-  /*const getName = async () => {
-    console.log("Get firstName ::>", userLogged);
-  };*/
   return (
     <ImageBackground
       source={require("../../../assets/bg_sin_logo.jpg")} //LA IDEA ES QUE EL FONDO SEA LA FOTO DE LA MOTO
@@ -217,41 +176,21 @@ export default function Usuario(props: UserStackScreenProps<"User">) {
             </View>
           </View>
           <View style={[styles.containerAddPhotoUser, styles.regularMargin]}>
-            <TouchableOpacity onPress={uploadImage}>
-              {!urlFoto ? (
-                <View>
-                  <Image
-                    style={styles.addPhoto}
-                    source={require("./../../../assets/drawable-xxxhdpi/addPhotoProfile.png")}
-                  />
-                  <View style={styles.iconAddPhotoUser}>
-                    <Icon
-                      name="plus"
-                      type="material-community"
-                      color="#0396c8"
-                      size={25}
-                    />
-                  </View>
-                </View>
-              ) : (
-                <View>
-                  <View style={[styles.addPhoto, styles.photo]}>
-                    {/* <Image
-                      style={styles.addPhoto}
-                      source={{ uri: urlFoto.url }}
-                    /> */}
-                  </View>
-                  <View style={styles.iconAddPhotoUser}>
-                    <Icon
-                      name="pencil-outline"
-                      type="material-community"
-                      color="#0396c8"
-                      size={25}
-                    />
-                  </View>
-                </View>
-              )}
-            </TouchableOpacity>
+            <View>
+              <Image
+                style={styles.addPhoto}
+                source={require("./../../../assets/drawable-xxxhdpi/addPhotoProfile.png")}
+              />
+              <View style={styles.iconAddPhotoUser}>
+                <Icon
+                  name="plus"
+                  type="material-community"
+                  color="#0396c8"
+                  size={25}
+                />
+              </View>
+            </View>
+
             {/* {!facebookUser ? (
               <Icon
                 name="arrow-up-bold-circle-outline"
