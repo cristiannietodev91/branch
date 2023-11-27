@@ -77,18 +77,18 @@ const createCita = (cita: CitaRequestAttributes) => {
                     .getById(cita.IdMecanico)
                     ?.then((mecanico) => {
                       const textoSms = parseTextoSms(mecanico, vehiculo, cita);
-                      if (vehiculo.usuarios?.celular) {
-                        sendSMStoInfoBip(vehiculo.usuarios?.celular, textoSms);
+                      if (vehiculo.usuario?.celular) {
+                        sendSMStoInfoBip(vehiculo.usuario?.celular, textoSms);
                       }
-                      if (vehiculo.usuarios?.tokenCM) {
+                      if (vehiculo.usuario?.tokenCM) {
                         sendNotificacionToUser(
-                          vehiculo.usuarios?.tokenCM,
+                          vehiculo.usuario?.tokenCM,
                           textoSms
                         );
                       }
-                      if (vehiculo.usuarios && vehiculo.usuarios.uid) {
+                      if (vehiculo.usuario && vehiculo.usuario.uid) {
                         const notificacion = {
-                          IdUsuario: vehiculo.usuarios.uid,
+                          IdUsuario: vehiculo.usuario.uid,
                           text: textoSms,
                           typenotificacion: "Cita",
                           read: false,
@@ -98,9 +98,9 @@ const createCita = (cita: CitaRequestAttributes) => {
                           },
                         };
                         notificacionDAO.create(notificacion)?.then(() => {
-                          if (vehiculo.usuarios?.tokenCM) {
+                          if (vehiculo.usuario?.tokenCM) {
                             sendDataToUser(
-                              vehiculo.usuarios?.tokenCM,
+                              vehiculo.usuario?.tokenCM,
                               "notificacion",
                               { IdCita: cita.IdCita }
                             );
@@ -172,12 +172,12 @@ const updateCitaByIdCita = (
 
                 if (
                   cita.vehiculo &&
-                  cita.vehiculo.usuarios &&
-                  cita.vehiculo.usuarios.uid &&
+                  cita.vehiculo.usuario &&
+                  cita.vehiculo.usuario.uid &&
                   textoSms
                 ) {
                   const notificacion = {
-                    IdUsuario: cita.vehiculo?.usuarios?.uid,
+                    IdUsuario: cita.vehiculo?.usuario?.uid,
                     text: textoSms,
                     typenotificacion: "Cita",
                     read: false,
@@ -187,9 +187,9 @@ const updateCitaByIdCita = (
                     },
                   };
                   notificacionDAO.create(notificacion)?.then(() => {
-                    if (cita.vehiculo?.usuarios?.tokenCM) {
+                    if (cita.vehiculo?.usuario?.tokenCM) {
                       sendDataToUser(
-                        cita.vehiculo.usuarios?.tokenCM,
+                        cita.vehiculo.usuario?.tokenCM,
                         "notificacion",
                         { IdCita: cita.IdCita }
                       );

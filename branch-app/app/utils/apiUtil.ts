@@ -1,9 +1,9 @@
-import { URL_SERVICES } from "@env";
 type HttpMethod = "GET" | "POST" | "PUT" | "DELETE"; // Add other methods as needed
 
 interface RequestOptions<P> {
   method: HttpMethod;
   body?: P;
+  headers?: Record<string, string | number>;
 }
 
 export async function fetchData<T, P = object>(
@@ -21,26 +21,37 @@ export async function fetchData<T, P = object>(
           .join("&")}`
       : "";
 
-    const response = await fetch(`${URL_SERVICES}/${url}${queryString}`, {
+    const response = await fetch(`${url}${queryString}`, {
       method: options?.method || "GET",
       headers: {
-        "Content-Type": "application/json", // Adjust headers as needed
+        "Content-Type": "application/json",
+        ...options?.headers,
       },
       body: options?.body ? JSON.stringify(options.body) : undefined,
     });
 
     if (!response.ok) {
-      const errorResponse: { error: string } = await response.json();
-      throw new Error(errorResponse.error);
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        const errorResponse: { error: string } = await response.json();
+        throw new Error(errorResponse.error);
+      }
+      throw new Error("Contact to support.");
+    }
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      const data: T = await response.json();
+
+      return data;
     }
 
-    const data: T = await response.json();
+    const data = await response.text();
 
-    return data;
+    return data as T;
   } catch (error) {
     if (error instanceof Error) {
-      throw new Error(`Error fetching data: ${error.message}`);
+      throw new Error(`Error making request: ${error.message}`);
     }
-    throw new Error("Error fetching data");
+    throw new Error("Error making request");
   }
 }

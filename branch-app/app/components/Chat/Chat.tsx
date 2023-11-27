@@ -15,6 +15,7 @@ import {
   Composer,
 } from "react-native-gifted-chat";
 import { BottomTabBarHeightContext } from "@react-navigation/bottom-tabs";
+import { v4 as uuidv4 } from "uuid";
 import CustomActions from "./CustomActions";
 import auth from "@react-native-firebase/auth";
 import { URL_SERVICES } from "@env";
@@ -115,16 +116,17 @@ export default function Chat(props: ChatComponentProps) {
     return message;
   };
 
-  const onSendFromUser = (_listMessages: any[]) => {
-    /*const createdAt = new Date();
+  const onSendFromUser = (imageUrl: string) => {
+    const createdAt = new Date();
     const userMessage = user();
-    const messagesToUpload = listMessages.map<never>((message: any) => ({
-      ...message,
+    const message: IMessage = {
       user: userMessage,
       createdAt,
       _id: uuidv4(),
-    }));*/
-    onSend([]);
+      image: imageUrl,
+      text: "",
+    };
+    onSend([message]);
   };
 
   return (
@@ -139,7 +141,7 @@ export default function Chat(props: ChatComponentProps) {
             placeholder="Escriba un mensaje"
             alwaysShowSend={true}
             renderUsernameOnMessage={true}
-            renderBubble={renderBuble}
+            renderBubble={renderBubble}
             scrollToBottom
             infiniteScroll
             scrollToBottomStyle={styles.chatScrollTo}
@@ -183,7 +185,7 @@ function renderInputToolbar(props: InputToolbarProps<IMessage>) {
   );
 }
 
-function renderBuble(props: any) {
+function renderBubble(props: any) {
   return (
     <Bubble
       {...props}

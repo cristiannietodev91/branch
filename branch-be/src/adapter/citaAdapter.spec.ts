@@ -38,7 +38,7 @@ describe("cita Adapter unit testing", () => {
 
       const vehiculoMock: any = {
         IdVehiculo: 1,
-        usuarios: {
+        usuario: {
           firstName: " Test 1",
           lastName: "Test last name",
           IdUsuario: 1,

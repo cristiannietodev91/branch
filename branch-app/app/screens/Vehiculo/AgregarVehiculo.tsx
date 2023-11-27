@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { Input, Button, Image } from "@rneui/base";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { launchImageLibrary } from "react-native-image-picker";
 import Moment from "moment";
 import auth from "@react-native-firebase/auth";
 import { Dropdown } from "react-native-material-dropdown-v2";
@@ -24,6 +23,7 @@ import {
 import styles from "../../styles/App.scss";
 import useFetch from "../../hooks/useFetch";
 import useMutation from "../../hooks/useMutation";
+import UploadImageToS3 from "../../utils/UploadImageToS3";
 
 type FormData = {
   marca: string;
@@ -50,12 +50,8 @@ export default function AgregarVehiculo(
   const [fechaCompra, setFechaCompra] = useState(new Date());
   const [referencia, setReferencia] = useState("");
   const [marca, setMarca] = useState<string>("");
-  const [urlFoto] = useState();
+  const [urlFoto, setUrlFoto] = useState<string>();
   const { mutate: createVehicle } = useMutation<Vehicle>("vehiculo/create");
-  const { mutate: signFile } = useMutation<string>("file/signedURL");
-  const { mutate: putFile, setUrl: setUrlToPutFile } = useMutation<{
-    url: string;
-  }>(undefined, undefined, "PUT");
 
   const { data: marcas, getData: getBrands } =
     useFetch<ListBrand>("marca/getAllUnique");
@@ -117,34 +113,22 @@ export default function AgregarVehiculo(
   //console.log("Vehiculo ::::>", vehiculo.kilometraje);
 
   const uploadImage = async () => {
-    const options = {
-      mediaType: "photo" as const,
-      quality: 1 as const,
-      maxWidth: 500,
-      maxHeight: 500,
-    };
+    try {
+      const { data } = await UploadImageToS3();
+      if (data) {
+        const { url } = data;
 
-    launchImageLibrary(options, async (response) => {
-      if (response.didCancel) {
-        console.log("User cancelled photo picker");
-      } else if (response.errorMessage) {
-        console.log("ImagePicker Error: ", response.errorMessage);
-      } else if (response.assets) {
-        const { uri, fileName, type } = response.assets[0];
-
-        const { isSuccess, data: url } = await signFile({ fileName: fileName });
-
-        if (isSuccess && url && type && uri) {
-          setUrlToPutFile(url);
-
-          await putFile({
-            uri: uri,
-            type: type,
-            name: fileName,
-          });
-        }
+        let urlFile = url.substring(0, url.indexOf("?"));
+        setUrlFoto(urlFile);
       }
-    });
+    } catch (error) {
+      if (error instanceof Error) {
+        Snackbar.show({
+          text: error.message,
+          duration: Snackbar.LENGTH_LONG,
+        });
+      }
+    }
   };
 
   const createVehiculo = async (data: any) => {
@@ -164,7 +148,7 @@ export default function AgregarVehiculo(
         uid: user?.uid,
       },
       tipoVehiculo: "Moto",
-      fotos: urlFoto ? [urlFoto] : [],
+      fotos: urlFoto ? [{ url: urlFoto }] : [],
     };
 
     const { isSuccess, error } = await createVehicle(vehicleToCreate);

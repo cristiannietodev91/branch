@@ -15,6 +15,7 @@ import {
 import {
   ERROR_CREATEVEHICULOTALLERASIGNADO,
   ERROR_CREATING_VEHICULE,
+  UPDATEVEHICULO_ERROR,
 } from "../utils/resultsMessages";
 import Debug from "debug";
 import usersDAO from "../dao/usersDAO";
@@ -52,9 +53,9 @@ const crearVehiculo = async (
     );
     
     if (resultUpdatevehiculo > 0) {
-      const { usuarios } = vehiculoResult;
-      if (usuarios && IdTaller) {
-        sendNotification(usuarios, IdTaller, vehiculoResult);
+      const { usuario } = vehiculoResult;
+      if (usuario && IdTaller) {
+        sendNotification(usuario, IdTaller, vehiculoResult);
       }
 
       return vehiculoResult;
@@ -110,11 +111,11 @@ const crearVehiculo = async (
       const vehicleCreated = await crearVehiculoDB(vehiculoDB, usuario.uid, idMarca);
 
       if(vehicleCreated) {
-        const { usuarios } = vehicleCreated;
+        const { usuario } = vehicleCreated;
         const { IdTaller } = vehicleCreated;
-        if (usuarios && IdTaller) {
+        if (usuario && IdTaller) {
           sendNotification(
-            usuarios,
+            usuario,
             IdTaller,
             vehicleCreated
           );
@@ -161,11 +162,11 @@ const crearVehiculo = async (
     );
 
     if(vehiculoCreated) {
-      const { usuarios } = vehiculoCreated;
+      const { usuario } = vehiculoCreated;
       const { IdTaller } = vehiculoCreated;
-      if (usuarios && IdTaller) {
+      if (usuario && IdTaller) {
         sendNotification(
-          usuarios,
+          usuario,
           IdTaller,
           vehiculoCreated
         );
@@ -245,12 +246,12 @@ const countVehiculosByIdTaller = (
 
 const findOneByFilter = (
   filter: WhereOptions<VehiculoAttributes>
-): Promise<VehiculoInstance | null> | undefined =>
+): Promise<VehiculoInstance | null> =>
   vehiculoDAO.findOneByFilter(filter);
 
 const findAllByFilter = (
   filter: WhereOptions<VehiculoAttributes>
-): Promise<VehiculoInstance[]> | undefined =>
+): Promise<VehiculoInstance[]> =>
   vehiculoDAO.findAllByFilter(filter);
 
 const updateVehiculo = (
@@ -265,10 +266,10 @@ const updateVehiculo = (
           referencia: vehiculo.marca?.referencia,
         })
         ?.then((marca) => {
-          if (marca && vehiculo.usuarios) {
+          if (marca && vehiculo.usuario) {
             const vehiculoUpdate = {
               IdMarca: marca.IdMarca,
-              IdUsuario: vehiculo.usuarios.uid,
+              IdUsuario: vehiculo.usuario.uid,
               IdTaller: vehiculo.IdTaller,
               tipoVehiculo: "Moto",
               placa: vehiculo.placa,
@@ -292,7 +293,7 @@ const updateVehiculo = (
                 reject(error);
               });
           } else {
-            reject(new Error(ERROR_CREATING_VEHICULE.message));
+            reject(new Error(UPDATEVEHICULO_ERROR.message));
           }
         })
         .catch((error) => {

@@ -13,12 +13,12 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { Dropdown } from "react-native-material-dropdown-v2";
 import { useForm } from "react-hook-form";
 import { years } from "../../../data/data";
-import { launchImageLibrary } from "react-native-image-picker";
 import Snackbar from "react-native-snackbar";
 import Moment from "moment";
 import { ListBrand, VehiclesStackScreenProps } from "../../../types/types";
 import useFetch from "../../hooks/useFetch";
 import useMutation from "../../hooks/useMutation";
+import UploadImageToS3 from "../../utils/UploadImageToS3";
 
 export default function EditVehicle(props: VehiclesStackScreenProps<"Edit">) {
   const { navigation, route } = props;
@@ -61,11 +61,6 @@ export default function EditVehicle(props: VehiclesStackScreenProps<"Edit">) {
   const { data: referencias, getData: getReferences } = useFetch<ListBrand>(
     `marca/getAllByMarca/${marca}`
   );
-
-  const { mutate: signFile } = useMutation<string>("file/signedURL");
-  const { mutate: putFile, setUrl: setUrlToPutFile } = useMutation<{
-    url: string;
-  }>(undefined, undefined, "PUT");
 
   useEffect(() => {
     if (!vehicle.marca) {
@@ -121,9 +116,9 @@ export default function EditVehicle(props: VehiclesStackScreenProps<"Edit">) {
         marca: data.marca,
         referencia: data.referencia,
       },
-      usuarios: vehicle.usuario,
+      usuario: vehicle.usuario,
       tipoVehiculo: vehicle.tipoVehiculo,
-      fotos: urlFoto ? [urlFoto] : [],
+      fotos: urlFoto ? [{ url: urlFoto }] : [],
       color: data.color,
       fechaCompra: data.fechacompra,
       modelo: data.modelo,
@@ -144,34 +139,22 @@ export default function EditVehicle(props: VehiclesStackScreenProps<"Edit">) {
   };
 
   const uploadImage = async () => {
-    const options = {
-      mediaType: "photo" as const,
-      quality: 1 as const,
-      maxWidth: 500,
-      maxHeight: 500,
-    };
+    try {
+      const { data } = await UploadImageToS3();
+      if (data) {
+        const { url } = data;
 
-    launchImageLibrary(options, async (response) => {
-      if (response.didCancel) {
-        console.log("User cancelled photo picker");
-      } else if (response.errorMessage) {
-        console.log("ImagePicker Error: ", response.errorMessage);
-      } else if (response.assets) {
-        const { uri, fileName, type } = response.assets[0];
-
-        const { isSuccess, data: url } = await signFile({ fileName: fileName });
-
-        if (isSuccess && url && type && uri) {
-          setUrlToPutFile(url);
-
-          await putFile({
-            uri: uri,
-            type: type,
-            name: fileName,
-          });
-        }
+        let urlFile = url.substring(0, url.indexOf("?"));
+        setUrlFoto(urlFile);
       }
-    });
+    } catch (error) {
+      if (error instanceof Error) {
+        Snackbar.show({
+          text: error.message,
+          duration: Snackbar.LENGTH_LONG,
+        });
+      }
+    }
   };
 
   //Set Url Foto

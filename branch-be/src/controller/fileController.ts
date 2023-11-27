@@ -46,17 +46,15 @@ const signedS3 = (req: Request, res: Response) => {
 };
 
 const signedURL = (req: Request, res: Response) => {
-  //let file = req.body;
-  //let paramsss = req.params;
-  console.log("Peticion recibida ::::>", req.body);
-  //console.log('Peticion recibida 2::::>', paramsss);
-  const unicocode = moment().format("MMDDYYYYHHMMSS");
-  const key = unicocode + req.body.fileName;
+  const uniqueCode = moment().format("MMDDYYYYHHMMSS");
+  const { fileName, fileType = "image/jpg" } = req.body || {};
+  const key = uniqueCode + fileName;
+
   const bucket = bucketName;
   const params = {
     Key: key,
     Bucket: bucket,
-    ContentType: "image/jpg",
+    ContentType: fileType,
     ACL: "public-read"
   };
 
@@ -64,7 +62,6 @@ const signedURL = (req: Request, res: Response) => {
     if (error) {
       console.log("Error al general URL Signed");
     } else {
-      console.log("URL Generated :::>", url);
       res.status(HttpStatus.OK).json(url);
     }
   });

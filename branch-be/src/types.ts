@@ -177,7 +177,7 @@ export interface VehiculoAttributes {
   estado: string;
   marca?: MarcaAttributes;
   taller?: TallerAttributes;
-  usuarios?: UserAttributes;
+  usuario?: UserAttributes;
 }
 
 export interface VehiculoPreCreationAttributes {

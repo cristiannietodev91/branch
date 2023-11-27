@@ -80,12 +80,12 @@ const createOrden = (req: Request, res: Response) => {
             }
 
             //Envio de notificaciones
-            if (cita.vehiculo?.usuarios?.celular && textoSms != "") {
-              sendSMStoInfoBip(cita.vehiculo.usuarios?.celular, textoSms);
+            if (cita.vehiculo?.usuario?.celular && textoSms != "") {
+              sendSMStoInfoBip(cita.vehiculo.usuario?.celular, textoSms);
             }
-            if (cita.vehiculo?.usuarios?.tokenCM && textoSms != "") {
+            if (cita.vehiculo?.usuario?.tokenCM && textoSms != "") {
               sendNotificacionToUser(
-                cita.vehiculo.usuarios?.tokenCM,
+                cita.vehiculo.usuario?.tokenCM,
                 textoSms,
                 "Citas",
                 { IdCita: orden.IdCita }
@@ -94,9 +94,9 @@ const createOrden = (req: Request, res: Response) => {
 
             const calificada = orden.IdEtapa !== 7;
             if (textoSms != "") {
-              if (cita.vehiculo && cita.vehiculo.usuarios) {
+              if (cita.vehiculo && cita.vehiculo.usuario) {
                 const notificacion = {
-                  IdUsuario: cita.vehiculo.usuarios.uid ?? "",
+                  IdUsuario: cita.vehiculo.usuario.uid ?? "",
                   text: textoSms,
                   typenotificacion:
                     orden.IdEtapa === 7 ? "Calificación" : "Orden",
@@ -109,9 +109,9 @@ const createOrden = (req: Request, res: Response) => {
                 notificacionAdapter
                   .crearNotificacion(notificacion)
                   ?.then(() => {
-                    if (cita.vehiculo?.usuarios?.tokenCM) {
+                    if (cita.vehiculo?.usuario?.tokenCM) {
                       sendDataToUser(
-                        cita.vehiculo.usuarios?.tokenCM,
+                        cita.vehiculo.usuario?.tokenCM,
                         "notificacion",
                         { IdCita: cita.IdCita }
                       );

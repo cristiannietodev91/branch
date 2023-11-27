@@ -25,7 +25,7 @@ const getAllVehiculos = (req: Request, res: Response): void => {
     if (error instanceof Error) {
       res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .json({ message: error.message });
+        .json({ error: error.message });
     }
   }
 };
@@ -46,14 +46,14 @@ const createVehiculo = (req: Request, res: Response): void => {
         debug("Error al crear vehiculo ", error);
         res
           .status(HttpStatus.BAD_REQUEST)
-          .json({ message: error.message });
+          .json({ error: error.message });
       });
   } catch (error) {
     debug("Error unhandled creating vehicle", error);
     if (error instanceof Error) {
       res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .json({ message: error.message });
+        .json({ error: error.message });
     }
   }
 };
@@ -74,27 +74,27 @@ const updateVehiculo = (req: Request, res: Response): void => {
           } else {
             return res
               .status(HttpStatus.OK)
-              .json({ message: "No se actualizo el vehiculo" });
+              .json({ error: "No se actualizo el vehiculo" });
           }
         })
         .catch((error) => {
           if (error instanceof Error) {
             res
               .status(HttpStatus.INTERNAL_SERVER_ERROR)
-              .json({ message: error.message });
+              .json({ error: error.message });
           }
         });
     } else {
       res
         .status(HttpStatus.BAD_REQUEST)
-        .json({ message: "El parametro IdVehiculo es requerido" });
+        .json({ error: "El parametro IdVehiculo es requerido" });
     }
   } catch (error) {
     debug("Error al actualizar vehiculo ", error);
     if (error instanceof Error) {
       res
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .json({ message: error.message });
+        .json({ error: error.message });
     }
   }
 };
@@ -137,7 +137,7 @@ const updateFechaVencimiento = (req: Request, res: Response): void => {
     } else {
       res
         .status(HttpStatus.BAD_REQUEST)
-        .json({ message: "El parametro IdVehiculo es requerido" });
+        .json({ error: "El parametro IdVehiculo es requerido" });
     }
   } catch (error) {
     debug("Error al actualizar vehiculo ", error);

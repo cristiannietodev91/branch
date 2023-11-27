@@ -3,7 +3,6 @@ import { Text, View, ScrollView } from "react-native";
 import { Image, Button, Input, Icon } from "@rneui/base";
 import Moment from "moment";
 import ReactSteps, { Step } from "../../components/steeper/steeper";
-import GalleryList from "../../components/GalleryList";
 
 import ActionButton from "react-native-action-button";
 import { useForm } from "react-hook-form";
@@ -98,6 +97,7 @@ export default function DetailCita({
     }
   };
 
+  /*
   let PhotosDiagnostico: Array<any>;
 
   if (cita.ordentrabajos.length > 1) {
@@ -124,7 +124,7 @@ export default function DetailCita({
         description: img.nombrearchivo,
       })
     );
-  }
+  }*/
 
   let pdfCotizacion: any;
 
@@ -203,7 +203,6 @@ export default function DetailCita({
                   {cita.ordentrabajos[1].mecanico.fullName}
                 </Text>
               </Text>
-              <GalleryList images={PhotosDiagnostico} itemsToRender={2} />
 
               {/* <ImageBrowser images={PhotosDiagnostico} /> */}
             </Step>
@@ -309,7 +308,6 @@ export default function DetailCita({
                   {cita.ordentrabajos[4].mecanico.fullName}
                 </Text>
               </Text>
-              <GalleryList images={PhotosReparacion} itemsToRender={2} />
             </Step>
           )}
           {cita.ordentrabajos.length > 5 && (
