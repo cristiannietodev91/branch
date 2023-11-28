@@ -44,6 +44,9 @@ const UploadImageToS3 = async (): Promise<UploadImageToS3Props> => {
             ...(fileSize && { "Content-Length": fileSize.toString() }),
           },
           body: {
+            // Trying to send the file with FormData or different options to avoid
+            // this typescript warning was not uploading the file to AWS. some additional
+            // work must be done to upload the file. Meanwhile this the only way to upload the file
             uri: uri,
             type: type,
             name: fileName,

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { SafeAreaView } from "react-native";
 import Snackbar from "react-native-snackbar";
 import messaging from "@react-native-firebase/messaging";
@@ -11,6 +11,7 @@ import Loading from "../../components/Loading";
 import { ListVehicles } from "../../../types/types";
 import useFetch from "../../hooks/useFetch";
 import useMutation from "../../hooks/useMutation";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function Vehiculo() {
   const user = auth().currentUser;
@@ -24,9 +25,11 @@ export default function Vehiculo() {
 
   const { mutate: updateUser } = useMutation(`usuario/update/${user?.uid}`);
 
-  useEffect(() => {
-    getVehicles();
-  }, [getVehicles]);
+  useFocusEffect(
+    useCallback(() => {
+      getVehicles();
+    }, [getVehicles])
+  );
 
   if (errorGettingVehicles) {
     Snackbar.show({

@@ -3,30 +3,28 @@ import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import styles from "../../styles/App.scss";
 import { ImageBackground, View, Text } from "react-native";
 import { Button, Icon, Image } from "@rneui/base";
-import { URL_SERVICES } from "@env";
 import Loading from "../../components/Loading";
 import { LoginManager, AccessToken } from "react-native-fbsdk-next";
 import ButtonBranch from "../../components/branch/button";
-import { UserStackScreenProps } from "../../../types/types";
+import { User, UserStackScreenProps } from "../../../types/types";
+import useFetch from "../../hooks/useFetch";
 import { useFocusEffect } from "@react-navigation/native";
+import Snackbar from "react-native-snackbar";
 
 export default function Usuario(props: UserStackScreenProps<"User">) {
   const { navigation } = props;
-  const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
-  const [isLoading, setLoading] = useState(true);
   const [facebookUser, setFacebookUser] =
     useState<FirebaseAuthTypes.UserInfo>();
 
   let userLogged = auth().currentUser;
 
-  // Handle user state changes
-  async function onAuthStateChanged(
-    userFirebase: FirebaseAuthTypes.User | null
-  ) {
-    setUser(userFirebase);
-  }
+  const {
+    data: user,
+    getData: getUser,
+    loading,
+  } = useFetch<User>(`usuario/getByEmail/${userLogged?.email}`);
 
-  const LoadfacebookUser = useCallback(() => {
+  const loadFacebookUser = useCallback(() => {
     if (userLogged) {
       userLogged.providerData.forEach(async (provider) => {
         if (provider.providerId === "facebook.com") {
@@ -37,71 +35,51 @@ export default function Usuario(props: UserStackScreenProps<"User">) {
   }, [userLogged]);
 
   useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    LoadfacebookUser();
-    return subscriber; // unsubscribe on unmount
-  }, [LoadfacebookUser]);
+    loadFacebookUser();
+  }, [loadFacebookUser]);
 
   useFocusEffect(
     useCallback(() => {
-      fetch(URL_SERVICES + "/usuario/getByEmail/" + userLogged?.email, {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      })
-        .then((response) => {
-          return response.json();
-        })
-        .then((json) => {
-          setUser(json);
-          setLoading(false);
-        })
-        .catch((error) => console.error(error));
-    }, [userLogged])
+      getUser();
+    }, [getUser])
   );
 
   const joinFacebookAccount = async () => {
-    const result = await LoginManager.logInWithPermissions([
-      "public_profile",
-      "email",
-    ]);
+    if (userLogged) {
+      try {
+        const result = await LoginManager.logInWithPermissions([
+          "public_profile",
+          "email",
+        ]);
 
-    if (result.isCancelled) {
-      throw "User cancelled the login process";
+        if (!result.isCancelled) {
+          const data = await AccessToken.getCurrentAccessToken();
+
+          if (data) {
+            const facebookCredential = auth.FacebookAuthProvider.credential(
+              data.accessToken
+            );
+
+            await userLogged.linkWithCredential(facebookCredential);
+          }
+        }
+      } catch (error) {
+        if (error instanceof Error) {
+          Snackbar.show({
+            text: error.message,
+            duration: Snackbar.LENGTH_LONG,
+          });
+        }
+      }
     }
-
-    // Get the email
-    //
-
-    // Once signed in, get the users AccesToken
-    const data = await AccessToken.getCurrentAccessToken();
-
-    if (!data) {
-      throw "Something went wrong obtaining access token";
-    }
-    // Create a Firebase credential with the AccessToken
-    const facebookCredential = auth.FacebookAuthProvider.credential(
-      data.accessToken
-    );
-
-    auth()
-      .currentUser?.linkWithCredential(facebookCredential)
-      .then((resultado) => {
-        console.log("Resltado de asociar cuenta a facebook :::>", resultado);
-      })
-      .catch((error) => {
-        console.log("Error al asociar cuentas :::>", error);
-      });
   };
 
   return (
     <ImageBackground
-      source={require("../../../assets/bg_sin_logo.jpg")} //LA IDEA ES QUE EL FONDO SEA LA FOTO DE LA MOTO
+      source={require("../../../assets/bg_sin_logo.jpg")}
       style={[styles.bgLogin, styles.bgProfile]}
     >
-      {isLoading ? (
+      {loading || !user ? (
         <Loading isVisible={true} text="Cargando" />
       ) : (
         <View style={styles.userCard}>

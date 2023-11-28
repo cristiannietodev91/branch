@@ -2047,7 +2047,7 @@
     node-forge "^1.2.1"
     nullthrows "^1.1.1"
 
-"@expo/config-plugins@4.1.5", "@expo/config-plugins@^4.0.14", "@expo/config-plugins@^4.0.4", "@expo/config-plugins@^4.1.5", "@expo/config-plugins@~4.1.4":
+"@expo/config-plugins@4.1.5", "@expo/config-plugins@^4.0.14", "@expo/config-plugins@^4.1.5", "@expo/config-plugins@~4.1.4":
   version "4.1.5"
   resolved "https://registry.yarnpkg.com/@expo/config-plugins/-/config-plugins-4.1.5.tgz#9d357d2cda9c095e511b51583ede8a3b76174068"
   integrity sha512-RVvU40RtZt12HavuDAe+LDIq9lHj7sheOfMEHdmpJ/uTA8pgvkbc56XF6JHQD+yRr6+uhhb+JnAasGq49dsQbw==
@@ -8782,12 +8782,11 @@ react-native-easy-view-transformer@^1.2.0:
     react-native-easy-guesture-responder "^1.1.2"
     react-native-scrolling "^1.0.2"
 
-react-native-fbsdk-next@^8.0.1:
-  version "8.0.5"
-  resolved "https://registry.yarnpkg.com/react-native-fbsdk-next/-/react-native-fbsdk-next-8.0.5.tgz#d69c51cdb2afd357e0a2400951155d64b935d348"
-  integrity sha512-gxIP+QfgHKtzVVcjQxflTbXuPOZQ1PlT9dJKlrCWDX2wIOblRIs8eTN6TS5dbw7OPgibwpHVMehIxLAM+z/G/w==
+react-native-fbsdk-next@12.1.1:
+  version "12.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-fbsdk-next/-/react-native-fbsdk-next-12.1.1.tgz#97485d555390c51278fe886d2cefd0235085278f"
+  integrity sha512-DxaypPHAWth6J9Sgd6p62GOHzv0wQQ9wRSSRzFHB9eEbrpU9Iqo5bH3TEZ2Kp3bfqnLs9yb+tn/zpf4YqQJSzA==
   dependencies:
-    "@expo/config-plugins" "^4.0.4"
     xml2js "^0.4.23"
 
 react-native-gallery-swiper@^1.26.4:

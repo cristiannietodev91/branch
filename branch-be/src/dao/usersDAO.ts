@@ -62,7 +62,7 @@ const deleteById = (
 const update = (
   filter: WhereOptions<UserAttributes>,
   user: Partial<UserCreationAttributes>
-): Promise<[affectedCount: number]> | undefined => {
+): Promise<[affectedCount: number]> => {
   return UserModel.update(user, {
     where: filter,
   });

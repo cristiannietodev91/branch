@@ -17,9 +17,9 @@ export interface Taller {
   latitude: number;
   longitud: number;
   celular: string;
-  telefono: any;
+  telefono: string;
   email: string;
-  logo: any;
+  logo: string;
   estado: string;
   createdAt: string;
   updatedAt: string;
@@ -222,7 +222,7 @@ export type WorkShopStackScreenProps<T extends keyof WorkShopStackParamList> =
 export type UserStackParamList = {
   User: undefined;
   Edit: {
-    usuario: FirebaseAuthTypes.User | null;
+    usuario: User;
     usuarioFacebook?: FirebaseAuthTypes.UserInfo;
   };
 };

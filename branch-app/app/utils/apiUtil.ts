@@ -21,14 +21,16 @@ export async function fetchData<T, P = object>(
           .join("&")}`
       : "";
 
-    const response = await fetch(`${url}${queryString}`, {
+    const fetchOptions = {
       method: options?.method || "GET",
       headers: {
         "Content-Type": "application/json",
         ...options?.headers,
       },
       body: options?.body ? JSON.stringify(options.body) : undefined,
-    });
+    };
+
+    const response = await fetch(`${url}${queryString}`, fetchOptions);
 
     if (!response.ok) {
       const contentType = response.headers.get("content-type");

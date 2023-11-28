@@ -122,39 +122,26 @@ const updateUsuarioByIdUsuario = (
   }
 };
 
-const updateUsuario = (
+const updateUsuario = async (
   usuario: Partial<UserCreationAttributes>
-): Promise<UserInstance> | undefined => {
+): Promise<[affectedCount: number]> => {
   if (usuario.uid) {
-    admin
-      .auth()
-      .updateUser(usuario.uid, {
-        email: usuario.email,
-        phoneNumber: usuario.celular,
-        displayName: usuario.firstName,
-      })
-      .then(() => {
-        // See the UserRecord reference doc for the contents of userRecord.
-        if (usuario.uid) {
-          return admin
-            .auth()
-            .setCustomUserClaims(usuario.uid, {
-              identificacion: usuario.identificacion,
-              tipoUsuario: usuario.tipoUsuario,
-            })
-            .then(() => {
-              // The new custom claims will propagate to the user's ID token the
-              // next time a new one is issued.
-              return usersDAO.update({ uid: usuario.uid }, usuario);
-            });
-        }
-      })
-      .catch((error) => {
-        debug("Error updating user:", error);
-        return Promise.reject(error);
-      });
+    
+    const authAdmin = admin.auth();
+    await authAdmin.updateUser(usuario.uid, {
+      email: usuario.email,
+      phoneNumber: usuario.celular,
+      displayName: usuario.firstName,
+    });
+
+    await authAdmin.setCustomUserClaims(usuario.uid, {
+      identificacion: usuario.identificacion,
+      tipoUsuario: usuario.tipoUsuario,
+    });
+
+    return usersDAO.update({ uid: usuario.uid }, usuario);     
   } else {
-    return Promise.reject("El parametro IdUsuario es requerido");
+    throw new Error("The uid param is required");
   }
 };
 

@@ -6,6 +6,8 @@ import Snackbar from "react-native-snackbar";
 import styles from "../../styles/App.scss";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import useMutation from "../../hooks/useMutation";
+import { UserStackScreenProps } from "../../../types/types";
+import auth from "@react-native-firebase/auth";
 
 type FormData = {
   nombre: string;
@@ -13,9 +15,9 @@ type FormData = {
   celular: string;
 };
 
-export default function EditarUsuario(props: any) {
-  const { navigation } = props;
-  const { usuario, usuarioFacebook } = navigation.state.params;
+export default function EditarUsuario(props: UserStackScreenProps<"Edit">) {
+  const { navigation, route } = props;
+  const { usuario, usuarioFacebook } = route.params;
   const {
     register,
     handleSubmit,
@@ -23,7 +25,11 @@ export default function EditarUsuario(props: any) {
     formState: { errors },
   } = useForm<FormData>();
 
-  const { mutate: updateUser } = useMutation(`usuario/update/${usuario.uid}`);
+  const { mutate: updateUser } = useMutation(
+    `usuario/update/${usuario?.uid}`,
+    {},
+    "PUT"
+  );
 
   useEffect(() => {
     register("nombre", {
@@ -40,10 +46,19 @@ export default function EditarUsuario(props: any) {
       },
     });
 
-    setValue(
-      "nombre",
-      usuarioFacebook ? usuarioFacebook.displayName : usuario.firstName
-    );
+    const userName = () => {
+      if (usuarioFacebook && usuarioFacebook.displayName) {
+        return usuarioFacebook.displayName;
+      }
+
+      if (usuario && usuario.firstName) {
+        return usuario.firstName;
+      }
+
+      return "";
+    };
+
+    setValue("nombre", userName());
     setValue("identificacion", usuario.identificacion);
     setValue("celular", usuario.celular);
   }, [register, setValue, usuario, usuarioFacebook]);
@@ -59,12 +74,16 @@ export default function EditarUsuario(props: any) {
     const { isSuccess, error } = await updateUser(usuarioUpdate);
 
     if (isSuccess) {
-      navigation.navigate("Usuario");
-      Snackbar.show({
-        text: "Se actualizo el usuario correctamente",
-        duration: Snackbar.LENGTH_SHORT,
-      });
-      return;
+      let userLogged = auth().currentUser;
+      if (userLogged) {
+        await userLogged?.reload();
+        navigation.goBack();
+        Snackbar.show({
+          text: "Se actualizo el usuario correctamente",
+          duration: Snackbar.LENGTH_SHORT,
+        });
+        return;
+      }
     }
 
     if (error) {
@@ -157,7 +176,7 @@ export default function EditarUsuario(props: any) {
         <Button
           title="Cancelar"
           onPress={() => {
-            navigation.navigate("Usuario");
+            navigation.goBack();
           }}
           buttonStyle={[styles.buttonSecondary, { marginBottom: 120 }]}
           titleStyle={styles.buttonText}

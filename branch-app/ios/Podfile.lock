@@ -2,8 +2,8 @@ PODS:
   - boost (1.76.0)
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
-  - FBAEMKit (13.2.0):
-    - FBSDKCoreKit_Basics (= 13.2.0)
+  - FBAEMKit (16.1.3):
+    - FBSDKCoreKit_Basics (= 16.1.3)
   - FBLazyVector (0.71.8)
   - FBReactNativeSpec (0.71.8):
     - RCT-Folly (= 2021.07.22.00)
@@ -12,18 +12,18 @@ PODS:
     - React-Core (= 0.71.8)
     - React-jsi (= 0.71.8)
     - ReactCommon/turbomodule/core (= 0.71.8)
-  - FBSDKCoreKit (13.2.0):
-    - FBAEMKit (= 13.2.0)
-    - FBSDKCoreKit_Basics (= 13.2.0)
-  - FBSDKCoreKit_Basics (13.2.0)
-  - FBSDKGamingServicesKit (13.2.0):
-    - FBSDKCoreKit (= 13.2.0)
-    - FBSDKCoreKit_Basics (= 13.2.0)
-    - FBSDKShareKit (= 13.2.0)
-  - FBSDKLoginKit (13.2.0):
-    - FBSDKCoreKit (= 13.2.0)
-  - FBSDKShareKit (13.2.0):
-    - FBSDKCoreKit (= 13.2.0)
+  - FBSDKCoreKit (16.1.3):
+    - FBAEMKit (= 16.1.3)
+    - FBSDKCoreKit_Basics (= 16.1.3)
+  - FBSDKCoreKit_Basics (16.1.3)
+  - FBSDKGamingServicesKit (16.1.3):
+    - FBSDKCoreKit (= 16.1.3)
+    - FBSDKCoreKit_Basics (= 16.1.3)
+    - FBSDKShareKit (= 16.1.3)
+  - FBSDKLoginKit (16.1.3):
+    - FBSDKCoreKit (= 16.1.3)
+  - FBSDKShareKit (16.1.3):
+    - FBSDKCoreKit (= 16.1.3)
   - Firebase/Auth (8.15.0):
     - Firebase/CoreOnly
     - FirebaseAuth (~> 8.15.0)
@@ -433,20 +433,20 @@ PODS:
     - glog
   - react-native-blob-util (0.16.4):
     - React-Core
-  - react-native-fbsdk-next (8.0.5):
+  - react-native-fbsdk-next (12.1.1):
     - React-Core
-    - react-native-fbsdk-next/Core (= 8.0.5)
-    - react-native-fbsdk-next/Login (= 8.0.5)
-    - react-native-fbsdk-next/Share (= 8.0.5)
-  - react-native-fbsdk-next/Core (8.0.5):
-    - FBSDKCoreKit (~> 13.2.0)
+    - react-native-fbsdk-next/Core (= 12.1.1)
+    - react-native-fbsdk-next/Login (= 12.1.1)
+    - react-native-fbsdk-next/Share (= 12.1.1)
+  - react-native-fbsdk-next/Core (12.1.1):
+    - FBSDKCoreKit (~> 16.1.3)
     - React-Core
-  - react-native-fbsdk-next/Login (8.0.5):
-    - FBSDKLoginKit (~> 13.2.0)
+  - react-native-fbsdk-next/Login (12.1.1):
+    - FBSDKLoginKit (~> 16.1.3)
     - React-Core
-  - react-native-fbsdk-next/Share (8.0.5):
-    - FBSDKGamingServicesKit (~> 13.2.0)
-    - FBSDKShareKit (~> 13.2.0)
+  - react-native-fbsdk-next/Share (12.1.1):
+    - FBSDKGamingServicesKit (~> 16.1.3)
+    - FBSDKShareKit (~> 16.1.3)
     - React-Core
   - react-native-google-maps (1.8.0):
     - Google-Maps-iOS-Utils (= 4.1.0)
@@ -793,14 +793,14 @@ SPEC CHECKSUMS:
   boost: 57d2868c099736d80fcd648bf211b4431e51a558
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
-  FBAEMKit: c2b2895363b7e57192013d1dc49fdf498b28624c
+  FBAEMKit: af2972f39bb0f3f7c45998f435b007833c32ffb2
   FBLazyVector: f637f31eacba90d4fdeff3fa41608b8f361c173b
   FBReactNativeSpec: 0d9a4f4de7ab614c49e98c00aedfd3bfbda33d59
-  FBSDKCoreKit: 58139803d861e72c7661dc875611a759352a55ac
-  FBSDKCoreKit_Basics: 1ffc68326a5ece051d85574f02a0adcf27c2a5f2
-  FBSDKGamingServicesKit: 2af7e19dcfc3459581dec011a230d1eeddc17861
-  FBSDKLoginKit: 19e2a878556c2ee4f20486dc406e582783cd7578
-  FBSDKShareKit: 079497bb0cfeb049dc8ff6aee2702698680a2806
+  FBSDKCoreKit: 19e2e18b3be578d7a51fed8fdd8c152bef0b9511
+  FBSDKCoreKit_Basics: dd9826ce3c9fd9f8cdf8dbbd0ef0a53e6c0c9e7e
+  FBSDKGamingServicesKit: 791d9b1de6da359e92da3b1ba3459f36b0aa604f
+  FBSDKLoginKit: c395c63a1a6cf4a8a1e6103fd94b8c46329ee81c
+  FBSDKShareKit: de5c291ad414ec07048ab09bae1b1b74b3ed92fe
   Firebase: 5f8193dff4b5b7c5d5ef72ae54bb76c08e2b841d
   FirebaseAuth: 3e73bf8abf4fbb40f8b421f361f4cc48ee57388c
   FirebaseCore: 5743c5785c074a794d35f2fff7ecc254a91e08b1
@@ -843,7 +843,7 @@ SPEC CHECKSUMS:
   React-jsinspector: c712f9e3bb9ba4122d6b82b4f906448b8a281580
   React-logger: 342f358b8decfbf8f272367f4eacf4b6154061be
   react-native-blob-util: 60453b777610c87a22b3524032c0214e8db555db
-  react-native-fbsdk-next: 79815a5b8f66ab0990fbb370b4a4b5bdf0a15e6c
+  react-native-fbsdk-next: 040cfe0d3cc5924d2026abb482fb6024746441f6
   react-native-google-maps: 356b9d01da0920be13e4c4dc83673b30e8a22c16
   react-native-image-picker: 2381c008bbb09e72395a2d043c147b11bd1523d9
   react-native-maps: f699e0753c22c4d5c3a44d03895b193a4dbca6c2
