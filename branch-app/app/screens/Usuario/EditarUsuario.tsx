@@ -63,7 +63,7 @@ export default function EditarUsuario(props: UserStackScreenProps<"Edit">) {
     setValue("celular", usuario.celular);
   }, [register, setValue, usuario, usuarioFacebook]);
 
-  const updateUsuario = async (data: any) => {
+  const updateUsuario = async (data: FormData) => {
     const usuarioUpdate = {
       email: usuario.email,
       identificacion: data.identificacion,

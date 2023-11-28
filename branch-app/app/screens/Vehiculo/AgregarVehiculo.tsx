@@ -131,7 +131,7 @@ export default function AgregarVehiculo(
     }
   };
 
-  const createVehiculo = async (data: any) => {
+  const createVehiculo = async (data: FormData) => {
     const vehicleToCreate = {
       placa: data.placa.toUpperCase(),
       alias: data.alias,

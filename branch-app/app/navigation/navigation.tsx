@@ -7,7 +7,7 @@ import TalleresStacks from "./TalleresStacks";
 import CitasStacks from "./CitasStacks";
 import UsuariosStacks from "./UsuariosStacks";
 import SplasScreen from "../screens/SplashScreen";
-import auth from "@react-native-firebase/auth";
+import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import LoginScreenStacks from "./LoginStacks";
 import { HomeBottomTabParamList } from "../../types/types";
 
@@ -33,6 +33,7 @@ const NavigationStacks = () => {
         tabBarInactiveTintColor: "#5be5e5",
         headerShown: false,
       }}
+      safeAreaInsets={{ bottom: 10 }}
     >
       <Tab.Screen
         name="Motos"
@@ -85,12 +86,12 @@ const NavigationStacks = () => {
 
 const MainStacks = () => {
   const [initializing, setInitializing] = useState(true);
-  const [user, setUser] = useState();
+  const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
 
   // Handle user state changes
   const onAuthStateChanged = useCallback(
-    (user: any) => {
-      setUser(user);
+    (userFirebase: FirebaseAuthTypes.User | null) => {
+      setUser(userFirebase);
       if (initializing) {
         setInitializing(false);
       }

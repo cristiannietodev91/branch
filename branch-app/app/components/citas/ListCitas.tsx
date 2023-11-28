@@ -19,6 +19,7 @@ import ActionButton from "react-native-action-button";
 import {
   ActiveAppointmentStackScreenProps,
   ListAppointment,
+  Appointment,
 } from "../../../types/types";
 
 interface ListCitasProps
@@ -41,7 +42,7 @@ interface CitaProps
     ActiveAppointmentStackScreenProps<"NavigateAppointment">,
     "navigation"
   > {
-  cita: any;
+  cita: Appointment;
 }
 
 export default function ListCitas({ citas, navigation }: ListCitasProps) {
@@ -102,7 +103,7 @@ export default function ListCitas({ citas, navigation }: ListCitasProps) {
           </Text>
         </ImageBackground>
       </View>
-      <SwipeListView
+      <SwipeListView<Appointment>
         contentContainerStyle={styles.scrollContainer}
         onScroll={handleScroll}
         data={citas}

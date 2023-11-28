@@ -85,8 +85,8 @@ export default function Vehiculo() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {loading || listVehicles === null ? (
-        <Loading isVisible={true} text="Loading" />
+      {loading || listVehicles === null || user === null ? (
+        <Loading />
       ) : (
         <ListVehiculos vehicles={listVehicles} user={user} />
       )}

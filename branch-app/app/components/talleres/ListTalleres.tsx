@@ -7,15 +7,15 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
   LayoutAnimation,
-  Platform,
 } from "react-native";
 import { Avatar, Text, Icon } from "@rneui/themed";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import OpenMap from "react-native-open-maps";
+import ActionButton from "react-native-action-button";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { EmptyGarage } from "./../../../assets/svg/EmptyGarage";
 import ButtonBranch from "../../components/branch/button";
 import { NotificationContext } from "../ContextNotifications";
-import ActionButton from "react-native-action-button";
 import type {
   ListTalleres,
   ListVehicles,
@@ -232,6 +232,8 @@ function EmptyList() {
 }
 
 function AddCitaButton() {
+  const insets = useSafeAreaInsets();
+
   return (
     <ActionButton
       buttonTextStyle={styles.actionButton}
@@ -244,7 +246,7 @@ function AddCitaButton() {
         });
       }}
       offsetX={15}
-      offsetY={Platform.OS === "ios" ? 80 : 70}
+      offsetY={80 - insets.bottom}
       renderIcon={() => <Icon name="add-location" />}
     >
       {">"}

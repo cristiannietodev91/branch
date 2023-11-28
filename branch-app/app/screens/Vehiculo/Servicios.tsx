@@ -27,7 +27,7 @@ export default function Servicios(props: VehiclesStackScreenProps<"Services">) {
   return (
     <SafeAreaView>
       {loading ? (
-        <Loading isVisible={true} text="Cargando" />
+        <Loading />
       ) : (
         <View>
           <Card

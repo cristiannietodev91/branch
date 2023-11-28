@@ -2,15 +2,14 @@ import React from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { Overlay } from "@rneui/themed";
 
-export default function Loading(props: any) {
+export default function Loading() {
   return (
     <Overlay
       isVisible={true}
       overlayStyle={{ ...style.overlay, backgroundColor: "transparent" }}
     >
       <View style={style.view}>
-        <ActivityIndicator size="large" color="#5be5e5"></ActivityIndicator>
-        {/* {text && <Text style={style.text}>{text}</Text>} */}
+        <ActivityIndicator size="large" color="#5be5e5" />
       </View>
     </Overlay>
   );

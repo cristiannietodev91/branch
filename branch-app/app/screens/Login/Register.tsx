@@ -25,20 +25,8 @@ export default function Register() {
     setValue,
     formState: { errors },
   } = useForm<FormData>();
-  const [, setUser] = useState();
   const [togglePassword, passwordState] = useState(true);
   const { mutate: createUser } = useMutation("usuario/createFireBaseUser");
-
-  // Handle user state changes
-  async function onAuthStateChanged(user: any) {
-    console.log("user :::>", user);
-    setUser(user);
-  }
-
-  useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber; // unsubscribe on unmount
-  }, []);
 
   useEffect(() => {
     register("email", {

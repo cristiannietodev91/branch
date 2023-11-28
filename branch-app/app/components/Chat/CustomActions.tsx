@@ -41,25 +41,20 @@ export default function CustomActions(props: CustomActionsProps) {
   );
 }
 
-function RenderIcon(props: any) {
-  const { renderIcon } = props;
-  if (renderIcon) {
-    return renderIcon;
-  } else {
-    return (
-      <View>
-        <Image
-          source={require("./../../../assets/drawable-xxxhdpi/button.png")}
-          style={styles.iconButtonImage}
-        />
-        <Icon
-          containerStyle={styles.iconButtonIcon}
-          name="cloud-upload-outline"
-          type="material-community"
-          color="#0396c8"
-          size={25}
-        />
-      </View>
-    );
-  }
+function RenderIcon() {
+  return (
+    <View>
+      <Image
+        source={require("./../../../assets/drawable-xxxhdpi/button.png")}
+        style={styles.iconButtonImage}
+      />
+      <Icon
+        containerStyle={styles.iconButtonIcon}
+        name="cloud-upload-outline"
+        type="material-community"
+        color="#0396c8"
+        size={25}
+      />
+    </View>
+  );
 }

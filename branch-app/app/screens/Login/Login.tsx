@@ -38,7 +38,7 @@ export default function Login() {
     });
   }, [register]);
 
-  const login = async (data: any) => {
+  const login = async (data: FormData) => {
     //console.log("User logged");
     //console.log("Email :::>", data);
     const { email, password } = data;

@@ -9,12 +9,18 @@ import { useForm } from "react-hook-form";
 import styles from "../../styles/App.scss";
 import {
   ActiveAppointmentStackScreenProps,
+  Appointment,
   OrdenTrabajo,
 } from "../../../types/types";
 import useMutation from "../../hooks/useMutation";
 
 type FormData = {
   comentario: string;
+};
+
+type PDF = {
+  uri: any;
+  cache: boolean;
 };
 
 export default function DetailCita({
@@ -49,7 +55,7 @@ export default function DetailCita({
     });
   }, [register]);
 
-  const aprobarCotizacion = async (data: any) => {
+  const aprobarCotizacion = async (data: FormData) => {
     let ordenToUpdate = orden;
     ordenToUpdate.estado = "Aceptado";
     ordenToUpdate.Observaciones =
@@ -74,13 +80,13 @@ export default function DetailCita({
 
     const { isSuccess, data: order } = await orderCreate(ordenCreate);
 
-    if (isSuccess) {
+    if (isSuccess && order) {
       cita.ordentrabajos.push(order);
       setReload(true);
     }
   };
 
-  const rechazarCotizacion = async (data: any) => {
+  const rechazarCotizacion = async (data: FormData) => {
     let ordenToUpdate = orden;
     ordenToUpdate.estado = "Rechazado";
     ordenToUpdate.Observaciones =
@@ -126,7 +132,7 @@ export default function DetailCita({
     );
   }*/
 
-  let pdfCotizacion: any;
+  let pdfCotizacion: PDF;
 
   if (cita.ordentrabajos.length > 2) {
     pdfCotizacion = {
@@ -135,7 +141,7 @@ export default function DetailCita({
     };
   }
 
-  let pdfFactura: any;
+  let pdfFactura: PDF;
   if (cita.ordentrabajos.length > 5) {
     pdfFactura = {
       uri: cita.ordentrabajos[5].documentos[0].url,
@@ -347,7 +353,7 @@ export default function DetailCita({
   );
 }
 
-const Cita = (props: { cita: any }) => {
+const Cita = (props: { cita: Appointment }) => {
   const { cita } = props;
   //console.log("Navigation :::>", navigation);
   let fechaCita = Moment(cita.fechaCita.toString()).format("YYYY-MM-DD");
@@ -385,7 +391,7 @@ const Cita = (props: { cita: any }) => {
 
 interface OpenChatProps
   extends Pick<ActiveAppointmentStackScreenProps<"Detail">, "navigation"> {
-  cita: any;
+  cita: Appointment;
 }
 
 function OpenChatButton(props: OpenChatProps) {

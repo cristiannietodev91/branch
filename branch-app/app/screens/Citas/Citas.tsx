@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from "react";
 import auth from "@react-native-firebase/auth";
 import ListCitas from "../../components/citas/ListCitas";
 import Loading from "../../components/Loading";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { View } from "react-native";
 import styles from "./../../styles/App.scss";
 import {
   ActiveAppointmentStackScreenProps,
@@ -42,13 +42,13 @@ const CitasScreen = ({
   }, [getAppointments]);
 
   return (
-    <SafeAreaView style={[styles.container, styles.datesContainer]}>
+    <View style={[styles.container, styles.datesContainer]}>
       {loading || !appointments ? (
-        <Loading isVisible={true} text="Cargando" />
+        <Loading />
       ) : (
         <ListCitas citas={appointments} navigation={navigation} etapa={etapa} />
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 

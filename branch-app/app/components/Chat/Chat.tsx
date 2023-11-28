@@ -13,6 +13,8 @@ import {
   InputToolbarProps,
   ComposerProps,
   Composer,
+  BubbleProps,
+  TimeProps,
 } from "react-native-gifted-chat";
 import { BottomTabBarHeightContext } from "@react-navigation/bottom-tabs";
 import { v4 as uuidv4 } from "uuid";
@@ -97,19 +99,19 @@ export default function Chat(props: ChatComponentProps) {
     );
   };
 
-  const parseMessage = (newmessage: any) => {
+  const parseMessage = (newMessage: IMessage) => {
     let message = {
-      _id: newmessage._id,
-      createdAt: newmessage.createdAt,
-      text: newmessage.text,
+      _id: newMessage._id,
+      createdAt: newMessage.createdAt,
+      text: newMessage.text,
       delivered: false,
       read: false,
       user: {
-        _id: newmessage.user._id,
-        name: newmessage.user.name,
+        _id: newMessage.user._id,
+        name: newMessage.user.name,
       },
-      image: newmessage.image,
-      IdConversacionUser: newmessage.user._id,
+      image: newMessage.image,
+      IdConversacionUser: newMessage.user._id,
       IdTaller: IdTaller,
       typeusuario: "client",
     };
@@ -185,12 +187,10 @@ function renderInputToolbar(props: InputToolbarProps<IMessage>) {
   );
 }
 
-function renderBubble(props: any) {
+function renderBubble(props: Readonly<BubbleProps<IMessage>>) {
   return (
     <Bubble
       {...props}
-      // renderTime={() => <Text>Time</Text>}
-      // renderTicks={() => <Text>Ticks</Text>}
       wrapperStyle={{
         right: {
           backgroundColor: "#8bd2e8",
@@ -219,12 +219,10 @@ function renderBubble(props: any) {
   );
 }
 
-function renderTime(props: any) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { containerStyle, wrapperStyle, ...timeProps } = props;
+function renderTime(props: TimeProps<IMessage>) {
   return (
     <Time
-      {...timeProps}
+      {...props}
       timeTextStyle={{
         right: {
           color: "#0396c8",

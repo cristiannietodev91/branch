@@ -10,7 +10,7 @@ import Moment from "moment";
 import { services } from "../../../data/data";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
-  AppointmentScreenNavigationProp,
+  ActiveAppointmentStackScreenProps,
   ListVehicles,
   Vehicle,
 } from "../../../types/types";
@@ -27,7 +27,7 @@ type FormData = {
 
 export default function AgregarCita({
   navigation,
-}: AppointmentScreenNavigationProp) {
+}: ActiveAppointmentStackScreenProps<"AddAppointment">) {
   const {
     register,
     handleSubmit,
@@ -67,7 +67,7 @@ export default function AgregarCita({
     });
   }, [register]);
 
-  const createCita = async (data: any) => {
+  const createCita = async (data: FormData) => {
     if (vehicles) {
       let vehiculo = vehicles.find((vehiculo) => {
         if (vehiculo.placa === data.placa) {

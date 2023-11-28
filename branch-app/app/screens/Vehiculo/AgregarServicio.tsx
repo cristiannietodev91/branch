@@ -27,7 +27,7 @@ export default function AgregarServicio(props: any) {
     });
   }, [register]);
 
-  const createServicio = async (data: any) => {
+  const createServicio = async (data: FormData) => {
     //console.log("User logged");
 
     let servicioCreate = {

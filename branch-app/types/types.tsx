@@ -53,6 +53,17 @@ export interface Brand {
   urllogo: string;
 }
 
+export interface VehicleDocument {
+  url: string;
+  date: string;
+  size: number;
+  type: string;
+  selected: boolean;
+  validate: boolean;
+  keynameFile: string;
+  nombreArchivo: string;
+}
+
 export interface Vehicle {
   IdVehiculo: number;
   IdMarca: number;
@@ -66,9 +77,9 @@ export interface Vehicle {
   fechaCompra: string;
   alias: string;
   fotos: Array<{ url: string }>;
-  tarjetapropiedad: any;
-  tecnomecanica: any;
-  soat: any;
+  tarjetapropiedad: VehicleDocument;
+  tecnomecanica: VehicleDocument;
+  soat: VehicleDocument;
   fvtecnomecanica: any;
   fvsoat: any;
   estado: string;
@@ -163,7 +174,7 @@ export type ListTalleres = Taller[];
 
 export type InternalAppointmentStackParamList = {
   NavigateAppointment: { etapa: string };
-  Detail: { cita: any };
+  Detail: { cita: Appointment };
   Pdfdetail: { pdf: any; orden?: any; cita?: any };
   Chat: { IdTaller: number };
   AddAppointment: undefined;

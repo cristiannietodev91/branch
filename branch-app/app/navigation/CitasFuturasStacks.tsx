@@ -18,7 +18,7 @@ const CitasFuturasStacks = () => {
       />
       <Stack.Screen name="Detail" component={DetailCitaScreen} />
       <Stack.Screen name="Pdfdetail" component={VerPDFScreen} />
-      <Stack.Screen name="Addappoinment" component={AgregarCitaScreen} />
+      <Stack.Screen name="AddAppointment" component={AgregarCitaScreen} />
     </Stack.Navigator>
   );
 };

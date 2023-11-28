@@ -7,22 +7,23 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
   LayoutAnimation,
-  Platform,
 } from "react-native";
 import { Icon, Image, Text } from "@rneui/themed";
 import { EmptyMoto } from "./../../../assets/svg/EmptyMoto";
 import { SwipeListView } from "react-native-swipe-list-view";
 import ButtonBranch from "../../components/branch/button";
 import ActionButton from "react-native-action-button";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   ListVehicles,
   Vehicle,
   VehicleScreenNavigationProp,
 } from "../../../types/types";
 import { useNavigation } from "@react-navigation/native";
+import { FirebaseAuthTypes } from "@react-native-firebase/auth";
 
 interface ListVehiculosProps {
-  user: any;
+  user: FirebaseAuthTypes.User;
   vehicles: ListVehicles;
 }
 
@@ -187,16 +188,18 @@ function EmptyList() {
 
 function AddVehiculoButton() {
   const navigation = useNavigation<VehicleScreenNavigationProp>();
+
+  const insets = useSafeAreaInsets();
   return (
     <ActionButton
       buttonTextStyle={styles.actionButton}
       buttonColor="#0396c8"
-      degrees={0}
       onPress={() => {
         navigation.navigate("Add");
       }}
+      degrees={0}
       offsetX={15}
-      offsetY={Platform.OS === "ios" ? 80 : 70}
+      offsetY={80 - insets.bottom}
       renderIcon={() => <Icon name="add" />}
     >
       {">"}

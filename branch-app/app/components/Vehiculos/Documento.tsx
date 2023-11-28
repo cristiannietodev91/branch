@@ -5,7 +5,11 @@ import Moment from "moment";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import styles from "../../styles/App.scss";
 import ButtonBranch from "../../components/branch/button";
-import { Vehicle, VehiclesStackScreenProps } from "../../../types/types";
+import {
+  Vehicle,
+  VehicleDocument,
+  VehiclesStackScreenProps,
+} from "../../../types/types";
 import useMutation from "../../hooks/useMutation";
 import Snackbar from "react-native-snackbar";
 import UploadImageToS3 from "../../utils/UploadImageToS3";
@@ -15,7 +19,7 @@ interface DocumentProps
   vehiculo: Vehicle;
   titleDocumento: string;
   tipoDocumento: string;
-  documento: any;
+  documento: VehicleDocument;
 }
 
 export default function Documento(props: DocumentProps) {
@@ -108,15 +112,15 @@ export default function Documento(props: DocumentProps) {
     }
   }, [tipoDocumento, vehiculo]);
 
-  const uploadFechaVencimiento = async (fechaVencimiento: Date) => {
+  const uploadFechaVencimiento = async (fechaVencimientoToUpdate: Date) => {
     let vehiculoToUpdate = {
       fvsoat: vehiculo.fvsoat,
       fvtecnomecanica: vehiculo.fvtecnomecanica,
     };
 
-    console.log("Fecha vencimiento::>", fechaVencimiento);
+    console.log("Fecha vencimiento::>", fechaVencimientoToUpdate);
 
-    let fechaVence = Moment(fechaVencimiento).format("DD/MM/YYYY");
+    let fechaVence = Moment(fechaVencimientoToUpdate).format("DD/MM/YYYY");
 
     switch (tipoDocumento) {
       case "soat":
@@ -185,7 +189,7 @@ export default function Documento(props: DocumentProps) {
             is24Hour={true}
             display="default"
             locale="es-ES"
-            onChange={(event, selectedDate) => {
+            onChange={(_event, selectedDate) => {
               setShowCalendar(Platform.OS === "ios" ? true : false);
 
               uploadFechaVencimiento(selectedDate!);

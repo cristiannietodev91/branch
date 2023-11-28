@@ -21,7 +21,9 @@ const CitasStacks = () => {
         swipeEnabled: false,
         tabBarActiveTintColor: "#041c24",
         tabBarInactiveTintColor: "#5be5e5",
-        tabBarStyle: { backgroundColor: "#041c24" },
+        tabBarStyle: {
+          backgroundColor: "#041c24",
+        },
         tabBarIndicatorStyle: {
           borderColor: "#d7f8f8",
           borderWidth: 24,
