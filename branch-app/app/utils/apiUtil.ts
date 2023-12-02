@@ -1,3 +1,5 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 type HttpMethod = "GET" | "POST" | "PUT" | "DELETE"; // Add other methods as needed
 
 interface RequestOptions<P> {
@@ -12,6 +14,8 @@ export async function fetchData<T, P = object>(
   queryParams?: object
 ): Promise<T> {
   try {
+    const sessionToken = await AsyncStorage.getItem("sessionToken");
+
     const queryString = queryParams
       ? `?${Object.entries(queryParams)
           .map(
@@ -26,6 +30,7 @@ export async function fetchData<T, P = object>(
       headers: {
         "Content-Type": "application/json",
         ...options?.headers,
+        ...(sessionToken && { Authorization: `Bearer ${sessionToken}` }),
       },
       body: options?.body ? JSON.stringify(options.body) : undefined,
     };

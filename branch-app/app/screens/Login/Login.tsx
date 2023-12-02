@@ -6,6 +6,7 @@ import auth from "@react-native-firebase/auth";
 import Snackbar from "react-native-snackbar";
 import { useForm } from "react-hook-form";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 
 type FormData = {
@@ -39,38 +40,38 @@ export default function Login() {
   }, [register]);
 
   const login = async (data: FormData) => {
-    //console.log("User logged");
-    //console.log("Email :::>", data);
-    const { email, password } = data;
-    await auth()
-      .signInWithEmailAndPassword(email, password)
-      .then((result) => {
-        console.log("Resultado de autenticacion exitoso", result);
-      })
-      .catch((error) => {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        if (errorCode === "auth/wrong-password") {
+    try {
+      const { email, password } = data;
+      await auth().signInWithEmailAndPassword(email, password);
+      const user = auth().currentUser;
+      if (user) {
+        const token = await user.getIdToken();
+
+        await AsyncStorage.setItem("sessionToken", token);
+      }
+    } catch (error: any) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      if (errorCode === "auth/wrong-password") {
+        Snackbar.show({
+          text: "Password Incorrecto",
+          duration: Snackbar.LENGTH_LONG,
+        });
+      } else {
+        if (errorCode === "auth/user-not-found") {
           Snackbar.show({
-            text: "Password Incorrecto",
+            text: "Usuario no existe, Registrese",
             duration: Snackbar.LENGTH_LONG,
           });
         } else {
-          if (errorCode === "auth/user-not-found") {
-            Snackbar.show({
-              text: "Usuario no existe, Registrese",
-              duration: Snackbar.LENGTH_LONG,
-            });
-          } else {
-            console.log("Error message :::>", errorMessage);
-            Snackbar.show({
-              text: "Error al autenticar el usuario",
-              duration: Snackbar.LENGTH_LONG,
-            });
-          }
+          console.log("Error message :::>", errorMessage);
+          Snackbar.show({
+            text: "Error al autenticar el usuario",
+            duration: Snackbar.LENGTH_LONG,
+          });
         }
-        console.log(error);
-      });
+      }
+    }
   };
 
   return (

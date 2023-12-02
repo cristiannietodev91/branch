@@ -7,7 +7,20 @@ async function validSession(req: Request, res: Response, next: NextFunction) {
     const sessionCookie = req.cookies.session || "";
 
     if(!sessionCookie || sessionCookie === "") {
-      return res.status(HttpStatus.UNAUTHORIZED).send({ error: "User does not have access to this resource. Log In with a valid user." });
+      const authHeader = req.headers.authorization || "";
+      const sessionToken = authHeader && authHeader.split(" ")[1];
+
+      if (!sessionToken || sessionToken === "") {
+        return res.status(HttpStatus.UNAUTHORIZED).send({ error: "User does not have access to this resource. Log In with a valid user." });
+      }
+
+      const decodedClaims = await admin.auth().verifyIdToken(sessionToken);
+    
+      if (decodedClaims) {
+        return next();
+      }
+
+      return res.status(HttpStatus.UNAUTHORIZED).send({ error: "User does not have access. Log In with a valid user." });
     }
 
     const decodedClaims = await admin.auth().verifySessionCookie(sessionCookie, true);
@@ -26,5 +39,5 @@ async function validSession(req: Request, res: Response, next: NextFunction) {
 }
 
 export default {
-  validSession
+  validSession,
 };
