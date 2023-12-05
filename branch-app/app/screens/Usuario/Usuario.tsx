@@ -80,7 +80,7 @@ export default function Usuario(props: UserStackScreenProps<"User">) {
       style={[styles.bgLogin, styles.bgProfile]}
     >
       {loading || !user ? (
-        <Loading isVisible={true} text="Cargando" />
+        <Loading />
       ) : (
         <View style={styles.userCard}>
           <View style={styles.bgUserCard}>

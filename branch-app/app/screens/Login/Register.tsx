@@ -54,7 +54,7 @@ export default function Register() {
     });
   }, [register]);
 
-  const registrarUsuario = async (data: any) => {
+  const registrarUsuario = async (data: FormData) => {
     let usuarioToCreate = {
       firstName: data.nombre,
       email: data.email,
