@@ -1,6 +1,5 @@
 package com.branchapp;
 import android.os.Bundle;
-import expo.modules.ReactActivityDelegateWrapper;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

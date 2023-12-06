@@ -1,7 +1,4 @@
 {
   "name": "branchapp",
-  "displayName": "branchapp",
-  "expo": {
-    "plugins": ["expo-image-picker"]
-  }
+  "displayName": "branchapp"
 }
