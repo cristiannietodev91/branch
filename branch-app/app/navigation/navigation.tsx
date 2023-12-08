@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+  useMemo,
+  useReducer,
+} from "react";
 import { Icon } from "@rneui/themed";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -10,6 +16,9 @@ import SplasScreen from "../screens/SplashScreen";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import LoginScreenStacks from "./LoginStacks";
 import { HomeBottomTabParamList } from "../../types/types";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AuthContext } from "../context/AuthContext";
+import { authReducer } from "../reducers/authReducer";
 
 const Tab = createBottomTabNavigator<HomeBottomTabParamList>();
 
@@ -86,12 +95,27 @@ const NavigationStacks = () => {
 
 const MainStacks = () => {
   const [initializing, setInitializing] = useState(true);
-  const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
+  const initialState = {
+    isLoading: true,
+    isSignOut: false,
+    userToken: null,
+  };
+  const [state, dispatch] = useReducer(authReducer, initialState);
 
   // Handle user state changes
   const onAuthStateChanged = useCallback(
-    (userFirebase: FirebaseAuthTypes.User | null) => {
-      setUser(userFirebase);
+    async (userFirebase: FirebaseAuthTypes.User | null) => {
+      if (userFirebase) {
+        try {
+          const token = await userFirebase.getIdToken();
+
+          await AsyncStorage.setItem("sessionToken", token);
+
+          dispatch({ type: "SIGN_IN", token });
+        } catch (error) {
+          dispatch({ type: "SIGN_OUT" });
+        }
+      }
       if (initializing) {
         setInitializing(false);
       }
@@ -104,14 +128,49 @@ const MainStacks = () => {
     return subscriber; // unsubscribe on unmount
   }, [onAuthStateChanged]);
 
+  const authContext = useMemo(
+    () => ({
+      signIn: async (email: string, password: string) => {
+        await auth().signInWithEmailAndPassword(email, password);
+      },
+      signOut: async () => {
+        await auth().signOut();
+        dispatch({ type: "SIGN_OUT" });
+      },
+      refreshToken: async () => {
+        const user = auth().currentUser;
+        if (!user) {
+          dispatch({ type: "SIGN_OUT" });
+        } else {
+          try {
+            const token = await user.getIdToken(true);
+
+            await AsyncStorage.setItem("sessionToken", token);
+
+            dispatch({ type: "RESTORE_TOKEN", token });
+          } catch (error) {
+            dispatch({ type: "SIGN_OUT" });
+          }
+        }
+      },
+    }),
+    []
+  );
+
   if (initializing) {
     return <SplasScreen />;
   }
 
   return (
-    <NavigationContainer>
-      {!user ? <LoginScreenStacks /> : <NavigationStacks />}
-    </NavigationContainer>
+    <AuthContext.Provider value={authContext}>
+      <NavigationContainer>
+        {state.userToken === null ? (
+          <LoginScreenStacks />
+        ) : (
+          <NavigationStacks />
+        )}
+      </NavigationContainer>
+    </AuthContext.Provider>
   );
 };
 

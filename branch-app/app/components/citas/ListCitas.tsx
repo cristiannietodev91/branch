@@ -14,7 +14,7 @@ import styles from "../../styles/App.scss";
 import ButtonBranch from "../../components/branch/button";
 import { EmptyDate } from "./../../../assets/svg/EmptyDate";
 import { SwipeListView } from "react-native-swipe-list-view";
-import { NotificationContext } from "../ContextNotifications";
+import { NotificationContext } from "../../context/ContextNotifications";
 import ActionButton from "react-native-action-button";
 import {
   ActiveAppointmentStackScreenProps,

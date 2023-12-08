@@ -35,7 +35,11 @@ export async function fetchData<T, P = object>(
       body: options?.body ? JSON.stringify(options.body) : undefined,
     };
 
-    const response = await fetch(`${url}${queryString}`, fetchOptions);
+    let response = await fetch(`${url}${queryString}`, fetchOptions);
+
+    if (response.status === 401) {
+      throw new Error("Error communicating with APP server");
+    }
 
     if (!response.ok) {
       const contentType = response.headers.get("content-type");
@@ -57,6 +61,9 @@ export async function fetchData<T, P = object>(
     return data as T;
   } catch (error) {
     if (error instanceof Error) {
+      if (error.message.includes("Error communicating with APP server")) {
+        throw error;
+      }
       throw new Error(`Error making request: ${error.message}`);
     }
     throw new Error("Error making request");

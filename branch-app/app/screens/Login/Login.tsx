@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import styles from "../../styles/App.scss";
 import { View, Image, Text, SafeAreaView } from "react-native";
 import { Button, Icon, Input } from "@rneui/base";
-import auth from "@react-native-firebase/auth";
 import Snackbar from "react-native-snackbar";
 import { useForm } from "react-hook-form";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { useNavigation } from "@react-navigation/native";
+import { AuthContext } from "../../context/AuthContext";
 
 type FormData = {
   email: string;
@@ -16,6 +16,7 @@ type FormData = {
 
 export default function Login() {
   const navigation = useNavigation();
+  const { signIn } = useContext(AuthContext);
   const {
     register,
     handleSubmit,
@@ -42,13 +43,8 @@ export default function Login() {
   const login = async (data: FormData) => {
     try {
       const { email, password } = data;
-      await auth().signInWithEmailAndPassword(email, password);
-      const user = auth().currentUser;
-      if (user) {
-        const token = await user.getIdToken();
 
-        await AsyncStorage.setItem("sessionToken", token);
-      }
+      await signIn(email, password);
     } catch (error: any) {
       const errorCode = error.code;
       const errorMessage = error.message;

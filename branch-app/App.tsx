@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Navigation from "./app/navigation/navigation";
 import messaging from "@react-native-firebase/messaging";
-import { NotificationContext } from "./app/components/ContextNotifications";
+import { NotificationContext } from "./app/context/ContextNotifications";
 
 export default function App() {
   const resetNotificaciones = () => {

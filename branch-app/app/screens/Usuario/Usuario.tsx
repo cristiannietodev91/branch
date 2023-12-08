@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useContext } from "react";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import styles from "../../styles/App.scss";
 import { ImageBackground, View, Text } from "react-native";
@@ -10,11 +10,13 @@ import { User, UserStackScreenProps } from "../../../types/types";
 import useFetch from "../../hooks/useFetch";
 import { useFocusEffect } from "@react-navigation/native";
 import Snackbar from "react-native-snackbar";
+import { AuthContext } from "../../context/AuthContext";
 
 export default function Usuario(props: UserStackScreenProps<"User">) {
   const { navigation } = props;
   const [facebookUser, setFacebookUser] =
     useState<FirebaseAuthTypes.UserInfo>();
+  const { signOut } = useContext(AuthContext);
 
   let userLogged = auth().currentUser;
 
@@ -141,12 +143,8 @@ export default function Usuario(props: UserStackScreenProps<"User">) {
               />
               <Button
                 title="Cerrar sesión"
-                onPress={() => {
-                  auth()
-                    .signOut()
-                    .then(() => {
-                      navigation.navigate("User");
-                    });
+                onPress={async () => {
+                  await signOut();
                 }}
                 buttonStyle={styles.buttonSecondary}
                 titleStyle={styles.buttonText}
