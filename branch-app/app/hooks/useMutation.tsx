@@ -2,6 +2,9 @@ import { useState, useCallback, useContext } from "react";
 import { fetchData } from "../utils/apiUtil";
 import { URL_SERVICES } from "@env";
 import { AuthContext } from "../context/AuthContext";
+import { CsrfResponse } from "../../types/types";
+import useFetch from "./useFetch";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 type HttpMethod = "POST" | "PUT";
 
 interface FetchState<T, P> {
@@ -22,6 +25,7 @@ function useMutation<T, P = object>(
 ): FetchState<T, P> {
   const [loading, setLoading] = useState<boolean>(true);
   const { signOut, refreshToken } = useContext(AuthContext);
+  const { getData: getCsrfToken } = useFetch<CsrfResponse>("csrf-token");
 
   const mutateData = useCallback(
     async (bodyRequest: P, retryCount = 0) => {
@@ -38,6 +42,17 @@ function useMutation<T, P = object>(
             if (retryCount < MAX_RETRIES) {
               await refreshToken();
               return mutateData(bodyRequest, retryCount + 1);
+            } else {
+              await signOut();
+            }
+          }
+          if (err.message.includes("APP session error")) {
+            if (retryCount < MAX_RETRIES) {
+              const csrfResponse = await getCsrfToken();
+              if (csrfResponse) {
+                await AsyncStorage.setItem("csrfToken", csrfResponse.csrfToken);
+                return mutateData(bodyRequest, retryCount + 1);
+              }
             } else {
               await signOut();
             }
