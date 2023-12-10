@@ -16,6 +16,13 @@ export async function fetchData<T, P = object>(
   try {
     const sessionToken = await AsyncStorage.getItem("sessionToken");
 
+    const storageCSRF = await AsyncStorage.getItem("csrfToken");
+
+    const csrfToken =
+      ["PUT", "POST", "DELETE"].includes(options?.method || "") && storageCSRF
+        ? storageCSRF
+        : null;
+
     const queryString = queryParams
       ? `?${Object.entries(queryParams)
           .map(
@@ -31,6 +38,7 @@ export async function fetchData<T, P = object>(
         "Content-Type": "application/json",
         ...options?.headers,
         ...(sessionToken && { Authorization: `Bearer ${sessionToken}` }),
+        ...(csrfToken && { "X-CSRF-TOKEN": csrfToken }),
       },
       body: options?.body ? JSON.stringify(options.body) : undefined,
     };
@@ -39,6 +47,10 @@ export async function fetchData<T, P = object>(
 
     if (response.status === 401) {
       throw new Error("Error communicating with APP server");
+    }
+
+    if (response.status === 403) {
+      throw new Error("APP session error");
     }
 
     if (!response.ok) {

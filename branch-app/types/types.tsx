@@ -9,6 +9,10 @@ import type {
 } from "@react-navigation/native";
 import { FirebaseAuthTypes } from "@react-native-firebase/auth";
 
+export type CsrfResponse = {
+  csrfToken: string;
+};
+
 export interface Taller {
   IdTaller: number;
   nombre: string;

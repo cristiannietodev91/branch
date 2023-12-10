@@ -1,6 +1,6 @@
 import * as Joi from "joi";
 
-export const createFirebaseUserSchema = Joi.object({
+export const registerUserSchema = Joi.object({
   tipoUsuario: Joi.string().valid("Cliente", "AdminTaller").required(),
   email: Joi.string().email().required(),
   celular: Joi.string().required(),

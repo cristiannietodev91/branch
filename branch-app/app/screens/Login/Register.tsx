@@ -26,7 +26,7 @@ export default function Register() {
     formState: { errors },
   } = useForm<FormData>();
   const [togglePassword, passwordState] = useState(true);
-  const { mutate: createUser } = useMutation("usuario/createFireBaseUser");
+  const { mutate: createUser } = useMutation("session/createUser");
 
   useEffect(() => {
     register("email", {

@@ -134,23 +134,27 @@ const MainStacks = () => {
         await auth().signInWithEmailAndPassword(email, password);
       },
       signOut: async () => {
-        await auth().signOut();
+        try {
+          await auth().signOut();
+        } catch (error) {}
+
+        await AsyncStorage.removeItem("sessionToken");
         dispatch({ type: "SIGN_OUT" });
       },
       refreshToken: async () => {
-        const user = auth().currentUser;
-        if (!user) {
-          dispatch({ type: "SIGN_OUT" });
-        } else {
-          try {
+        try {
+          const user = auth().currentUser;
+          if (!user) {
+            dispatch({ type: "SIGN_OUT" });
+          } else {
             const token = await user.getIdToken(true);
 
             await AsyncStorage.setItem("sessionToken", token);
 
             dispatch({ type: "RESTORE_TOKEN", token });
-          } catch (error) {
-            dispatch({ type: "SIGN_OUT" });
           }
+        } catch (error) {
+          dispatch({ type: "SIGN_OUT" });
         }
       },
     }),

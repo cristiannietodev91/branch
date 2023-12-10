@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Navigation from "./app/navigation/navigation";
 import messaging from "@react-native-firebase/messaging";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NotificationContext } from "./app/context/ContextNotifications";
+import useFetch from "./app/hooks/useFetch";
+import { CsrfResponse } from "./types/types";
 
 export default function App() {
   const resetNotificaciones = () => {
@@ -17,6 +20,23 @@ export default function App() {
     value: 0,
     resetNotificaciones,
   });
+
+  const { data: csrfResponse, getData: getCsrfToken } =
+    useFetch<CsrfResponse>("csrf-token");
+
+  useEffect(() => {
+    getCsrfToken();
+  }, [getCsrfToken]);
+
+  const onCsrfTokenChange = useCallback(async () => {
+    if (csrfResponse !== null) {
+      await AsyncStorage.setItem("csrfToken", csrfResponse.csrfToken);
+    }
+  }, [csrfResponse]);
+
+  useEffect(() => {
+    onCsrfTokenChange();
+  }, [onCsrfTokenChange]);
 
   useEffect(() => {
     // SplashScreen.show();

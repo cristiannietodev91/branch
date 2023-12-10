@@ -10,7 +10,7 @@ class ServiceCrm {
   }
 
   registrarUsuario(usuario) {
-    return http.post("/usuario/createFireBaseUser", usuario);
+    return http.post("/session/createUser", usuario);
   }
 
   getAllTalleres() {

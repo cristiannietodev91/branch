@@ -23,7 +23,11 @@ export default function Vehiculo() {
     getData: getVehicles,
   } = useFetch<ListVehicles>(`vehiculo/getByIdUsuario/${user?.uid}`);
 
-  const { mutate: updateUser } = useMutation(`usuario/update/${user?.uid}`);
+  const { mutate: updateUser } = useMutation(
+    `usuario/update/${user?.uid}`,
+    {},
+    "PUT"
+  );
 
   useFocusEffect(
     useCallback(() => {
