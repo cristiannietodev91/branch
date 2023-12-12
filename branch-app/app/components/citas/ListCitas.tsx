@@ -6,7 +6,6 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
   LayoutAnimation,
-  Platform,
 } from "react-native";
 import { Icon, Text, Image } from "@rneui/themed";
 import Moment from "moment";
@@ -14,6 +13,7 @@ import styles from "../../styles/App.scss";
 import ButtonBranch from "../../components/branch/button";
 import { EmptyDate } from "./../../../assets/svg/EmptyDate";
 import { SwipeListView } from "react-native-swipe-list-view";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { NotificationContext } from "../../context/ContextNotifications";
 import ActionButton from "react-native-action-button";
 import {
@@ -199,13 +199,15 @@ function EmptyList() {
 
 function AddCitaButton(props: AddCitaButtonProps) {
   const { navigation } = props;
+
+  const insets = useSafeAreaInsets();
   return (
     <ActionButton
       buttonTextStyle={styles.actionButton}
       buttonColor="#0396c8"
       degrees={0}
       offsetX={15}
-      offsetY={Platform.OS === "ios" ? 80 : 70}
+      offsetY={80 - insets.bottom}
       onPress={() => {
         navigation.navigate("AddAppointment");
       }}

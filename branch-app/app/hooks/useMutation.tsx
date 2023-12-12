@@ -38,7 +38,8 @@ function useMutation<T, P = object>(
         return { data: result, isSuccess: true };
       } catch (err) {
         if (err instanceof Error) {
-          if (err.message.includes("Error communicating with APP server")) {
+          const errorMessage = err.message;
+          if (errorMessage.includes("Error communicating with APP server")) {
             if (retryCount < MAX_RETRIES) {
               await refreshToken();
               return mutateData(bodyRequest, retryCount + 1);
@@ -46,7 +47,7 @@ function useMutation<T, P = object>(
               await signOut();
             }
           }
-          if (err.message.includes("APP session error")) {
+          if (errorMessage.includes("APP session error")) {
             if (retryCount < MAX_RETRIES) {
               const csrfResponse = await getCsrfToken();
               if (csrfResponse) {

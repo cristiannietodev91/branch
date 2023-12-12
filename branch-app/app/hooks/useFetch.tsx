@@ -30,7 +30,8 @@ function useFetch<T>(url: string, queryParams?: object): FetchState<T> {
         return result;
       } catch (err) {
         if (err instanceof Error) {
-          if (err.message.includes("Error communicating with APP server")) {
+          const errorMessage = err.message;
+          if (errorMessage.includes("Error communicating with APP server")) {
             if (retryCount < MAX_RETRIES) {
               await refreshToken();
               return fetchDataFromApi(retryCount + 1);

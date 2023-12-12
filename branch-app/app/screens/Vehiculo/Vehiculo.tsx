@@ -46,7 +46,6 @@ export default function Vehiculo() {
     messaging()
       .getToken()
       .then(async (token) => {
-        console.log(token);
         let usuario = {
           tokenCM: token,
           celular: user?.phoneNumber,
@@ -80,7 +79,7 @@ export default function Vehiculo() {
 
       if (errorUpdateUser) {
         Snackbar.show({
-          text: "Ocurrio un error al actualizar el token",
+          text: "Error when refresh the token.",
           duration: Snackbar.LENGTH_SHORT,
         });
       }

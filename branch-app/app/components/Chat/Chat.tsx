@@ -1,7 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect } from "react";
 import { View, Platform } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Icon } from "@rneui/themed";
 import {
   GiftedChat,
@@ -134,9 +133,9 @@ export default function Chat(props: ChatComponentProps) {
   return (
     <BottomTabBarHeightContext.Consumer>
       {(tabBarHeight) => (
-        <SafeAreaView style={{ flex: 1, marginBottom: tabBarHeight }}>
+        <View style={{ flex: 1, marginBottom: (tabBarHeight || 0) + 17 }}>
           <GiftedChat
-            bottomOffset={tabBarHeight}
+            bottomOffset={Platform.OS === "ios" ? tabBarHeight : 0}
             messages={chatMessages}
             onSend={(newMessages) => onSend(newMessages)}
             user={user()}
@@ -150,9 +149,7 @@ export default function Chat(props: ChatComponentProps) {
             renderTime={renderTime}
             renderInputToolbar={renderInputToolbar}
             renderActions={() => {
-              return Platform.OS === "web" ? null : (
-                <CustomActions onSend={onSendFromUser} />
-              );
+              return <CustomActions onSend={onSendFromUser} />;
             }}
             renderComposer={renderInputComposer}
             renderSend={(sendProps: IMessage) => {
@@ -171,7 +168,7 @@ export default function Chat(props: ChatComponentProps) {
               );
             }}
           />
-        </SafeAreaView>
+        </View>
       )}
     </BottomTabBarHeightContext.Consumer>
   );
