@@ -37,7 +37,7 @@ interface ChatComponentProps {
 export default function Chat(props: ChatComponentProps) {
   const { IdTaller } = props;
   const [chatMessages, setChatMessages] = useState<IMessage[]>([]);
-  const { getData: getMessages } = useFetch<ListMessage>(
+  const { getData: getMessages, data: messages } = useFetch<ListMessage>(
     "message/getMessagesByConversacion",
     {
       IdConversacionUser: auth().currentUser?.uid,
@@ -64,21 +64,14 @@ export default function Chat(props: ChatComponentProps) {
   }, [IdTaller]);
 
   useEffect(() => {
-    async function fetchData() {
-      const response = await getMessages();
-      if (response) {
-        setChatMessages(
-          GiftedChat.append(
-            chatMessages,
-            parseServerMessagesToIMessages(response)
-          )
-        );
-      }
-    }
-
-    fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    getMessages();
   }, [getMessages]);
+
+  useEffect(() => {
+    if (messages) {
+      setChatMessages(parseServerMessagesToIMessages(messages));
+    }
+  }, [messages]);
 
   useEffect(() => {
     socket.on("sendmessage", (message: any) => {
