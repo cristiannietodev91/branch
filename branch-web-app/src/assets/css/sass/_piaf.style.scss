@@ -479,6 +479,10 @@ p {
   color: $secondary-color !important;
 }
 
+.text-foreground {
+  color: $foreground-color;
+}
+
 .font-weight-medium {
   font-weight: 500;
 }
@@ -2671,6 +2675,10 @@ button {
     }
   }
 
+  .chat-container {
+    padding: 0 1em 0 1em;
+  }
+
   .chat-text-left {
     padding-left: 64px;
   }
@@ -2687,12 +2695,6 @@ button {
 
   .body-chat {
     min-width: 130px;
-  }
-
-  .card .card-body {
-    @include respond-below(sm) {
-      padding: 0.75rem;
-    }
   }
 }
 

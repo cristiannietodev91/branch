@@ -11,7 +11,6 @@
         <div class="col col-12 chat-app">
           <conversation-detail
             v-if="conversacion && conversacion.usuario"
-            key="conversation"
             :current-user="currentUser"
             :other-user="conversacion.usuario"
             :messages="messages"

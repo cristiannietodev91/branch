@@ -25,50 +25,10 @@
     <div class="separator mb-5" />
     <perfect-scrollbar
       ref="chatArea"
-      class="scroll"
+      class="chat-container"
     >
       <div v-for="(message, index) in messages" :key="`message${index}`">
-        <div
-          class="card d-inline-block mb-3"
-          :class="{
-            'float-left': message.user._id === otherUser.uid,
-            'float-right': message.user._id === currentUser.uid
-          }"
-        >
-          <div class="d-flex position-absolute pt-1 pr-2 w-90">
-            <span class="align-self-start ml-2">
-              {{
-                message.user.name
-              }}
-            </span>
-            <div class="position-absolute r-0">
-              <span class="align-self-xl-end text-extra-small text-muted">
-                {{
-                  new Date(message.createdAt).getHours() +
-                    ":" +
-                    new Date(message.createdAt).getMinutes()
-                }}
-              </span>
-            </div>
-          </div>
-          <div class="card-body body-chat">
-            <div v-if="message.user._id === currentUser.uid" class="d-flex flex-row" />
-            <div v-else class="d-flex flex-row pb-1" />
-            <div>
-              <p v-if="message.text" class="mb-0 text-semi-muted">
-                {{ message.text }}
-              </p>
-              <!-- <single-lightbox-lazy
-                v-else
-                :thumb="
-                  message.image.replace('branchmedia', 'branchmedia-resized')
-                "
-                :large="message.image"
-                class-name="responsive"
-              /> -->
-            </div>
-          </div>
-        </div>
+        <MessageCard :message="message" :showLeft="message.user._id === otherUser.uid" />
         <div class="clearfix" />
       </div>
     </perfect-scrollbar>
@@ -77,10 +37,12 @@
 <script>
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import defaultProfilePicture from "../../assets/img/profile-pic-l.jpg"
+import MessageCard from './MessageCard.vue';
 
 export default {
   components: {
-        PerfectScrollbar
+      PerfectScrollbar,
+      MessageCard,
   },
   props: ["currentUser", "otherUser", "messages"],
   data() {
@@ -88,11 +50,13 @@ export default {
       defaultProfilePicture
     }
   },
-  mounted() {
-    this.scrollToEnd();
-  },
-  updated() {
-    this.scrollToEnd();
+  watch: {
+    'messages': {
+      handler(){
+        this.scrollToEnd();
+      },
+      deep: true
+    }
   },
   methods: {
     scrollToEnd() {
