@@ -22,7 +22,7 @@
         </div>
       </div>
     </div>
-    <div class="separator mb-5" />
+    <div class="separator mb-2" />
     <perfect-scrollbar
       ref="chatArea"
       class="chat-container"
@@ -57,6 +57,9 @@ export default {
       },
       deep: true
     }
+  },
+  mounted() {
+    this.scrollToEnd();
   },
   methods: {
     scrollToEnd() {

@@ -6,53 +6,49 @@
     :show="open"
     @close="hideModal(`sidebar${workorder}`)"
   >
-    <div class="p-3">
-      <div class="row">
-        <div class="col col-12 chat-app">
-          <conversation-detail
-            v-if="conversacion && conversacion.usuario"
-            :current-user="currentUser"
-            :other-user="conversacion.usuario"
-            :messages="messages"
-          />
-          <div v-else key="conversationLoading" class="loading" />
-        </div>
-      </div>
-      <div>
-        <div v-if="!isLoadImage" class="d-flex justify-content-between align-items-center">
-          <input
-            v-model="message"
-            class="form-control"
-            type="text"
-            :placeholder="$t('chat.saysomething')"
-            :readonly="isLoadImage"
-            @keyup.enter="sendMessage"
-          >
-          <div class="d-flex flex-row">
-            <button class="btn btn-outline-primary icon-button small ml-1" @click="openFileHandler">
-              <i class="simple-icon-paper-clip" />
-            </button>
-            <button class="btn btn-primary icon-button small ml-1" @click="sendMessage">
-              <i class="simple-icon-arrow-right" />
-            </button>
-          </div>
-          <span v-if="showErrorMessage">{{ errorMessage }}</span>
-        </div>
-        <template v-else>
-          <div class="loading" />
-        </template>
-      </div>
-      <vue-dropzone
-        id="dropzone"
-        ref="myVueDropzone"
-        :awss3="awss3"
-        :options="dropzoneOptions"
-        class="d-none"
-        @vdropzone-complete="complete"
-        @vdropzone-file-added="starLoad"
-        @vdropzone-error="errorLoadFile"
-      /> 
+    <div class="chat-app">
+      <conversation-detail
+        v-if="conversacion && conversacion.usuario && open"
+        :current-user="currentUser"
+        :other-user="conversacion.usuario"
+        :messages="messages"
+      />
+      <div v-else key="conversationLoading" class="loading" />
     </div>
+    <div>
+      <div v-if="!isLoadImage" class="d-flex justify-content-between align-items-center">
+        <input
+          v-model="message"
+          class="form-control"
+          type="text"
+          :placeholder="$t('chat.saysomething')"
+          :readonly="isLoadImage"
+          @keyup.enter="sendMessage"
+        >
+        <div class="d-flex flex-row">
+          <button class="btn btn-outline-primary icon-button small ml-1" @click="openFileHandler">
+            <i class="simple-icon-paper-clip" />
+          </button>
+          <button class="btn btn-primary icon-button small ml-1" @click="sendMessage">
+            <i class="simple-icon-arrow-right" />
+          </button>
+        </div>
+        <span v-if="showErrorMessage">{{ errorMessage }}</span>
+      </div>
+      <template v-else>
+        <div class="loading" />
+      </template>
+    </div>
+    <vue-dropzone
+      id="dropzone"
+      ref="myVueDropzone"
+      :awss3="awss3"
+      :options="dropzoneOptions"
+      class="d-none"
+      @vdropzone-complete="complete"
+      @vdropzone-file-added="starLoad"
+      @vdropzone-error="errorLoadFile"
+    />
   </v-modal>
 </template>
 
