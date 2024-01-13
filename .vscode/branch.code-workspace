@@ -10,5 +10,9 @@
 			"path": "../branch-app"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"jest.disabledWorkspaceFolders": [
+			"branch-be"
+		]
+	}
 }
