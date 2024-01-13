@@ -21,7 +21,7 @@ const getById = (
 const findAllUsers = (): Promise<UserInstance[]> => usersDAO.findAll();
 
 const findOneUserByFilter = (
-  filter: WhereOptions<UserAttributes> | undefined
+  filter: WhereOptions<UserAttributes>
 ): Promise<UserInstance | null> => usersDAO.findOneByFilter(filter);
 
 const countUsersByIdWorkshop = (

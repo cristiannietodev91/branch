@@ -22,7 +22,7 @@ const create = (
 };
 
 const findOneByFilter = (
-  filter: WhereOptions<UserAttributes> | undefined
+  filter: WhereOptions<UserAttributes>
 ): Promise<UserInstance | null> => {
   return UserModel.findOne({
     where: filter,

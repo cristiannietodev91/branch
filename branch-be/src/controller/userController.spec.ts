@@ -67,7 +67,7 @@ describe("user controller", () => {
   });
 
   describe("find user by email", () => {
-    let findOneUserByFilterStub: sinon.SinonStub<[filter: WhereOptions<UserAttributes> | undefined], Promise<UserInstance | null> | undefined>;
+    let findOneUserByFilterStub: sinon.SinonStub<[filter: WhereOptions<UserAttributes>], Promise<UserInstance | null> | undefined>;
 
     beforeEach(() => {
       findOneUserByFilterStub = sinon.stub(userAdapter, "findOneUserByFilter");
@@ -183,7 +183,7 @@ describe("user controller", () => {
   });
 
   describe("find user by uid", () => {
-    let findOneUserByFilterStub: sinon.SinonStub<[filter: WhereOptions<UserAttributes> | undefined], Promise<UserInstance | null> | undefined>;
+    let findOneUserByFilterStub: sinon.SinonStub<[filter: WhereOptions<UserAttributes>], Promise<UserInstance | null> | undefined>;
 
     beforeEach(() => {
       findOneUserByFilterStub = sinon.stub(userAdapter, "findOneUserByFilter");

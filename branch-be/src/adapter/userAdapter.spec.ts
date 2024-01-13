@@ -60,7 +60,7 @@ describe("user adapter testing", () => {
 
   describe("must find an user by filter", () => {
     let getUserByStub: sinon.SinonStub<
-      [filter: WhereOptions<UserAttributes> | undefined],
+      [filter: WhereOptions<UserAttributes>],
       Promise<UserInstance | null> | undefined
     >;
 
@@ -127,7 +127,7 @@ describe("user adapter testing", () => {
       Promise<UserInstance> | undefined>;
 
     let findOneUserByFilterStub: sinon.SinonStub<[
-      filter: WhereOptions<UserAttributes> | undefined
+      filter: WhereOptions<UserAttributes>
     ], Promise<UserInstance | null> | undefined>;
 
     let updateVehiculoStub: sinon.SinonStub<[

@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../branch-be"
+		},
+		{
+			"path": "../branch-web-app"
+		},
+		{
+			"path": "../branch-app"
+		}
+	],
+	"settings": {}
+}

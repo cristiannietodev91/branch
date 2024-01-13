@@ -158,7 +158,7 @@ describe("vehicle Adapter", () => {
     ], Promise<[affectedCount: number]>>;
 
     let findUserStub: sinon.SinonStub<[
-      filter: WhereOptions<UserAttributes> | undefined
+      filter: WhereOptions<UserAttributes>
     ], Promise<UserInstance | null>>;
 
     let createUserStub: sinon.SinonStub<[
