@@ -1,9 +1,9 @@
 // For React Native version 0.59 or later
-const upstreamTransformer = require("metro-react-native-babel-transformer");
+const upstreamTransformer = require("@react-native/metro-babel-transformer");
 const sassTransformer = require("react-native-sass-transformer");
-const svgTransformer = require("react-native-svg-transformer");
+const svgTransformer = require("react-native-svg-transformer/react-native");
 
-module.exports.transform = function ({ src, filename, options }) {
+module.exports.transform = function ({ src, filename, options, ...rest }) {
   if (filename.endsWith(".scss") || filename.endsWith(".sass")) {
     var opts = Object.assign(options, {
       sassOptions: {
@@ -16,10 +16,10 @@ module.exports.transform = function ({ src, filename, options }) {
         },
       },
     });
-    return sassTransformer.transform({ src, filename, options: opts });
+    return sassTransformer.transform({ src, filename, options: opts, ...rest });
   } else if (filename.endsWith(".svg")) {
-    return svgTransformer.transform({ src, filename, options });
+    return svgTransformer.transform({ src, filename, options, ...rest });
   } else {
-    return upstreamTransformer.transform({ src, filename, options });
+    return upstreamTransformer.transform({ src, filename, options, ...rest });
   }
 };

@@ -12,7 +12,6 @@ import { Icon, Image, Text } from "@rneui/themed";
 import { EmptyMoto } from "./../../../assets/svg/EmptyMoto";
 import { SwipeListView } from "react-native-swipe-list-view";
 import ButtonBranch from "../../components/branch/button";
-import ActionButton from "react-native-action-button";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   ListVehicles,
@@ -114,7 +113,7 @@ export default function ListVehiculos({ vehicles, user }: ListVehiculosProps) {
         keyExtractor={(item, index) => index.toString()}
         ListEmptyComponent={EmptyList}
       />
-      {showButton && <AddVehiculoButton />}
+      {/* {showButton && <AddVehiculoButton />} */}
     </View>
   );
 }
@@ -186,6 +185,7 @@ function EmptyList() {
   );
 }
 
+/*
 function AddVehiculoButton() {
   const navigation = useNavigation<VehicleScreenNavigationProp>();
 
@@ -206,3 +206,4 @@ function AddVehiculoButton() {
     </ActionButton>
   );
 }
+*/

@@ -11,8 +11,6 @@ import {
 import { Avatar, Text, Icon } from "@rneui/themed";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import OpenMap from "react-native-open-maps";
-import ActionButton from "react-native-action-button";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { EmptyGarage } from "./../../../assets/svg/EmptyGarage";
 import ButtonBranch from "../../components/branch/button";
 import { NotificationContext } from "../../context/ContextNotifications";
@@ -123,7 +121,7 @@ export default function ListTalleres({
         keyExtractor={(item) => item.IdTaller.toString()}
         ListEmptyComponent={EmptyList}
       />
-      {showButton && <AddCitaButton />}
+      {/* {showButton && <AddCitaButton />} */}
     </View>
   );
 }
@@ -231,6 +229,7 @@ function EmptyList() {
   );
 }
 
+/*
 function AddCitaButton() {
   const insets = useSafeAreaInsets();
 
@@ -253,3 +252,4 @@ function AddCitaButton() {
     </ActionButton>
   );
 }
+*/

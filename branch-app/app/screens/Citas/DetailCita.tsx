@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Text, View, ScrollView } from "react-native";
-import { Image, Button, Input, Icon } from "@rneui/base";
+import { Image, Button, Input } from "@rneui/base";
 import Moment from "moment";
 import ReactSteps, { Step } from "../../components/steeper/steeper";
-
-import ActionButton from "react-native-action-button";
 import { useForm } from "react-hook-form";
 import styles from "../../styles/App.scss";
 import {
@@ -345,9 +343,9 @@ export default function DetailCita({
             </Step>
           )}
         </ReactSteps>
-        {cita.estado === "Cumplida" && (
+        {/* {cita.estado === "Cumplida" && (
           <OpenChatButton cita={cita} navigation={navigation} />
-        )}
+        )} */}
       </View>
     </ScrollView>
   );
@@ -389,11 +387,7 @@ const Cita = (props: { cita: Appointment }) => {
   );
 };
 
-interface OpenChatProps
-  extends Pick<ActiveAppointmentStackScreenProps<"Detail">, "navigation"> {
-  cita: Appointment;
-}
-
+/*
 function OpenChatButton(props: OpenChatProps) {
   const { cita, navigation } = props;
   const { IdTaller } = cita;
@@ -413,3 +407,4 @@ function OpenChatButton(props: OpenChatProps) {
     </ActionButton>
   );
 }
+*/
