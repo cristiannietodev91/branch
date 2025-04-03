@@ -3,5 +3,3 @@ declare module "@env" {
 }
 
 declare module "*.scss";
-
-declare module "react-native-material-dropdown-v2";

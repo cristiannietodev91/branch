@@ -215,8 +215,24 @@ $standardSpace: 10px;
   font-size: 14px;
 }
 .dropdown{
+  border-width: 0;
+  border-bottom-width: 1px;
+  border-color: #d1d1d1;
+  background-color: transparent;
+  padding: 5px 0;
+}
+.dropdownContainer {
+  margin-top: 5px;
   width: 95%;
-  margin: auto;
+  margin: 0 auto;
+}
+.placeholder {
+  color: gray;
+  font-size: 16px;
+}
+.selectedText {
+  color: $contrast;
+  font-size: 16px;
 }
 .input {
   @extend %light;
@@ -516,4 +532,21 @@ $standardSpace: 10px;
   background-color: $contrast;
   color: $white;
   @extend %bold;
+}
+
+// ====== FLOATING ACTION BUTTON ====== //
+.fabButton {
+  position: absolute;
+  width: 56px;
+  height: 56px;
+  border-radius: 28px;
+  background-color: $contrast;
+  justify-content: center;
+  align-items: center;
+  elevation: 5;
+  shadowColor: $dark;
+  shadowOffset: { width: 0px; height: 2px };
+  shadowOpacity: 0.3;
+  shadowRadius: 3px;
+  z-index: 1000;
 }

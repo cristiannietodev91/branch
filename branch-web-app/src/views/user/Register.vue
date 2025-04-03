@@ -59,6 +59,24 @@
               </div>
             </div>
             <div class="has-float-label mb-4">
+              <label for="register_phone" class="form-label">{{ $t('user.phone') }}</label>
+              <div class="input-group has-validation">
+                <input
+                  id="register_phone"
+                  v-model="v$.form.celular.$model"
+                  type="text"
+                  class="form-control"
+                  :class="{ 'is-invalid': v$.form.celular.$error }"
+                >
+                <div v-if="v$.form.celular.required.$invalid" class="invalid-feedback">
+                  {{ $t('branch.forms.validations.required') }}
+                </div>
+                <div v-else-if="v$.form.celular.minLength.$invalid" class="invalid-feedback">
+                  {{ $t('branch.forms.validations.longitud') }}
+                </div>
+              </div>
+            </div>
+            <div class="has-float-label mb-4">
               <label for="register_email" class="form-label">{{ $t('user.email') }}</label>
               <div class="input-group has-validation">
                 <input
@@ -132,7 +150,8 @@ export default {
         fullname: "",
         email: "",
         password: "",
-        identificacion: ""
+        identificacion: "",
+        celular: ""
       }
     };
   },
@@ -157,6 +176,11 @@ export default {
         required,
         maxLength: maxLength(40),
         minLength: minLength(4)
+      },
+      celular: {
+        required,
+        maxLength: maxLength(15),
+        minLength: minLength(7)
       }
     }
   },
@@ -192,7 +216,8 @@ export default {
         firstName: this.form.fullname,
         identificacion: this.form.identificacion,
         email: this.form.email,
-        password: this.form.password
+        password: this.form.password,
+        celular: this.form.celular
       });
     }
   }

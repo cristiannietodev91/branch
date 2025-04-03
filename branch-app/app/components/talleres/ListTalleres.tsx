@@ -20,6 +20,7 @@ import type {
   Taller,
   WorkShopStackScreenProps,
 } from "../../../types/types";
+import FloatingActionButton from "../common/FloatingActionButton";
 
 interface ListWorkshopProps
   extends Pick<WorkShopStackScreenProps<"Main">, "navigation"> {
@@ -121,7 +122,7 @@ export default function ListTalleres({
         keyExtractor={(item) => item.IdTaller.toString()}
         ListEmptyComponent={EmptyList}
       />
-      {/* {showButton && <AddCitaButton />} */}
+      {showButton && <AddCitaButton />}
     </View>
   );
 }
@@ -229,27 +230,16 @@ function EmptyList() {
   );
 }
 
-/*
 function AddCitaButton() {
-  const insets = useSafeAreaInsets();
-
   return (
-    <ActionButton
-      buttonTextStyle={styles.actionButton}
-      buttonColor="#0396c8"
-      degrees={0}
+    <FloatingActionButton
       onPress={() => {
         OpenMap({
           zoom: 19,
           query: "Talleres",
         });
       }}
-      offsetX={15}
-      offsetY={80 - insets.bottom}
-      renderIcon={() => <Icon name="add-location" />}
-    >
-      {">"}
-    </ActionButton>
+      iconName="add-location"
+    />
   );
 }
-*/
