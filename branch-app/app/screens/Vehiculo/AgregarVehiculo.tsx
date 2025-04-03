@@ -11,7 +11,7 @@ import { Input, Button, Image } from "@rneui/base";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Moment from "moment";
 import auth from "@react-native-firebase/auth";
-import { Dropdown } from "react-native-material-dropdown-v2";
+import { Dropdown } from "react-native-element-dropdown";
 import { useForm } from "react-hook-form";
 import Snackbar from "react-native-snackbar";
 import { years } from "../../../data/data";
@@ -51,6 +51,7 @@ export default function AgregarVehiculo(
   const [referencia, setReferencia] = useState("");
   const [marca, setMarca] = useState<string>("");
   const [urlFoto, setUrlFoto] = useState<string>();
+  const [modeloValue, setModeloValue] = useState<string>("");
   const { mutate: createVehicle } = useMutation<Vehicle>("vehiculo/create");
 
   const { data: marcas, getData: getBrands } =
@@ -109,8 +110,6 @@ export default function AgregarVehiculo(
       required: { value: true, message: "Campo requerido" },
     });
   }, [register]);
-
-  //console.log("Vehiculo ::::>", vehiculo.kilometraje);
 
   const uploadImage = async () => {
     try {
@@ -209,62 +208,76 @@ export default function AgregarVehiculo(
             )}
           </TouchableOpacity>
         </View>
+        <View>
+          <View style={styles.dropdownContainer}>
+            <Text style={styles.label}>Marca</Text>
+            <Dropdown
+              style={[styles.input, styles.dropdown]}
+              placeholderStyle={styles.placeholder}
+              selectedTextStyle={styles.selectedText}
+              data={marcas || []}
+              labelField="marca"
+              valueField="marca"
+              placeholder="Seleccione una marca"
+              value={marca}
+              onChange={(item) => {
+                if (marca !== item.marca) {
+                  setValue("marca", item.marca);
+                  setMarca(item.marca);
+                  setReferencia("");
+                }
+              }}
+            />
+            {errors.marca && (
+              <Text style={styles.inputError}>{errors.marca.message}</Text>
+            )}
+          </View>
+        </View>
+        <View>
+          <View style={styles.dropdownContainer}>
+            <Text style={styles.label}>Referencia</Text>
+            <Dropdown
+              style={[styles.input, styles.dropdown]}
+              placeholderStyle={styles.placeholder}
+              selectedTextStyle={styles.selectedText}
+              data={referencias || []}
+              labelField="referencia"
+              valueField="referencia"
+              placeholder="Seleccione una referencia"
+              value={referencia}
+              onChange={(item) => {
+                setValue("referencia", item.referencia);
+                setReferencia(item.referencia);
+              }}
+            />
+            {errors.referencia && (
+              <Text style={styles.inputError}>{errors.referencia.message}</Text>
+            )}
+          </View>
+        </View>
+        <View>
+          <View style={styles.dropdownContainer}>
+            <Text style={styles.label}>Modelo</Text>
+            <Dropdown
+              style={[styles.input, styles.dropdown]}
+              placeholderStyle={styles.placeholder}
+              selectedTextStyle={styles.selectedText}
+              data={years || []}
+              labelField="value"
+              valueField="value"
+              placeholder="Seleccione un modelo"
+              value={modeloValue}
+              onChange={(item) => {
+                setModeloValue(item.value);
+                setValue("modelo", item.value);
+              }}
+            />
+            {errors.modelo && (
+              <Text style={styles.inputError}>{errors.modelo.message}</Text>
+            )}
+          </View>
+        </View>
 
-        <Dropdown
-          textColor="#0396c8"
-          containerStyle={[styles.input, styles.dropdown]}
-          label="Marca "
-          labelExtractor={(label: any) => {
-            return label.marca;
-          }}
-          valueExtractor={(value: any) => {
-            return value.marca;
-          }}
-          data={marcas || []}
-          onChangeText={(text: any) => {
-            if (marca !== text) {
-              setValue("marca", text);
-              setMarca(text);
-              setReferencia("");
-            }
-          }}
-        />
-        {errors.marca && (
-          <Text style={styles.inputError}>{errors.marca.message}</Text>
-        )}
-        <Dropdown
-          textColor="#0396c8"
-          containerStyle={[styles.input, styles.dropdown]}
-          label="Referencia "
-          labelExtractor={(label: any) => {
-            return label.referencia;
-          }}
-          valueExtractor={(value: any) => {
-            //console.log("Indexx :::>", index, "Value ::>", value);
-            return value.referencia;
-          }}
-          data={referencias || []}
-          onChangeText={(text: any) => {
-            setValue("referencia", text);
-            setReferencia(text);
-          }}
-          value={referencia}
-        />
-        {errors.referencia && (
-          <Text style={styles.inputError}>{errors.referencia.message}</Text>
-        )}
-        <Dropdown
-          textColor="#0396c8"
-          containerStyle={[styles.input, styles.dropdown]}
-          label="Modelo"
-          data={years || []}
-          onChangeText={(text: any) => {
-            setValue("modelo", text);
-          }}
-        />
-        {errors.modelo && (
-          <Text style={styles.inputError}>{errors.modelo.message}</Text>
-        )}
         <Input
           labelStyle={styles.label}
           inputStyle={styles.input}
@@ -354,7 +367,6 @@ export default function AgregarVehiculo(
           title="Cancelar"
           onPress={() => {
             navigation.navigate("Main");
-            // console.log(navigation.navigate("Vehiculo"))
           }}
           buttonStyle={styles.buttonSecondary}
           titleStyle={styles.buttonText}

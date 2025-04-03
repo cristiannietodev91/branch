@@ -13,9 +13,7 @@ import styles from "../../styles/App.scss";
 import ButtonBranch from "../../components/branch/button";
 import { EmptyDate } from "./../../../assets/svg/EmptyDate";
 import { SwipeListView } from "react-native-swipe-list-view";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { NotificationContext } from "../../context/ContextNotifications";
-import ActionButton from "react-native-action-button";
 import {
   ActiveAppointmentStackScreenProps,
   ListAppointment,
@@ -30,12 +28,6 @@ interface ListCitasProps
   citas: ListAppointment;
   etapa?: string;
 }
-
-interface AddCitaButtonProps
-  extends Pick<
-    ActiveAppointmentStackScreenProps<"NavigateAppointment">,
-    "navigation"
-  > {}
 
 interface CitaProps
   extends Pick<
@@ -125,7 +117,7 @@ export default function ListCitas({ citas, navigation }: ListCitasProps) {
         keyExtractor={(item, index) => index.toString()}
         ListEmptyComponent={EmptyList}
       />
-      {showButton && <AddCitaButton navigation={navigation} />}
+      {/* {showButton && <AddCitaButton navigation={navigation} />} */}
     </View>
   );
 }
@@ -197,6 +189,7 @@ function EmptyList() {
   );
 }
 
+/*
 function AddCitaButton(props: AddCitaButtonProps) {
   const { navigation } = props;
 
@@ -217,3 +210,4 @@ function AddCitaButton(props: AddCitaButtonProps) {
     </ActionButton>
   );
 }
+*/

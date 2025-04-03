@@ -11,8 +11,6 @@ import {
 import { Avatar, Text, Icon } from "@rneui/themed";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import OpenMap from "react-native-open-maps";
-import ActionButton from "react-native-action-button";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { EmptyGarage } from "./../../../assets/svg/EmptyGarage";
 import ButtonBranch from "../../components/branch/button";
 import { NotificationContext } from "../../context/ContextNotifications";
@@ -22,6 +20,7 @@ import type {
   Taller,
   WorkShopStackScreenProps,
 } from "../../../types/types";
+import FloatingActionButton from "../common/FloatingActionButton";
 
 interface ListWorkshopProps
   extends Pick<WorkShopStackScreenProps<"Main">, "navigation"> {
@@ -232,24 +231,15 @@ function EmptyList() {
 }
 
 function AddCitaButton() {
-  const insets = useSafeAreaInsets();
-
   return (
-    <ActionButton
-      buttonTextStyle={styles.actionButton}
-      buttonColor="#0396c8"
-      degrees={0}
+    <FloatingActionButton
       onPress={() => {
         OpenMap({
           zoom: 19,
           query: "Talleres",
         });
       }}
-      offsetX={15}
-      offsetY={80 - insets.bottom}
-      renderIcon={() => <Icon name="add-location" />}
-    >
-      {">"}
-    </ActionButton>
+      iconName="add-location"
+    />
   );
 }

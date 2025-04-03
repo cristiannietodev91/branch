@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { Input, Button, Image } from "@rneui/base";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Dropdown } from "react-native-material-dropdown-v2";
+import { Dropdown } from "react-native-element-dropdown";
 import { useForm } from "react-hook-form";
 import { years } from "../../../data/data";
 import Snackbar from "react-native-snackbar";
@@ -48,7 +48,10 @@ export default function EditVehicle(props: VehiclesStackScreenProps<"Edit">) {
   const [referencia, setReferencia] = useState(
     vehicle.marca ? vehicle.marca.referencia : ""
   );
-  const [marca, setMarca] = useState("");
+  const [marca, setMarca] = useState(vehicle.marca ? vehicle.marca.marca : "");
+  const [modeloValue, setModeloValue] = useState(
+    vehicle.modelo ? vehicle.modelo + "" : ""
+  );
   const [urlFoto, setUrlFoto] = useState<string | null>();
 
   const { mutate: updateVehicle } = useMutation<{
@@ -105,10 +108,7 @@ export default function EditVehicle(props: VehiclesStackScreenProps<"Edit">) {
     });
   }, [register]);
 
-  //console.log("Vehiculo ::::>", vehiculo.kilometraje);
-
   const updateVehiculo = async (data: any) => {
-    //console.log("User logged");
     const vehiculoToUdp = {
       alias: data.alias,
       kilometraje: data.kilometraje,
@@ -157,7 +157,6 @@ export default function EditVehicle(props: VehiclesStackScreenProps<"Edit">) {
     }
   };
 
-  //Set Url Foto
   useEffect(() => {
     let photoURL = !(
       vehicle.fotos &&
@@ -287,68 +286,83 @@ export default function EditVehicle(props: VehiclesStackScreenProps<"Edit">) {
           />
         )}
 
-        <Dropdown
-          textColor="#0396c8"
-          containerStyle={[styles.input, styles.dropdown]}
-          label="Marca "
-          labelExtractor={(label: any) => {
-            return label.marca;
-          }}
-          valueExtractor={(value: any) => {
-            return value.marca;
-          }}
-          value={vehicle.marca.marca}
-          data={vehicle.marca.IdMarca !== 1 ? new Array(vehicle.marca) : marcas}
-          onChangeText={(text: any) => {
-            if (marca !== text) {
-              setValue("marca", text);
-              setMarca(text);
-              setReferencia("");
+        <View style={styles.dropdownContainer}>
+          <Text style={styles.label}>Marca</Text>
+          <Dropdown
+            style={[styles.input, styles.dropdown]}
+            placeholderStyle={styles.placeholder}
+            selectedTextStyle={styles.selectedText}
+            data={
+              vehicle.marca.IdMarca !== 1
+                ? new Array(vehicle.marca)
+                : marcas || []
             }
-          }}
-          disabled={vehicle.marca.IdMarca !== 1 ? true : false}
-        />
-        {errors.marca && (
-          <Text style={styles.inputError}>{errors.marca.message}</Text>
-        )}
-        <Dropdown
-          textColor="#0396c8"
-          containerStyle={[styles.input, styles.dropdown]}
-          label="Referencia "
-          labelExtractor={(label: any) => {
-            return label.referencia;
-          }}
-          valueExtractor={(value: any) => {
-            //console.log("Indexx :::>", index, "Value ::>", value);
-            return value.referencia;
-          }}
-          value={referencia}
-          data={
-            vehicle.marca.IdMarca !== 1 ? new Array(vehicle.marca) : referencias
-          }
-          onChangeText={(text: any) => {
-            setValue("referencia", text);
-            setReferencia(text);
-          }}
-          disabled={vehicle.marca.IdMarca !== 1 ? true : false}
-        />
-        {errors.referencia && (
-          <Text style={styles.inputError}>{errors.referencia.message}</Text>
-        )}
-        <Dropdown
-          textColor="#0396c8"
-          containerStyle={[styles.input, styles.dropdown]}
-          label="Modelo "
-          value={vehicle.modelo ? vehicle.modelo + "" : ""}
-          data={years}
-          disabled={vehicle.modelo ? true : false}
-          onChangeText={(text: any) => {
-            setValue("modelo", text);
-          }}
-        />
-        {errors.modelo && (
-          <Text style={styles.inputError}>{errors.modelo.message}</Text>
-        )}
+            labelField="marca"
+            valueField="marca"
+            placeholder="Seleccione una marca"
+            value={marca}
+            onChange={(item) => {
+              if (marca !== item.marca) {
+                setValue("marca", item.marca);
+                setMarca(item.marca);
+                setReferencia("");
+              }
+            }}
+            disable={vehicle.marca.IdMarca !== 1 ? true : false}
+          />
+          {errors.marca && (
+            <Text style={styles.inputError}>{errors.marca.message}</Text>
+          )}
+        </View>
+
+        <View style={styles.dropdownContainer}>
+          <Text style={styles.label}>Referencia</Text>
+          <Dropdown
+            style={[styles.input, styles.dropdown]}
+            placeholderStyle={styles.placeholder}
+            selectedTextStyle={styles.selectedText}
+            data={
+              vehicle.marca.IdMarca !== 1
+                ? new Array(vehicle.marca)
+                : referencias || []
+            }
+            labelField="referencia"
+            valueField="referencia"
+            placeholder="Seleccione una referencia"
+            value={referencia}
+            onChange={(item) => {
+              setValue("referencia", item.referencia);
+              setReferencia(item.referencia);
+            }}
+            disable={vehicle.marca.IdMarca !== 1 ? true : false}
+          />
+          {errors.referencia && (
+            <Text style={styles.inputError}>{errors.referencia.message}</Text>
+          )}
+        </View>
+
+        <View style={styles.dropdownContainer}>
+          <Text style={styles.label}>Modelo</Text>
+          <Dropdown
+            style={[styles.input, styles.dropdown]}
+            placeholderStyle={styles.placeholder}
+            selectedTextStyle={styles.selectedText}
+            data={years || []}
+            labelField="value"
+            valueField="value"
+            placeholder="Seleccione un modelo"
+            value={modeloValue}
+            onChange={(item) => {
+              setModeloValue(item.value);
+              setValue("modelo", item.value);
+            }}
+            disable={vehicle.modelo ? true : false}
+          />
+          {errors.modelo && (
+            <Text style={styles.inputError}>{errors.modelo.message}</Text>
+          )}
+        </View>
+
         <Button
           title="Guardar"
           onPress={handleSubmit(updateVehiculo)}

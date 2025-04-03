@@ -3,7 +3,7 @@ import styles from "../../styles/App.scss";
 import { View, SafeAreaView, Text, Platform } from "react-native";
 import { Input, Button, Image } from "@rneui/base";
 import auth from "@react-native-firebase/auth";
-import { Dropdown } from "react-native-material-dropdown-v2";
+import { Dropdown } from "react-native-element-dropdown";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useForm } from "react-hook-form";
 import Moment from "moment";
@@ -39,6 +39,8 @@ export default function AgregarCita({
   const [fechaCita, setFechaCita] = useState(new Date());
   const [horaCita, setHoraCita] = useState(new Date());
   const [vehiculoSelect, setVehiculoSelect] = useState<Vehicle>();
+  const [placaValue, setPlacaValue] = useState<string>("");
+  const [servicioValue, setServicioValue] = useState<string>("");
 
   const user = auth().currentUser;
 
@@ -138,18 +140,18 @@ export default function AgregarCita({
           Agenda tu cita llenando estos datos
         </Text>
         <Dropdown
-          label="Placa"
-          containerStyle={[styles.input, styles.dropdown]}
-          labelExtractor={(label: any) => {
-            return label.placa;
-          }}
-          valueExtractor={(value: any) => {
-            return value.placa;
-          }}
-          data={vehicles || []} //TODO: Send an array value
-          onChangeText={(text: any) => {
-            selectVehiculo(text);
-            setValue("placa", text);
+          style={[styles.input, styles.dropdown]}
+          placeholderStyle={{ color: "gray" }}
+          selectedTextStyle={{ color: "black" }}
+          data={vehicles || []}
+          labelField="placa"
+          valueField="placa"
+          placeholder="Seleccione una placa"
+          value={placaValue}
+          onChange={(item) => {
+            setPlacaValue(item.placa);
+            selectVehiculo(item.placa);
+            setValue("placa", item.placa);
           }}
         />
         {errors.placa && (
@@ -229,11 +231,17 @@ export default function AgregarCita({
           <Text style={styles.inputError}>{errors.horacita.message}</Text>
         )}
         <Dropdown
-          label="Servicio"
+          style={[styles.input, styles.dropdown]}
+          placeholderStyle={{ color: "gray" }}
+          selectedTextStyle={{ color: "black" }}
           data={services}
-          containerStyle={[styles.input, styles.dropdown]}
-          onChangeText={(text: any) => {
-            setValue("servicio", text);
+          labelField="value"
+          valueField="value"
+          placeholder="Seleccione un servicio"
+          value={servicioValue}
+          onChange={(item) => {
+            setServicioValue(item.value);
+            setValue("servicio", item.value);
           }}
         />
         {errors.servicio && (

@@ -46,6 +46,7 @@ export default function Login() {
 
       await signIn(email, password);
     } catch (error: any) {
+      console.log("Error :::>", error);
       const errorCode = error.code;
       const errorMessage = error.message;
       if (errorCode === "auth/wrong-password") {
